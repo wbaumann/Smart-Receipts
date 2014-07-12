@@ -23,8 +23,8 @@ public abstract class NotFilter<T> implements Filter<T> {
 	private final CopyOnWriteArrayList<Filter<T>> mFilters;
 
 	/**
-	 * Additional logical AND calls may be added to this composite
-	 * {@link Filter} via the {@link #and(Filter)} method.
+	 * Additional logical NOT calls may be added to this composite
+	 * {@link Filter} via the {@link #not(Filter)} method.
 	 */
 	public NotFilter() {
 		mFilters = new CopyOnWriteArrayList<Filter<T>>();
@@ -32,7 +32,7 @@ public abstract class NotFilter<T> implements Filter<T> {
 
 	/**
 	 * A preset list of logical NOT filters may be added to this constructor so
-	 * that chaining via the {@link #and(Filter)} method is not required
+	 * that chaining via the {@link #not(Filter)} method is not required
 	 * 
 	 * @param filters - the {@link List} of {@link Filter} to add
 	 */
@@ -73,7 +73,7 @@ public abstract class NotFilter<T> implements Filter<T> {
 	 * @param filter - the {@link Filter} to add
 	 * @return this instance of {@link NotFilter} for method chaining
 	 */
-	public NotFilter<T> and(final Filter<T> filter) {
+	public NotFilter<T> not(final Filter<T> filter) {
 		mFilters.add(filter);
 		return this;
 	}

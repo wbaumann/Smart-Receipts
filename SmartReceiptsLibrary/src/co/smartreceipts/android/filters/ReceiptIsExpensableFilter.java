@@ -5,19 +5,19 @@ import org.json.JSONObject;
 
 import co.smartreceipts.android.model.ReceiptRow;
 
-public class ReceiptSelectedFilter implements Filter<ReceiptRow> {
+public class ReceiptIsExpensableFilter implements Filter<ReceiptRow> {
 
-	public ReceiptSelectedFilter() {
+	public ReceiptIsExpensableFilter() {
 		// empty
 	}
 
-	public ReceiptSelectedFilter(JSONObject json) throws JSONException {
+	public ReceiptIsExpensableFilter(JSONObject json) throws JSONException {
 		// empty
 	}
 
 	@Override
 	public boolean accept(ReceiptRow t) {
-		return t.isSelected();
+		return t.isExpensable();
 	}
 
 	@Override

@@ -32,7 +32,7 @@ public class TripStartsOnOrAfterDayFilter implements Filter<TripRow> {
 
 	@Override
 	public boolean accept(TripRow t) {
-		return FilterUtils.isOnOrAfter(mDate, mTimeZone, t.getStartDate(), t.getStartTimeZone());
+		return FilterUtils.isOnOrAfter(t.getStartDate(), t.getStartTimeZone(), mDate, mTimeZone);
 	}
 
 	@Override

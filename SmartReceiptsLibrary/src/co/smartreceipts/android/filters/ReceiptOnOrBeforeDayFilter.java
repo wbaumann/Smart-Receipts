@@ -32,8 +32,7 @@ public class ReceiptOnOrBeforeDayFilter implements Filter<ReceiptRow> {
 
 	@Override
 	public boolean accept(ReceiptRow t) {
-		// TODO still not sure about dealing with TimeZone
-		return t.getDate().equals(mDate) || t.getDate().before(mDate);
+		return FilterUtils.isOnOrBefore(mDate, mTimeZone, t.getDate(), t.getTimeZone());
 	}
 
 	@Override

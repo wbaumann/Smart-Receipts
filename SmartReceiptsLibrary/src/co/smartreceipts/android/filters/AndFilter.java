@@ -9,8 +9,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * A filter implementation that combines multiple other {@link Filter} implementations
- * in the manner of a logical AND operation.
+ * A filter implementation that combines multiple other {@link Filter}
+ * implementations in the manner of a logical AND operation.
  * 
  * @author Will Baumann
  * @since July 12, 2014
@@ -19,7 +19,7 @@ import org.json.JSONObject;
 public abstract class AndFilter<T> implements Filter<T> {
 
 	private static final String AND_FILTERS = "and_filters";
-	
+
 	private final CopyOnWriteArrayList<Filter<T>> mFilters;
 
 	/**
@@ -34,18 +34,21 @@ public abstract class AndFilter<T> implements Filter<T> {
 	 * A preset list of logical AND filters may be added to this constructor so
 	 * that chaining via the {@link #and(Filter)} method is not required
 	 * 
-	 * @param filters - the {@link List} of {@link Filter} to add
+	 * @param filters
+	 *            - the {@link List} of {@link Filter} to add
 	 */
 	public AndFilter(List<Filter<T>> filters) {
 		mFilters = new CopyOnWriteArrayList<Filter<T>>(filters);
 	}
 
 	/**
-	 * A package-private constructor that enables us to recreate this filter via a
-	 * {@link JSONObject} representation
+	 * A package-private constructor that enables us to recreate this filter via
+	 * a {@link JSONObject} representation
 	 * 
-	 * @param json - the {@link JSONObject} representation of this filter
-	 * @throws JSONException - throw if our provide {@link JSONObject} is invalid
+	 * @param json
+	 *            - the {@link JSONObject} representation of this filter
+	 * @throws JSONException
+	 *             - throw if our provide {@link JSONObject} is invalid
 	 */
 	protected AndFilter(JSONObject json) throws JSONException {
 		final List<Filter<T>> filters = new ArrayList<Filter<T>>();
@@ -57,20 +60,23 @@ public abstract class AndFilter<T> implements Filter<T> {
 	}
 
 	/**
-	 * Retrieves a {@link Filter} implementation from a given JSON object. This is required in order 
-	 * to properly reconstruct our filters from JSON
+	 * Retrieves a {@link Filter} implementation from a given JSON object. This
+	 * is required in order to properly reconstruct our filters from JSON
 	 * 
-	 * @param json - the {@link JSONObject} representing a particular filter
+	 * @param json
+	 *            - the {@link JSONObject} representing a particular filter
 	 * @return a {@link Filter} implementation
-	 * @throws JSONException - throw if our provide {@link JSONObject} is invalid
+	 * @throws JSONException
+	 *             - throw if our provide {@link JSONObject} is invalid
 	 */
 	abstract Filter<T> getFilter(JSONObject json) throws JSONException;
-	
+
 	/**
 	 * Adds another filter for the logical AND comparison that will be performed
 	 * via the {@link #accept(Object)} method is called.
 	 * 
-	 * @param filter - the {@link Filter} to add
+	 * @param filter
+	 *            - the {@link Filter} to add
 	 * @return this instance of {@link AndFilter} for method chaining
 	 */
 	public AndFilter<T> and(final Filter<T> filter) {
@@ -101,25 +107,30 @@ public abstract class AndFilter<T> implements Filter<T> {
 		json.put(AND_FILTERS, filtersArray);
 		return json;
 	}
-	
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((mFilters == null) ? 0 : mFilters.hashCode());
+		return result;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
+		if (this == obj)
 			return true;
-		}
-		if (obj == null || getClass() != obj.getClass()) {
+		if (obj == null)
 			return false;
-		}
-		
+		if (getClass() != obj.getClass())
+			return false;
 		AndFilter<?> other = (AndFilter<?>) obj;
 		if (mFilters == null) {
-			if (other.mFilters != null) {
+			if (other.mFilters != null)
 				return false;
-			}
-		} 
-		else if (!mFilters.equals(other.mFilters)) {
+		} else if (!mFilters.equals(other.mFilters))
 			return false;
-		}
 		return true;
 	}
 

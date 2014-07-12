@@ -46,10 +46,9 @@ public class ReceiptMinimumPriceFilter implements Filter<ReceiptRow> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		// TODO is it the correct way to generate hash?
 		result = prime * result
-				+ ((mCurrencyCode == null) ? 0 : mCurrencyCode.hashCode())
-				+ (int) (mMinPrice * 100);
+				+ ((mCurrencyCode == null) ? 0 : mCurrencyCode.hashCode());
+		result = prime * result + Float.floatToIntBits(mMinPrice);
 		return result;
 	}
 
@@ -57,11 +56,25 @@ public class ReceiptMinimumPriceFilter implements Filter<ReceiptRow> {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null || getClass() != obj.getClass())
+
+		if (obj == null)
+			return false;
+
+		if (getClass() != obj.getClass())
 			return false;
 
 		ReceiptMinimumPriceFilter other = (ReceiptMinimumPriceFilter) obj;
-		return (mMinPrice == other.mMinPrice 
-				&& mCurrencyCode.equals(other.mCurrencyCode));
+
+		if (mCurrencyCode == null) {
+			if (other.mCurrencyCode != null)
+				return false;
+		} else if (!mCurrencyCode.equals(other.mCurrencyCode))
+			return false;
+
+		if (Float.floatToIntBits(mMinPrice) != Float
+				.floatToIntBits(other.mMinPrice))
+			return false;
+
+		return true;
 	}
 }

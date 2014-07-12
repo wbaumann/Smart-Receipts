@@ -31,7 +31,6 @@ public class ReceiptIsExpensableFilter implements Filter<ReceiptRow> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		// TODO is it the correct way to generate hash?
 		result = prime * result + getClass().hashCode();
 		return result;
 	}

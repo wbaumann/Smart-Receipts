@@ -46,10 +46,9 @@ public class ReceiptMaximumPriceFilter implements Filter<ReceiptRow> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		// TODO is it the correct way to generate hash?
 		result = prime * result
-				+ ((mCurrencyCode == null) ? 0 : mCurrencyCode.hashCode())
-				+ (int) (mMaxPrice * 100);
+				+ ((mCurrencyCode == null) ? 0 : mCurrencyCode.hashCode());
+		result = prime * result + Float.floatToIntBits(mMaxPrice);
 		return result;
 	}
 
@@ -57,11 +56,26 @@ public class ReceiptMaximumPriceFilter implements Filter<ReceiptRow> {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null || getClass() != obj.getClass())
+
+		if (obj == null)
+			return false;
+
+		if (getClass() != obj.getClass())
 			return false;
 
 		ReceiptMaximumPriceFilter other = (ReceiptMaximumPriceFilter) obj;
-		return (mMaxPrice == other.mMaxPrice 
-				&& mCurrencyCode.equals(other.mCurrencyCode));
+
+		if (mCurrencyCode == null) {
+			if (other.mCurrencyCode != null)
+				return false;
+		} else if (!mCurrencyCode.equals(other.mCurrencyCode))
+			return false;
+
+		if (Float.floatToIntBits(mMaxPrice) != Float
+				.floatToIntBits(other.mMaxPrice))
+			return false;
+
+		return true;
 	}
+
 }

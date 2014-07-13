@@ -193,20 +193,6 @@ public class ReceiptFilterTest {
 	}
 	
 	@Test
-	public void receiptOrFilterConstructorTest() throws JSONException {
-		final ReceiptCategoryFilter filter1 = new ReceiptCategoryFilter(Constants.CATEGORY);
-		final ReceiptCategoryFilter filter2 = new ReceiptCategoryFilter("cat2");
-		final List<Filter<ReceiptRow>> filters = new ArrayList<Filter<ReceiptRow>>(2);
-		filters.add(filter1);
-		filters.add(filter2);
-		final ReceiptOrFilter orFilter1 = new ReceiptOrFilter(filters);
-		final ReceiptOrFilter orFilter2 = new ReceiptOrFilter();
-		orFilter2.or(filter1);
-		orFilter2.or(filter2);
-		assertEquals(orFilter1, orFilter2);
-	}
-	
-	@Test
 	public void receiptOrFilterTest() throws JSONException {
 		final String category2 = "cat2";
 		final ReceiptRow receipt1 = getGenericReceiptRowBuilder().build();
@@ -250,5 +236,33 @@ public class ReceiptFilterTest {
 		
 		assertFalse(notFilter.accept(receipt));
 		assertEquals(notFilter, FilterFactory.getReceiptFilter(notFilter.getJsonRepresentation()));
+	}
+
+	@Test
+	public void receiptOrFilterConstructorTest() throws JSONException {
+		final ReceiptCategoryFilter filter1 = new ReceiptCategoryFilter(Constants.CATEGORY);
+		final ReceiptCategoryFilter filter2 = new ReceiptCategoryFilter("cat2");
+		final List<Filter<ReceiptRow>> filters = new ArrayList<Filter<ReceiptRow>>(2);
+		filters.add(filter1);
+		filters.add(filter2);
+		final ReceiptOrFilter orFilter1 = new ReceiptOrFilter(filters);
+		final ReceiptOrFilter orFilter2 = new ReceiptOrFilter();
+		orFilter2.or(filter1);
+		orFilter2.or(filter2);
+		assertEquals(orFilter1, orFilter2);
+	}
+	
+	@Test
+	public void receiptAndFilterConstructorTest() throws JSONException {
+		final ReceiptCategoryFilter filter1 = new ReceiptCategoryFilter(Constants.CATEGORY);
+		final ReceiptCategoryFilter filter2 = new ReceiptCategoryFilter("cat2");
+		final List<Filter<ReceiptRow>> filters = new ArrayList<Filter<ReceiptRow>>(2);
+		filters.add(filter1);
+		filters.add(filter2);
+		final ReceiptAndFilter andFilter1 = new ReceiptAndFilter(filters);
+		final ReceiptAndFilter andFilter2 = new ReceiptAndFilter();
+		andFilter2.and(filter1);
+		andFilter2.and(filter2);
+		assertEquals(andFilter1, andFilter2);
 	}
 }

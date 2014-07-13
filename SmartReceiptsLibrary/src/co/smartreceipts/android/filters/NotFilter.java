@@ -1,10 +1,7 @@
 package co.smartreceipts.android.filters;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -18,17 +15,9 @@ import org.json.JSONObject;
  */
 public abstract class NotFilter<T> implements Filter<T> {
 
-	private static final String NOT_FILTERS = "not_filters";
+	private static final String NOT_FILTER = "not_filter";
 
-	private final CopyOnWriteArrayList<Filter<T>> mFilters;
-
-	/**
-	 * Additional logical NOT calls may be added to this composite
-	 * {@link Filter} via the {@link #not(Filter)} method.
-	 */
-	public NotFilter() {
-		mFilters = new CopyOnWriteArrayList<Filter<T>>();
-	}
+	private final Filter<T> mFilter;
 
 	/**
 	 * A preset list of logical NOT filters may be added to this constructor so
@@ -36,8 +25,8 @@ public abstract class NotFilter<T> implements Filter<T> {
 	 * 
 	 * @param filters - the {@link List} of {@link Filter} to add
 	 */
-	public NotFilter(List<Filter<T>> filters) {
-		mFilters = new CopyOnWriteArrayList<Filter<T>>(filters);
+	public NotFilter(Filter<T> filter) {
+		mFilter = filter;
 	}
 
 	/**
@@ -48,12 +37,8 @@ public abstract class NotFilter<T> implements Filter<T> {
 	 * @throws JSONException - throw if our provide {@link JSONObject} is invalid
 	 */
 	protected NotFilter(JSONObject json) throws JSONException {
-		final List<Filter<T>> filters = new ArrayList<Filter<T>>();
-		final JSONArray filtersArray = json.getJSONArray(NOT_FILTERS);
-		for (int i = 0; i < filtersArray.length(); i++) {
-			filters.add(getFilter(filtersArray.getJSONObject(i)));
-		}
-		mFilters = new CopyOnWriteArrayList<Filter<T>>(filters);
+		final JSONObject filterJson = json.getJSONObject(NOT_FILTER);
+		mFilter = getFilter(filterJson);
 	}
 
 	/**
@@ -66,39 +51,16 @@ public abstract class NotFilter<T> implements Filter<T> {
 	 */
 	abstract Filter<T> getFilter(JSONObject json) throws JSONException;
 
-	/**
-	 * Adds another filter for the logical NOT comparison that will be performed
-	 * via the {@link #accept(Object)} method is called.
-	 * 
-	 * @param filter - the {@link Filter} to add
-	 * @return this instance of {@link NotFilter} for method chaining
-	 */
-	public NotFilter<T> not(final Filter<T> filter) {
-		mFilters.add(filter);
-		return this;
-	}
-
 	@Override
 	public boolean accept(T t) {
-		// iterating through all filters
-		// and return false if one of the filter is accepted
-		for (final Filter<T> filter : mFilters) {
-			if (filter.accept(t)) {
-				return false;
-			}
-		}
-		return true;
+		return !mFilter.accept(t);
 	}
 
 	@Override
 	public JSONObject getJsonRepresentation() throws JSONException {
-		final JSONArray filtersArray = new JSONArray();
-		for (final Filter<T> filter : mFilters) {
-			filtersArray.put(filter.getJsonRepresentation());
-		}
 		final JSONObject json = new JSONObject();
 		json.put(FilterFactory.CLASS_NAME, this.getClass().getName());
-		json.put(NOT_FILTERS, filtersArray);
+		json.put(NOT_FILTER, mFilter.getJsonRepresentation());
 		return json;
 	}
 
@@ -106,8 +68,7 @@ public abstract class NotFilter<T> implements Filter<T> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((mFilters == null) ? 0 : mFilters.hashCode());
+		result = prime * result	+ ((mFilter == null) ? 0 : mFilter.hashCode());
 		return result;
 	}
 
@@ -124,10 +85,10 @@ public abstract class NotFilter<T> implements Filter<T> {
 		
 		NotFilter<?> other = (NotFilter<?>) obj;
 		
-		if (mFilters == null) {
-			if (other.mFilters != null)
+		if (mFilter == null) {
+			if (other.mFilter != null)
 				return false;
-		} else if (!mFilters.equals(other.mFilters))
+		} else if (!mFilter.equals(other.mFilter))
 			return false;
 		
 		return true;

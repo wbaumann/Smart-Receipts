@@ -46,12 +46,12 @@ public class TripStartsOnOrBeforeDayFilter implements Filter<TripRow> {
 
 	@Override
 	public int hashCode() {
-		final int dateHashCode = mDate.hashCode();
-		final int timezoneHashCode = mTimeZone.getID().hashCode();
+		final int dtHash = (mDate == null) ? 0 : mDate.hashCode();
+		final int tzHash = (mTimeZone == null) ? 0 : mTimeZone.getID().hashCode();
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((mDate == null) ? 0 : dateHashCode);
-		result = prime * result + ((mTimeZone == null) ? 0 : timezoneHashCode);
+		result = prime * result + dtHash;
+		result = prime * result + tzHash;
 		return result;
 	}
 

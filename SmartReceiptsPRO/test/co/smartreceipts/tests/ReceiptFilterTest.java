@@ -39,6 +39,19 @@ import co.smartreceipts.tests.utils.ReceiptUtils.Constants;
 @RunWith(RobolectricTestRunner.class)
 public class ReceiptFilterTest {
 	
+	// Test constants for Price checking
+	private static final String CURRENCY = Constants.CURRENCY_CODE;
+	private static final String PRICE_NORMAL = "100.00";
+	private static final String PRICE_HIGH = "150.00";
+	private static final String PRICE_LOW = "50.00";
+
+	// Test constants for Date checking
+	private static final TimeZone TZ = Constants.TIMEZONE;
+	private static final long MILLIS = new java.util.Date().getTime();
+	private static final Date NOW = new Date(MILLIS);
+	private static final Date FUTURE = new Date(MILLIS + 1000);
+	private static final Date PAST = new Date(MILLIS - 1000);
+	
 	private SmartReceiptsApplication mApp;
 
 	/**
@@ -116,17 +129,12 @@ public class ReceiptFilterTest {
 	
 	@Test
 	public void receiptMinimumPriceFilterTest() throws JSONException {
-		final String priceNormal = "100.0";
-		final String priceHigh = "150.0";
-		final String priceLow = "50.0";
-		
-		final ReceiptRow receiptNormal = getGenericReceiptRowBuilder().setPrice(priceNormal).build();
-		final ReceiptRow receiptHigh = getGenericReceiptRowBuilder().setPrice(priceHigh).build();
-		final ReceiptRow receiptLow = getGenericReceiptRowBuilder().setPrice(priceLow).build();
+		final ReceiptRow receiptNormal = getGenericReceiptRowBuilder().setPrice(PRICE_NORMAL).build();
+		final ReceiptRow receiptHigh = getGenericReceiptRowBuilder().setPrice(PRICE_HIGH).build();
+		final ReceiptRow receiptLow = getGenericReceiptRowBuilder().setPrice(PRICE_LOW).build();
 		
 		final ReceiptMinimumPriceFilter filter = new ReceiptMinimumPriceFilter(
-				Float.parseFloat(priceNormal), 
-				Constants.CURRENCY_CODE);
+				Float.parseFloat(PRICE_NORMAL), CURRENCY);
 		
 		assertTrue(filter.accept(receiptNormal));
 		assertTrue(filter.accept(receiptHigh));
@@ -136,17 +144,12 @@ public class ReceiptFilterTest {
 	
 	@Test
 	public void receiptMaximumPriceFilterTest() throws JSONException {
-		final String priceNormal = "100.0";
-		final String priceHigh = "150.0";
-		final String priceLow = "50.0";
-		
-		final ReceiptRow receiptNormal = getGenericReceiptRowBuilder().setPrice(priceNormal).build();
-		final ReceiptRow receiptHigh = getGenericReceiptRowBuilder().setPrice(priceHigh).build();
-		final ReceiptRow receiptLow = getGenericReceiptRowBuilder().setPrice(priceLow).build();
+		final ReceiptRow receiptNormal = getGenericReceiptRowBuilder().setPrice(PRICE_NORMAL).build();
+		final ReceiptRow receiptHigh = getGenericReceiptRowBuilder().setPrice(PRICE_HIGH).build();
+		final ReceiptRow receiptLow = getGenericReceiptRowBuilder().setPrice(PRICE_LOW).build();
 		
 		final ReceiptMaximumPriceFilter filter = new ReceiptMaximumPriceFilter(
-				Float.parseFloat(priceNormal), 
-				Constants.CURRENCY_CODE);
+				Float.parseFloat(PRICE_NORMAL), CURRENCY);
 		
 		assertTrue(filter.accept(receiptNormal));
 		assertFalse(filter.accept(receiptHigh));
@@ -156,16 +159,10 @@ public class ReceiptFilterTest {
 	
 	@Test
 	public void receiptOnOrAfterDayFilterTest() throws JSONException {
-		final TimeZone tz = TimeZone.getDefault();
-		final long nowMillis = new java.util.Date().getTime();
-		final Date now = new Date(nowMillis);
-		final Date future = new Date(nowMillis + 10000);
-		final Date past = new Date(nowMillis - 10000);
-
-		final ReceiptRow receiptNow = getGenericReceiptRowBuilder().setDate(now).build();
-		final ReceiptRow receiptFuture = getGenericReceiptRowBuilder().setDate(future).build();
-		final ReceiptRow receiptPast = getGenericReceiptRowBuilder().setDate(past).build();
-		final ReceiptOnOrAfterDayFilter filter = new ReceiptOnOrAfterDayFilter(now, tz);
+		final ReceiptRow receiptNow = getGenericReceiptRowBuilder().setDate(NOW).build();
+		final ReceiptRow receiptFuture = getGenericReceiptRowBuilder().setDate(FUTURE).build();
+		final ReceiptRow receiptPast = getGenericReceiptRowBuilder().setDate(PAST).build();
+		final ReceiptOnOrAfterDayFilter filter = new ReceiptOnOrAfterDayFilter(NOW, TZ);
 		
 		assertTrue(filter.accept(receiptNow));
 		assertTrue(filter.accept(receiptFuture));
@@ -175,16 +172,10 @@ public class ReceiptFilterTest {
 	
 	@Test
 	public void receiptOnOrBeforeDayFilterTest() throws JSONException {
-		final TimeZone tz = TimeZone.getDefault();
-		final long nowMillis = new java.util.Date().getTime();
-		final Date now = new Date(nowMillis);
-		final Date future = new Date(nowMillis + 10000);
-		final Date past = new Date(nowMillis - 10000);
-
-		final ReceiptRow receiptNow = getGenericReceiptRowBuilder().setDate(now).build();
-		final ReceiptRow receiptFuture = getGenericReceiptRowBuilder().setDate(future).build();
-		final ReceiptRow receiptPast = getGenericReceiptRowBuilder().setDate(past).build();
-		final ReceiptOnOrBeforeDayFilter filter = new ReceiptOnOrBeforeDayFilter(now, tz);
+		final ReceiptRow receiptNow = getGenericReceiptRowBuilder().setDate(NOW).build();
+		final ReceiptRow receiptFuture = getGenericReceiptRowBuilder().setDate(FUTURE).build();
+		final ReceiptRow receiptPast = getGenericReceiptRowBuilder().setDate(PAST).build();
+		final ReceiptOnOrBeforeDayFilter filter = new ReceiptOnOrBeforeDayFilter(NOW, TZ);
 		
 		assertTrue(filter.accept(receiptNow));
 		assertFalse(filter.accept(receiptFuture));

@@ -32,11 +32,13 @@ import co.smartreceipts.tests.utils.TripUtils.Constants;
 @RunWith(RobolectricTestRunner.class)
 public class TripFilterTest {
 
+	// Test constants for Price checking
 	private static final String CURRENCY = Constants.CURRENCY_CODE;
 	private static final String PRICE_NORMAL = "100.00";
 	private static final String PRICE_HIGH = "150.00";
 	private static final String PRICE_LOW = "50.00";
 
+	// Test constants for Date checking
 	private static final TimeZone TZ = TimeZone.getDefault();
 	private static final long MILLIS = new java.util.Date().getTime();
 	private static final Date NOW = new Date(MILLIS);

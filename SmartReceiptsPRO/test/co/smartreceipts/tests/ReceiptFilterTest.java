@@ -7,7 +7,6 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.TimeZone;
 
 import org.json.JSONException;
@@ -221,39 +220,69 @@ public class ReceiptFilterTest {
 	
 	@Test
 	public void receiptNotFilterTest() throws JSONException {
-		final ReceiptRow receipt = getGenericReceiptRowBuilder().build();
-		final ReceiptCategoryFilter filter = new ReceiptCategoryFilter(Constants.CATEGORY);
-		final ReceiptNotFilter notFilter = new ReceiptNotFilter(filter);
+		// in this test scenario, we will only accept receiptHigh
+		// accept rule: NOT (price <= normal) 
+		// equivalent to: (price > normal)
 		
-		assertFalse(notFilter.accept(receipt));
+		final ReceiptRow receiptNormal = getGenericReceiptRowBuilder().setPrice(PRICE_NORMAL).build();
+		final ReceiptRow receiptHigh = getGenericReceiptRowBuilder().setPrice(PRICE_HIGH).build();
+		final ReceiptRow receiptLow = getGenericReceiptRowBuilder().setPrice(PRICE_LOW).build();
+
+		final ReceiptMaximumPriceFilter priceFilter = new ReceiptMaximumPriceFilter(Float.parseFloat(PRICE_NORMAL), CURRENCY);
+		final ReceiptNotFilter notFilter = new ReceiptNotFilter(priceFilter);
+		
+		assertFalse(notFilter.accept(receiptNormal));
+		assertTrue(notFilter.accept(receiptHigh)); // accepted
+		assertFalse(notFilter.accept(receiptLow));
+		
 		assertEquals(notFilter, FilterFactory.getReceiptFilter(notFilter.getJsonRepresentation()));
 	}
 
 	@Test
 	public void receiptOrFilterConstructorTest() throws JSONException {
+		// in this test scenario, 
+		// filters constructed with same data but different method should be equal
+
 		final ReceiptCategoryFilter filter1 = new ReceiptCategoryFilter(Constants.CATEGORY);
-		final ReceiptCategoryFilter filter2 = new ReceiptCategoryFilter("cat2");
-		final List<Filter<ReceiptRow>> filters = new ArrayList<Filter<ReceiptRow>>(2);
+		final ReceiptCategoryFilter filter2 = new ReceiptCategoryFilter("Just another category");
+		
+		// filter 1 -- composited filters added in object instantiation (i.e. constructor)
+		final ArrayList<Filter<ReceiptRow>> filters = new ArrayList<Filter<ReceiptRow>>();
 		filters.add(filter1);
 		filters.add(filter2);
 		final ReceiptOrFilter orFilter1 = new ReceiptOrFilter(filters);
+		
+		// filter 2 -- composited filters added after object instantiation
 		final ReceiptOrFilter orFilter2 = new ReceiptOrFilter();
 		orFilter2.or(filter1);
 		orFilter2.or(filter2);
+		
 		assertEquals(orFilter1, orFilter2);
+		assertEquals(orFilter1, FilterFactory.getReceiptFilter(orFilter1.getJsonRepresentation()));
+		assertEquals(orFilter2, FilterFactory.getReceiptFilter(orFilter2.getJsonRepresentation()));
 	}
 	
 	@Test
 	public void receiptAndFilterConstructorTest() throws JSONException {
+		// in this test scenario, 
+		// filters constructed with same data but different method should be equal
+
 		final ReceiptCategoryFilter filter1 = new ReceiptCategoryFilter(Constants.CATEGORY);
-		final ReceiptCategoryFilter filter2 = new ReceiptCategoryFilter("cat2");
-		final List<Filter<ReceiptRow>> filters = new ArrayList<Filter<ReceiptRow>>(2);
+		final ReceiptCategoryFilter filter2 = new ReceiptCategoryFilter("Just another category");
+		
+		// filter 1 -- composited filters added in object instantiation (i.e. constructor)
+		final ArrayList<Filter<ReceiptRow>> filters = new ArrayList<Filter<ReceiptRow>>();
 		filters.add(filter1);
 		filters.add(filter2);
 		final ReceiptAndFilter andFilter1 = new ReceiptAndFilter(filters);
+		
+		// filter 2 -- composited filters added after object instantiation
 		final ReceiptAndFilter andFilter2 = new ReceiptAndFilter();
 		andFilter2.and(filter1);
 		andFilter2.and(filter2);
+		
 		assertEquals(andFilter1, andFilter2);
+		assertEquals(andFilter1, FilterFactory.getReceiptFilter(andFilter1.getJsonRepresentation()));
+		assertEquals(andFilter2, FilterFactory.getReceiptFilter(andFilter2.getJsonRepresentation()));
 	}
 }

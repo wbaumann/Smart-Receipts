@@ -47,8 +47,8 @@ public final class DatabaseHelper extends SQLiteOpenHelper implements AutoComple
 
 	//Database Info
 	public static final String DATABASE_NAME = "receipts.db";
-	private static final int DATABASE_VERSION = 11;
-	public static final String NO_DATA = "null"; //TODO: Just set to null
+	private static final int DATABASE_VERSION = 12;
+	public static final String NO_DATA = "null"; // TODO: Just set to null
 	static final String MULTI_CURRENCY = "XXXXXX";
 
 	//Tags
@@ -146,7 +146,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper implements AutoComple
 		public static final String COLUMN_FILTERS = "trips_filters";
 	}
 	private static final class ReceiptsTable {
-	private ReceiptsTable() {}
+		private ReceiptsTable() {}
 		public static final String TABLE_NAME = "receipts";
 		public static final String COLUMN_ID = "id";
 		public static final String COLUMN_PATH = "path";
@@ -173,6 +173,18 @@ public final class DatabaseHelper extends SQLiteOpenHelper implements AutoComple
 		public static final String COLUMN_CODE = "code";
 		public static final String COLUMN_BREAKDOWN = "breakdown";
 	}
+	private static final class DistanceTable {
+		private DistanceTable() {}
+		public static final String TABLE_NAME = "mileage";
+		public static final String COLUMN_ID = "id"; 
+		public static final String COLUMN_PARENT = "parent"; 
+		public static final String COLUMN_DISTANCE = "distance"; 
+		public static final String COLUMN_LOCATION = "location"; 
+		public static final String COLUMN_DATE = "date"; 
+		public static final String COLUMN_TIMEZONE = "timezone"; 
+		public static final String COLUMN_COMMENT = "comment"; 
+		public static final String COLUMN_RATE = "rate"; 
+	}
 	public static final class CSVTable {
 		private CSVTable() {}
 		public static final String TABLE_NAME = "csvcolumns";
@@ -194,7 +206,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper implements AutoComple
 		mFlex = application.getFlex();
 		mPersistenceManager = persistenceManager;
 		mCustomizations = application;
-		this.getReadableDatabase(); //Called here, so onCreate gets called on the UI thread
+		this.getReadableDatabase(); // Called here, so onCreate gets called on the UI thread
 	}
 
 	public static final DatabaseHelper getInstance(SmartReceiptsApplication application, PersistenceManager persistenceManager) {
@@ -272,6 +284,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper implements AutoComple
 					+ CategoriesTable.COLUMN_CODE + " TEXT, "
 					+ CategoriesTable.COLUMN_BREAKDOWN + " BOOLEAN DEFAULT 1"
 					+ ");";
+			
 			if (BuildConfig.DEBUG) {
 				Log.d(TAG, trips);
 			}
@@ -286,6 +299,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper implements AutoComple
 			db.execSQL(categories);
 			this.createCSVTable(db);
 			this.createPDFTable(db);
+			this.createDistanceTable(db);
 			mCustomizations.insertCategoryDefaults(this);
 			mCustomizations.onFirstRun();
 			_initDB = null;
@@ -476,6 +490,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper implements AutoComple
 					Log.d(TAG, alterTrips);
 				}
 				db.execSQL(alterTrips);
+				this.createDistanceTable(db);
 			}
 			_initDB = null;
 		}
@@ -568,6 +583,23 @@ public final class DatabaseHelper extends SQLiteOpenHelper implements AutoComple
 		}
 		db.execSQL(pdf);
 		mCustomizations.insertPDFDefaults(this);
+	}
+	
+	private final void createDistanceTable(final SQLiteDatabase db){
+		final String distance = "CREATE TABLE " + DistanceTable.TABLE_NAME + " ("
+				+ DistanceTable.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+				+ DistanceTable.COLUMN_PARENT + " TEXT REFERENCES "+ TripsTable.COLUMN_NAME + " ON DELETE CASCADE,"
+				+ DistanceTable.COLUMN_DISTANCE + " DECIMAL(10, 2) DEFAULT 0.00,"
+				+ DistanceTable.COLUMN_LOCATION + " TEXT,"
+				+ DistanceTable.COLUMN_DATE + " DATE,"
+				+ DistanceTable.COLUMN_TIMEZONE + " TEXT,"
+				+ DistanceTable.COLUMN_COMMENT + " TEXT,"
+				+ DistanceTable.COLUMN_RATE + " DECIMAL(10, 2) DEFAULT 0.00 );";
+		
+		if(BuildConfig.DEBUG) {
+			Log.d(TAG, distance);
+		}
+		db.execSQL(distance);
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////

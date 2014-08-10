@@ -2,6 +2,7 @@ package co.smartreceipts.android.persistence;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -33,6 +34,7 @@ import co.smartreceipts.android.SmartReceiptsApplication;
 import co.smartreceipts.android.date.DateUtils;
 import co.smartreceipts.android.model.CSVColumns;
 import co.smartreceipts.android.model.Columns.Column;
+import co.smartreceipts.android.model.DistanceRow;
 import co.smartreceipts.android.model.PDFColumns;
 import co.smartreceipts.android.model.ReceiptRow;
 import co.smartreceipts.android.model.TripRow;
@@ -47,8 +49,8 @@ public final class DatabaseHelper extends SQLiteOpenHelper implements AutoComple
 
 	//Database Info
 	public static final String DATABASE_NAME = "receipts.db";
-	private static final int DATABASE_VERSION = 11;
-	public static final String NO_DATA = "null"; //TODO: Just set to null
+	private static final int DATABASE_VERSION = 12;
+	public static final String NO_DATA = "null"; // TODO: Just set to null
 	static final String MULTI_CURRENCY = "XXXXXX";
 
 	//Tags
@@ -79,6 +81,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper implements AutoComple
 	//Listeners
 	private TripRowListener mTripRowListener;
 	private ReceiptRowListener mReceiptRowListener;
+	private DistanceRowListener mDistanceRowListener;
 	private ReceiptRowGraphListener mReceiptRowGraphListener;
 
 	//Locks
@@ -117,6 +120,16 @@ public final class DatabaseHelper extends SQLiteOpenHelper implements AutoComple
 		public void onReceiptMoveFailure();
 		public void onReceiptDeleteFailure();
 	}
+	
+	public interface DistanceRowListener {
+		public void onDistanceRowsQuerySuccess(List<DistanceRow> distance);
+		public void onDistanceRowInsertSuccess(DistanceRow distance);
+		public void onDistanceRowInsertFailure(SQLException error); 
+		public void onDistanceRowUpdateSuccess(DistanceRow distance);
+		public void onDistanceRowUpdateFailure(); //For rollback info
+		public void onDistanceDeleteSuccess(DistanceRow distance);
+		public void onDistanceDeleteFailure();
+	}
 
 	public interface ReceiptRowGraphListener {
 		public void onGraphQuerySuccess(List<ReceiptRow> receipts);
@@ -146,7 +159,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper implements AutoComple
 		public static final String COLUMN_FILTERS = "trips_filters";
 	}
 	private static final class ReceiptsTable {
-	private ReceiptsTable() {}
+		private ReceiptsTable() {}
 		public static final String TABLE_NAME = "receipts";
 		public static final String COLUMN_ID = "id";
 		public static final String COLUMN_PATH = "path";
@@ -173,6 +186,18 @@ public final class DatabaseHelper extends SQLiteOpenHelper implements AutoComple
 		public static final String COLUMN_CODE = "code";
 		public static final String COLUMN_BREAKDOWN = "breakdown";
 	}
+	private static final class DistanceTable {
+		private DistanceTable() {}
+		public static final String TABLE_NAME = "distance";
+		public static final String COLUMN_ID = "id"; 
+		public static final String COLUMN_PARENT = "parent"; 
+		public static final String COLUMN_DISTANCE = "distance"; 
+		public static final String COLUMN_LOCATION = "location"; 
+		public static final String COLUMN_DATE = "date"; 
+		public static final String COLUMN_TIMEZONE = "timezone"; 
+		public static final String COLUMN_COMMENT = "comment"; 
+		public static final String COLUMN_RATE = "rate"; 
+	}
 	public static final class CSVTable {
 		private CSVTable() {}
 		public static final String TABLE_NAME = "csvcolumns";
@@ -194,7 +219,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper implements AutoComple
 		mFlex = application.getFlex();
 		mPersistenceManager = persistenceManager;
 		mCustomizations = application;
-		this.getReadableDatabase(); //Called here, so onCreate gets called on the UI thread
+		this.getReadableDatabase(); // Called here, so onCreate gets called on the UI thread
 	}
 
 	public static final DatabaseHelper getInstance(SmartReceiptsApplication application, PersistenceManager persistenceManager) {
@@ -272,6 +297,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper implements AutoComple
 					+ CategoriesTable.COLUMN_CODE + " TEXT, "
 					+ CategoriesTable.COLUMN_BREAKDOWN + " BOOLEAN DEFAULT 1"
 					+ ");";
+			
 			if (BuildConfig.DEBUG) {
 				Log.d(TAG, trips);
 			}
@@ -286,6 +312,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper implements AutoComple
 			db.execSQL(categories);
 			this.createCSVTable(db);
 			this.createPDFTable(db);
+			this.createDistanceTable(db);
 			mCustomizations.insertCategoryDefaults(this);
 			mCustomizations.onFirstRun();
 			_initDB = null;
@@ -470,12 +497,13 @@ public final class DatabaseHelper extends SQLiteOpenHelper implements AutoComple
 				db.execSQL(alterTrips1);
 				db.execSQL(alterTrips2);
 			}
-			if (oldVersion <= 11) { //Added trips filters and mileage table
+			if (oldVersion <= 11) { //Added trips filters and distance table
 				final String alterTrips = "ALTER TABLE " + TripsTable.TABLE_NAME + " ADD " + TripsTable.COLUMN_FILTERS + " TEXT";
 				if (BuildConfig.DEBUG) {
 					Log.d(TAG, alterTrips);
 				}
 				db.execSQL(alterTrips);
+				this.createDistanceTable(db);
 			}
 			_initDB = null;
 		}
@@ -568,6 +596,23 @@ public final class DatabaseHelper extends SQLiteOpenHelper implements AutoComple
 		}
 		db.execSQL(pdf);
 		mCustomizations.insertPDFDefaults(this);
+	}
+	
+	private final void createDistanceTable(final SQLiteDatabase db){
+		final String distance = "CREATE TABLE " + DistanceTable.TABLE_NAME + " ("
+				+ DistanceTable.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+				+ DistanceTable.COLUMN_PARENT + " TEXT REFERENCES "+ TripsTable.COLUMN_NAME + " ON DELETE CASCADE,"
+				+ DistanceTable.COLUMN_DISTANCE + " DECIMAL(10, 2) DEFAULT 0.00,"
+				+ DistanceTable.COLUMN_LOCATION + " TEXT,"
+				+ DistanceTable.COLUMN_DATE + " DATE,"
+				+ DistanceTable.COLUMN_TIMEZONE + " TEXT,"
+				+ DistanceTable.COLUMN_COMMENT + " TEXT,"
+				+ DistanceTable.COLUMN_RATE + " DECIMAL(10, 2) DEFAULT 0.00 );";
+		
+		if(BuildConfig.DEBUG) {
+			Log.d(TAG, distance);
+		}
+		db.execSQL(distance);
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1259,8 +1304,421 @@ public final class DatabaseHelper extends SQLiteOpenHelper implements AutoComple
 			getTripDailyPrice(trip);
 		}
 	}
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	//	Distance Methods
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	public void registerDistanceRowListener(DistanceRowListener listener) {
+		mDistanceRowListener = listener;
+	}
 
+	public void unregisterDistanceRowListener() {
+		mDistanceRowListener = null;
+	}
+	
+	public List<DistanceRow> getDistanceSerial(final boolean desc) {
+		return this.getDistanceHelper(desc);
+	}
+	
+	public void getDistanceParallel(final boolean desc){
+		if (mDistanceRowListener == null) {
+			if (BuildConfig.DEBUG) {
+				Log.d(TAG, "No DistanceRowListener was registered.");
+			}
+		}
+		
+		(new GetDistanceWorker(desc)).execute();
+	}
+	
+	private List<DistanceRow> getDistanceHelper(final boolean desc) {
+		List<DistanceRow> distanceRows;
+		synchronized (mDatabaseLock) {
+			SQLiteDatabase db = null;
+			Cursor c = null;
+			try {
+				db = this.getReadableDatabase();
+				c = db.query(DistanceTable.TABLE_NAME,
+							 null,
+							 null, // condition
+							 null, // binding
+							 null,
+							 null,
+							 DistanceTable.COLUMN_DATE + ((desc)?" DESC":" ASC"));
+				if (c != null && c.moveToFirst()) {
+					distanceRows = new ArrayList<DistanceRow>(c.getCount());
+					final int idIndex = c.getColumnIndex(DistanceTable.COLUMN_ID);
+					final int locationIndex = c.getColumnIndex(DistanceTable.COLUMN_LOCATION);
+					final int distanceIndex = c.getColumnIndex(DistanceTable.COLUMN_DISTANCE);
+					final int dateIndex = c.getColumnIndex(DistanceTable.COLUMN_DATE);
+					final int timezoneIndex = c.getColumnIndex(DistanceTable.COLUMN_TIMEZONE);
+					final int rateIndex = c.getColumnIndex(DistanceTable.COLUMN_RATE);
+					final int commentIndex = c.getColumnIndex(DistanceTable.COLUMN_COMMENT);
+					do {
+						final long id = c.getLong(idIndex);
+						final String location = c.getString(locationIndex);
+						final BigDecimal distance = BigDecimal.valueOf(c.getDouble(distanceIndex));
+						final long date = c.getLong(dateIndex);
+						final String timezone = c.getString(timezoneIndex);
+						final BigDecimal rate = BigDecimal.valueOf(c.getDouble(rateIndex));
+						final String comment = c.getString(commentIndex);
+						
+						distanceRows.add(new DistanceRow.Builder(id)
+								.setLocation(location)
+								.setDistance(distance)
+								.setDate(date)
+								.setTimezone(timezone)
+								.setRate(rate)
+								.setComment(comment)
+								.build());
+					}
+					while (c.moveToNext());
+				}
+				else {
+					distanceRows = new ArrayList<DistanceRow>();
+				}
+			}
+			finally { // Close the cursor and db to avoid memory leaks
+				if (c != null) {
+					c.close();
+				}
+			}
+		}
+		
+		return distanceRows;
+	}
+	
+	private class GetDistanceWorker extends AsyncTask<Void, Void, List<DistanceRow>> {
 
+		private final boolean mDesc;
+
+		public GetDistanceWorker(boolean desc) { 
+			mDesc = desc; 
+		}
+
+		@Override
+		protected List<DistanceRow> doInBackground(Void... params) {
+			return getDistanceHelper(mDesc);
+		}
+
+		@Override
+		protected void onPostExecute(List<DistanceRow> result) {
+			if (mDistanceRowListener != null) {
+				mDistanceRowListener.onDistanceRowsQuerySuccess(result);
+			}
+		}
+	}
+	
+	public DistanceRow insertDistanceSerial(
+			final String location, 
+			final BigDecimal distance, 
+			final Date date, 
+			final String timezone, 
+			final BigDecimal rate, 
+			final String comment){
+		
+		return insertDistanceHelper(location, distance, date, timezone, rate, comment);
+	}
+	
+	public void insertDistanceParallel(
+			final String location, 
+			final BigDecimal distance, 
+			final Date date, 
+			final String timezone, 
+			final BigDecimal rate, 
+			final String comment){
+		
+		if (mDistanceRowListener == null) {
+			if (BuildConfig.DEBUG) {
+				Log.d(TAG, "No DistanceRowListener was registered.");
+			}
+		}
+		
+		new InsertDistanceWorker(location, distance, date, timezone, rate, comment).execute();
+	}
+
+	private DistanceRow insertDistanceHelper(
+			final String location, 
+			final BigDecimal distance, 
+			final Date date, 
+			final String timezone, 
+			final BigDecimal rate, 
+			final String comment){
+		
+		ContentValues values = new ContentValues(6);
+		values.put(DistanceTable.COLUMN_LOCATION, location); 
+		values.put(DistanceTable.COLUMN_DISTANCE, distance.doubleValue()); 
+		values.put(DistanceTable.COLUMN_DATE, date.getTime()); 
+		values.put(DistanceTable.COLUMN_TIMEZONE, timezone); 
+		values.put(DistanceTable.COLUMN_RATE, rate.doubleValue()); 
+		values.put(DistanceTable.COLUMN_COMMENT, comment); 
+		
+		DistanceRow toReturn = null;
+		synchronized (mDatabaseLock) {
+			SQLiteDatabase db = this.getWritableDatabase();
+			if (db.insertOrThrow(DistanceTable.TABLE_NAME, null, values) == -1) {
+				toReturn = null;
+			} else {
+				Cursor cur = null;
+				try{
+					cur = db.rawQuery("SELECT last_insert_rowid()", null);
+					if (cur != null && cur.moveToFirst() && cur.getColumnCount() > 0) {
+						final long id = cur.getInt(0);
+						toReturn =  new DistanceRow.Builder(id)
+								.setLocation(location)
+								.setDistance(distance)
+								.setDate(date)
+								.setTimezone(timezone)
+								.setRate(rate)
+								.setComment(comment)
+								.build();
+					}
+				} finally {
+					if (cur != null)
+						cur.close();
+					
+					if (db != null)
+						db.close();
+				}
+			}
+		}
+		
+		if (this.getReadableDatabase() != null) {
+			String databasePath = this.getReadableDatabase().getPath();
+			if (!TextUtils.isEmpty(databasePath)) {
+				backUpDatabase(databasePath);
+			}
+		}
+		
+		return toReturn;
+	}
+	
+	private class InsertDistanceWorker extends AsyncTask<Void, Void, DistanceRow>{
+		final private String mLocation;
+		final private BigDecimal mDistance;
+		final private Date mDate;
+		final private String mTimezone;
+		final private BigDecimal mRate;
+		final private String mComment;
+		
+		private SQLException mException;
+		
+		public InsertDistanceWorker(
+				final String location, 
+				final BigDecimal distance, 
+				final Date date, 
+				final String timezone, 
+				final BigDecimal rate, 
+				final String comment){
+			
+			mLocation = location;
+			mDistance = distance;
+			mDate = date;
+			mTimezone = timezone;
+			mRate = rate;
+			mComment = comment;
+		}
+
+		@Override
+		protected DistanceRow doInBackground(Void... params) {
+			try {
+				return insertDistanceHelper(mLocation, mDistance, mDate, mTimezone, mRate, mComment);
+			} catch (SQLException exception) {
+				mException = exception;
+				return null;
+			}
+		}
+		
+		@Override
+		protected void onPostExecute(DistanceRow result) {
+			if (mDistanceRowListener == null)
+				return;
+			
+			if (result == null || mException != null) { // implies exception
+				mDistanceRowListener.onDistanceRowInsertFailure(mException);
+			} else {
+				mDistanceRowListener.onDistanceRowInsertSuccess(result);
+			}
+		}
+		
+	}
+	
+	public void updateDistanceSerial(
+			final DistanceRow oldDistance,
+			final String location, 
+			final BigDecimal distance, 
+			final Date date, 
+			final String timezone, 
+			final BigDecimal rate, 
+			final String comment) {
+		
+		updateDistanceHelper(oldDistance, location, distance, date, timezone, rate, comment);
+	}
+	
+	public void updateDistanceParallel(
+			final DistanceRow oldDistance,
+			final String location, 
+			final BigDecimal distance, 
+			final Date date, 
+			final String timezone, 
+			final BigDecimal rate, 
+			final String comment) {
+		
+		if (mDistanceRowListener == null) {
+			if (BuildConfig.DEBUG) {
+				Log.d(TAG, "No DistanceRowListener was registered.");
+			}
+		}
+		
+		new UpdateDistanceWorker(oldDistance, location, distance, date, timezone, rate, comment).execute();
+	}
+	
+	private DistanceRow updateDistanceHelper(
+			final DistanceRow oldDistance,
+			final String location, 
+			final BigDecimal distance, 
+			final Date date, 
+			final String timezone, 
+			final BigDecimal rate, 
+			final String comment){
+		
+		ContentValues values = new ContentValues(6);
+		values.put(DistanceTable.COLUMN_LOCATION, location); 
+		values.put(DistanceTable.COLUMN_DISTANCE, distance.doubleValue()); 
+		values.put(DistanceTable.COLUMN_DATE, date.getTime()); 
+		values.put(DistanceTable.COLUMN_TIMEZONE, timezone); 
+		values.put(DistanceTable.COLUMN_RATE, rate.doubleValue()); 
+		values.put(DistanceTable.COLUMN_COMMENT, comment); 
+		
+		DistanceRow toReturn = null;
+		long id = oldDistance.getId();
+		synchronized (mDatabaseLock) {
+			SQLiteDatabase db = this.getWritableDatabase();
+			if (db.update(DistanceTable.TABLE_NAME, values, 
+					DistanceTable.COLUMN_ID +" = ?", 
+					new String[]{ String.valueOf(id) }) > 0) {
+				
+				toReturn =  new DistanceRow.Builder(id)
+					.setLocation(location)
+					.setDistance(distance)
+					.setDate(date)
+					.setTimezone(timezone)
+					.setRate(rate)
+					.setComment(comment)
+					.build();
+
+			} else {
+				toReturn = null;
+			}
+		}
+		
+		return toReturn;
+	}
+	
+	private class UpdateDistanceWorker extends AsyncTask<Void, Void, DistanceRow> {
+
+	final DistanceRow mOldDistance;
+	final String mLocation; 
+	final BigDecimal mDistance; 
+	final Date mDate; 
+	final String mTimezone; 
+	final BigDecimal mRate; 
+	final String mComment;
+
+		public UpdateDistanceWorker (
+				final DistanceRow oldDistance,
+				final String location, 
+				final BigDecimal distance, 
+				final Date date, 
+				final String timezone, 
+				final BigDecimal rate, 
+				final String comment){
+			
+
+			mOldDistance = oldDistance;
+			mLocation = location; 
+			mDistance = distance; 
+			mDate = date; 
+			mTimezone = timezone; 
+			mRate = rate; 
+			mComment = comment;
+
+		}
+		
+		@Override
+		protected DistanceRow doInBackground(Void... params) {
+			return updateDistanceHelper(mOldDistance, mLocation, mDistance, mDate, mTimezone, mRate, mComment);
+		}
+		
+		@Override
+		protected void onPostExecute(DistanceRow result) {
+			if (mDistanceRowListener == null)
+				return;
+			
+			if (result == null)
+				mDistanceRowListener.onDistanceRowUpdateFailure();
+			else
+				mDistanceRowListener.onDistanceRowUpdateSuccess(result);
+		}
+		
+	}
+	
+	public boolean deleteDistanceSerial(DistanceRow distance) {
+		return deleteDistanceHelper(distance);
+	}
+	
+	public void deleteDistanceParallel(DistanceRow distance) {
+		if (mDistanceRowListener == null) {
+			if (BuildConfig.DEBUG) {
+				Log.d(TAG, "No DistanceRowListener was registered.");
+			}
+		}
+
+		new DeleteDistanceWorker().execute(distance);
+	}
+	
+	private boolean deleteDistanceHelper(DistanceRow distance) {
+		int result = -1;
+		synchronized (mDatabaseLock) {
+			SQLiteDatabase db = null;
+			db = this.getWritableDatabase();
+			try {
+				result = db.delete(DistanceTable.TABLE_NAME, 
+						DistanceTable.COLUMN_ID + " = ?", 
+						new String[] { String.valueOf(distance.getId()) });
+			} catch (Exception e){
+				return false;
+			}
+		}
+		
+		return result > 0;
+	}
+	
+	private class DeleteDistanceWorker extends AsyncTask<DistanceRow, Void, Boolean>{
+
+		private DistanceRow mDistanceRow;
+		
+		@Override
+		protected Boolean doInBackground(DistanceRow... params) {
+			if(params.length < 1)
+				return false;
+			
+			mDistanceRow = params[0];
+			return deleteDistanceHelper(mDistanceRow);
+		}
+		
+		@Override
+		protected void onPostExecute(Boolean result) {
+			if(mDistanceRowListener == null)
+				return;
+			
+			if(result)
+				mDistanceRowListener.onDistanceDeleteSuccess(mDistanceRow);
+			else
+				mDistanceRowListener.onDistanceDeleteFailure();
+		}
+		
+	}
+	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	//	ReceiptRow Methods
 	////////////////////////////////////////////////////////////////////////////////////////////////////

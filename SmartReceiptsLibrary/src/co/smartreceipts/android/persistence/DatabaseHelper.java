@@ -175,7 +175,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper implements AutoComple
 	}
 	private static final class DistanceTable {
 		private DistanceTable() {}
-		public static final String TABLE_NAME = "mileage";
+		public static final String TABLE_NAME = "distance";
 		public static final String COLUMN_ID = "id"; 
 		public static final String COLUMN_PARENT = "parent"; 
 		public static final String COLUMN_DISTANCE = "distance"; 
@@ -484,7 +484,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper implements AutoComple
 				db.execSQL(alterTrips1);
 				db.execSQL(alterTrips2);
 			}
-			if (oldVersion <= 11) { //Added trips filters and mileage table
+			if (oldVersion <= 11) { //Added trips filters and distance table
 				final String alterTrips = "ALTER TABLE " + TripsTable.TABLE_NAME + " ADD " + TripsTable.COLUMN_FILTERS + " TEXT";
 				if (BuildConfig.DEBUG) {
 					Log.d(TAG, alterTrips);

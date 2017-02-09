@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.support.annotation.VisibleForTesting;
 import android.text.TextUtils;
 import android.util.TypedValue;
 
@@ -42,7 +43,7 @@ public class Preferences implements OnSharedPreferenceChangeListener {
     // Output Preferences
     private String mUserID;
     private File mSignaturePhoto;
-    private boolean mIncludeCSVHeaders, mIncludeIDNotIndex, mIncludeCommentByReceiptPhoto, mOptimizePDFSpace, mShowSignature;
+    private boolean mIncludeCSVHeaders, mIncludeIDNotIndex, mIncludeCommentByReceiptPhoto, mOptimizePDFSpace, mShowSignature, mReceiptsLandscapeMode;
 
     // Email Preferences
     private String mEmailTo, mEmailCC, mEmailBCC, mEmailSubject;
@@ -71,6 +72,7 @@ public class Preferences implements OnSharedPreferenceChangeListener {
     private final Flex mFlex;
     private final StorageManager mStorageManager;
     private final File mPreferenceFolder;
+
 
     public interface VersionUpgradeListener {
         public void onVersionUpgrade(int oldVersion, int newVersion);
@@ -169,6 +171,10 @@ public class Preferences implements OnSharedPreferenceChangeListener {
 
     private void initUserID(SharedPreferences prefs) {
         this.mUserID = prefs.getString(mContext.getString(R.string.pref_output_username_key), "");
+    }
+
+    private void initReceiptsLandscapeMode(SharedPreferences prefs) {
+        this.mReceiptsLandscapeMode = prefs.getBoolean(mContext.getString(R.string.pref_output_receipts_landscape_key), mContext.getResources().getBoolean(R.bool.pref_output_receipts_landscape_defaultValue));
     }
 
     private void initIncludeCSVHeaders(SharedPreferences prefs) {
@@ -271,7 +277,8 @@ public class Preferences implements OnSharedPreferenceChangeListener {
         this.mAutoBackupOnWifiOnly = prefs.getBoolean(mContext.getString(R.string.pref_no_category_auto_backup_wifi_only_key), mContext.getResources().getBoolean(R.bool.pref_no_category_auto_backup_wifi_only_defaultValue));
     }
 
-    Preferences(Context context, Flex flex, StorageManager storageManager) {
+    @VisibleForTesting
+    public Preferences(Context context, Flex flex, StorageManager storageManager) {
         this.mContext = context;
         this.mFlex = flex;
         this.mStorageManager = storageManager;
@@ -307,6 +314,7 @@ public class Preferences implements OnSharedPreferenceChangeListener {
 
         // Output Preferences
         this.initUserID(prefs);
+        this.initReceiptsLandscapeMode(prefs);
         this.initIncludeCSVHeaders(prefs);
         this.initIncludeReceiptIdNotIndex(prefs);
         this.initIncludeCommentByReceiptPhoto(prefs);
@@ -468,6 +476,10 @@ public class Preferences implements OnSharedPreferenceChangeListener {
 
     public boolean defaultToFirstReportDate() {
         return mDefaultToFirstReportDate;
+    }
+
+    public boolean isReceiptsTableLandscapeMode() {
+        return mReceiptsLandscapeMode;
     }
 
     public boolean includeCSVHeaders() {

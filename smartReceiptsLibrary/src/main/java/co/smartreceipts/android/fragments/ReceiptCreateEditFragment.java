@@ -33,7 +33,7 @@ import java.util.Collections;
 import java.util.List;
 
 import co.smartreceipts.android.R;
-import co.smartreceipts.android.activities.DefaultFragmentProvider;
+import co.smartreceipts.android.activities.FragmentProvider;
 import co.smartreceipts.android.activities.NavigationHandler;
 import co.smartreceipts.android.activities.SmartReceiptsActivity;
 import co.smartreceipts.android.adapters.TaxAutoCompleteAdapter;
@@ -48,6 +48,7 @@ import co.smartreceipts.android.model.Trip;
 import co.smartreceipts.android.model.factory.ExchangeRateBuilderFactory;
 import co.smartreceipts.android.model.factory.ReceiptBuilderFactory;
 import co.smartreceipts.android.model.gson.ExchangeRate;
+import co.smartreceipts.android.ocr.info.tooltip.OcrInformationalTooltipFragment;
 import co.smartreceipts.android.persistence.DatabaseHelper;
 import co.smartreceipts.android.persistence.Preferences;
 import co.smartreceipts.android.persistence.database.controllers.TableEventsListener;
@@ -153,7 +154,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements View.OnFocu
         mReceipt = getArguments().getParcelable(Receipt.PARCEL_KEY);
         mFile = (File) getArguments().getSerializable(ARG_FILE);
         mReceiptInputCache = new ReceiptInputCache(getFragmentManager());
-        mNavigationHandler = new NavigationHandler(getActivity(), new DefaultFragmentProvider());
+        mNavigationHandler = new NavigationHandler(getActivity(), new FragmentProvider());
         mExchangeRateServiceManager = new ExchangeRateServiceManager(getFragmentManager());
         mCurrenciesAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, getPersistenceManager().getDatabase().getCurrenciesList());
         mCategoriesList = Collections.emptyList();
@@ -171,6 +172,13 @@ public class ReceiptCreateEditFragment extends WBFragment implements View.OnFocu
     @Override
     public void onViewCreated(View rootView, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(rootView, savedInstanceState);
+
+        if (savedInstanceState == null) {
+            if (mReceipt == null) {
+                getChildFragmentManager().beginTransaction().replace(R.id.update_receipt_tooltip, new OcrInformationalTooltipFragment()).commit();
+            }
+        }
+
         this.nameBox = (AutoCompleteTextView) getFlex().getSubView(getActivity(), rootView, R.id.DIALOG_RECEIPTMENU_NAME);
         this.priceBox = (EditText) getFlex().getSubView(getActivity(), rootView, R.id.DIALOG_RECEIPTMENU_PRICE);
         this.taxBox = (AutoCompleteTextView) getFlex().getSubView(getActivity(), rootView, R.id.DIALOG_RECEIPTMENU_TAX);
@@ -509,6 +517,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements View.OnFocu
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             mNavigationHandler.navigateToReportInfoFragment(mTrip);
+            deleteReceiptFileIfUnused();
             return true;
         }
         if (item.getItemId() == R.id.action_save) {
@@ -598,10 +607,11 @@ public class ReceiptCreateEditFragment extends WBFragment implements View.OnFocu
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Logger.debug(this, "onSaveInstanceState");
         if (mExchangeRateContainer != null && outState != null) {
             outState.putBoolean(KEY_OUT_STATE_IS_EXCHANGE_RATE_VISIBLE, mExchangeRateContainer.getVisibility() == View.VISIBLE);
         }
-        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -724,6 +734,14 @@ public class ReceiptCreateEditFragment extends WBFragment implements View.OnFocu
         }
 
         mNavigationHandler.navigateToReportInfoFragment(mTrip);
+    }
+
+    private void deleteReceiptFileIfUnused() {
+        if (mReceipt == null && mFile != null) {
+            if (mFile.delete()) {
+                Logger.info(this, "Deleting receipt file as we're not saving it");
+            }
+        }
     }
 
     private class SpinnerSelectionListener implements AdapterView.OnItemSelectedListener {

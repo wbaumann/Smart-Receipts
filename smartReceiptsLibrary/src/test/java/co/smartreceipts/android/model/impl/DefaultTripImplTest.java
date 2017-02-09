@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RobolectricTestRunner;
 
 import java.io.File;
 import java.sql.Date;
@@ -18,9 +18,8 @@ import co.smartreceipts.android.DefaultObjects;
 import co.smartreceipts.android.model.Price;
 import co.smartreceipts.android.model.Source;
 import co.smartreceipts.android.model.Trip;
-import co.smartreceipts.android.model.WBCurrency;
+import co.smartreceipts.android.model.PriceCurrency;
 import co.smartreceipts.android.sync.model.SyncState;
-import co.smartreceipts.android.sync.model.impl.DefaultSyncState;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -32,7 +31,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 
-@RunWith(RobolectricGradleTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class DefaultTripImplTest {
 
     private static final String NAME = "TripName";
@@ -43,7 +42,7 @@ public class DefaultTripImplTest {
     private static final TimeZone END_TIMEZONE = TimeZone.getTimeZone(TimeZone.getAvailableIDs()[1]);
     private static final String COMMENT = "Comment";
     private static final String COST_CENTER = "Cost Center";
-    private static final WBCurrency CURRENCY = WBCurrency.getInstance("USD");
+    private static final PriceCurrency CURRENCY = PriceCurrency.getInstance("USD");
 
     // Class under test
     DefaultTripImpl mTrip;
@@ -168,7 +167,7 @@ public class DefaultTripImplTest {
         assertThat(mTrip, not(equalTo(new DefaultTripImpl(DIRECTORY, START_DATE, TimeZone.getTimeZone(TimeZone.getAvailableIDs()[2]), END_DATE, END_TIMEZONE, CURRENCY, COMMENT, COST_CENTER, Source.Undefined, mSyncState))));
         assertThat(mTrip, not(equalTo(new DefaultTripImpl(DIRECTORY, START_DATE, START_TIMEZONE, new Date(System.currentTimeMillis()), END_TIMEZONE, CURRENCY, COMMENT, COST_CENTER, Source.Undefined, mSyncState))));
         assertThat(mTrip, not(equalTo(new DefaultTripImpl(DIRECTORY, START_DATE, START_TIMEZONE, END_DATE, TimeZone.getTimeZone(TimeZone.getAvailableIDs()[2]), CURRENCY, COMMENT, COST_CENTER, Source.Undefined, mSyncState))));
-        assertThat(mTrip, not(equalTo(new DefaultTripImpl(DIRECTORY, START_DATE, START_TIMEZONE, END_DATE, END_TIMEZONE, WBCurrency.MISSING_CURRENCY, COMMENT, COST_CENTER, Source.Undefined, mSyncState))));
+        assertThat(mTrip, not(equalTo(new DefaultTripImpl(DIRECTORY, START_DATE, START_TIMEZONE, END_DATE, END_TIMEZONE, PriceCurrency.getInstance("EUR"), COMMENT, COST_CENTER, Source.Undefined, mSyncState))));
         assertThat(mTrip, not(equalTo(new DefaultTripImpl(DIRECTORY, START_DATE, START_TIMEZONE, END_DATE, END_TIMEZONE, CURRENCY, "bad", COST_CENTER, Source.Undefined, mSyncState))));
         assertThat(mTrip, not(equalTo(new DefaultTripImpl(DIRECTORY, START_DATE, START_TIMEZONE, END_DATE, END_TIMEZONE, CURRENCY, COMMENT, "bad", Source.Undefined, mSyncState))));
 

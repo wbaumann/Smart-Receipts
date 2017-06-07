@@ -2,6 +2,8 @@ package co.smartreceipts.android.ocr.apis.model;
 
 import android.support.annotation.Nullable;
 
+import com.google.gson.Gson;
+
 public class RecognitionResponse {
 
     private Recognition recognition;
@@ -54,5 +56,10 @@ public class RecognitionResponse {
         public OcrResponse getRecognitionData() {
             return recognition_data;
         }
+    }
+
+    @Override
+    public String toString() {
+        return new Gson().toJson(this);
     }
 }

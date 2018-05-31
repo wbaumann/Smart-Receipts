@@ -96,6 +96,15 @@ public class UserPreferenceManager {
                                 context.getResources().getValue(userPreference.getDefaultValue(), typedValue, true);
                                 preferences.get().edit().putFloat(preferenceName, typedValue.getFloat()).apply();
                                 Logger.debug(UserPreferenceManager.this, "Assigned default float value for {} as {}", preferenceName, typedValue.getFloat());
+                            } else if (UserPreference.ReportOutput.PreferredReportLanguage.equals(userPreference)) {
+                                final Locale currentLocale = context.getResources().getConfiguration().locale;
+                                final String[] supportedLanguages = context.getResources().getStringArray(R.array.pref_output_preferred_language_entryValues);
+                                for (String supportedLanguage : supportedLanguages) {
+                                    if (currentLocale.getLanguage().equals(supportedLanguage)) {
+                                        preferences.edit().putString(preferenceName, currentLocale.getLanguage()).apply();
+                                        break;
+                                    }
+                                }
                             }
                         }
                     }

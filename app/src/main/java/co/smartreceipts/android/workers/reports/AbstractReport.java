@@ -36,8 +36,9 @@ public abstract class AbstractReport implements Report {
     }
 
     @NonNull
-    protected final Context getContext() {
-        return context;
+    protected final Context getLocalizedContext() {
+        // TODO: 03.06.2018
+        return new ReportResourcesManager(context, userPreferenceManager).getLocalizedContext();
     }
 
     @NonNull

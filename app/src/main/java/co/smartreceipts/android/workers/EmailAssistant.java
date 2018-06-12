@@ -50,6 +50,7 @@ import co.smartreceipts.android.utils.IntentUtils;
 import co.smartreceipts.android.utils.log.Logger;
 import co.smartreceipts.android.workers.reports.Report;
 import co.smartreceipts.android.workers.reports.ReportGenerationException;
+import co.smartreceipts.android.workers.reports.ReportResourcesManager;
 import co.smartreceipts.android.workers.reports.csv.CsvReportWriter;
 import co.smartreceipts.android.workers.reports.csv.CsvTableGenerator;
 import co.smartreceipts.android.workers.reports.formatting.SmartReceiptsFormattableString;
@@ -261,8 +262,11 @@ public class EmailAssistant {
 
             Logger.info(this, "Generating the following report types {}.", mOptions);
 
+            // TODO: 07.06.2018 inject
+            ReportResourcesManager reportResourcesManager = new ReportResourcesManager(context, mPreferenceManager);
+
             if (mOptions.contains(EmailOptions.PDF_FULL)) {
-                final Report pdfFullReport = new PdfBoxFullPdfReport(context, mDB,
+                final Report pdfFullReport = new PdfBoxFullPdfReport(reportResourcesManager, mDB,
                         persistenceManager.getPreferenceManager(), persistenceManager.getStorageManager(),
                         flex, purchaseWallet);
                 try {
@@ -310,7 +314,7 @@ public class EmailAssistant {
                             Collections.reverse(distances); // Reverse the list, so we print the most recent one first
 
                             // CSVs cannot print special characters
-                            final ColumnDefinitions<Distance> distanceColumnDefinitions = new DistanceColumnDefinitions(context, mDB, mPreferenceManager, flex, true);
+                            final ColumnDefinitions<Distance> distanceColumnDefinitions = new DistanceColumnDefinitions(reportResourcesManager, mPreferenceManager, flex, true);
                             final List<Column<Distance>> distanceColumns = distanceColumnDefinitions.getAllColumns();
                             data += "\n\n";
                             data += new CsvTableGenerator<>(distanceColumns, true, true).generate(distances);
@@ -324,7 +328,9 @@ public class EmailAssistant {
                                 .toList()
                                 .blockingGet();
 
-                        final List<Column<SumCategoryGroupingResult>> categoryColumns = new CategoryColumnDefinitions(context)
+                        // TODO: 04.06.2018 check CSV generation.
+                        final List<Column<SumCategoryGroupingResult>> categoryColumns = new CategoryColumnDefinitions(reportResourcesManager)
+//                        final List<Column<SumCategoryGroupingResult>> categoryColumns = new CategoryColumnDefinitions(new ReportResourcesManager(context, mPreferenceManager))
                                 .getAllColumns();
 
                         data += "\n\n";

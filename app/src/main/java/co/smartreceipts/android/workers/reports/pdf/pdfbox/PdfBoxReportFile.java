@@ -30,15 +30,15 @@ public class PdfBoxReportFile implements PdfReportFile, PdfBoxSectionFactory {
     private final List<PdfBoxSection> sections;
 
 
-    public PdfBoxReportFile(@NonNull Context androidContext, @NonNull UserPreferenceManager preferences) throws IOException {
+    public PdfBoxReportFile(@NonNull Context localizedAndroidContext, @NonNull UserPreferenceManager preferences) throws IOException {
         pdDocument = new PDDocument();
         sections = new ArrayList<>();
 
         final PdfColorManager colorManager = new PdfColorManager();
-        final PdfFontManager fontManager = new PdfFontManager(androidContext, pdDocument);
+        final PdfFontManager fontManager = new PdfFontManager(localizedAndroidContext, pdDocument);
         fontManager.initialize();
 
-        pdfBoxContext = new DefaultPdfBoxContext(androidContext, fontManager, colorManager, preferences);
+        pdfBoxContext = new DefaultPdfBoxContext(localizedAndroidContext, fontManager, colorManager, preferences);
     }
 
 

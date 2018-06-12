@@ -45,7 +45,7 @@ public abstract class PdfBoxAbstractReport extends AbstractReport {
 
             pdfStream = getStorageManager().getFOS(trip.getDirectory(), outputFileName);
 
-            PdfBoxReportFile pdfBoxReportFile = new PdfBoxReportFile(getContext(), getPreferences());
+            PdfBoxReportFile pdfBoxReportFile = new PdfBoxReportFile(getLocalizedContext(), getPreferences());
 
             createSections(trip, pdfBoxReportFile);
 

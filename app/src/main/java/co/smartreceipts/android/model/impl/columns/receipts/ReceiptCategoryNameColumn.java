@@ -11,12 +11,12 @@ import co.smartreceipts.android.sync.model.SyncState;
  */
 public final class ReceiptCategoryNameColumn extends AbstractColumnImpl<Receipt> {
 
-    public ReceiptCategoryNameColumn(int id, @NonNull String name, @NonNull SyncState syncState) {
-        super(id, name, syncState);
+    public ReceiptCategoryNameColumn(int id, @NonNull SyncState syncState) {
+        super(id, ReceiptColumnDefinitions.ActualDefinition.CATEGORY_NAME, syncState);
     }
 
-    public ReceiptCategoryNameColumn(int id, @NonNull String name, @NonNull SyncState syncState, long customOrderId) {
-        super(id, name, syncState, customOrderId);
+    public ReceiptCategoryNameColumn(int id, @NonNull SyncState syncState, long customOrderId) {
+        super(id, ReceiptColumnDefinitions.ActualDefinition.CATEGORY_NAME, syncState, customOrderId);
     }
 
     @Override

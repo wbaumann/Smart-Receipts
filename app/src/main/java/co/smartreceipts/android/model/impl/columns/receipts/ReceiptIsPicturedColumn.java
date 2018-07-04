@@ -13,22 +13,22 @@ import co.smartreceipts.android.sync.model.SyncState;
  */
 public final class ReceiptIsPicturedColumn extends AbstractColumnImpl<Receipt> {
 
-    private final Context mContext;
+    private final Context localizedContext;
 
-    public ReceiptIsPicturedColumn(int id, @NonNull String name, @NonNull SyncState syncState,
-                                   @NonNull Context context, long customOrderId) {
-        super(id, name, syncState, customOrderId);
-        mContext = context;
+    public ReceiptIsPicturedColumn(int id, @NonNull SyncState syncState,
+                                   @NonNull Context localizedContext, long customOrderId) {
+        super(id, ReceiptColumnDefinitions.ActualDefinition.PICTURED, syncState, customOrderId);
+        this.localizedContext = localizedContext;
     }
 
     @Override
     public String getValue(@NonNull Receipt receipt) {
         if (receipt.hasImage()) {
-            return mContext.getString(R.string.yes);
+            return localizedContext.getString(R.string.yes);
         } else if (receipt.hasPDF()) {
-            return mContext.getString(R.string.yes_as_pdf);
+            return localizedContext.getString(R.string.yes_as_pdf);
         } else {
-            return mContext.getString(R.string.no);
+            return localizedContext.getString(R.string.no);
         }
     }
 }

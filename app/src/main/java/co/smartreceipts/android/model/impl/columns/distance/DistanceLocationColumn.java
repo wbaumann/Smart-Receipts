@@ -12,11 +12,11 @@ import co.smartreceipts.android.sync.model.SyncState;
 
 public final class DistanceLocationColumn extends AbstractColumnImpl<Distance> {
 
-    private final Context mContext;
+    private final Context localizedContext;
 
-    public DistanceLocationColumn(int id, @NonNull String name, @NonNull SyncState syncState, @NonNull Context context) {
-        super(id, name, syncState);
-        mContext = context;
+    public DistanceLocationColumn(int id, @NonNull SyncState syncState, @NonNull Context context) {
+        super(id, DistanceColumnDefinitions.ActualDefinition.LOCATION, syncState);
+        localizedContext = context;
     }
 
     @Override
@@ -27,6 +27,6 @@ public final class DistanceLocationColumn extends AbstractColumnImpl<Distance> {
     @Override
     @NonNull
     public String getFooter(@NonNull List<Distance> distances) {
-        return mContext.getString(R.string.total);
+        return localizedContext.getString(R.string.total);
     }
 }

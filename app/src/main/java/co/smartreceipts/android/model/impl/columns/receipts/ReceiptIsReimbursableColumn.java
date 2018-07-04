@@ -13,16 +13,16 @@ import co.smartreceipts.android.sync.model.SyncState;
  */
 public final class ReceiptIsReimbursableColumn extends AbstractColumnImpl<Receipt> {
 
-    private final Context mContext;
+    private final Context localizedContext;
 
-    public ReceiptIsReimbursableColumn(int id, @NonNull String name, @NonNull SyncState syncState,
-                                       @NonNull Context context, long customOrderId) {
-        super(id, name, syncState, customOrderId);
-        mContext = context;
+    public ReceiptIsReimbursableColumn(int id, @NonNull SyncState syncState,
+                                       @NonNull Context localizedContext, long customOrderId) {
+        super(id, ReceiptColumnDefinitions.ActualDefinition.REIMBURSABLE, syncState, customOrderId);
+        this.localizedContext = localizedContext;
     }
 
     @Override
     public String getValue(@NonNull Receipt receipt) {
-        return (receipt.isReimbursable()) ? mContext.getString(R.string.yes) : mContext.getString(R.string.no);
+        return (receipt.isReimbursable()) ? localizedContext.getString(R.string.yes) : localizedContext.getString(R.string.no);
     }
 }

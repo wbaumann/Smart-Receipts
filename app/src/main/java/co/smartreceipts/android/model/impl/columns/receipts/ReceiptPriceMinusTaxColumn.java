@@ -23,20 +23,10 @@ public final class ReceiptPriceMinusTaxColumn extends AbstractColumnImpl<Receipt
 
     private final UserPreferenceManager userPreferenceManager;
 
-    public ReceiptPriceMinusTaxColumn(int id,
-                                      @NonNull String name,
-                                      @NonNull SyncState syncState,
-                                      @NonNull UserPreferenceManager userPreferenceManager) {
-        super(id, name, syncState);
-        this.userPreferenceManager = Preconditions.checkNotNull(userPreferenceManager);
-    }
-
-    public ReceiptPriceMinusTaxColumn(int id,
-                                      @NonNull String name,
-                                      @NonNull SyncState syncState,
+    public ReceiptPriceMinusTaxColumn(int id, @NonNull SyncState syncState,
                                       @NonNull UserPreferenceManager userPreferenceManager,
                                       long customOrderId) {
-        super(id, name, syncState, customOrderId);
+        super(id, ReceiptColumnDefinitions.ActualDefinition.PRICE_MINUS_TAX, syncState, customOrderId);
         this.userPreferenceManager = Preconditions.checkNotNull(userPreferenceManager);
     }
 

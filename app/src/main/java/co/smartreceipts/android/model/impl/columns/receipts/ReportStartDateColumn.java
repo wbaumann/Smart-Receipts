@@ -16,19 +16,19 @@ import co.smartreceipts.android.sync.model.SyncState;
  */
 public final class ReportStartDateColumn extends AbstractColumnImpl<Receipt> {
 
-    private final Context mContext;
-    private final UserPreferenceManager mPreferences;
+    private final Context localizedContext;
+    private final UserPreferenceManager preferences;
 
-    public ReportStartDateColumn(int id, @NonNull String name, @NonNull SyncState syncState, @NonNull Context context,
+    public ReportStartDateColumn(int id, @NonNull SyncState syncState, @NonNull Context localizedContext,
                                  @NonNull UserPreferenceManager preferences, long customOrderId) {
-        super(id, name, syncState, customOrderId);
-        mContext = context;
-        mPreferences = preferences;
+        super(id, ReceiptColumnDefinitions.ActualDefinition.REPORT_START_DATE, syncState, customOrderId);
+        this.localizedContext = localizedContext;
+        this.preferences = preferences;
     }
 
     @Override
     public String getValue(@NonNull Receipt receipt) {
-        return receipt.getTrip().getFormattedStartDate(mContext, mPreferences.get(UserPreference.General.DateSeparator));
+        return receipt.getTrip().getFormattedStartDate(localizedContext, preferences.get(UserPreference.General.DateSeparator));
     }
 
     @NonNull

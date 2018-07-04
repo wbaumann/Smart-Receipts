@@ -12,8 +12,8 @@ import co.smartreceipts.android.sync.model.SyncState;
 
 public final class DistanceDistanceColumn extends AbstractColumnImpl<Distance> {
 
-    public DistanceDistanceColumn(int id, @NonNull String name, @NonNull SyncState syncState) {
-        super(id, name, syncState);
+    public DistanceDistanceColumn(int id, @NonNull SyncState syncState) {
+        super(id, DistanceColumnDefinitions.ActualDefinition.DISTANCE, syncState);
     }
 
     @Override

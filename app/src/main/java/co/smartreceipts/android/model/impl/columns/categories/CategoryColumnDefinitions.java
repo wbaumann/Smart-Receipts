@@ -1,6 +1,5 @@
 package co.smartreceipts.android.model.impl.columns.categories;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 
@@ -13,92 +12,98 @@ import co.smartreceipts.android.model.Column;
 import co.smartreceipts.android.model.ColumnDefinitions;
 import co.smartreceipts.android.model.comparators.ColumnNameComparator;
 import co.smartreceipts.android.model.impl.columns.AbstractColumnImpl;
-import co.smartreceipts.android.model.impl.columns.BlankColumn;
+import co.smartreceipts.android.model.ActualColumnDefinition;
 import co.smartreceipts.android.persistence.database.controllers.grouping.results.SumCategoryGroupingResult;
 import co.smartreceipts.android.sync.model.SyncState;
 import co.smartreceipts.android.sync.model.impl.DefaultSyncState;
+import co.smartreceipts.android.workers.reports.ReportResourcesManager;
 
 public class CategoryColumnDefinitions implements ColumnDefinitions<SumCategoryGroupingResult> {
 
-    private enum ActualDefinition {
-        NAME(R.string.category_name_field),
-        CODE(R.string.category_code_field),
-        PRICE(R.string.category_price_field),
-        TAX(R.string.category_tax_field),
-        CURRENCY(R.string.category_currency_field);
+    /**
+     * Note: Column types must be unique
+     * Column type must be >= 0
+     */
+    enum ActualDefinition implements ActualColumnDefinition {
+        NAME(1, R.string.category_name_field),
+        CODE(2, R.string.category_code_field),
+        PRICE(3, R.string.category_price_field),
+        TAX(4, R.string.category_tax_field),
+        CURRENCY(5, R.string.category_currency_field);
 
+        private final int columnType;
         private final int stringResId;
 
-        ActualDefinition(int stringResId) {
+        ActualDefinition(int columnType, int stringResId) {
+            this.columnType = columnType;
             this.stringResId = stringResId;
         }
 
-        @StringRes
-        public final int getStringResId() {
-            return stringResId;
+        @Override
+        public int getColumnType() {
+            return columnType;
         }
 
+        @Override
+        @StringRes
+        public int getColumnHeaderId() {
+            return stringResId;
+        }
     }
 
     private final ActualDefinition[] actualDefinitions;
-    private final Context context;
+    private final ReportResourcesManager reportResourcesManager;
 
-
-    public CategoryColumnDefinitions(Context context) {
-        this.context = context;
+    public CategoryColumnDefinitions(@NonNull ReportResourcesManager reportResourcesManager) {
         this.actualDefinitions = ActualDefinition.values();
+        this.reportResourcesManager = reportResourcesManager;
     }
 
+    @NonNull
     @Override
-    public Column<SumCategoryGroupingResult> getColumn(int id, @NonNull String definitionName,
-                                                       @NonNull SyncState syncState, long ignoredCustomOrderId) {
-        for (int i = 0; i < actualDefinitions.length; i++) {
-            final ActualDefinition definition = actualDefinitions[i];
-            if (definitionName.equals(context.getString(definition.getStringResId()))) {
-                return getColumnFromClass(id, definition, definitionName, syncState);
+    public Column<SumCategoryGroupingResult> getColumn(int id, int columnType, @NonNull SyncState syncState, long ignoredCustomOrderId) {
+        for (final ActualDefinition definition : actualDefinitions) {
+
+            if (columnType == definition.columnType) {
+                return getColumnFromClass(id, definition, syncState);
             }
         }
-        return null;
+        throw new IllegalArgumentException("Unknown column type: " + columnType);
     }
 
     @NonNull
     @Override
     public List<Column<SumCategoryGroupingResult>> getAllColumns() {
         final ArrayList<AbstractColumnImpl<SumCategoryGroupingResult>> columns = new ArrayList<>(actualDefinitions.length);
-        for (int i = 0; i < actualDefinitions.length; i++) {
-            final ActualDefinition definition = actualDefinitions[i];
-
+        for (final ActualDefinition definition : actualDefinitions) {
             final AbstractColumnImpl<SumCategoryGroupingResult> column =
-                    getColumnFromClass(Column.UNKNOWN_ID, definition,
-                            context.getString(definition.getStringResId()), new DefaultSyncState());
+                    getColumnFromClass(Column.UNKNOWN_ID, definition, new DefaultSyncState());
 
-            if (column != null) {
-                columns.add(column);
-            }
+            columns.add(column);
         }
-        Collections.sort(columns, new ColumnNameComparator<AbstractColumnImpl<SumCategoryGroupingResult>>());
-        return new ArrayList<Column<SumCategoryGroupingResult>>(columns);
+        Collections.sort(columns, new ColumnNameComparator<>(reportResourcesManager));
+        return new ArrayList<>(columns);
     }
 
     @NonNull
     @Override
     public Column<SumCategoryGroupingResult> getDefaultInsertColumn() {
-        return new BlankColumn<>(Column.UNKNOWN_ID, context.getString(R.string.column_item_blank), new DefaultSyncState());
+        return getColumnFromClass(Column.UNKNOWN_ID, ActualDefinition.NAME, new DefaultSyncState());
     }
 
 
-    private AbstractColumnImpl<SumCategoryGroupingResult> getColumnFromClass(int id, @NonNull ActualDefinition definition, @NonNull String definitionName, @NonNull SyncState syncState) {
+    private AbstractColumnImpl<SumCategoryGroupingResult> getColumnFromClass(int id, @NonNull ActualDefinition definition, @NonNull SyncState syncState) {
         switch (definition) {
             case NAME:
-                return new CategoryNameColumn(id, definitionName, syncState);
+                return new CategoryNameColumn(id, syncState);
             case CODE:
-                return new CategoryCodeColumn(id, definitionName, syncState);
+                return new CategoryCodeColumn(id, syncState);
             case PRICE:
-                return new CategoryPriceColumn(id, definitionName, syncState);
+                return new CategoryPriceColumn(id, syncState);
             case TAX:
-                return new CategoryTaxColumn(id, definitionName, syncState);
+                return new CategoryTaxColumn(id, syncState);
             case CURRENCY:
-                return new CategoryCurrencyColumn(id, definitionName, syncState);
+                return new CategoryCurrencyColumn(id, syncState);
             default:
                 throw new IllegalArgumentException("Unknown definition type: " + definition);
         }

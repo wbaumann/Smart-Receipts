@@ -11,18 +11,19 @@ import co.smartreceipts.android.sync.model.SyncState;
 
 public final class DistanceDateColumn extends AbstractColumnImpl<Distance> {
 
-    private final Context mContext;
-    private final UserPreferenceManager mPreferences;
+    private final Context localizedContext;
+    private final UserPreferenceManager preferences;
 
-    public DistanceDateColumn(int id, @NonNull String name, @NonNull SyncState syncState, @NonNull Context context, @NonNull UserPreferenceManager preferences) {
-        super(id, name, syncState);
-        mContext = context;
-        mPreferences = preferences;
+    public DistanceDateColumn(int id, @NonNull SyncState syncState, @NonNull Context localizedContext,
+                              @NonNull UserPreferenceManager preferences) {
+        super(id, DistanceColumnDefinitions.ActualDefinition.DATE, syncState);
+        this.localizedContext = localizedContext;
+        this.preferences = preferences;
     }
 
     @Override
     public String getValue(@NonNull Distance distance) {
-        return distance.getFormattedDate(mContext, mPreferences.get(UserPreference.General.DateSeparator));
+        return distance.getFormattedDate(localizedContext, preferences.get(UserPreference.General.DateSeparator));
     }
 
 }

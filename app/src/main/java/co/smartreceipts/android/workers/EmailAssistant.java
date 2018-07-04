@@ -57,7 +57,6 @@ import co.smartreceipts.android.workers.reports.formatting.SmartReceiptsFormatta
 import co.smartreceipts.android.workers.reports.pdf.PdfBoxFullPdfReport;
 import co.smartreceipts.android.workers.reports.pdf.PdfBoxImagesOnlyReport;
 import co.smartreceipts.android.workers.reports.pdf.misc.TooManyColumnsException;
-import wb.android.flex.Flex;
 import wb.android.storage.StorageManager;
 
 //TODO: Redo this class... Really sloppy
@@ -84,8 +83,8 @@ public class EmailAssistant {
     }
 
     private final Context context;
+    private final ReportResourcesManager reportResourcesManager;
     private final NavigationHandler navigationHandler;
-    private final Flex flex;
     private final PersistenceManager persistenceManager;
     private final Trip trip;
     private final PurchaseWallet purchaseWallet;
@@ -122,11 +121,12 @@ public class EmailAssistant {
         return intent;
     }
 
-    public EmailAssistant(NavigationHandler navigationHandler, Context context, Flex flex,
+    public EmailAssistant(Context context, NavigationHandler navigationHandler,
+                          ReportResourcesManager reportResourcesManager,
                           PersistenceManager persistenceManager, Trip trip, PurchaseWallet purchaseWallet) {
-        this.navigationHandler = navigationHandler;
         this.context = context;
-        this.flex = flex;
+        this.navigationHandler = navigationHandler;
+        this.reportResourcesManager = reportResourcesManager;
         this.persistenceManager = persistenceManager;
         this.trip = trip;
         this.purchaseWallet = purchaseWallet;
@@ -174,7 +174,8 @@ public class EmailAssistant {
         emailIntent.putExtra(Intent.EXTRA_EMAIL, to);
         emailIntent.putExtra(Intent.EXTRA_CC, cc);
         emailIntent.putExtra(Intent.EXTRA_BCC, bcc);
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, new SmartReceiptsFormattableString(persistenceManager.getPreferenceManager().get(UserPreference.Email.Subject), context, trip, persistenceManager.getPreferenceManager()).toString());
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, new SmartReceiptsFormattableString(persistenceManager.getPreferenceManager().get(UserPreference.Email.Subject),
+                context, trip, persistenceManager.getPreferenceManager()).toString());
         emailIntent.putExtra(Intent.EXTRA_TEXT, body);
 
         Logger.debug(this, "Built the send intent {} with extras {}.", emailIntent, emailIntent.getExtras());
@@ -262,13 +263,10 @@ public class EmailAssistant {
 
             Logger.info(this, "Generating the following report types {}.", mOptions);
 
-            // TODO: 07.06.2018 inject
-            ReportResourcesManager reportResourcesManager = new ReportResourcesManager(context, mPreferenceManager);
-
             if (mOptions.contains(EmailOptions.PDF_FULL)) {
                 final Report pdfFullReport = new PdfBoxFullPdfReport(reportResourcesManager, mDB,
                         persistenceManager.getPreferenceManager(), persistenceManager.getStorageManager(),
-                        flex, purchaseWallet);
+                        purchaseWallet);
                 try {
                     mFiles[EmailOptions.PDF_FULL.getIndex()] = pdfFullReport.generate(trip);
                 } catch (ReportGenerationException e) {
@@ -280,9 +278,9 @@ public class EmailAssistant {
             }
 
             if (mOptions.contains(EmailOptions.PDF_IMAGES_ONLY)) {
-                final Report pdfimagesReport = new PdfBoxImagesOnlyReport(context, persistenceManager, flex);
+                final Report pdfImagesReport = new PdfBoxImagesOnlyReport(reportResourcesManager, persistenceManager);
                 try {
-                    mFiles[EmailOptions.PDF_IMAGES_ONLY.getIndex()] = pdfimagesReport.generate(trip);
+                    mFiles[EmailOptions.PDF_IMAGES_ONLY.getIndex()] = pdfImagesReport.generate(trip);
                 } catch (ReportGenerationException e) {
                     results.didPDFFailCompletely = true;
                 }
@@ -293,7 +291,8 @@ public class EmailAssistant {
                     mStorageManager.delete(dir, dir.getName() + ".csv");
 
                     final List<Column<Receipt>> csvColumns = mDB.getCSVTable().get().blockingGet();
-                    final CsvTableGenerator<Receipt> csvTableGenerator = new CsvTableGenerator<Receipt>(csvColumns, new LegacyReceiptFilter(mPreferenceManager), true, false);
+                    final CsvTableGenerator<Receipt> csvTableGenerator = new CsvTableGenerator<Receipt>(reportResourcesManager,
+                            csvColumns, true, false, new LegacyReceiptFilter(mPreferenceManager));
 
                     String data;
 
@@ -314,10 +313,11 @@ public class EmailAssistant {
                             Collections.reverse(distances); // Reverse the list, so we print the most recent one first
 
                             // CSVs cannot print special characters
-                            final ColumnDefinitions<Distance> distanceColumnDefinitions = new DistanceColumnDefinitions(reportResourcesManager, mPreferenceManager, flex, true);
+                            final ColumnDefinitions<Distance> distanceColumnDefinitions = new DistanceColumnDefinitions(reportResourcesManager, mPreferenceManager, true);
                             final List<Column<Distance>> distanceColumns = distanceColumnDefinitions.getAllColumns();
                             data += "\n\n";
-                            data += new CsvTableGenerator<>(distanceColumns, true, true).generate(distances);
+                            data += new CsvTableGenerator<>(reportResourcesManager, distanceColumns,
+                                    true, true).generate(distances);
                         }
                     }
 
@@ -328,13 +328,12 @@ public class EmailAssistant {
                                 .toList()
                                 .blockingGet();
 
-                        // TODO: 04.06.2018 check CSV generation.
                         final List<Column<SumCategoryGroupingResult>> categoryColumns = new CategoryColumnDefinitions(reportResourcesManager)
-//                        final List<Column<SumCategoryGroupingResult>> categoryColumns = new CategoryColumnDefinitions(new ReportResourcesManager(context, mPreferenceManager))
                                 .getAllColumns();
 
                         data += "\n\n";
-                        data += new CsvTableGenerator<>(categoryColumns, true, true).generate(sumCategoryGroupingResults);
+                        data += new CsvTableGenerator<>(reportResourcesManager, categoryColumns,
+                                true, true).generate(sumCategoryGroupingResults);
                     }
 
                     // Separated tables for each category
@@ -347,7 +346,9 @@ public class EmailAssistant {
                         for (CategoryGroupingResult groupingResult : groupingResults) {
                             data += "\n\n";
                             data += groupingResult.getCategory().getName() + "\n";
-                            data += new CsvTableGenerator<>(csvColumns, true, true).generate(groupingResult.getReceipts());
+                            data += new CsvTableGenerator<>(reportResourcesManager, csvColumns,
+                                    true, true)
+                                    .generate(groupingResult.getReceipts());
                         }
                     }
 
@@ -503,30 +504,30 @@ public class EmailAssistant {
                 canvas.drawText(trip.getFormattedStartDate(context, persistenceManager.getPreferenceManager().get(UserPreference.General.DateSeparator)) + " -- " + trip.getFormattedEndDate(context, persistenceManager.getPreferenceManager().get(UserPreference.General.DateSeparator)), xPad / 2, y, brush);
                 y += spacing;
                 y = background.getHeight() - yPad / 2 + spacing * 2;
-                canvas.drawText(flex.getString(context, R.string.RECEIPTMENU_FIELD_NAME) + ": " + receipt.getName(), xPad / 2, y, brush);
+                canvas.drawText(reportResourcesManager.getFlexString(R.string.RECEIPTMENU_FIELD_NAME) + ": " + receipt.getName(), xPad / 2, y, brush);
                 y += spacing;
-                canvas.drawText(flex.getString(context, R.string.RECEIPTMENU_FIELD_PRICE) + ": " + receipt.getPrice().getDecimalFormattedPrice() + " " + receipt.getPrice().getCurrencyCode(), xPad / 2, y, brush);
+                canvas.drawText(reportResourcesManager.getFlexString(R.string.RECEIPTMENU_FIELD_PRICE) + ": " + receipt.getPrice().getDecimalFormattedPrice() + " " + receipt.getPrice().getCurrencyCode(), xPad / 2, y, brush);
                 y += spacing;
                 if (mPreferenceManager.get(UserPreference.Receipts.IncludeTaxField)) {
-                    canvas.drawText(flex.getString(context, R.string.RECEIPTMENU_FIELD_TAX) + ": " + receipt.getTax().getDecimalFormattedPrice() + " " + receipt.getPrice().getCurrencyCode(), xPad / 2, y, brush);
+                    canvas.drawText(reportResourcesManager.getFlexString(R.string.RECEIPTMENU_FIELD_TAX) + ": " + receipt.getTax().getDecimalFormattedPrice() + " " + receipt.getPrice().getCurrencyCode(), xPad / 2, y, brush);
                     y += spacing;
                 }
-                canvas.drawText(flex.getString(context, R.string.RECEIPTMENU_FIELD_DATE) + ": " + receipt.getFormattedDate(context, persistenceManager.getPreferenceManager().get(UserPreference.General.DateSeparator)), xPad / 2, y, brush);
+                canvas.drawText(reportResourcesManager.getFlexString(R.string.RECEIPTMENU_FIELD_DATE) + ": " + receipt.getFormattedDate(context, persistenceManager.getPreferenceManager().get(UserPreference.General.DateSeparator)), xPad / 2, y, brush);
                 y += spacing;
-                canvas.drawText(flex.getString(context, R.string.RECEIPTMENU_FIELD_CATEGORY) + ": " + receipt.getCategory().getName(), xPad / 2, y, brush);
+                canvas.drawText(reportResourcesManager.getFlexString(R.string.RECEIPTMENU_FIELD_CATEGORY) + ": " + receipt.getCategory().getName(), xPad / 2, y, brush);
                 y += spacing;
-                canvas.drawText(flex.getString(context, R.string.RECEIPTMENU_FIELD_COMMENT) + ": " + receipt.getComment(), xPad / 2, y, brush);
+                canvas.drawText(reportResourcesManager.getFlexString(R.string.RECEIPTMENU_FIELD_COMMENT) + ": " + receipt.getComment(), xPad / 2, y, brush);
                 y += spacing;
                 if (receipt.hasExtraEditText1()) {
-                    canvas.drawText(flex.getString(context, R.string.RECEIPTMENU_FIELD_EXTRA_EDITTEXT_1) + ": " + receipt.getExtraEditText1(), xPad / 2, y, brush);
+                    canvas.drawText(reportResourcesManager.getFlexString(R.string.RECEIPTMENU_FIELD_EXTRA_EDITTEXT_1) + ": " + receipt.getExtraEditText1(), xPad / 2, y, brush);
                     y += spacing;
                 }
                 if (receipt.hasExtraEditText2()) {
-                    canvas.drawText(flex.getString(context, R.string.RECEIPTMENU_FIELD_EXTRA_EDITTEXT_2) + ": " + receipt.getExtraEditText2(), xPad / 2, y, brush);
+                    canvas.drawText(reportResourcesManager.getFlexString(R.string.RECEIPTMENU_FIELD_EXTRA_EDITTEXT_2) + ": " + receipt.getExtraEditText2(), xPad / 2, y, brush);
                     y += spacing;
                 }
                 if (receipt.hasExtraEditText3()) {
-                    canvas.drawText(flex.getString(context, R.string.RECEIPTMENU_FIELD_EXTRA_EDITTEXT_3) + ": " + receipt.getExtraEditText3(), xPad / 2, y, brush);
+                    canvas.drawText(reportResourcesManager.getFlexString(R.string.RECEIPTMENU_FIELD_EXTRA_EDITTEXT_3) + ": " + receipt.getExtraEditText3(), xPad / 2, y, brush);
                     y += spacing;
                 }
 

@@ -11,12 +11,12 @@ import co.smartreceipts.android.sync.model.SyncState;
  */
 public final class ReceiptPaymentMethodColumn extends AbstractColumnImpl<Receipt> {
 
-    public ReceiptPaymentMethodColumn(int id, @NonNull String name, @NonNull SyncState syncState, long customOrderId) {
-        super(id, name, syncState, customOrderId);
+    public ReceiptPaymentMethodColumn(int id, @NonNull SyncState syncState, long customOrderId) {
+        super(id, ReceiptColumnDefinitions.ActualDefinition.PAYMENT_METHOD, syncState, customOrderId);
     }
 
     @Override
     public String getValue(@NonNull Receipt receipt) {
-        return receipt.getPaymentMethod() != null ? receipt.getPaymentMethod().getMethod() : "";
+        return receipt.getPaymentMethod().getMethod();
     }
 }

@@ -17,18 +17,20 @@ import co.smartreceipts.android.sync.model.SyncState;
  */
 public final class ReceiptNetExchangedPricePlusTaxColumn extends AbstractExchangedPriceColumn {
 
-    private final UserPreferenceManager mPreferences;
+    private final UserPreferenceManager preferences;
 
-    public ReceiptNetExchangedPricePlusTaxColumn(int id, @NonNull String name, @NonNull SyncState syncState,
-                                                 @NonNull Context context, @NonNull UserPreferenceManager preferences, long customOrderId) {
-        super(id, name, syncState, context, customOrderId);
-        mPreferences = preferences;
+    public ReceiptNetExchangedPricePlusTaxColumn(int id, @NonNull SyncState syncState,
+                                                 @NonNull Context localizedContext,
+                                                 @NonNull UserPreferenceManager preferences,
+                                                 long customOrderId) {
+        super(id, ReceiptColumnDefinitions.ActualDefinition.PRICE_PLUS_TAX_EXCHANGED, syncState, localizedContext, customOrderId);
+        this.preferences = preferences;
     }
 
     @NonNull
     @Override
     protected Price getPrice(@NonNull Receipt receipt) {
-        if (mPreferences.get(UserPreference.Receipts.UsePreTaxPrice)) {
+        if (preferences.get(UserPreference.Receipts.UsePreTaxPrice)) {
             final PriceBuilderFactory factory = new PriceBuilderFactory();
             factory.setPrices(Arrays.asList(receipt.getPrice(), receipt.getTax()), receipt.getTrip().getTripCurrency());
             return factory.build();

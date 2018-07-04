@@ -14,25 +14,18 @@ import co.smartreceipts.android.sync.model.SyncState;
  */
 public final class ReceiptDateColumn extends AbstractColumnImpl<Receipt> {
 
-    private final Context mContext;
-    private final UserPreferenceManager mPreferences;
+    private final Context localizedContext;
+    private final UserPreferenceManager preferences;
 
-    public ReceiptDateColumn(int id, @NonNull String name, @NonNull SyncState syncState, @NonNull Context context,
-                             @NonNull UserPreferenceManager preferences) {
-        super(id, name, syncState);
-        mContext = context;
-        mPreferences = preferences;
-    }
-
-    public ReceiptDateColumn(int id, @NonNull String name, @NonNull SyncState syncState, @NonNull Context context,
+    public ReceiptDateColumn(int id, @NonNull SyncState syncState, @NonNull Context localizedContext,
                              @NonNull UserPreferenceManager preferences, long customOrderId) {
-        super(id, name, syncState, customOrderId);
-        mContext = context;
-        mPreferences = preferences;
+        super(id, ReceiptColumnDefinitions.ActualDefinition.DATE, syncState, customOrderId);
+        this.localizedContext = localizedContext;
+        this.preferences = preferences;
     }
 
     @Override
     public String getValue(@NonNull Receipt receipt) {
-        return receipt.getFormattedDate(mContext, mPreferences.get(UserPreference.General.DateSeparator));
+        return receipt.getFormattedDate(localizedContext, preferences.get(UserPreference.General.DateSeparator));
     }
 }

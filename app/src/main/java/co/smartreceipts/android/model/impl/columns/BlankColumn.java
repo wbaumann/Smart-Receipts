@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import java.util.List;
 
+import co.smartreceipts.android.model.impl.columns.receipts.ReceiptColumnDefinitions;
 import co.smartreceipts.android.sync.model.SyncState;
 
 /**
@@ -11,18 +12,12 @@ import co.smartreceipts.android.sync.model.SyncState;
  */
 public final class BlankColumn<T> extends AbstractColumnImpl<T> {
 
-    public BlankColumn(int id, @NonNull String name, @NonNull SyncState syncState) {
-        super(id, name, syncState);
+    public BlankColumn(int id, @NonNull SyncState syncState) {
+        super(id, ReceiptColumnDefinitions.ActualDefinition.BLANK, syncState);
     }
 
-    public BlankColumn(int id, @NonNull String name, @NonNull SyncState syncState, long customOrderId) {
-        super(id, name, syncState, customOrderId);
-    }
-
-    @NonNull
-    @Override
-    public String getHeader() {
-        return "";
+    public BlankColumn(int id, @NonNull SyncState syncState, long customOrderId) {
+        super(id, ReceiptColumnDefinitions.ActualDefinition.BLANK, syncState, customOrderId);
     }
 
     @Override

@@ -8,8 +8,8 @@ import co.smartreceipts.android.sync.model.SyncState;
 
 public final class DistanceCommentColumn extends AbstractColumnImpl<Distance> {
 
-    public DistanceCommentColumn(int id, @NonNull String name, @NonNull SyncState syncState) {
-        super(id, name, syncState);
+    public DistanceCommentColumn(int id, @NonNull SyncState syncState) {
+        super(id, DistanceColumnDefinitions.ActualDefinition.COMMENT, syncState);
     }
 
     @Override

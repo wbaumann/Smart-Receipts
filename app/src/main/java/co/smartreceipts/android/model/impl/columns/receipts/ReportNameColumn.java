@@ -13,8 +13,8 @@ import co.smartreceipts.android.sync.model.SyncState;
  */
 public final class ReportNameColumn extends AbstractColumnImpl<Receipt> {
 
-    public ReportNameColumn(int id, @NonNull String name, @NonNull SyncState syncState, long customOrderId) {
-        super(id, name, syncState, customOrderId);
+    public ReportNameColumn(int id, @NonNull SyncState syncState, long customOrderId) {
+        super(id, ReceiptColumnDefinitions.ActualDefinition.REPORT_NAME, syncState, customOrderId);
     }
 
     @Override

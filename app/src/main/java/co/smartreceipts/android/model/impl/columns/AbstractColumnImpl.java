@@ -2,9 +2,13 @@ package co.smartreceipts.android.model.impl.columns;
 
 import android.support.annotation.NonNull;
 
+import com.google.common.base.Preconditions;
+
 import java.util.List;
+import java.util.Objects;
 
 import co.smartreceipts.android.model.Column;
+import co.smartreceipts.android.model.ActualColumnDefinition;
 import co.smartreceipts.android.sync.model.SyncState;
 
 /**
@@ -12,43 +16,42 @@ import co.smartreceipts.android.sync.model.SyncState;
  */
 public abstract class AbstractColumnImpl<T> implements Column<T> {
 
-    private final int mId;
-    private final String mName;
-    private final SyncState mSyncState;
-    private final long mCustomOrderId;
+    private final int id;
+    private final ActualColumnDefinition columnDefinition;
+    private final SyncState syncState;
+    private final long customOrderId;
 
     @Deprecated
-    public AbstractColumnImpl(int id, @NonNull String name, @NonNull SyncState syncState) {
-        this(id, name, syncState, 0);
+    public AbstractColumnImpl(int id, @NonNull ActualColumnDefinition columnDefinition, @NonNull SyncState syncState) {
+        this(id, columnDefinition, syncState, 0);
     }
 
-    public AbstractColumnImpl(int id, @NonNull String name, @NonNull SyncState syncState, long customOrderId) {
-        mId = id;
-        mName = name;
-        mSyncState = syncState;
-        mCustomOrderId = customOrderId;
+    public AbstractColumnImpl(int id, @NonNull ActualColumnDefinition columnDefinition,
+                              @NonNull SyncState syncState, long customOrderId) {
+        this.id = id;
+        this.columnDefinition = Preconditions.checkNotNull(columnDefinition);
+        this.syncState = syncState;
+        this.customOrderId = customOrderId;
     }
 
     @Override
     public int getId() {
-        return mId;
+        return id;
     }
 
     @Override
     public long getCustomOrderId() {
-        return mCustomOrderId;
+        return customOrderId;
     }
 
     @Override
-    @NonNull
-    public final String getName() {
-        return mName;
+    public int getType() {
+        return columnDefinition.getColumnType();
     }
 
     @Override
-    @NonNull
-    public String getHeader() {
-        return getName();
+    public int getHeaderStringResId() {
+        return columnDefinition.getColumnHeaderId();
     }
 
     @Override
@@ -59,40 +62,28 @@ public abstract class AbstractColumnImpl<T> implements Column<T> {
 
     @Override
     public int compareTo(@NonNull Column otherColumn) {
-        return mCustomOrderId == otherColumn.getCustomOrderId() ? getId() - otherColumn.getId() :
-                Long.compare(mCustomOrderId, otherColumn.getCustomOrderId());
+        return customOrderId == otherColumn.getCustomOrderId() ? getId() - otherColumn.getId() :
+                Long.compare(customOrderId, otherColumn.getCustomOrderId());
     }
 
     @NonNull
     @Override
     public SyncState getSyncState() {
-        return mSyncState;
-    }
-
-    @Override
-    public String toString() {
-        return getName();
+        return syncState;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof AbstractColumnImpl)) return false;
-
-        AbstractColumnImpl that = (AbstractColumnImpl) o;
-
-        if (mId != that.mId) return false;
-        if (mCustomOrderId != that.mCustomOrderId) return false;
-        if (!mName.equals(that.mName)) return false;
-
-        return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AbstractColumnImpl<?> that = (AbstractColumnImpl<?>) o;
+        return id == that.id &&
+                customOrderId == that.customOrderId &&
+                Objects.equals(columnDefinition, that.columnDefinition);
     }
 
     @Override
     public int hashCode() {
-        int result = mId;
-        result = 31 * result + (int) (mCustomOrderId ^ (mCustomOrderId >>> 32));
-        result = 31 * result + mName.hashCode();
-        return result;
+        return Objects.hash(id, columnDefinition, customOrderId);
     }
 }

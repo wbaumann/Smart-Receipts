@@ -17,12 +17,8 @@ import co.smartreceipts.android.sync.model.SyncState;
  */
 public final class ReceiptPriceColumn extends AbstractColumnImpl<Receipt> {
 
-    public ReceiptPriceColumn(int id, @NonNull String name, @NonNull SyncState syncState) {
-        super(id, name, syncState);
-    }
-
-    public ReceiptPriceColumn(int id, @NonNull String name, @NonNull SyncState syncState, long customOrderId) {
-        super(id, name, syncState, customOrderId);
+    public ReceiptPriceColumn(int id, @NonNull SyncState syncState, long customOrderId) {
+        super(id, ReceiptColumnDefinitions.ActualDefinition.PRICE, syncState, customOrderId);
     }
 
     @Override

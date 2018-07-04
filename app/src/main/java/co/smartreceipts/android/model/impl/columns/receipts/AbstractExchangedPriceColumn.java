@@ -13,6 +13,7 @@ import co.smartreceipts.android.model.Receipt;
 import co.smartreceipts.android.model.factory.PriceBuilderFactory;
 import co.smartreceipts.android.model.gson.ExchangeRate;
 import co.smartreceipts.android.model.impl.columns.AbstractColumnImpl;
+import co.smartreceipts.android.model.ActualColumnDefinition;
 import co.smartreceipts.android.model.utils.ModelUtils;
 import co.smartreceipts.android.sync.model.SyncState;
 
@@ -21,12 +22,13 @@ import co.smartreceipts.android.sync.model.SyncState;
  */
 public abstract class AbstractExchangedPriceColumn extends AbstractColumnImpl<Receipt> {
 
-    private final Context mContext;
+    private final Context localizedContext;
 
-    public AbstractExchangedPriceColumn(int id, @NonNull String name, @NonNull SyncState syncState,
-                                        @NonNull Context context, long customOrderId) {
-        super(id, name, syncState, customOrderId);
-        mContext = context;
+    public AbstractExchangedPriceColumn(int id, @NonNull ActualColumnDefinition definition,
+                                        @NonNull SyncState syncState,
+                                        @NonNull Context localizedContext, long customOrderId) {
+        super(id, definition, syncState, customOrderId);
+        this.localizedContext = localizedContext;
     }
 
     @Override
@@ -37,7 +39,7 @@ public abstract class AbstractExchangedPriceColumn extends AbstractColumnImpl<Re
         if (exchangeRate.supportsExchangeRateFor(baseCurrency)) {
             return ModelUtils.getDecimalFormattedValue(price.getPrice().multiply(exchangeRate.getExchangeRate(baseCurrency)));
         } else {
-            return mContext.getString(R.string.undefined);
+            return localizedContext.getString(R.string.undefined);
         }
     }
 

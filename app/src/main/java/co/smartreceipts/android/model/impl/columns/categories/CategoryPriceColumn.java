@@ -1,14 +1,12 @@
 package co.smartreceipts.android.model.impl.columns.categories;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import co.smartreceipts.android.currency.PriceCurrency;
 import co.smartreceipts.android.model.Price;
-import co.smartreceipts.android.model.Receipt;
 import co.smartreceipts.android.model.factory.PriceBuilderFactory;
 import co.smartreceipts.android.model.impl.columns.AbstractColumnImpl;
 import co.smartreceipts.android.persistence.database.controllers.grouping.results.SumCategoryGroupingResult;
@@ -17,8 +15,8 @@ import co.smartreceipts.android.sync.model.SyncState;
 
 public class CategoryPriceColumn extends AbstractColumnImpl<SumCategoryGroupingResult> {
 
-    public CategoryPriceColumn(int id, @NonNull String name, @NonNull SyncState syncState) {
-        super(id, name, syncState);
+    public CategoryPriceColumn(int id, @NonNull SyncState syncState) {
+        super(id, CategoryColumnDefinitions.ActualDefinition.PRICE, syncState);
     }
 
     @NonNull

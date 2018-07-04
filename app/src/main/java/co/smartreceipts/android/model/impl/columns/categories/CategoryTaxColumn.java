@@ -16,8 +16,8 @@ import co.smartreceipts.android.sync.model.SyncState;
 
 public class CategoryTaxColumn extends AbstractColumnImpl<SumCategoryGroupingResult> {
 
-    public CategoryTaxColumn(int id, @NonNull String name, @NonNull SyncState syncState) {
-        super(id, name, syncState);
+    public CategoryTaxColumn(int id, @NonNull SyncState syncState) {
+        super(id, CategoryColumnDefinitions.ActualDefinition.TAX, syncState);
     }
 
     @Nullable

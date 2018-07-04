@@ -17,13 +17,11 @@ public final class ReceiptNetExchangedPriceMinusTaxColumn extends AbstractExchan
 
     private final UserPreferenceManager userPreferenceManager;
 
-    public ReceiptNetExchangedPriceMinusTaxColumn(int id,
-                                                  @NonNull String name,
-                                                  @NonNull SyncState syncState,
-                                                  @NonNull Context context,
+    public ReceiptNetExchangedPriceMinusTaxColumn(int id,@NonNull SyncState syncState,
+                                                  @NonNull Context localizedContext,
                                                   @NonNull UserPreferenceManager preferences,
                                                   long customOrderId) {
-        super(id, name, syncState, context, customOrderId);
+        super(id, ReceiptColumnDefinitions.ActualDefinition.PRICE_MINUS_TAX_EXCHANGED, syncState, localizedContext, customOrderId);
         userPreferenceManager = preferences;
     }
 

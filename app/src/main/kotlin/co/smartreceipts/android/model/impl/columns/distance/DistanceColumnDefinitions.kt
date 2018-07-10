@@ -29,7 +29,7 @@ class DistanceColumnDefinitions(
      * Note: Column types must be unique
      * Column type must be >= 0
      */
-    internal enum class ActualDefinition private constructor(
+    internal enum class ActualDefinition(
         private val columnType: Int,
         private val stringResId: Int
     ) : ActualColumnDefinition {
@@ -41,14 +41,10 @@ class DistanceColumnDefinitions(
         DATE(5, R.string.distance_date_field),
         COMMENT(6, R.string.distance_comment_field);
 
-        override fun getColumnType(): Int {
-            return columnType
-        }
+        override fun getColumnType(): Int = columnType
 
         @StringRes
-        override fun getColumnHeaderId(): Int {
-            return stringResId
-        }
+        override fun getColumnHeaderId(): Int = stringResId
     }
 
 

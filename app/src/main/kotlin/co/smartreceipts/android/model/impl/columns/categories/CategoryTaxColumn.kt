@@ -15,9 +15,8 @@ class CategoryTaxColumn(id: Int, syncState: SyncState) :
         syncState
     ) {
 
-    override fun getValue(sumCategoryGroupingResult: SumCategoryGroupingResult): String? {
-        return sumCategoryGroupingResult.tax.decimalFormattedPrice
-    }
+    override fun getValue(sumCategoryGroupingResult: SumCategoryGroupingResult): String? =
+        sumCategoryGroupingResult.tax.decimalFormattedPrice
 
     override fun getFooter(rows: List<SumCategoryGroupingResult>): String {
         return if (!rows.isEmpty()) {

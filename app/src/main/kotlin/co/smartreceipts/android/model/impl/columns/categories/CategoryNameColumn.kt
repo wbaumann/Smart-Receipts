@@ -11,8 +11,6 @@ class CategoryNameColumn(id: Int, syncState: SyncState) :
         syncState
     ) {
 
-    override fun getValue(sumCategoryGroupingResult: SumCategoryGroupingResult): String {
-        return sumCategoryGroupingResult.category.name + " [" + sumCategoryGroupingResult.receiptsCount + "]"
-    }
-
+    override fun getValue(sumCategoryGroupingResult: SumCategoryGroupingResult): String =
+        sumCategoryGroupingResult.category.name + " [" + sumCategoryGroupingResult.receiptsCount + "]"
 }

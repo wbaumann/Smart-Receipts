@@ -23,7 +23,7 @@ class CategoryColumnDefinitions(private val reportResourcesManager: ReportResour
      * Note: Column types must be unique
      * Column type must be >= 0
      */
-    internal enum class ActualDefinition private constructor(
+    internal enum class ActualDefinition(
         private val columnType: Int,
         private val stringResId: Int
     ) : ActualColumnDefinition {
@@ -33,14 +33,10 @@ class CategoryColumnDefinitions(private val reportResourcesManager: ReportResour
         TAX(3, R.string.category_tax_field),
         CURRENCY(4, R.string.category_currency_field);
 
-        override fun getColumnType(): Int {
-            return columnType
-        }
+        override fun getColumnType(): Int = columnType
 
         @StringRes
-        override fun getColumnHeaderId(): Int {
-            return stringResId
-        }
+        override fun getColumnHeaderId(): Int = stringResId
     }
 
     override fun getColumn(

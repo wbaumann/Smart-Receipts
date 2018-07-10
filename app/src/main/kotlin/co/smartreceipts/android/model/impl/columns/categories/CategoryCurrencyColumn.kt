@@ -15,9 +15,8 @@ class CategoryCurrencyColumn(id: Int, syncState: SyncState) :
         syncState
     ) {
 
-    override fun getValue(sumCategoryGroupingResult: SumCategoryGroupingResult): String {
-        return sumCategoryGroupingResult.currency.currencyCode
-    }
+    override fun getValue(sumCategoryGroupingResult: SumCategoryGroupingResult): String =
+        sumCategoryGroupingResult.currency.currencyCode
 
     override fun getFooter(rows: List<SumCategoryGroupingResult>): String {
         return if (!rows.isEmpty()) {

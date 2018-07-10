@@ -11,9 +11,7 @@ class DistanceCurrencyColumn(id: Int, syncState: SyncState) : AbstractColumnImpl
     syncState
 ) {
 
-    override fun getValue(distance: Distance): String {
-        return distance.price.currencyCode
-    }
+    override fun getValue(distance: Distance): String = distance.price.currencyCode
 
     override fun getFooter(distances: List<Distance>): String {
         val tripCurrency = distances[0].trip.tripCurrency

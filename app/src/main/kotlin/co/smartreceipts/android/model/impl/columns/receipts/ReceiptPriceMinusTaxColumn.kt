@@ -32,8 +32,10 @@ class ReceiptPriceMinusTaxColumn(
             for (receipt in receipts) {
                 prices.add(getPrice(receipt))
             }
-            PriceBuilderFactory().setPrices(prices, tripCurrency).build()
-                .decimalFormattedPrice
+
+            val total = PriceBuilderFactory().setPrices(prices, tripCurrency).build()
+
+            if (total.currencyCodeCount == 1) total.decimalFormattedPrice else total.currencyCodeFormattedPrice
         } else {
             ""
         }

@@ -17,9 +17,9 @@ import java.util.Locale;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import co.smartreceipts.android.R;
 import co.smartreceipts.android.date.DateUtils;
 import co.smartreceipts.android.di.scopes.ApplicationScope;
-import co.smartreceipts.android.persistence.SharedPreferenceDefinitions;
 import co.smartreceipts.android.settings.catalog.UserPreference;
 import co.smartreceipts.android.utils.log.Logger;
 import dagger.Lazy;
@@ -101,7 +101,7 @@ public class UserPreferenceManager {
                                 final String[] supportedLanguages = context.getResources().getStringArray(R.array.pref_output_preferred_language_entryValues);
                                 for (String supportedLanguage : supportedLanguages) {
                                     if (currentLocale.getLanguage().equals(supportedLanguage)) {
-                                        preferences.edit().putString(preferenceName, currentLocale.getLanguage()).apply();
+                                        preferences.get().edit().putString(preferenceName, currentLocale.getLanguage()).apply();
                                         break;
                                     }
                                 }

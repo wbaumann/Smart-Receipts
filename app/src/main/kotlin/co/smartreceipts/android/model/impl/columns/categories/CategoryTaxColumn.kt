@@ -25,8 +25,10 @@ class CategoryTaxColumn(id: Int, syncState: SyncState) :
             for (row in rows) {
                 prices.add(row.tax)
             }
-            PriceBuilderFactory().setPrices(prices, tripCurrency).build()
-                .decimalFormattedPrice
+
+            val total = PriceBuilderFactory().setPrices(prices, tripCurrency).build()
+
+            if (total.currencyCodeCount == 1) total.decimalFormattedPrice else total.currencyCodeFormattedPrice
         } else {
             ""
         }

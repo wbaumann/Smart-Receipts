@@ -18,6 +18,7 @@ import co.smartreceipts.android.model.impl.columns.receipts.ReceiptNameColumn;
 import co.smartreceipts.android.persistence.database.operations.DatabaseOperationMetadata;
 import co.smartreceipts.android.persistence.database.operations.OperationFamilyType;
 import co.smartreceipts.android.persistence.database.tables.AbstractColumnTable;
+import co.smartreceipts.android.persistence.database.tables.AbstractSqlTable;
 import co.smartreceipts.android.persistence.database.tables.keys.PrimaryKey;
 import co.smartreceipts.android.settings.UserPreferenceManager;
 import co.smartreceipts.android.sync.model.SyncState;
@@ -70,7 +71,7 @@ public class ColumnDatabaseAdapterTest {
         final int typeIndex = 2;
         final int customOrderIdIndex = 3;
 
-        receiptNameColumn = new ReceiptNameColumn(ID, syncState, CUSTOM_ORDER_ID);
+        receiptNameColumn = new ReceiptNameColumn(ID, getSyncState, CUSTOM_ORDER_ID);
         ReceiptColumnDefinitions receiptColumnDefinitions = new ReceiptColumnDefinitions(reportResourcesManager, preferences);
 
         when(reportResourcesManager.getLocalizedContext()).thenReturn(RuntimeEnvironment.systemContext);
@@ -130,7 +131,6 @@ public class ColumnDatabaseAdapterTest {
 
     @Test
     public void build() throws Exception {
-        // TODO: 23.06.2018 check this test after rebase
         assertEquals(receiptNameColumn, columnDatabaseAdapter.build(column, primaryKey, mock(DatabaseOperationMetadata.class)));
         assertEquals(receiptNameColumn.getSyncState(), columnDatabaseAdapter.build(column, primaryKey, mock(DatabaseOperationMetadata.class)).getSyncState());
     }

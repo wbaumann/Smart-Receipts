@@ -29,11 +29,12 @@ import co.smartreceipts.android.persistence.DatabaseHelper;
 import co.smartreceipts.android.persistence.database.defaults.TableDefaultsCustomizer;
 import co.smartreceipts.android.persistence.database.operations.DatabaseOperationMetadata;
 import co.smartreceipts.android.persistence.database.tables.ordering.OrderingPreferencesManager;
-import co.smartreceipts.android.sync.model.SyncState;
 import co.smartreceipts.android.settings.UserPreferenceManager;
 import co.smartreceipts.android.sync.model.impl.DefaultSyncState;
 import co.smartreceipts.android.workers.reports.ReportResourcesManager;
 
+import static co.smartreceipts.android.persistence.database.tables.AbstractColumnTable.COLUMN_ID;
+import static co.smartreceipts.android.persistence.database.tables.AbstractColumnTable.COLUMN_TYPE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -64,10 +65,7 @@ public class PDFTableTest {
     @Mock
     OrderingPreferencesManager orderingPreferencesManager;
 
-    SQLiteOpenHelper mSQLiteOpenHelper;
-
-
-    SQLiteOpenHelper openHelper;
+    SQLiteOpenHelper sqliteOpenHelper;
 
     @Captor
     ArgumentCaptor<String> sqlCaptor;
@@ -79,12 +77,12 @@ public class PDFTableTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
-        openHelper = new TestSQLiteOpenHelper(RuntimeEnvironment.application);
+        sqliteOpenHelper = new TestSQLiteOpenHelper(RuntimeEnvironment.application);
         final ReceiptColumnDefinitions receiptColumnDefinitions = new ReceiptColumnDefinitions(reportResourcesManager, preferences);
-        pdfTable = new PDFTable(openHelper, receiptColumnDefinitions, orderingPreferencesManager);
+        pdfTable = new PDFTable(sqliteOpenHelper, receiptColumnDefinitions, orderingPreferencesManager);
 
         // Now create the table and insert some defaults
-        pdfTable.onCreate(openHelper.getWritableDatabase(), tableDefaultsCustomizer);
+        pdfTable.onCreate(sqliteOpenHelper.getWritableDatabase(), tableDefaultsCustomizer);
         receiptNameColumn = pdfTable.insert(new ReceiptNameColumn(-1, new DefaultSyncState(), 0), new DatabaseOperationMetadata()).blockingGet();
         receiptPriceColumn = pdfTable.insert(new ReceiptPriceColumn(-1, new DefaultSyncState(), 0), new DatabaseOperationMetadata()).blockingGet();
         assertNotNull(receiptNameColumn);
@@ -93,7 +91,7 @@ public class PDFTableTest {
 
     @After
     public void tearDown() {
-        openHelper.getWritableDatabase().execSQL("DROP TABLE IF EXISTS " + pdfTable.getTableName());
+        sqliteOpenHelper.getWritableDatabase().execSQL("DROP TABLE IF EXISTS " + pdfTable.getTableName());
     }
 
     @Test
@@ -168,6 +166,44 @@ public class PDFTableTest {
     }
 
     @Test
+    public void onUpgradeFromV17() {
+        final int oldVersion = 17;
+        final int newVersion = DatabaseHelper.DATABASE_VERSION;
+
+        final TableDefaultsCustomizer customizer = mock(TableDefaultsCustomizer.class);
+        pdfTable.onUpgrade(sqliteDatabase, oldVersion, newVersion, customizer);
+        verify(sqliteDatabase, atLeastOnce()).execSQL(sqlCaptor.capture());
+        verify(customizer, never()).insertPDFDefaults(pdfTable);
+
+        assertEquals(sqlCaptor.getAllValues().get(0), String.format("ALTER TABLE %s ADD COLUMN %s INTEGER DEFAULT 0;", pdfTable.getTableName(), AbstractColumnTable.COLUMN_TYPE));
+
+        assertEquals(sqlCaptor.getAllValues().get(1), String.format("ALTER TABLE %s RENAME TO %s;", pdfTable.getTableName(), pdfTable.getTableName() + "_tmp"));
+
+        final String createNewTable = "CREATE TABLE " + pdfTable.getTableName() + " ("
+                + AbstractColumnTable.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + AbstractColumnTable.COLUMN_TYPE + " INTEGER DEFAULT 0, "
+                + AbstractSqlTable.COLUMN_DRIVE_SYNC_ID + " TEXT, "
+                + AbstractSqlTable.COLUMN_DRIVE_IS_SYNCED + " BOOLEAN DEFAULT 0, "
+                + AbstractSqlTable.COLUMN_DRIVE_MARKED_FOR_DELETION + " BOOLEAN DEFAULT 0, "
+                + AbstractSqlTable.COLUMN_LAST_LOCAL_MODIFICATION_TIME + " DATE, "
+                + AbstractSqlTable.COLUMN_CUSTOM_ORDER_ID + " INTEGER DEFAULT 0"
+                + ");";
+        assertEquals(sqlCaptor.getAllValues().get(2), createNewTable);
+
+        final String baseColumns = String.format("%s, %s, %s, %s, %s, %s", COLUMN_TYPE, AbstractSqlTable.COLUMN_DRIVE_SYNC_ID,
+                AbstractSqlTable.COLUMN_DRIVE_IS_SYNCED, AbstractSqlTable.COLUMN_DRIVE_MARKED_FOR_DELETION,
+                AbstractSqlTable.COLUMN_LAST_LOCAL_MODIFICATION_TIME,
+                AbstractSqlTable.COLUMN_CUSTOM_ORDER_ID);
+        final String insertData = "INSERT INTO " + pdfTable.getTableName()
+                + " (" + COLUMN_ID + ", " + baseColumns + ") "
+                + "SELECT " + AbstractColumnTable.idColumnName + ", " + baseColumns
+                + " FROM " + pdfTable.getTableName() + "_tmp"+ ";";
+        assertEquals(sqlCaptor.getAllValues().get(3), insertData);
+
+        assertEquals(sqlCaptor.getAllValues().get(4), "DROP TABLE " + pdfTable.getTableName() + "_tmp" + ";");
+    }
+
+    @Test
     public void onUpgradeAlreadyOccurred() {
         final int oldVersion = DatabaseHelper.DATABASE_VERSION;
         final int newVersion = DatabaseHelper.DATABASE_VERSION;
@@ -212,23 +248,6 @@ public class PDFTableTest {
     }
 
     @Test
-    public void insertDefaultColumn() throws Exception {
-        Column<Receipt> defaultColumn = new BlankColumn<>(-1, new DefaultSyncState());
-
-
-        final Column<Receipt> column = pdfTable.insertDefaultColumn().blockingGet();
-
-        // Note: We cannot do an 'equals' operation here, since the inserted column will receive a primary key
-        assertNotNull(column);
-        assertTrue(column instanceof BlankColumn);
-        assertEquals(defaultColumn.getType(), column.getType());
-        assertEquals(defaultColumn.getHeaderStringResId(), column.getHeaderStringResId());
-
-        final List<Column<Receipt>> columns = pdfTable.get().blockingGet();
-        assertEquals(Arrays.asList(receiptNameColumn, receiptPriceColumn, column), columns);
-    }
-
-    @Test
     public void update() {
         final Column<Receipt> column = pdfTable.update(receiptNameColumn,
                 new ReceiptCategoryNameColumn(-1, new DefaultSyncState())
@@ -245,16 +264,6 @@ public class PDFTableTest {
     public void delete() {
         assertEquals(receiptNameColumn, pdfTable.delete(receiptNameColumn, new DatabaseOperationMetadata()).blockingGet());
         assertEquals(pdfTable.get().blockingGet(), Collections.singletonList(receiptPriceColumn));
-    }
-
-    @Test
-    public void deleteLast() {
-        final DatabaseOperationMetadata databaseOperationMetadata = new DatabaseOperationMetadata();
-        assertTrue(pdfTable.deleteLast(databaseOperationMetadata).blockingGet());
-        assertEquals(pdfTable.get().blockingGet(), Collections.singletonList(receiptNameColumn));
-        assertTrue(pdfTable.deleteLast(databaseOperationMetadata).blockingGet());
-        assertEquals(pdfTable.get().blockingGet(), Collections.emptyList());
-        assertFalse(pdfTable.deleteLast(databaseOperationMetadata).blockingGet());
     }
 
 }

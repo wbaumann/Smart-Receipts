@@ -26,17 +26,25 @@ public class ColumnsSpinnerAdapter<T> extends ArrayAdapter<Column<T>> {
         super(reportResourcesManager.getLocalizedContext(), SPINNER_ITEM_RES, objects);
 
         this.reportResourcesManager = Preconditions.checkNotNull(reportResourcesManager);
-
-        setDropDownViewResource(SPINNER_DROPDOWN_ITEM_RES);
     }
 
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        return getSimpleView(position, convertView, parent, false);
+    }
+
+    @Override
+    public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        return getSimpleView(position, convertView, parent, true);
+    }
+
+    private View getSimpleView(int position, @Nullable View convertView, @NonNull ViewGroup parent, boolean isDropDown) {
         final TextView textView;
 
         if (convertView == null) {
-            textView = (TextView) LayoutInflater.from(getContext()).inflate(SPINNER_ITEM_RES, parent, false);
+            textView = (TextView) LayoutInflater.from(getContext()).inflate(isDropDown ? SPINNER_DROPDOWN_ITEM_RES : SPINNER_ITEM_RES,
+                    parent, false);
         } else {
             textView = (TextView) convertView;
         }
@@ -44,10 +52,5 @@ public class ColumnsSpinnerAdapter<T> extends ArrayAdapter<Column<T>> {
         textView.setText(reportResourcesManager.getFlexString(getItem(position).getHeaderStringResId()));
 
         return textView;
-    }
-
-    @Override
-    public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        return getView(position, convertView, parent);
     }
 }

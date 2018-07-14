@@ -20,7 +20,6 @@ import java.util.List;
 
 import co.smartreceipts.android.model.Column;
 import co.smartreceipts.android.model.Receipt;
-import co.smartreceipts.android.model.impl.columns.BlankColumn;
 import co.smartreceipts.android.model.impl.columns.receipts.ReceiptCategoryNameColumn;
 import co.smartreceipts.android.model.impl.columns.receipts.ReceiptColumnDefinitions;
 import co.smartreceipts.android.model.impl.columns.receipts.ReceiptNameColumn;
@@ -127,8 +126,8 @@ public class PDFTableTest {
         verify(customizer).insertPDFDefaults(pdfTable);
 
         assertTrue(sqlCaptor.getAllValues().get(0).contains(PDFTable.TABLE_NAME));
-        assertTrue(sqlCaptor.getAllValues().get(0).contains(PDFTable.idColumnName));
-        assertTrue(sqlCaptor.getAllValues().get(0).contains(PDFTable.typeColumnName));
+        assertTrue(sqlCaptor.getAllValues().get(0).contains(PDFTable.DEPRECATED_COLUMN_ID_AS_NAME));
+        assertTrue(sqlCaptor.getAllValues().get(0).contains(PDFTable.DEPRECATED_COLUMN_TYPE_AS_NAME));
         assertEquals(sqlCaptor.getAllValues().get(0), "CREATE TABLE pdfcolumns (id INTEGER PRIMARY KEY AUTOINCREMENT, type TEXT);");
         assertEquals(sqlCaptor.getAllValues().get(1), "ALTER TABLE " + pdfTable.getTableName() + " ADD drive_sync_id TEXT");
         assertEquals(sqlCaptor.getAllValues().get(2), "ALTER TABLE " + pdfTable.getTableName() + " ADD drive_is_synced BOOLEAN DEFAULT 0");
@@ -196,7 +195,7 @@ public class PDFTableTest {
                 AbstractSqlTable.COLUMN_CUSTOM_ORDER_ID);
         final String insertData = "INSERT INTO " + pdfTable.getTableName()
                 + " (" + COLUMN_ID + ", " + baseColumns + ") "
-                + "SELECT " + AbstractColumnTable.idColumnName + ", " + baseColumns
+                + "SELECT " + AbstractColumnTable.DEPRECATED_COLUMN_ID_AS_NAME + ", " + baseColumns
                 + " FROM " + pdfTable.getTableName() + "_tmp"+ ";";
         assertEquals(sqlCaptor.getAllValues().get(3), insertData);
 

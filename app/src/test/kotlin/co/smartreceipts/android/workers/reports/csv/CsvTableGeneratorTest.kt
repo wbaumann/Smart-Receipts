@@ -2,6 +2,7 @@ package co.smartreceipts.android.workers.reports.csv
 
 import co.smartreceipts.android.model.Column
 import co.smartreceipts.android.workers.reports.ReportResourcesManager
+import com.nhaarman.mockito_kotlin.whenever
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -9,7 +10,6 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyListOf
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
 import java.util.*
@@ -29,11 +29,11 @@ class CsvTableGeneratorTest {
     @Throws(Exception::class)
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        `when`(column.headerStringResId).thenReturn(HEADER_ID)
-        `when`<String>(column.getValue(anyString())).thenReturn(VALUE)
-        `when`(column.getFooter(anyListOf(String::class.java))).thenReturn(FOOTER)
+        whenever(column.headerStringResId).thenReturn(HEADER_ID)
+        whenever(column.getValue(anyString())).thenReturn(VALUE)
+        whenever(column.getFooter(anyListOf(String::class.java))).thenReturn(FOOTER)
 
-        `when`(reportResourceManager.getFlexString(HEADER_ID)).thenReturn(HEADER)
+        whenever(reportResourceManager.getFlexString(HEADER_ID)).thenReturn(HEADER)
 
         csvTableGenerator = CsvTableGenerator(
             reportResourceManager,
@@ -75,7 +75,7 @@ class CsvTableGeneratorTest {
                 "\"va\nlue\",\"va\nlue\",\"va\nlue\"\n" +
                 "\"va\nlue\",\"va\nlue\",\"va\nlue\"\n" +
                 "footer,footer,footer\n"
-        `when`<String>(column.getValue(anyString())).thenReturn("va\nlue")
+        whenever(column.getValue(anyString())).thenReturn("va\nlue")
         assertEquals(expected, csvTableGenerator.generate(Arrays.asList("1", "2")))
     }
 
@@ -86,7 +86,7 @@ class CsvTableGeneratorTest {
                 "\"\"\"value\"\"\",\"\"\"value\"\"\",\"\"\"value\"\"\"\n" +
                 "\"\"\"value\"\"\",\"\"\"value\"\"\",\"\"\"value\"\"\"\n" +
                 "footer,footer,footer\n"
-        `when`<String>(column.getValue(anyString())).thenReturn("\"value\"")
+        whenever(column.getValue(anyString())).thenReturn("\"value\"")
         assertEquals(expected, csvTableGenerator.generate(Arrays.asList("1", "2")))
     }
 

@@ -18,11 +18,9 @@ class DistancePriceColumn(
     override fun getFooter(distances: List<Distance>): String {
         val tripCurrency = if (!distances.isEmpty()) distances[0].trip.tripCurrency else null
         return if (allowSpecialCharacters) {
-            PriceBuilderFactory().setPriceables(distances, tripCurrency!!).build()
-                .currencyFormattedPrice
+            PriceBuilderFactory().setPriceables(distances, tripCurrency!!).build().currencyFormattedPrice
         } else {
-            PriceBuilderFactory().setPriceables(distances, tripCurrency!!).build()
-                .currencyCodeFormattedPrice
+            PriceBuilderFactory().setPriceables(distances, tripCurrency!!).build().currencyCodeFormattedPrice
         }
     }
 }

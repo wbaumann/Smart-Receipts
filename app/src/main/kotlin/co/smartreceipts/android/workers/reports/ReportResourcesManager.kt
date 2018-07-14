@@ -13,38 +13,25 @@ import javax.inject.Inject
 
 @ApplicationScope
 class ReportResourcesManager @Inject constructor(
-    context: Context,
+    private var context: Context,
     private val preferenceManager: UserPreferenceManager,
     private val flex: Flex
 ) {
 
-    private var localizedContext: Context
-
-    init {
-        val desiredLocale =
-            Locale(preferenceManager.get(UserPreference.ReportOutput.PreferredReportLanguage))
-
-        val conf = Configuration(context.resources.configuration)
-        conf.setLocale(desiredLocale)
-
-        localizedContext = context.createConfigurationContext(conf)
-
-    }
-
     fun getLocalizedContext(): Context {
         val currentLocalizedContextLocale =
-            ConfigurationCompat.getLocales(localizedContext.resources.configuration).get(0)
+            ConfigurationCompat.getLocales(context.resources.configuration).get(0)
 
         val desiredLocale =
             Locale(preferenceManager.get(UserPreference.ReportOutput.PreferredReportLanguage))
 
         if (currentLocalizedContextLocale != desiredLocale) {
-            val conf = Configuration(localizedContext.resources.configuration)
+            val conf = Configuration(context.resources.configuration)
             conf.setLocale(desiredLocale)
-            localizedContext = localizedContext.createConfigurationContext(conf)
+            context = context.createConfigurationContext(conf)
         }
 
-        return localizedContext
+        return context
 
     }
 

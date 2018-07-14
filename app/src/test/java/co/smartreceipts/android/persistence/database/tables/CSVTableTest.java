@@ -20,10 +20,8 @@ import java.util.List;
 
 import co.smartreceipts.android.model.Column;
 import co.smartreceipts.android.model.Receipt;
-import co.smartreceipts.android.model.impl.columns.BlankColumn;
 import co.smartreceipts.android.model.impl.columns.receipts.ReceiptCategoryNameColumn;
 import co.smartreceipts.android.model.impl.columns.receipts.ReceiptColumnDefinitions;
-import co.smartreceipts.android.model.impl.columns.receipts.ReceiptColumnDefinitions.ActualDefinition;
 import co.smartreceipts.android.model.impl.columns.receipts.ReceiptNameColumn;
 import co.smartreceipts.android.model.impl.columns.receipts.ReceiptPriceColumn;
 import co.smartreceipts.android.persistence.DatabaseHelper;
@@ -32,7 +30,6 @@ import co.smartreceipts.android.persistence.database.operations.DatabaseOperatio
 import co.smartreceipts.android.persistence.database.tables.ordering.OrderingPreferencesManager;
 import co.smartreceipts.android.settings.UserPreferenceManager;
 import co.smartreceipts.android.sync.model.impl.DefaultSyncState;
-import co.smartreceipts.android.utils.log.Logger;
 import co.smartreceipts.android.workers.reports.ReportResourcesManager;
 
 import static co.smartreceipts.android.persistence.database.tables.AbstractColumnTable.COLUMN_ID;
@@ -45,7 +42,6 @@ import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 public class CSVTableTest {
@@ -130,8 +126,8 @@ public class CSVTableTest {
         verify(customizer).insertCSVDefaults(csvTable);
 
         assertTrue(sqlCaptor.getAllValues().get(0).contains(CSVTable.TABLE_NAME));
-        assertTrue(sqlCaptor.getAllValues().get(0).contains(CSVTable.idColumnName));
-        assertTrue(sqlCaptor.getAllValues().get(0).contains(CSVTable.typeColumnName));
+        assertTrue(sqlCaptor.getAllValues().get(0).contains(CSVTable.DEPRECATED_COLUMN_ID_AS_NAME));
+        assertTrue(sqlCaptor.getAllValues().get(0).contains(CSVTable.DEPRECATED_COLUMN_TYPE_AS_NAME));
         assertEquals(sqlCaptor.getAllValues().get(0), "CREATE TABLE csvcolumns (id INTEGER PRIMARY KEY AUTOINCREMENT, type TEXT);");
         assertEquals(sqlCaptor.getAllValues().get(1), "ALTER TABLE " + csvTable.getTableName() + " ADD drive_sync_id TEXT");
         assertEquals(sqlCaptor.getAllValues().get(2), "ALTER TABLE " + csvTable.getTableName() + " ADD drive_is_synced BOOLEAN DEFAULT 0");
@@ -199,7 +195,7 @@ public class CSVTableTest {
                 AbstractSqlTable.COLUMN_CUSTOM_ORDER_ID);
         final String insertData = "INSERT INTO " + csvTable.getTableName()
                 + " (" + COLUMN_ID + ", " + baseColumns + ") "
-                + "SELECT " + AbstractColumnTable.idColumnName + ", " + baseColumns
+                + "SELECT " + AbstractColumnTable.DEPRECATED_COLUMN_ID_AS_NAME + ", " + baseColumns
                 + " FROM " + csvTable.getTableName() + "_tmp"+ ";";
         assertEquals(sqlCaptor.getAllValues().get(3), insertData);
 

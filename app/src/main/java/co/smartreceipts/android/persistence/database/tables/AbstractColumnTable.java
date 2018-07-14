@@ -32,11 +32,12 @@ public abstract class AbstractColumnTable extends AbstractSqlTable<Column<Receip
 
     private final int tableExistsSinceDatabaseVersion;
     private final ColumnDefinitions<Receipt> receiptColumnDefinitions;
+    private final ColumnFinder columnFinder;
 
     @Deprecated
-    public static final String idColumnName = "id";
+    public static final String DEPRECATED_COLUMN_ID_AS_NAME = "id";
     @Deprecated
-    public static final String typeColumnName = "type";
+    public static final String DEPRECATED_COLUMN_TYPE_AS_NAME = "type";
 
 
     public AbstractColumnTable(@NonNull SQLiteOpenHelper sqLiteOpenHelper,
@@ -49,6 +50,7 @@ public abstract class AbstractColumnTable extends AbstractSqlTable<Column<Receip
                 new ColumnPrimaryKey(COLUMN_ID), new OrderByOrderingPreference(orderingPreferencesManager, tableClass, new OrderByColumn(COLUMN_CUSTOM_ORDER_ID, false), new OrderByDatabaseDefault()));
         this.tableExistsSinceDatabaseVersion = tableExistsSinceDatabaseVersion;
         receiptColumnDefinitions = Preconditions.checkNotNull(columnDefinitions);
+        columnFinder = (ColumnFinder) columnDefinitions;
     }
 
     @Override
@@ -74,8 +76,8 @@ public abstract class AbstractColumnTable extends AbstractSqlTable<Column<Receip
         super.onUpgrade(db, oldVersion, newVersion, customizer);
         if (oldVersion <= tableExistsSinceDatabaseVersion) {
             final String columnsTable = "CREATE TABLE " + getTableName() + " ("
-                    + idColumnName + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                    + typeColumnName + " TEXT"
+                    + DEPRECATED_COLUMN_ID_AS_NAME + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + DEPRECATED_COLUMN_TYPE_AS_NAME + " TEXT"
                     + ");";
             Logger.debug(this, columnsTable);
 
@@ -91,7 +93,7 @@ public abstract class AbstractColumnTable extends AbstractSqlTable<Column<Receip
             Logger.debug(this, addCustomOrderColumn);
             db.execSQL(addCustomOrderColumn);
         }
-        if (oldVersion <= 17) { // removing unused typeColumnName column, adding COLUMN_TYPE column
+        if (oldVersion <= 17) { // removing unused DEPRECATED_COLUMN_TYPE_AS_NAME column, adding COLUMN_TYPE column
             // adding new column column_type
             final String addNewColumn = String.format("ALTER TABLE %s ADD COLUMN %s INTEGER DEFAULT 0;",
                     getTableName(), AbstractColumnTable.COLUMN_TYPE);
@@ -101,10 +103,10 @@ public abstract class AbstractColumnTable extends AbstractSqlTable<Column<Receip
             // finding new column types for old values (adding default column if correct type wasn't found)
             Cursor columnsCursor = null;
             try {
-                columnsCursor = db.query(getTableName(), new String[]{idColumnName, typeColumnName, COLUMN_TYPE}, null, null, null, null, null);
+                columnsCursor = db.query(getTableName(), new String[]{DEPRECATED_COLUMN_ID_AS_NAME, DEPRECATED_COLUMN_TYPE_AS_NAME, COLUMN_TYPE}, null, null, null, null, null);
                 if (columnsCursor != null && columnsCursor.moveToFirst()) {
-                    final int idIndex = columnsCursor.getColumnIndex(idColumnName);
-                    final int typeIndex = columnsCursor.getColumnIndex(typeColumnName);
+                    final int idIndex = columnsCursor.getColumnIndex(DEPRECATED_COLUMN_ID_AS_NAME);
+                    final int typeIndex = columnsCursor.getColumnIndex(DEPRECATED_COLUMN_TYPE_AS_NAME);
 
                     do {
                         final int id = columnsCursor.getInt(idIndex);
@@ -112,11 +114,9 @@ public abstract class AbstractColumnTable extends AbstractSqlTable<Column<Receip
 
                         int newColumnType = receiptColumnDefinitions.getDefaultInsertColumn().getType();
 
-                        if (receiptColumnDefinitions instanceof ColumnFinder) {
-                            final int columnTypeByHeaderValue = ((ColumnFinder) receiptColumnDefinitions).getColumnTypeByHeaderValue(oldColumnType);
-                            if (columnTypeByHeaderValue >= 0) {
-                                newColumnType = columnTypeByHeaderValue;
-                            }
+                        final int columnTypeByHeaderValue = columnFinder.getColumnTypeByHeaderValue(oldColumnType);
+                        if (columnTypeByHeaderValue >= 0) {
+                            newColumnType = columnTypeByHeaderValue;
                         }
 
                         final ContentValues columnValues = new ContentValues(1);
@@ -125,6 +125,7 @@ public abstract class AbstractColumnTable extends AbstractSqlTable<Column<Receip
 
                         if (db.update(getTableName(), columnValues, COLUMN_ID + "= ?", new String[]{Integer.toString(id)}) == 0) {
                             Logger.error(this, "Column update error happened");
+                            throw new RuntimeException("Column update error happened");
                         }
 
 
@@ -160,8 +161,8 @@ public abstract class AbstractColumnTable extends AbstractSqlTable<Column<Receip
 
             final String insertData = "INSERT INTO " + getTableName()
                     + " (" + COLUMN_ID + ", " + baseColumns + ") "
-                    + "SELECT " + idColumnName + ", " + baseColumns
-                    + " FROM " + getTableName() + "_tmp"+ ";";
+                    + "SELECT " + DEPRECATED_COLUMN_ID_AS_NAME + ", " + baseColumns
+                    + " FROM " + getTableName() + "_tmp" + ";";
             Logger.debug(this, insertData);
             db.execSQL(insertData);
 

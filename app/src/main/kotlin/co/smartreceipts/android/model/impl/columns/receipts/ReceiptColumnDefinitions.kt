@@ -59,9 +59,10 @@ constructor(
         INDEX(25, R.string.column_item_index, R.string.original_column_item_index_en_us_name),
         ID(26, R.string.column_item_id, R.string.original_column_item_id_en_us_name),
         PAYMENT_METHOD(27, R.string.column_item_payment_method),
-        EXTRA_EDITTEXT_1(28, R.string.RECEIPTMENU_FIELD_EXTRA_EDITTEXT_1),
-        EXTRA_EDITTEXT_2(29, R.string.RECEIPTMENU_FIELD_EXTRA_EDITTEXT_2),
-        EXTRA_EDITTEXT_3(30, R.string.RECEIPTMENU_FIELD_EXTRA_EDITTEXT_3);
+
+        EXTRA_EDITTEXT_1(100, R.string.RECEIPTMENU_FIELD_EXTRA_EDITTEXT_1),
+        EXTRA_EDITTEXT_2(101, R.string.RECEIPTMENU_FIELD_EXTRA_EDITTEXT_2),
+        EXTRA_EDITTEXT_3(102, R.string.RECEIPTMENU_FIELD_EXTRA_EDITTEXT_3);
 
         private val columnType: Int
         private val stringResId: Int
@@ -80,9 +81,9 @@ constructor(
             this.stringResId = stringResId
             this.legacyStringResIds = ArrayList()
 
-                for (legacyStringResId in legacyStringResIds) {
-                    this.legacyStringResIds.add(legacyStringResId)
-                }
+            for (legacyStringResId in legacyStringResIds) {
+                this.legacyStringResIds.add(legacyStringResId)
+            }
 
         }
 

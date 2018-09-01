@@ -38,6 +38,10 @@ public class ByRowDatabaseMerger implements DatabaseMerger {
     @NonNull
     @Override
     public Completable merge(@NonNull DatabaseHelper currentDatabase, @NonNull DatabaseHelper importedBackupDatabase) {
+        // TODO: 31.08.2018 review merging process due to tables changes (new uuid column)
+        // TODO: 31.08.2018 add UUID column value for newly created objects
+        // TODO: 01.09.2018 add UUID field to models
+        // TODO: 01.09.2018 add uuid testing for tables
         return Completable.fromAction(() -> {
             Logger.info(ByRowDatabaseMerger.this, "Importing database entries by row, preferring the existing item where appropriate");
 
@@ -112,6 +116,7 @@ public class ByRowDatabaseMerger implements DatabaseMerger {
             final List<Trip> importedTrips = new ArrayList<>(importedBackupDatabase.getTripsTable().getBlocking());
             Logger.info(ByRowDatabaseMerger.this, "Importing {} trip entries", importedTrips.size());
             for (final Trip importedTrip : importedTrips) {
+                // TODO: 31.08.2018 trip names are still unique (because of directory names). what if imported trip has same name but different UUID?
                 boolean wasDuplicateFound = false;
                 for (final Trip existingTrip : existingTrips) {
                     if (importedTrip.getName().equals(existingTrip.getName())) {

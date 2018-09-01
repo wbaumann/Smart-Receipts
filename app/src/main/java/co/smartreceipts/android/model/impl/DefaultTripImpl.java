@@ -26,6 +26,7 @@ import co.smartreceipts.android.sync.model.SyncState;
 
 public class DefaultTripImpl implements Trip {
 
+    private final int id;
     private final File mReportDirectory;
     private final String mComment;
     private final Date mStartDate;
@@ -44,8 +45,10 @@ public class DefaultTripImpl implements Trip {
     private final Filter<Receipt> mFilter = null;
 
 
-    public DefaultTripImpl(@NonNull File directory, @NonNull Date startDate, @NonNull TimeZone startTimeZone, @NonNull Date endDate, @NonNull TimeZone endTimeZone,
-                           @NonNull PriceCurrency defaultCurrency, @NonNull String comment, @NonNull String costCenter, @Nullable Source source, @NonNull SyncState syncState) {
+    public DefaultTripImpl(int id, @NonNull File directory, @NonNull Date startDate, @NonNull TimeZone startTimeZone,
+                           @NonNull Date endDate, @NonNull TimeZone endTimeZone, @NonNull PriceCurrency defaultCurrency,
+                           @NonNull String comment, @NonNull String costCenter, @Nullable Source source, @NonNull SyncState syncState) {
+        this.id = id;
         mReportDirectory = Preconditions.checkNotNull(directory);
         mStartDate = Preconditions.checkNotNull(startDate);
         mStartTimeZone = Preconditions.checkNotNull(startTimeZone);
@@ -63,6 +66,7 @@ public class DefaultTripImpl implements Trip {
     }
 
     private DefaultTripImpl(Parcel in) {
+        id = in.readInt();
         mReportDirectory = new File(in.readString());
         mPrice = in.readParcelable(Price.class.getClassLoader());
         mStartDate = new Date(in.readLong());
@@ -75,6 +79,11 @@ public class DefaultTripImpl implements Trip {
         mDefaultCurrency = PriceCurrency.getInstance(in.readString());
         mSyncState = in.readParcelable(SyncState.class.getClassLoader());
         mSource = Source.Parcel;
+    }
+
+    @Override
+    public int getId() {
+        return id;
     }
 
     @Override
@@ -253,6 +262,7 @@ public class DefaultTripImpl implements Trip {
 
         DefaultTripImpl that = (DefaultTripImpl) o;
 
+        if (id != that.id) return false;
         if (!mReportDirectory.equals(that.mReportDirectory)) return false;
         if (!mComment.equals(that.mComment)) return false;
         if (!mStartDate.equals(that.mStartDate)) return false;
@@ -264,9 +274,12 @@ public class DefaultTripImpl implements Trip {
 
     }
 
+
+
     @Override
     public int hashCode() {
-        int result = mReportDirectory.hashCode();
+        int result = id;
+        result = 31 * result + mReportDirectory.hashCode();
         result = 31 * result + mComment.hashCode();
         result = 31 * result + mStartDate.hashCode();
         result = 31 * result + mStartTimeZone.hashCode();
@@ -280,7 +293,8 @@ public class DefaultTripImpl implements Trip {
     @Override
     public String toString() {
         return "DefaultTripImpl{" +
-                "mReportDirectory=" + mReportDirectory +
+                "id=" + id +
+                ", mReportDirectory=" + mReportDirectory +
                 ", mComment='" + mComment + '\'' +
                 ", mCostCenter='" + mCostCenter + '\'' +
                 ", mPrice=" + mPrice +
@@ -302,6 +316,7 @@ public class DefaultTripImpl implements Trip {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
         dest.writeString(getDirectoryPath());
         dest.writeParcelable(getPrice(), flags);
         dest.writeLong(getStartDate().getTime());

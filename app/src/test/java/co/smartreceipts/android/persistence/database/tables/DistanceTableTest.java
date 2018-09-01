@@ -47,13 +47,13 @@ public class DistanceTableTest {
 
     private static final double DISTANCE_1 = 12.55d;
     private static final String LOCATION_1 = "Location";
-    private static final String TRIP_1 = "Trip";
+    private static final int TRIP_ID_1 = 5;
     private static final double DISTANCE_2 = 140d;
     private static final String LOCATION_2 = "Location2";
-    private static final String TRIP_2 = "Trip2";
+    private static final int TRIP_ID_2 = 7;
     private static final double DISTANCE_3 = 12.123;
     private static final String LOCATION_3 = "Location3";
-    private static final String TRIP_3 = "Trip3";
+    private static final int TRIP_ID_3 = 8;
 
     private static final long DATE = 1409703721000L;
     private static final String TIMEZONE = TimeZone.getDefault().getID();
@@ -71,7 +71,7 @@ public class DistanceTableTest {
     TableDefaultsCustomizer mTableDefaultsCustomizer;
 
     @Mock
-    Table<Trip, String> mTripsTable;
+    Table<Trip, Integer> mTripsTable;
 
     @Mock
     UserPreferenceManager userPreferenceManager;
@@ -100,13 +100,13 @@ public class DistanceTableTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
-        when(mTrip1.getName()).thenReturn(TRIP_1);
-        when(mTrip2.getName()).thenReturn(TRIP_2);
-        when(mTrip3.getName()).thenReturn(TRIP_3);
+        when(mTrip1.getId()).thenReturn(TRIP_ID_1);
+        when(mTrip2.getId()).thenReturn(TRIP_ID_2);
+        when(mTrip3.getId()).thenReturn(TRIP_ID_3);
 
-        when(mTripsTable.findByPrimaryKey(TRIP_1)).thenReturn(Single.just(mTrip1));
-        when(mTripsTable.findByPrimaryKey(TRIP_2)).thenReturn(Single.just(mTrip2));
-        when(mTripsTable.findByPrimaryKey(TRIP_3)).thenReturn(Single.just(mTrip3));
+        when(mTripsTable.findByPrimaryKey(TRIP_ID_1)).thenReturn(Single.just(mTrip1));
+        when(mTripsTable.findByPrimaryKey(TRIP_ID_2)).thenReturn(Single.just(mTrip2));
+        when(mTripsTable.findByPrimaryKey(TRIP_ID_3)).thenReturn(Single.just(mTrip3));
         when(userPreferenceManager.get(UserPreference.General.DefaultCurrency)).thenReturn(CURRENCY_CODE);
 
         mSQLiteOpenHelper = new TestSQLiteOpenHelper(RuntimeEnvironment.application);
@@ -139,7 +139,7 @@ public class DistanceTableTest {
 
         assertTrue(mSqlCaptor.getValue().contains("CREATE TABLE distance")); // Table name
         assertTrue(mSqlCaptor.getValue().contains("id INTEGER PRIMARY KEY AUTOINCREMENT"));
-        assertTrue(mSqlCaptor.getValue().contains("parent TEXT"));
+        assertTrue(mSqlCaptor.getValue().contains("parentKey INTEGER"));
         assertTrue(mSqlCaptor.getValue().contains("distance DECIMAL(10, 2)"));
         assertTrue(mSqlCaptor.getValue().contains("location TEXT"));
         assertTrue(mSqlCaptor.getValue().contains("date DATE"));
@@ -151,6 +151,7 @@ public class DistanceTableTest {
         assertTrue(mSqlCaptor.getValue().contains("drive_is_synced BOOLEAN DEFAULT 0"));
         assertTrue(mSqlCaptor.getValue().contains("drive_marked_for_deletion BOOLEAN DEFAULT 0"));
         assertTrue(mSqlCaptor.getValue().contains("last_local_modification_time DATE"));
+        assertTrue(mSqlCaptor.getValue().contains("entity_uuid TEXT"));
     }
 
     @Test

@@ -18,6 +18,13 @@ public interface Trip extends Parcelable, Priceable, Comparable<Trip>, Syncable 
     String PARCEL_KEY = Trip.class.getName();
 
     /**
+     * Gets the database primary key id for this trip
+     *
+     * @return the database primary key id for this trip
+     */
+    int getId();
+
+    /**
      * Gets the name of this trip
      *
      * @return the {@link String} object, contain the name of this trip (this will be the name of {@link #getDirectory()}

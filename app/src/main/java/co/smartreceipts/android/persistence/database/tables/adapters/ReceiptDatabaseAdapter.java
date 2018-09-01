@@ -31,18 +31,18 @@ import wb.android.storage.StorageManager;
  */
 public final class ReceiptDatabaseAdapter implements SelectionBackedDatabaseAdapter<Receipt, PrimaryKey<Receipt, Integer>, Trip> {
 
-    private final Table<Trip, String> mTripsTable;
+    private final Table<Trip, Integer> mTripsTable;
     private final Table<PaymentMethod, Integer> mPaymentMethodTable;
     private final Table<Category, Integer> mCategoriesTable;
     private final StorageManager mStorageManager;
     private final SyncStateAdapter mSyncStateAdapter;
 
-    public ReceiptDatabaseAdapter(@NonNull Table<Trip, String> tripsTable, @NonNull Table<PaymentMethod, Integer> paymentMethodTable,
+    public ReceiptDatabaseAdapter(@NonNull Table<Trip, Integer> tripsTable, @NonNull Table<PaymentMethod, Integer> paymentMethodTable,
                                   @NonNull Table<Category, Integer> categoriesTable, @NonNull StorageManager storageManager) {
         this(tripsTable, paymentMethodTable, categoriesTable, storageManager, new SyncStateAdapter());
     }
 
-    public ReceiptDatabaseAdapter(@NonNull Table<Trip, String> tripsTable, @NonNull Table<PaymentMethod, Integer> paymentMethodTable,
+    public ReceiptDatabaseAdapter(@NonNull Table<Trip, Integer> tripsTable, @NonNull Table<PaymentMethod, Integer> paymentMethodTable,
                                   @NonNull Table<Category, Integer> categoriesTable, @NonNull StorageManager storageManager,
                                   @NonNull SyncStateAdapter syncStateAdapter) {
         mTripsTable = Preconditions.checkNotNull(tripsTable);
@@ -55,8 +55,8 @@ public final class ReceiptDatabaseAdapter implements SelectionBackedDatabaseAdap
     @NonNull
     @Override
     public Receipt read(@NonNull Cursor cursor) {
-        final int parentIndex = cursor.getColumnIndex(ReceiptsTable.COLUMN_PARENT);
-        final Trip trip = mTripsTable.findByPrimaryKey(cursor.getString(parentIndex)).blockingGet();
+        final int parentIndex = cursor.getColumnIndex(ReceiptsTable.COLUMN_PARENT_TRIP_ID);
+        final Trip trip = mTripsTable.findByPrimaryKey(cursor.getInt(parentIndex)).blockingGet();
         return readForSelection(cursor, trip, true);
     }
 
@@ -193,7 +193,7 @@ public final class ReceiptDatabaseAdapter implements SelectionBackedDatabaseAdap
         final ContentValues values = new ContentValues();
 
         // Add core data
-        values.put(ReceiptsTable.COLUMN_PARENT, receipt.getTrip().getName());
+        values.put(ReceiptsTable.COLUMN_PARENT_TRIP_ID, receipt.getTrip().getId());
         values.put(ReceiptsTable.COLUMN_NAME, receipt.getName().trim());
         values.put(ReceiptsTable.COLUMN_CATEGORY_ID, receipt.getCategory().getId());
         values.put(ReceiptsTable.COLUMN_DATE, receipt.getDate().getTime());

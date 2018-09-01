@@ -3,7 +3,6 @@ package co.smartreceipts.android.persistence.database.tables;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.text.TextUtils;
 
 import org.junit.After;
 import org.junit.Before;
@@ -34,6 +33,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -97,14 +97,16 @@ public class PaymentMethodsTableTest {
         verify(mSQLiteDatabase, atLeastOnce()).execSQL(mSqlCaptor.capture());
         verify(customizer).insertPaymentMethodDefaults(mPaymentMethodsTable);
 
-        assertTrue(mSqlCaptor.getValue().contains("CREATE TABLE paymentmethods"));
-        assertTrue(mSqlCaptor.getValue().contains("id INTEGER PRIMARY KEY AUTOINCREMENT"));
-        assertTrue(mSqlCaptor.getValue().contains("method TEXT"));
-        assertTrue(mSqlCaptor.getValue().contains("drive_sync_id TEXT"));
-        assertTrue(mSqlCaptor.getValue().contains("drive_is_synced BOOLEAN DEFAULT 0"));
-        assertTrue(mSqlCaptor.getValue().contains("drive_marked_for_deletion BOOLEAN DEFAULT 0"));
-        assertTrue(mSqlCaptor.getValue().contains("last_local_modification_time DATE"));
-        assertTrue(mSqlCaptor.getValue().contains("custom_order_id INTEGER DEFAULT 0"));
+        final String creatingTable = mSqlCaptor.getValue();
+        assertTrue(creatingTable.contains("CREATE TABLE paymentmethods"));
+        assertTrue(creatingTable.contains("id INTEGER PRIMARY KEY AUTOINCREMENT"));
+        assertTrue(creatingTable.contains("method TEXT"));
+        assertTrue(creatingTable.contains("drive_sync_id TEXT"));
+        assertTrue(creatingTable.contains("drive_is_synced BOOLEAN DEFAULT 0"));
+        assertTrue(creatingTable.contains("drive_marked_for_deletion BOOLEAN DEFAULT 0"));
+        assertTrue(creatingTable.contains("last_local_modification_time DATE"));
+        assertTrue(creatingTable.contains("custom_order_id INTEGER DEFAULT 0"));
+        assertTrue(creatingTable.contains("uuid TEXT"));
     }
 
     @Test
@@ -174,7 +176,7 @@ public class PaymentMethodsTableTest {
         when(cursor.moveToNext()).thenReturn(true, true, true, true, true, true, false);
 
         mPaymentMethodsTable.onUpgrade(mSQLiteDatabase, oldVersion, newVersion, customizer);
-        verify(mSQLiteDatabase, never()).execSQL(mSqlCaptor.capture());
+        verify(mSQLiteDatabase, times(1)).execSQL(mSqlCaptor.capture());
         verify(customizer, never()).insertPaymentMethodDefaults(mPaymentMethodsTable);
     }
 

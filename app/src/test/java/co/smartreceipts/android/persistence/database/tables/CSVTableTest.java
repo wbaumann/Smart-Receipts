@@ -35,7 +35,6 @@ import co.smartreceipts.android.workers.reports.ReportResourcesManager;
 import static co.smartreceipts.android.persistence.database.tables.AbstractColumnTable.COLUMN_ID;
 import static co.smartreceipts.android.persistence.database.tables.AbstractColumnTable.COLUMN_TYPE;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.atLeastOnce;
@@ -113,6 +112,7 @@ public class CSVTableTest {
         assertTrue(sqlCaptor.getValue().contains("drive_marked_for_deletion BOOLEAN"));
         assertTrue(sqlCaptor.getValue().contains("last_local_modification_time DATE"));
         assertTrue(sqlCaptor.getValue().contains("custom_order_id INTEGER DEFAULT 0"));
+        assertTrue(sqlCaptor.getValue().contains("entity_uuid TEXT"));
     }
 
     @Test

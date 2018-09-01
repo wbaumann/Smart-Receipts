@@ -23,6 +23,9 @@ import co.smartreceipts.android.sync.model.impl.DefaultSyncState;
  */
 public final class TripBuilderFactory implements BuilderFactory<Trip> {
 
+    private static final int UNKNOWN_ID = -1;
+
+    private int _id;
     private File _dir;
     private String _comment, _costCenter;
     private Date _startDate, _endDate;
@@ -32,6 +35,7 @@ public final class TripBuilderFactory implements BuilderFactory<Trip> {
     private Source _source;
 
     public TripBuilderFactory() {
+        _id = UNKNOWN_ID;
         _dir = new File("");
         _comment = "";
         _costCenter = "";
@@ -45,6 +49,7 @@ public final class TripBuilderFactory implements BuilderFactory<Trip> {
     }
 
     public TripBuilderFactory(@NonNull Trip trip) {
+        _id = trip.getId();
         _dir = trip.getDirectory();
         _comment = trip.getComment();
         _costCenter = trip.getCostCenter();
@@ -55,6 +60,11 @@ public final class TripBuilderFactory implements BuilderFactory<Trip> {
         _startTimeZone = trip.getStartTimeZone();
         _endTimeZone = trip.getEndTimeZone();
         _syncState = trip.getSyncState();
+    }
+
+    public TripBuilderFactory setId(int id) {
+        _id = id;
+        return this;
     }
 
     public TripBuilderFactory setDirectory(@NonNull File directory) {
@@ -151,6 +161,7 @@ public final class TripBuilderFactory implements BuilderFactory<Trip> {
     @Override
     @NonNull
     public Trip build() {
-        return new DefaultTripImpl(_dir, _startDate, _startTimeZone, _endDate, _endTimeZone, _defaultCurrency, _comment, _costCenter, _source, _syncState);
+        return new DefaultTripImpl(_id, _dir, _startDate, _startTimeZone, _endDate, _endTimeZone, _defaultCurrency,
+                _comment, _costCenter, _source, _syncState);
     }
 }

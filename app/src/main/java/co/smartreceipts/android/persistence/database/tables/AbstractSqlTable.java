@@ -12,6 +12,7 @@ import com.hadisatrio.optional.Optional;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import co.smartreceipts.android.persistence.database.defaults.TableDefaultsCustomizer;
 import co.smartreceipts.android.persistence.database.operations.DatabaseOperationMetadata;
@@ -20,8 +21,8 @@ import co.smartreceipts.android.persistence.database.tables.adapters.DatabaseAda
 import co.smartreceipts.android.persistence.database.tables.adapters.SyncStateAdapter;
 import co.smartreceipts.android.persistence.database.tables.keys.AutoIncrementIdPrimaryKey;
 import co.smartreceipts.android.persistence.database.tables.keys.PrimaryKey;
-import co.smartreceipts.android.persistence.database.tables.ordering.OrderByDatabaseDefault;
 import co.smartreceipts.android.persistence.database.tables.ordering.OrderBy;
+import co.smartreceipts.android.persistence.database.tables.ordering.OrderByDatabaseDefault;
 import co.smartreceipts.android.sync.model.Syncable;
 import co.smartreceipts.android.sync.provider.SyncProvider;
 import co.smartreceipts.android.utils.log.Logger;
@@ -36,6 +37,8 @@ import io.reactivex.Single;
  */
 public abstract class AbstractSqlTable<ModelType, PrimaryKeyType> implements Table<ModelType, PrimaryKeyType> {
 
+    public static final String COLUMN_ID = "id";
+    public static final String COLUMN_UUID = "entity_uuid";
     public static final String COLUMN_DRIVE_SYNC_ID = "drive_sync_id";
     public static final String COLUMN_DRIVE_IS_SYNCED = "drive_is_synced";
     public static final String COLUMN_DRIVE_MARKED_FOR_DELETION = "drive_marked_for_deletion";
@@ -116,6 +119,42 @@ public abstract class AbstractSqlTable<ModelType, PrimaryKeyType> implements Tab
         }
     }
 
+    protected synchronized void onUpgradeToAddUUID(@NonNull SQLiteDatabase db, int oldVersion) {
+        if (oldVersion <= 18) { // Add a uuid to all app database tables
+            final String addNewColumn = "ALTER TABLE " + getTableName() + " ADD " + COLUMN_UUID + " TEXT";
+            db.execSQL(addNewColumn);
+
+            // assign random values
+            Cursor cursor = null;
+            try {
+                cursor = db.query(getTableName(), new String[]{COLUMN_UUID}, null, null, null, null, null);
+                if (cursor != null && cursor.moveToFirst()) {
+
+                    final int idIdx = cursor.getColumnIndex(ReceiptsTable.COLUMN_ID);
+
+                    do {
+                        final int id = cursor.getInt(idIdx);
+                        final String uuid = UUID.randomUUID().toString();
+
+                        final ContentValues columnValues = new ContentValues(1);
+                        columnValues.put(COLUMN_UUID, uuid);
+                        Logger.debug(this, "Updating UUID value to {}", uuid);
+
+                        if (db.update(getTableName(), columnValues, COLUMN_ID + "= ?", new String[]{Integer.toString(id)}) == 0) {
+                            Logger.error(this, "Column update error happened");
+                        } else {
+                            throw new RuntimeException("UUID update error happened for (" + id + ")");
+                        }
+                    } while (cursor.moveToNext());
+                }
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
+        }
+    }
+
     @Override
     public synchronized final void onPostCreateUpgrade() {
         // We no longer need to worry about recursive database calls
@@ -139,23 +178,23 @@ public abstract class AbstractSqlTable<ModelType, PrimaryKeyType> implements Tab
         Preconditions.checkArgument(syncProvider == SyncProvider.GoogleDrive, "Google Drive is the only supported provider at the moment");
 
         return Single.fromCallable(() -> {
-                    Cursor cursor = null;
-                    try {
-                        final List<ModelType> results = new ArrayList<>();
-                        cursor = getReadableDatabase().query(getTableName(), null, COLUMN_DRIVE_MARKED_FOR_DELETION + " = ?", new String[]{Integer.toString(1)}, null, null, null);
-                        if (cursor != null && cursor.moveToFirst()) {
-                            do {
-                                results.add(databaseAdapter.read(cursor));
-                            }
-                            while (cursor.moveToNext());
-                        }
-                        return results;
-                    } finally {
-                        if (cursor != null) {
-                            cursor.close();
-                        }
+            Cursor cursor = null;
+            try {
+                final List<ModelType> results = new ArrayList<>();
+                cursor = getReadableDatabase().query(getTableName(), null, COLUMN_DRIVE_MARKED_FOR_DELETION + " = ?", new String[]{Integer.toString(1)}, null, null, null);
+                if (cursor != null && cursor.moveToFirst()) {
+                    do {
+                        results.add(databaseAdapter.read(cursor));
                     }
-                });
+                    while (cursor.moveToNext());
+                }
+                return results;
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
+        });
     }
 
     @NonNull
@@ -243,6 +282,11 @@ public abstract class AbstractSqlTable<ModelType, PrimaryKeyType> implements Tab
     @NonNull
     public synchronized Optional<ModelType> insertBlocking(@NonNull ModelType modelType, @NonNull DatabaseOperationMetadata databaseOperationMetadata) {
         final ContentValues values = databaseAdapter.write(modelType, databaseOperationMetadata);
+
+        if (!values.containsKey(COLUMN_UUID)) { // todo 31.08.18 while merge?
+            values.put(COLUMN_UUID, UUID.randomUUID().toString());
+        }
+
         if (getWritableDatabase().insertOrThrow(getTableName(), null, values) != -1) {
             if (Integer.class.equals(primaryKey.getPrimaryKeyClass())) {
                 Cursor cursor = null;
@@ -297,9 +341,9 @@ public abstract class AbstractSqlTable<ModelType, PrimaryKeyType> implements Tab
         if (databaseOperationMetadata.getOperationFamilyType() == OperationFamilyType.Sync && oldModelType instanceof Syncable) {
             // For sync operations, ensure that this only succeeds if we haven't already updated this item more recently
             final Syncable syncableOldModel = (Syncable) oldModelType;
-            updateSuccess = getWritableDatabase().update(getTableName(), values, primaryKey.getPrimaryKeyColumn() + " = ? AND " + AbstractSqlTable.COLUMN_LAST_LOCAL_MODIFICATION_TIME + " >= ?", new String[]{ oldPrimaryKeyValue, Long.toString(syncableOldModel.getSyncState().getLastLocalModificationTime().getTime()) }) > 0;
+            updateSuccess = getWritableDatabase().update(getTableName(), values, primaryKey.getPrimaryKeyColumn() + " = ? AND " + AbstractSqlTable.COLUMN_LAST_LOCAL_MODIFICATION_TIME + " >= ?", new String[]{oldPrimaryKeyValue, Long.toString(syncableOldModel.getSyncState().getLastLocalModificationTime().getTime())}) > 0;
         } else {
-            updateSuccess = getWritableDatabase().update(getTableName(), values, primaryKey.getPrimaryKeyColumn() + " = ?", new String[]{ oldPrimaryKeyValue }) > 0;
+            updateSuccess = getWritableDatabase().update(getTableName(), values, primaryKey.getPrimaryKeyColumn() + " = ?", new String[]{oldPrimaryKeyValue}) > 0;
         }
 
         if (updateSuccess) {

@@ -33,7 +33,7 @@ public class DefaultObjects {
 
     @NonNull
     public static Trip newDefaultTrip() {
-        return new DefaultTripImpl(new File(new File("").getAbsolutePath()),
+        return new DefaultTripImpl(-1, new File(new File("").getAbsolutePath()),
                                   new Date(System.currentTimeMillis()),
                                   TimeZone.getDefault(),
                                   new Date(System.currentTimeMillis()),

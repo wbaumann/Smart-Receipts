@@ -2,6 +2,7 @@ package co.smartreceipts.android.persistence.database.tables;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.text.TextUtils;
 
 import org.junit.After;
 import org.junit.Before;
@@ -41,7 +42,6 @@ import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 public class CategoriesTableTest {
@@ -120,6 +120,7 @@ public class CategoriesTableTest {
         assertTrue(creatingTable.contains("drive_marked_for_deletion BOOLEAN DEFAULT 0"));
         assertTrue(creatingTable.contains("last_local_modification_time DATE"));
         assertTrue(creatingTable.contains("custom_order_id INTEGER DEFAULT 0"));
+        assertTrue(creatingTable.contains("entity_uuid TEXT"));
     }
 
     @Test
@@ -166,7 +167,7 @@ public class CategoriesTableTest {
         verify(customizer, never()).insertCategoryDefaults(mCategoriesTable);
 
         List<String> allValues = mSqlCaptor.getAllValues();
-        assertEquals(4, allValues.size());
+        assertEquals(5, allValues.size());
 
         assertEquals(allValues.get(0), "CREATE TABLE " + CategoriesTable.TABLE_NAME + "_copy" + " ("
                 + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -180,9 +181,9 @@ public class CategoriesTableTest {
                 + COLUMN_CUSTOM_ORDER_ID + " INTEGER DEFAULT 0"
                 + ");");
 
-        final String baseColumns = String.format("%s, %s, %s, %s, %s, %s, %s",
+        final String baseColumns = TextUtils.join(", ", new String[]{
                 COLUMN_NAME, COLUMN_CODE, COLUMN_BREAKDOWN, COLUMN_DRIVE_SYNC_ID,
-                COLUMN_DRIVE_IS_SYNCED, COLUMN_DRIVE_MARKED_FOR_DELETION, COLUMN_LAST_LOCAL_MODIFICATION_TIME);
+                COLUMN_DRIVE_IS_SYNCED, COLUMN_DRIVE_MARKED_FOR_DELETION, COLUMN_LAST_LOCAL_MODIFICATION_TIME});
 
 
         assertEquals(allValues.get(1), "INSERT INTO " + CategoriesTable.TABLE_NAME + "_copy ("
@@ -194,6 +195,8 @@ public class CategoriesTableTest {
 
         assertEquals(allValues.get(3), "ALTER TABLE " + CategoriesTable.TABLE_NAME + "_copy "
                 + "RENAME TO " + CategoriesTable.TABLE_NAME + ";");
+
+        assertEquals(allValues.get(4), "ALTER TABLE " + CategoriesTable.TABLE_NAME + " ADD " + AbstractSqlTable.COLUMN_UUID + " TEXT");
 
     }
 

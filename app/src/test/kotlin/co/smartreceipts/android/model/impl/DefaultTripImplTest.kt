@@ -31,6 +31,7 @@ class DefaultTripImplTest {
 
     companion object {
 
+        private val ID = 5
         private val NAME = "TripName"
         private val DIRECTORY = File(File(NAME).absolutePath)
         private val START_DATE = Date(1409703721000L)
@@ -56,16 +57,8 @@ class DefaultTripImplTest {
         TestLocaleToggler.setDefaultLocale(Locale.US)
         syncState = DefaultObjects.newDefaultSyncState()
         trip = DefaultTripImpl(
-            DIRECTORY,
-            START_DATE,
-            START_TIMEZONE,
-            END_DATE,
-            END_TIMEZONE,
-            CURRENCY,
-            COMMENT,
-            COST_CENTER,
-            Source.Undefined,
-            syncState
+            ID, DIRECTORY, START_DATE, START_TIMEZONE, END_DATE, END_TIMEZONE, CURRENCY, COMMENT,
+            COST_CENTER, Source.Undefined, syncState
         )
     }
 
@@ -168,50 +161,20 @@ class DefaultTripImplTest {
     fun compareTo() {
         assertTrue(
             trip.compareTo(
-                DefaultTripImpl(
-                    DIRECTORY,
-                    START_DATE,
-                    START_TIMEZONE,
-                    END_DATE,
-                    END_TIMEZONE,
-                    CURRENCY,
-                    COMMENT,
-                    COST_CENTER,
-                    Source.Undefined,
-                    syncState
-                )
+                DefaultTripImpl(ID, DIRECTORY, START_DATE, START_TIMEZONE, END_DATE, END_TIMEZONE, CURRENCY, COMMENT, COST_CENTER,
+                    Source.Undefined, syncState)
             ) == 0
         )
         assertTrue(
             trip.compareTo(
-                DefaultTripImpl(
-                    DIRECTORY,
-                    START_DATE,
-                    START_TIMEZONE,
-                    Date(END_DATE.time * 2),
-                    END_TIMEZONE,
-                    CURRENCY,
-                    COMMENT,
-                    COST_CENTER,
-                    Source.Undefined,
-                    syncState
-                )
+                DefaultTripImpl(ID, DIRECTORY, START_DATE, START_TIMEZONE, Date(END_DATE.time * 2), END_TIMEZONE, CURRENCY, COMMENT,
+                    COST_CENTER, Source.Undefined, syncState)
             ) > 0
         )
         assertTrue(
             trip.compareTo(
-                DefaultTripImpl(
-                    DIRECTORY,
-                    START_DATE,
-                    START_TIMEZONE,
-                    Date(0),
-                    END_TIMEZONE,
-                    CURRENCY,
-                    COMMENT,
-                    COST_CENTER,
-                    Source.Undefined,
-                    syncState
-                )
+                DefaultTripImpl(ID, DIRECTORY, START_DATE, START_TIMEZONE, Date(0), END_TIMEZONE, CURRENCY, COMMENT, COST_CENTER,
+                    Source.Undefined, syncState)
             ) < 0
         )
     }
@@ -221,18 +184,8 @@ class DefaultTripImplTest {
         assertEquals(trip, trip)
         assertEquals(
             trip,
-            DefaultTripImpl(
-                DIRECTORY,
-                START_DATE,
-                START_TIMEZONE,
-                END_DATE,
-                END_TIMEZONE,
-                CURRENCY,
-                COMMENT,
-                COST_CENTER,
-                Source.Undefined,
-                syncState
-            )
+            DefaultTripImpl(ID, DIRECTORY, START_DATE, START_TIMEZONE, END_DATE, END_TIMEZONE, CURRENCY, COMMENT, COST_CENTER,
+                Source.Undefined, syncState)
         )
         assertThat(trip, not(equalTo(Any())))
         assertThat(trip, not(equalTo(mock(Trip::class.java))))
@@ -241,16 +194,28 @@ class DefaultTripImplTest {
             not(
                 equalTo(
                     DefaultTripImpl(
-                        File(""),
-                        START_DATE,
-                        START_TIMEZONE,
-                        END_DATE,
-                        END_TIMEZONE,
-                        CURRENCY,
-                        COMMENT,
-                        COST_CENTER,
-                        Source.Undefined,
-                        syncState
+                        ID, File(""), START_DATE, START_TIMEZONE, END_DATE, END_TIMEZONE, CURRENCY, COMMENT, COST_CENTER,
+                        Source.Undefined, syncState
+                    )
+                )
+            )
+        )
+        assertThat(
+            trip,
+            not(
+                equalTo(
+                    DefaultTripImpl(ID, DIRECTORY, Date(System.currentTimeMillis()), START_TIMEZONE, END_DATE, END_TIMEZONE, CURRENCY,
+                        COMMENT, COST_CENTER, Source.Undefined, syncState)
+                )
+            )
+        )
+        assertThat(
+            trip,
+            not(
+                equalTo(
+                    DefaultTripImpl(
+                        ID, DIRECTORY, START_DATE, TimeZone.getTimeZone(TimeZone.getAvailableIDs()[2]), END_DATE, END_TIMEZONE,
+                        CURRENCY, COMMENT, COST_CENTER, Source.Undefined, syncState
                     )
                 )
             )
@@ -260,16 +225,8 @@ class DefaultTripImplTest {
             not(
                 equalTo(
                     DefaultTripImpl(
-                        DIRECTORY,
-                        Date(System.currentTimeMillis()),
-                        START_TIMEZONE,
-                        END_DATE,
-                        END_TIMEZONE,
-                        CURRENCY,
-                        COMMENT,
-                        COST_CENTER,
-                        Source.Undefined,
-                        syncState
+                        ID, DIRECTORY, START_DATE, START_TIMEZONE, Date(System.currentTimeMillis()), END_TIMEZONE, CURRENCY,
+                        COMMENT, COST_CENTER, Source.Undefined, syncState
                     )
                 )
             )
@@ -279,16 +236,8 @@ class DefaultTripImplTest {
             not(
                 equalTo(
                     DefaultTripImpl(
-                        DIRECTORY,
-                        START_DATE,
-                        TimeZone.getTimeZone(TimeZone.getAvailableIDs()[2]),
-                        END_DATE,
-                        END_TIMEZONE,
-                        CURRENCY,
-                        COMMENT,
-                        COST_CENTER,
-                        Source.Undefined,
-                        syncState
+                        ID, DIRECTORY, START_DATE, START_TIMEZONE, END_DATE, TimeZone.getTimeZone(TimeZone.getAvailableIDs()[2]),
+                        CURRENCY, COMMENT, COST_CENTER, Source.Undefined, syncState
                     )
                 )
             )
@@ -297,18 +246,8 @@ class DefaultTripImplTest {
             trip,
             not(
                 equalTo(
-                    DefaultTripImpl(
-                        DIRECTORY,
-                        START_DATE,
-                        START_TIMEZONE,
-                        Date(System.currentTimeMillis()),
-                        END_TIMEZONE,
-                        CURRENCY,
-                        COMMENT,
-                        COST_CENTER,
-                        Source.Undefined,
-                        syncState
-                    )
+                    DefaultTripImpl(ID, DIRECTORY, START_DATE, START_TIMEZONE, END_DATE, END_TIMEZONE,
+                        PriceCurrency.getInstance("EUR"), COMMENT, COST_CENTER, Source.Undefined, syncState)
                 )
             )
         )
@@ -316,18 +255,8 @@ class DefaultTripImplTest {
             trip,
             not(
                 equalTo(
-                    DefaultTripImpl(
-                        DIRECTORY,
-                        START_DATE,
-                        START_TIMEZONE,
-                        END_DATE,
-                        TimeZone.getTimeZone(TimeZone.getAvailableIDs()[2]),
-                        CURRENCY,
-                        COMMENT,
-                        COST_CENTER,
-                        Source.Undefined,
-                        syncState
-                    )
+                    DefaultTripImpl( ID, DIRECTORY, START_DATE, START_TIMEZONE, END_DATE, END_TIMEZONE, CURRENCY, "bad",
+                        COST_CENTER, Source.Undefined, syncState)
                 )
             )
         )
@@ -335,101 +264,24 @@ class DefaultTripImplTest {
             trip,
             not(
                 equalTo(
-                    DefaultTripImpl(
-                        DIRECTORY,
-                        START_DATE,
-                        START_TIMEZONE,
-                        END_DATE,
-                        END_TIMEZONE,
-                        PriceCurrency.getInstance("EUR"),
-                        COMMENT,
-                        COST_CENTER,
-                        Source.Undefined,
-                        syncState
-                    )
-                )
-            )
-        )
-        assertThat(
-            trip,
-            not(
-                equalTo(
-                    DefaultTripImpl(
-                        DIRECTORY,
-                        START_DATE,
-                        START_TIMEZONE,
-                        END_DATE,
-                        END_TIMEZONE,
-                        CURRENCY,
-                        "bad",
-                        COST_CENTER,
-                        Source.Undefined,
-                        syncState
-                    )
-                )
-            )
-        )
-        assertThat(
-            trip,
-            not(
-                equalTo(
-                    DefaultTripImpl(
-                        DIRECTORY,
-                        START_DATE,
-                        START_TIMEZONE,
-                        END_DATE,
-                        END_TIMEZONE,
-                        CURRENCY,
-                        COMMENT,
-                        "bad",
-                        Source.Undefined,
-                        syncState
-                    )
+                    DefaultTripImpl( ID, DIRECTORY, START_DATE, START_TIMEZONE, END_DATE, END_TIMEZONE, CURRENCY, COMMENT, "bad",
+                        Source.Undefined, syncState)
                 )
             )
         )
 
         // Special equals cases (source, price, and daily subtotal don't cound):
-        val tripWithPrice = DefaultTripImpl(
-            DIRECTORY,
-            START_DATE,
-            START_TIMEZONE,
-            END_DATE,
-            END_TIMEZONE,
-            CURRENCY,
-            COMMENT,
-            COST_CENTER,
-            Source.Undefined,
-            syncState
-        )
-        val tripWithDailySubTotal = DefaultTripImpl(
-            DIRECTORY,
-            START_DATE,
-            START_TIMEZONE,
-            END_DATE,
-            END_TIMEZONE,
-            CURRENCY,
-            COMMENT,
-            COST_CENTER,
-            Source.Undefined,
-            syncState
-        )
+        val tripWithPrice = DefaultTripImpl( ID, DIRECTORY, START_DATE, START_TIMEZONE, END_DATE, END_TIMEZONE, CURRENCY, COMMENT,
+            COST_CENTER, Source.Undefined, syncState)
+
+        val tripWithDailySubTotal = DefaultTripImpl( ID, DIRECTORY, START_DATE, START_TIMEZONE, END_DATE, END_TIMEZONE, CURRENCY, COMMENT,
+            COST_CENTER, Source.Undefined, syncState)
+
         tripWithPrice.price = price!!
         tripWithDailySubTotal.dailySubTotal = price!!
         assertEquals(
             trip,
-            DefaultTripImpl(
-                DIRECTORY,
-                START_DATE,
-                START_TIMEZONE,
-                END_DATE,
-                END_TIMEZONE,
-                CURRENCY,
-                COMMENT,
-                COST_CENTER,
-                Source.Parcel,
-                syncState
-            )
+            DefaultTripImpl( ID, DIRECTORY, START_DATE, START_TIMEZONE, END_DATE, END_TIMEZONE, CURRENCY, COMMENT, COST_CENTER, Source.Parcel, syncState)
         )
         assertEquals(trip, tripWithPrice)
         assertEquals(trip, tripWithDailySubTotal)

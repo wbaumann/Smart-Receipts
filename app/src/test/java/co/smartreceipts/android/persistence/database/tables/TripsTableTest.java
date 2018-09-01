@@ -32,6 +32,8 @@ import co.smartreceipts.android.settings.UserPreferenceManager;
 import co.smartreceipts.android.settings.catalog.UserPreference;
 import wb.android.storage.StorageManager;
 
+import static co.smartreceipts.android.persistence.database.tables.AbstractSqlTable.COLUMN_ID;
+import static co.smartreceipts.android.persistence.database.tables.TripsTable.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -116,8 +118,11 @@ public class TripsTableTest {
         mTripsTable.onCreate(mSQLiteOpenHelper.getWritableDatabase(), mTableDefaultsCustomizer);
         mBuilder = new TripBuilderFactory();
         mBuilder.setStartTimeZone(START_TIMEZONE).setEndTimeZone(END_TIMEZONE).setComment(COMMENT).setCostCenter(COST_CENTER).setDefaultCurrency(CURRENCY_CODE, mPreferences.get(UserPreference.General.DefaultCurrency));
-        mTrip1 = mTripsTable.insert(mBuilder.setStartDate(START_DATE_1).setEndDate(END_DATE_1).setDirectory(mStorageManager.getFile(NAME_1)).build(), new DatabaseOperationMetadata()).blockingGet();
-        mTrip2 = mTripsTable.insert(mBuilder.setStartDate(START_DATE_2).setEndDate(END_DATE_2).setDirectory(mStorageManager.getFile(NAME_2)).build(), new DatabaseOperationMetadata()).blockingGet();
+        final Trip trip1 = mBuilder.setStartDate(START_DATE_1).setEndDate(END_DATE_1).setDirectory(mStorageManager.getFile(NAME_1)).build();
+        final Trip trip2 = mBuilder.setStartDate(START_DATE_2).setEndDate(END_DATE_2).setDirectory(mStorageManager.getFile(NAME_2)).build();
+
+        mTrip1 = mTripsTable.insert(trip1, new DatabaseOperationMetadata()).blockingGet();
+        mTrip2 = mTripsTable.insert(trip2, new DatabaseOperationMetadata()).blockingGet();
     }
 
     @After
@@ -137,21 +142,24 @@ public class TripsTableTest {
         verify(mSQLiteDatabase).execSQL(mSqlCaptor.capture());
         verifyZeroInteractions(customizer);
 
-        assertTrue(mSqlCaptor.getValue().contains("CREATE TABLE trips")); // Table name
-        assertTrue(mSqlCaptor.getValue().contains("name TEXT PRIMARY KEY"));
-        assertTrue(mSqlCaptor.getValue().contains("from_date DATE"));
-        assertTrue(mSqlCaptor.getValue().contains("to_date DATE"));
-        assertTrue(mSqlCaptor.getValue().contains("from_timezone TEXT"));
-        assertTrue(mSqlCaptor.getValue().contains("to_timezone TEXT"));
-        assertTrue(mSqlCaptor.getValue().contains("trips_comment TEXT"));
-        assertTrue(mSqlCaptor.getValue().contains("trips_cost_center TEXT"));
-        assertTrue(mSqlCaptor.getValue().contains("trips_default_currency TEXT"));
-        assertTrue(mSqlCaptor.getValue().contains("trips_filters TEXT"));
-        assertTrue(mSqlCaptor.getValue().contains("trip_processing_status TEXT"));
-        assertTrue(mSqlCaptor.getValue().contains("drive_sync_id TEXT"));
-        assertTrue(mSqlCaptor.getValue().contains("drive_is_synced BOOLEAN DEFAULT 0"));
-        assertTrue(mSqlCaptor.getValue().contains("drive_marked_for_deletion BOOLEAN DEFAULT 0"));
-        assertTrue(mSqlCaptor.getValue().contains("last_local_modification_time DATE"));
+        final String creatingTable = mSqlCaptor.getValue();
+        assertTrue(creatingTable.contains("CREATE TABLE trips")); // Table name
+        assertTrue(creatingTable.contains("id INTEGER PRIMARY KEY AUTOINCREMENT"));
+        assertTrue(creatingTable.contains("name TEXT UNIQUE"));
+        assertTrue(creatingTable.contains("from_date DATE"));
+        assertTrue(creatingTable.contains("to_date DATE"));
+        assertTrue(creatingTable.contains("from_timezone TEXT"));
+        assertTrue(creatingTable.contains("to_timezone TEXT"));
+        assertTrue(creatingTable.contains("trips_comment TEXT"));
+        assertTrue(creatingTable.contains("trips_cost_center TEXT"));
+        assertTrue(creatingTable.contains("trips_default_currency TEXT"));
+        assertTrue(creatingTable.contains("trips_filters TEXT"));
+        assertTrue(creatingTable.contains("trip_processing_status TEXT"));
+        assertTrue(creatingTable.contains("drive_sync_id TEXT"));
+        assertTrue(creatingTable.contains("drive_is_synced BOOLEAN DEFAULT 0"));
+        assertTrue(creatingTable.contains("drive_marked_for_deletion BOOLEAN DEFAULT 0"));
+        assertTrue(creatingTable.contains("last_local_modification_time DATE"));
+        assertTrue(creatingTable.contains("entity_uuid TEXT"));
     }
 
     @Test
@@ -229,6 +237,22 @@ public class TripsTableTest {
         verifyV14Upgrade(times(1));
     }
 
+    @Test
+    public void onUpgradeFromV18() {
+        final int oldVersion = 18;
+        final int newVersion = DatabaseHelper.DATABASE_VERSION;
+
+        final TableDefaultsCustomizer customizer = mock(TableDefaultsCustomizer.class);
+        mTripsTable.onUpgrade(mSQLiteDatabase, oldVersion, newVersion, customizer);
+        verifyZeroInteractions(customizer);
+        verifyV8Upgrade(never());
+        verifyV10Upgrade(never());
+        verifyV11Upgrade(never());
+        verifyV12Upgrade(never());
+        verifyV14Upgrade(never());
+        verifyV18Upgrade(times(1));
+    }
+
     private void verifyV8Upgrade(@NonNull VerificationMode verificationMode) {
         verify(mSQLiteDatabase, verificationMode).execSQL("ALTER TABLE trips ADD from_timezone TEXT");
         verify(mSQLiteDatabase, verificationMode).execSQL("ALTER TABLE trips ADD to_timezone TEXT");
@@ -253,6 +277,45 @@ public class TripsTableTest {
         verify(mSQLiteDatabase, verificationMode).execSQL("ALTER TABLE " + mTripsTable.getTableName() + " ADD drive_is_synced BOOLEAN DEFAULT 0");
         verify(mSQLiteDatabase, verificationMode).execSQL("ALTER TABLE " + mTripsTable.getTableName() + " ADD drive_marked_for_deletion BOOLEAN DEFAULT 0");
         verify(mSQLiteDatabase, verificationMode).execSQL("ALTER TABLE " + mTripsTable.getTableName() + " ADD last_local_modification_time DATE");
+    }
+
+    private void verifyV18Upgrade(@NonNull VerificationMode verificationMode) {
+        final String copyTable = "CREATE TABLE " + TripsTable.TABLE_NAME + "_copy" + " ("
+                + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + COLUMN_NAME + " TEXT UNIQUE, "
+                + COLUMN_FROM + " DATE, "
+                + COLUMN_TO + " DATE, "
+                + COLUMN_FROM_TIMEZONE + " TEXT, "
+                + COLUMN_TO_TIMEZONE + " TEXT, "
+                + COLUMN_COMMENT + " TEXT, "
+                + COLUMN_COST_CENTER + " TEXT, "
+                + COLUMN_DEFAULT_CURRENCY + " TEXT, "
+                + COLUMN_PROCESSING_STATUS + " TEXT, "
+                + COLUMN_FILTERS + " TEXT, "
+                + AbstractSqlTable.COLUMN_DRIVE_SYNC_ID + " TEXT, "
+                + AbstractSqlTable.COLUMN_DRIVE_IS_SYNCED + " BOOLEAN DEFAULT 0, "
+                + AbstractSqlTable.COLUMN_DRIVE_MARKED_FOR_DELETION + " BOOLEAN DEFAULT 0, "
+                + AbstractSqlTable.COLUMN_LAST_LOCAL_MODIFICATION_TIME + " DATE"
+                + ");";
+
+        final String baseColumns = String.format("%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s",
+                COLUMN_NAME, COLUMN_FROM, COLUMN_TO, COLUMN_FROM_TIMEZONE,
+                COLUMN_TO_TIMEZONE, COLUMN_COMMENT, COLUMN_COST_CENTER, COLUMN_DEFAULT_CURRENCY, COLUMN_PROCESSING_STATUS, COLUMN_FILTERS, COLUMN_DRIVE_SYNC_ID,
+                COLUMN_DRIVE_IS_SYNCED, COLUMN_DRIVE_MARKED_FOR_DELETION, COLUMN_LAST_LOCAL_MODIFICATION_TIME);
+
+        final String insertData = "INSERT INTO " + TripsTable.TABLE_NAME + "_copy"
+                + " (" + baseColumns + ") "
+                + "SELECT " + baseColumns
+                + " FROM " + TripsTable.TABLE_NAME + ";";
+
+        final String dropOldTable = "DROP TABLE " + TripsTable.TABLE_NAME + ";";
+
+        final String renameTable = "ALTER TABLE " + TripsTable.TABLE_NAME + "_copy" + " RENAME TO " + TripsTable.TABLE_NAME + ";";
+
+        verify(mSQLiteDatabase, verificationMode).execSQL(copyTable);
+        verify(mSQLiteDatabase, verificationMode).execSQL(insertData);
+        verify(mSQLiteDatabase, verificationMode).execSQL(dropOldTable);
+        verify(mSQLiteDatabase, verificationMode).execSQL(renameTable);
     }
 
     @Test
@@ -284,7 +347,7 @@ public class TripsTableTest {
 
     @Test
     public void findByPrimaryKey() {
-        mTripsTable.findByPrimaryKey(NAME_1)
+        mTripsTable.findByPrimaryKey(mTrip1.getId())
                 .test()
                 .assertNoErrors()
                 .assertResult(mTrip1);
@@ -292,7 +355,7 @@ public class TripsTableTest {
 
     @Test
     public void findByPrimaryMissingKey() {
-        mTripsTable.findByPrimaryKey("")
+        mTripsTable.findByPrimaryKey(-1)
                 .test()
                 .assertError(Exception.class);
     }

@@ -116,7 +116,9 @@ public abstract class TripForeignKeyAbstractSqlTable<ModelType, PrimaryKeyType> 
         Cursor cursor = null;
         try {
             final List<ModelType> results = new ArrayList<>();
-            cursor = getReadableDatabase().query(getTableName(), null, mTripForeignKeyReferenceColumnName + "= ? AND " + COLUMN_DRIVE_MARKED_FOR_DELETION + " = ?", new String[]{ trip.getName(), Integer.toString(0) }, null, null, new OrderByColumn(mOrderBy.getOrderByColumn(), isDescending).getOrderByPredicate());
+            cursor = getReadableDatabase().query(getTableName(), null, mTripForeignKeyReferenceColumnName + "= ? AND "
+                    + COLUMN_DRIVE_MARKED_FOR_DELETION + " = ?", new String[]{ Integer.toString(trip.getId()), Integer.toString(0) },
+                    null, null, new OrderByColumn(mOrderBy.getOrderByColumn(), isDescending).getOrderByPredicate());
             if (cursor != null && cursor.moveToFirst()) {
                 do {
                     results.add(mSelectionBackedDatabaseAdapter.readForSelection(cursor, trip, isDescending));
@@ -227,8 +229,9 @@ public abstract class TripForeignKeyAbstractSqlTable<ModelType, PrimaryKeyType> 
 
     public synchronized void updateParentBlocking(@NonNull Trip oldTrip, @NonNull Trip newTrip) {
         final ContentValues contentValues = new ContentValues();
-        contentValues.put(mTripForeignKeyReferenceColumnName, newTrip.getName());
-        getWritableDatabase().update(getTableName(), contentValues, mTripForeignKeyReferenceColumnName + "= ?", new String[]{ oldTrip.getName() });
+        contentValues.put(mTripForeignKeyReferenceColumnName, newTrip.getId());
+        getWritableDatabase().update(getTableName(), contentValues, mTripForeignKeyReferenceColumnName + "= ?",
+                new String[]{ Integer.toString(oldTrip.getId()) });
         mPerTripCache.remove(oldTrip);
     }
 
@@ -246,7 +249,7 @@ public abstract class TripForeignKeyAbstractSqlTable<ModelType, PrimaryKeyType> 
     }
 
     public synchronized void deleteParentBlocking(@NonNull Trip trip) {
-        getWritableDatabase().delete(getTableName(), mTripForeignKeyReferenceColumnName + "= ?", new String[]{ trip.getName() });
+        getWritableDatabase().delete(getTableName(), mTripForeignKeyReferenceColumnName + "= ?", new String[]{ Integer.toString(trip.getId()) });
         mPerTripCache.remove(trip);
     }
 

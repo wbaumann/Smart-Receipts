@@ -3,6 +3,7 @@ package co.smartreceipts.android.persistence.database.tables;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import org.junit.After;
 import org.junit.Before;
@@ -61,17 +62,19 @@ import static org.mockito.Mockito.when;
 @RunWith(RobolectricTestRunner.class)
 public class ReceiptsTableTest {
 
+    // TODO: 31.08.2018 deal with tests like onUpgrade()
+
     private static final double PRICE_1 = 12.55d;
     private static final String NAME_1 = "Name1";
-    private static final String TRIP_1 = "Trip";
+    private static final int TRIP_ID_1 = 96;
     public static final Date DATE_1 = new Date(1200000000000L);
     private static final double PRICE_2 = 140d;
     private static final String NAME_2 = "Name2";
-    private static final String TRIP_2 = "Trip2";
+    private static final int TRIP_ID_2 = 97;
     public static final Date DATE_2 = new Date(1300000000000L);
     private static final double PRICE_3 = 12.123;
     private static final String NAME_3 = "Name3";
-    private static final String TRIP_3 = "Trip3";
+    private static final int TRIP_ID_3 = 98;
     public static final Date DATE_3 = new Date(1400000000000L);
 
     private static final String CURRENCY_CODE = "USD";
@@ -86,7 +89,7 @@ public class ReceiptsTableTest {
     TableDefaultsCustomizer mTableDefaultsCustomizer;
 
     @Mock
-    Table<Trip, String> mTripsTable;
+    Table<Trip, Integer> mTripsTable;
 
     @Mock
     Table<PaymentMethod, Integer> mPaymentMethodTable;
@@ -136,9 +139,9 @@ public class ReceiptsTableTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
-        when(mTrip1.getName()).thenReturn(TRIP_1);
-        when(mTrip2.getName()).thenReturn(TRIP_2);
-        when(mTrip3.getName()).thenReturn(TRIP_3);
+        when(mTrip1.getId()).thenReturn(TRIP_ID_1);
+        when(mTrip2.getId()).thenReturn(TRIP_ID_2);
+        when(mTrip3.getId()).thenReturn(TRIP_ID_3);
         when(mTrip1.getDefaultCurrencyCode()).thenReturn(CURRENCY_CODE);
         when(mTrip2.getDefaultCurrencyCode()).thenReturn(CURRENCY_CODE);
         when(mTrip3.getDefaultCurrencyCode()).thenReturn(CURRENCY_CODE);
@@ -146,9 +149,9 @@ public class ReceiptsTableTest {
         when(mTrip2.getTripCurrency()).thenReturn(PriceCurrency.getInstance(CURRENCY_CODE));
         when(mTrip3.getTripCurrency()).thenReturn(PriceCurrency.getInstance(CURRENCY_CODE));
 
-        when(mTripsTable.findByPrimaryKey(TRIP_1)).thenReturn(Single.just(mTrip1));
-        when(mTripsTable.findByPrimaryKey(TRIP_2)).thenReturn(Single.just(mTrip2));
-        when(mTripsTable.findByPrimaryKey(TRIP_3)).thenReturn(Single.just(mTrip3));
+        when(mTripsTable.findByPrimaryKey(TRIP_ID_1)).thenReturn(Single.just(mTrip1));
+        when(mTripsTable.findByPrimaryKey(TRIP_ID_2)).thenReturn(Single.just(mTrip2));
+        when(mTripsTable.findByPrimaryKey(TRIP_ID_3)).thenReturn(Single.just(mTrip3));
 
         when(mCategoryTable.findByPrimaryKey(anyInt())).thenReturn(Single.just(mCategory));
         when(mPaymentMethodTable.findByPrimaryKey(anyInt())).thenReturn(Single.just(mPaymentMethod));
@@ -194,31 +197,33 @@ public class ReceiptsTableTest {
         verify(mSQLiteDatabase).execSQL(mSqlCaptor.capture());
         verifyZeroInteractions(customizer);
 
-        assertTrue(mSqlCaptor.getValue().contains("CREATE TABLE receipts"));
-        assertTrue(mSqlCaptor.getValue().contains("id INTEGER PRIMARY KEY AUTOINCREMENT"));
-        assertTrue(mSqlCaptor.getValue().contains("path TEXT"));
-        assertTrue(mSqlCaptor.getValue().contains("name TEXT"));
-        assertTrue(mSqlCaptor.getValue().contains("parent TEXT"));
-        assertTrue(mSqlCaptor.getValue().contains("categoryKey INTEGER"));
-        assertTrue(mSqlCaptor.getValue().contains("price DECIMAL(10, 2)"));
-        assertTrue(mSqlCaptor.getValue().contains("tax DECIMAL(10, 2)"));
-        assertTrue(mSqlCaptor.getValue().contains("exchange_rate DECIMAL(10, 10)"));
-        assertTrue(mSqlCaptor.getValue().contains("rcpt_date DATE"));
-        assertTrue(mSqlCaptor.getValue().contains("timezone TEXT"));
-        assertTrue(mSqlCaptor.getValue().contains("comment TEXT"));
-        assertTrue(mSqlCaptor.getValue().contains("expenseable BOOLEAN"));
-        assertTrue(mSqlCaptor.getValue().contains("isocode TEXT"));
-        assertTrue(mSqlCaptor.getValue().contains("paymentMethodKey INTEGER"));
-        assertTrue(mSqlCaptor.getValue().contains("fullpageimage BOOLEAN"));
-        assertTrue(mSqlCaptor.getValue().contains("receipt_processing_status TEXT"));
-        assertTrue(mSqlCaptor.getValue().contains("extra_edittext_1 TEXT"));
-        assertTrue(mSqlCaptor.getValue().contains("extra_edittext_2 TEXT"));
-        assertTrue(mSqlCaptor.getValue().contains("extra_edittext_3 TEXT"));
-        assertTrue(mSqlCaptor.getValue().contains("drive_sync_id TEXT"));
-        assertTrue(mSqlCaptor.getValue().contains("drive_is_synced BOOLEAN DEFAULT 0"));
-        assertTrue(mSqlCaptor.getValue().contains("drive_marked_for_deletion BOOLEAN DEFAULT 0"));
-        assertTrue(mSqlCaptor.getValue().contains("last_local_modification_time DATE"));
-        assertTrue(mSqlCaptor.getValue().contains("custom_order_id INTEGER DEFAULT 0"));
+        final String creatingTable = mSqlCaptor.getValue();
+        assertTrue(creatingTable.contains("CREATE TABLE receipts"));
+        assertTrue(creatingTable.contains("id INTEGER PRIMARY KEY AUTOINCREMENT"));
+        assertTrue(creatingTable.contains("path TEXT"));
+        assertTrue(creatingTable.contains("name TEXT"));
+        assertTrue(creatingTable.contains("parentKey INTEGER"));
+        assertTrue(creatingTable.contains("categoryKey INTEGER"));
+        assertTrue(creatingTable.contains("price DECIMAL(10, 2)"));
+        assertTrue(creatingTable.contains("tax DECIMAL(10, 2)"));
+        assertTrue(creatingTable.contains("exchange_rate DECIMAL(10, 10)"));
+        assertTrue(creatingTable.contains("rcpt_date DATE"));
+        assertTrue(creatingTable.contains("timezone TEXT"));
+        assertTrue(creatingTable.contains("comment TEXT"));
+        assertTrue(creatingTable.contains("expenseable BOOLEAN"));
+        assertTrue(creatingTable.contains("isocode TEXT"));
+        assertTrue(creatingTable.contains("paymentMethodKey INTEGER"));
+        assertTrue(creatingTable.contains("fullpageimage BOOLEAN"));
+        assertTrue(creatingTable.contains("receipt_processing_status TEXT"));
+        assertTrue(creatingTable.contains("extra_edittext_1 TEXT"));
+        assertTrue(creatingTable.contains("extra_edittext_2 TEXT"));
+        assertTrue(creatingTable.contains("extra_edittext_3 TEXT"));
+        assertTrue(creatingTable.contains("drive_sync_id TEXT"));
+        assertTrue(creatingTable.contains("drive_is_synced BOOLEAN DEFAULT 0"));
+        assertTrue(creatingTable.contains("drive_marked_for_deletion BOOLEAN DEFAULT 0"));
+        assertTrue(creatingTable.contains("last_local_modification_time DATE"));
+        assertTrue(creatingTable.contains("custom_order_id INTEGER DEFAULT 0"));
+        assertTrue(creatingTable.contains("uuid TEXT"));
     }
 
     @Test
@@ -482,7 +487,7 @@ public class ReceiptsTableTest {
                 + AbstractSqlTable.COLUMN_CUSTOM_ORDER_ID + " INTEGER DEFAULT 0"
                 + ");");
 
-        final String finalColumns = String.format("%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s",
+        final String finalColumns = TextUtils.join(", ", new String[]{
                 ReceiptsTable.COLUMN_ID, ReceiptsTable.COLUMN_PATH, ReceiptsTable.COLUMN_PARENT,
                 ReceiptsTable.COLUMN_NAME, ReceiptsTable.COLUMN_CATEGORY_ID, ReceiptsTable.COLUMN_DATE,
                 ReceiptsTable.COLUMN_TIMEZONE, ReceiptsTable.COLUMN_COMMENT, ReceiptsTable.COLUMN_ISO4217,
@@ -492,11 +497,11 @@ public class ReceiptsTableTest {
                 ReceiptsTable.COLUMN_EXTRA_EDITTEXT_1, ReceiptsTable.COLUMN_EXTRA_EDITTEXT_2,
                 ReceiptsTable.COLUMN_EXTRA_EDITTEXT_3, AbstractSqlTable.COLUMN_DRIVE_SYNC_ID,
                 AbstractSqlTable.COLUMN_DRIVE_IS_SYNCED, AbstractSqlTable.COLUMN_DRIVE_MARKED_FOR_DELETION,
-                AbstractSqlTable.COLUMN_LAST_LOCAL_MODIFICATION_TIME);
+                AbstractSqlTable.COLUMN_LAST_LOCAL_MODIFICATION_TIME});
 
-        verify(mSQLiteDatabase, verificationMode).execSQL("INSERT INTO " + ReceiptsTable.TABLE_NAME + "_copy" + " (" + finalColumns + ") "
+        verify(mSQLiteDatabase, verificationMode).execSQL("INSERT INTO " + ReceiptsTable.TABLE_NAME + "_copy" + " ( " + finalColumns + " ) "
                 + "SELECT " + finalColumns
-                + " FROM " + ReceiptsTable.TABLE_NAME + ";");
+                + " FROM " + ReceiptsTable.TABLE_NAME + " ;");
 
         verify(mSQLiteDatabase, verificationMode).execSQL("DROP TABLE " + ReceiptsTable.TABLE_NAME + ";");
 
@@ -512,7 +517,8 @@ public class ReceiptsTableTest {
     @Test
     public void getForTrip() {
         // Note: We're adding this one to trip 1
-        final Receipt receipt = mReceiptsTable.insert(mBuilder.setName(NAME_3).setPrice(PRICE_3).setTrip(mTrip1).setDate(DATE_3).setIndex(2).build(), new DatabaseOperationMetadata()).blockingGet();
+        final Receipt receiptToInsert = mBuilder.setName(NAME_3).setPrice(PRICE_3).setTrip(mTrip1).setDate(DATE_3).setIndex(2).build();
+        final Receipt receipt = mReceiptsTable.insert(receiptToInsert, new DatabaseOperationMetadata()).blockingGet();
         assertNotNull(receipt);
 
         final List<Receipt> list1 = mReceiptsTable.get(mTrip1).blockingGet();

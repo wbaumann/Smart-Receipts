@@ -123,7 +123,7 @@ public class DistanceTable extends TripForeignKeyAbstractSqlTable<Distance, Inte
                     AbstractSqlTable.COLUMN_DRIVE_IS_SYNCED, AbstractSqlTable.COLUMN_DRIVE_MARKED_FOR_DELETION,
                     AbstractSqlTable.COLUMN_LAST_LOCAL_MODIFICATION_TIME});
 
-            final String copyTable = "CREATE TABLE " + TABLE_NAME + " ("
+            final String copyTable = "CREATE TABLE " + TABLE_NAME + "_copy" + " ("
                     + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                     + COLUMN_PARENT_TRIP_ID + " INTEGER REFERENCES " + TripsTable.COLUMN_NAME + " ON DELETE CASCADE,"
                     + COLUMN_DISTANCE + " DECIMAL(10, 2) DEFAULT 0.00,"

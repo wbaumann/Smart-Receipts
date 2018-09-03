@@ -121,16 +121,16 @@ public abstract class AbstractSqlTable<ModelType, PrimaryKeyType> implements Tab
 
     protected synchronized void onUpgradeToAddUUID(@NonNull SQLiteDatabase db, int oldVersion) {
         if (oldVersion <= 18) { // Add a uuid to all app database tables
-            final String addNewColumn = "ALTER TABLE " + getTableName() + " ADD " + COLUMN_UUID + " TEXT";
+            final String addNewColumn = "ALTER TABLE " + getTableName() + " ADD " + COLUMN_UUID + " TEXT DEFAULT '' ";
             db.execSQL(addNewColumn);
 
             // assign random values
             Cursor cursor = null;
             try {
-                cursor = db.query(getTableName(), new String[]{COLUMN_UUID}, null, null, null, null, null);
+                cursor = db.query(getTableName(), new String[]{COLUMN_ID}, null, null, null, null, null);
                 if (cursor != null && cursor.moveToFirst()) {
 
-                    final int idIdx = cursor.getColumnIndex(ReceiptsTable.COLUMN_ID);
+                    final int idIdx = cursor.getColumnIndex(COLUMN_ID);
 
                     do {
                         final int id = cursor.getInt(idIdx);
@@ -142,8 +142,6 @@ public abstract class AbstractSqlTable<ModelType, PrimaryKeyType> implements Tab
 
                         if (db.update(getTableName(), columnValues, COLUMN_ID + "= ?", new String[]{Integer.toString(id)}) == 0) {
                             Logger.error(this, "Column update error happened");
-                        } else {
-                            throw new RuntimeException("UUID update error happened for (" + id + ")");
                         }
                     } while (cursor.moveToNext());
                 }
@@ -283,7 +281,7 @@ public abstract class AbstractSqlTable<ModelType, PrimaryKeyType> implements Tab
     public synchronized Optional<ModelType> insertBlocking(@NonNull ModelType modelType, @NonNull DatabaseOperationMetadata databaseOperationMetadata) {
         final ContentValues values = databaseAdapter.write(modelType, databaseOperationMetadata);
 
-        if (!values.containsKey(COLUMN_UUID)) { // todo 31.08.18 while merge?
+        if (!values.containsKey(COLUMN_UUID)) { // todo   31.08.18 while merge?
             values.put(COLUMN_UUID, UUID.randomUUID().toString());
         }
 

@@ -10,11 +10,6 @@ import co.smartreceipts.android.sync.model.Syncable
 interface Category : Parcelable, Syncable, Draggable<Category> {
 
     /**
-     * The database primary key id for this category
-     */
-    val id: Int
-
-    /**
      * The full-name representation of this category
      */
     val name: String

@@ -16,13 +16,6 @@ public interface Receipt extends Parcelable, Priceable, Draggable<Receipt>, Sync
     String PARCEL_KEY = Receipt.class.getName();
 
     /**
-     * Gets the primary key id for this receipt
-     *
-     * @return the receipt's autoincrement id
-     */
-    int getId();
-
-    /**
      * Gets the parent trip for this receipt. This can only be null if it's detached from a {@link Trip}
      * (e.g. if it's a converted distance).
      *

@@ -13,11 +13,6 @@ import co.smartreceipts.android.sync.model.Syncable;
 public interface PaymentMethod extends Parcelable, Syncable, Draggable<PaymentMethod> {
 
     /**
-     * @return - the database primary key id for this method
-     */
-    int getId();
-
-    /**
      * @return - the actual payment method that the user specified
      */
     @NonNull

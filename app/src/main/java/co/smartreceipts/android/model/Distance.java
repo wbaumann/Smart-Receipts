@@ -16,13 +16,6 @@ public interface Distance extends Parcelable, Priceable, Comparable<Distance>, S
     int RATE_PRECISION = 3;
 
     /**
-     * Gets the primary key id for this distance
-     *
-     * @return the distance's autoincrement id
-     */
-    int getId();
-
-    /**
      * Gets the parent trip for this distance. This should never be {@code null}.
      *
      * @return - the parent {@link Trip}

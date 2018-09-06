@@ -9,11 +9,9 @@ import java.util.*
  * Provides an abstract implementation of the column contract to cover shared code
  */
 abstract class AbstractColumnImpl<T> @JvmOverloads constructor(
-    private val id: Int, private val columnDefinition: ActualColumnDefinition,
+    override val id: Int, private val columnDefinition: ActualColumnDefinition,
     override val syncState: SyncState, override val customOrderId: Long = 0
 ) : Column<T> {
-
-    override fun getId() = id
 
     override fun getType() = columnDefinition.columnType
 
@@ -22,7 +20,9 @@ abstract class AbstractColumnImpl<T> @JvmOverloads constructor(
     override fun getFooter(rows: List<T>) = ""
 
     override operator fun compareTo(other: Column<T>): Int =
-        if (customOrderId == other.customOrderId) getId() - other.id
+        if (customOrderId == other.customOrderId) {
+            id - other.id
+        }
         else java.lang.Long.compare(customOrderId, other.customOrderId)
 
     override fun equals(other: Any?): Boolean {

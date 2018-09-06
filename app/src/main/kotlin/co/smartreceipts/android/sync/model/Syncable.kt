@@ -6,6 +6,13 @@ package co.smartreceipts.android.sync.model
 interface Syncable {
 
     /**
+     * The primary key id for this item
+     *
+     * @return the items's autoincrement id
+     */
+    val id: Int
+
+    /**
      * The current [SyncState] associated with this item
      */
     val syncState: SyncState

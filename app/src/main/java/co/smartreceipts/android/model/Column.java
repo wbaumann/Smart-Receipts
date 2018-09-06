@@ -16,13 +16,6 @@ public interface Column<T> extends Syncable, Draggable<Column<T>> {
     int UNKNOWN_ID = -1;
 
     /**
-     * Gets the unique identifier number for this column
-     *
-     * @return the unique id or {@link #UNKNOWN_ID} if none is defined
-     */
-    int getId();
-
-    /**
      * Gets the column type of this particular column
      *
      * @return int enum type from {@link ColumnDefinitions}

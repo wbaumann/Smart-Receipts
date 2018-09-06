@@ -21,7 +21,6 @@ import co.smartreceipts.android.model.Trip;
 import co.smartreceipts.android.model.utils.ModelUtils;
 import co.smartreceipts.android.persistence.DatabaseHelper;
 import co.smartreceipts.android.sync.model.SyncState;
-import co.smartreceipts.android.sync.model.impl.DefaultSyncState;
 
 /**
  * A mostly immutable implementation of the {@link co.smartreceipts.android.model.Receipt} interface that
@@ -29,35 +28,27 @@ import co.smartreceipts.android.sync.model.impl.DefaultSyncState;
  */
 public final class DefaultReceiptImpl implements Receipt {
 
-    private final int mId;
-    private final Trip mTrip;
-    private final PaymentMethod mPaymentMethod;
-    private final int mIndex; // Tracks the index in the list (if specified)
-    private final String mName;
-    private final String mComment;
-    private final Category mCategory;
-    private final Price mPrice, mTax;
-    private final Date mDate;
-    private final TimeZone mTimeZone;
-    private final boolean mIsReimbursable;
-    private final boolean mIsFullPage;
-    private final Source mSource;
-    private final String mExtraEditText1;
-    private final String mExtraEditText2;
-    private final String mExtraEditText3;
-    private final SyncState mSyncState;
-    private boolean mIsSelected;
-    private File mFile;
-    private long mFileLastModifiedTime;
+    private final int id;
+    private final Trip trip;
+    private final PaymentMethod paymentMethod;
+    private final int index; // Tracks the index in the list (if specified)
+    private final String name;
+    private final String comment;
+    private final Category category;
+    private final Price price, tax;
+    private final Date date;
+    private final TimeZone timeZone;
+    private final boolean isReimbursable;
+    private final boolean isFullPage;
+    private final Source source;
+    private final String extraEditText1;
+    private final String extraEditText2;
+    private final String extraEditText3;
+    private final SyncState syncState;
+    private boolean isSelected;
+    private File file;
+    private long fileLastModifiedTime;
     private final long customOrderId;
-
-    public DefaultReceiptImpl(int id, int index, @NonNull Trip trip, @Nullable File file, @NonNull PaymentMethod paymentMethod, @NonNull String name,
-                              @NonNull Category category, @NonNull String comment, @NonNull Price price, @NonNull Price tax, @NonNull Date date,
-                              @NonNull TimeZone timeZone, boolean isReimbursable, boolean isFullPage, boolean isSelected,
-                              @NonNull Source source, @Nullable String extraEditText1, @Nullable String extraEditText2, @Nullable String extraEditText3) {
-        this(id, index, trip, file, paymentMethod, name, category, comment, price, tax, date, timeZone, isReimbursable, isFullPage, isSelected, source, extraEditText1, extraEditText2, extraEditText3, new DefaultSyncState(), 0);
-
-    }
 
     public DefaultReceiptImpl(int id, int index, @NonNull Trip trip, @Nullable File file, @NonNull PaymentMethod paymentMethod, @NonNull String name,
                               @NonNull Category category, @NonNull String comment, @NonNull Price price, @NonNull Price tax, @NonNull Date date,
@@ -65,84 +56,84 @@ public final class DefaultReceiptImpl implements Receipt {
                               @NonNull Source source, @Nullable String extraEditText1, @Nullable String extraEditText2, @Nullable String extraEditText3,
                               @NonNull SyncState syncState, long customOrderId) {
 
-        mTrip = Preconditions.checkNotNull(trip);
-        mName = Preconditions.checkNotNull(name);
-        mCategory = Preconditions.checkNotNull(category);
-        mComment = Preconditions.checkNotNull(comment);
-        mSource = Preconditions.checkNotNull(source);
-        mPrice = Preconditions.checkNotNull(price);
-        mTax = Preconditions.checkNotNull(tax);
-        mDate = Preconditions.checkNotNull(date);
-        mTimeZone = Preconditions.checkNotNull(timeZone);
-        mSyncState = Preconditions.checkNotNull(syncState);
-        mPaymentMethod = Preconditions.checkNotNull(paymentMethod);
+        this.trip = Preconditions.checkNotNull(trip);
+        this.name = Preconditions.checkNotNull(name);
+        this.category = Preconditions.checkNotNull(category);
+        this.comment = Preconditions.checkNotNull(comment);
+        this.source = Preconditions.checkNotNull(source);
+        this.price = Preconditions.checkNotNull(price);
+        this.tax = Preconditions.checkNotNull(tax);
+        this.date = Preconditions.checkNotNull(date);
+        this.timeZone = Preconditions.checkNotNull(timeZone);
+        this.syncState = Preconditions.checkNotNull(syncState);
+        this.paymentMethod = Preconditions.checkNotNull(paymentMethod);
 
-        mId = id;
-        mIndex = index;
-        mFile = file;
-        mFileLastModifiedTime = file != null ? file.lastModified() : -1;
-        mIsReimbursable = isReimbursable;
-        mIsFullPage = isFullPage;
-        mExtraEditText1 = extraEditText1;
-        mExtraEditText2 = extraEditText2;
-        mExtraEditText3 = extraEditText3;
-        mIsSelected = isSelected;
+        this.id = id;
+        this.index = index;
+        this.file = file;
+        fileLastModifiedTime = file != null ? file.lastModified() : -1;
+        this.isReimbursable = isReimbursable;
+        this.isFullPage = isFullPage;
+        this.extraEditText1 = extraEditText1;
+        this.extraEditText2 = extraEditText2;
+        this.extraEditText3 = extraEditText3;
+        this.isSelected = isSelected;
         this.customOrderId = customOrderId;
     }
 
     private DefaultReceiptImpl(@NonNull Parcel in) {
-        mTrip = in.readParcelable(Trip.class.getClassLoader());
-        mPaymentMethod = in.readParcelable(PaymentMethod.class.getClassLoader());
-        mId = in.readInt();
-        mName = in.readString();
-        mCategory = in.readParcelable(Category.class.getClassLoader());
-        mComment = in.readString();
-        mPrice = in.readParcelable(Price.class.getClassLoader());
-        mTax = in.readParcelable(Price.class.getClassLoader());
+        trip = in.readParcelable(Trip.class.getClassLoader());
+        paymentMethod = in.readParcelable(PaymentMethod.class.getClassLoader());
+        id = in.readInt();
+        name = in.readString();
+        category = in.readParcelable(Category.class.getClassLoader());
+        comment = in.readString();
+        price = in.readParcelable(Price.class.getClassLoader());
+        tax = in.readParcelable(Price.class.getClassLoader());
         final String fileName = in.readString();
-        mFile = TextUtils.isEmpty(fileName) ? null : new File(fileName);
-        mFileLastModifiedTime = in.readLong();
-        mDate = new Date(in.readLong());
-        mIsReimbursable = (in.readByte() != 0);
-        mIsFullPage = (in.readByte() != 0);
-        mIsSelected = (in.readByte() != 0);
-        mExtraEditText1 = in.readString();
-        mExtraEditText2 = in.readString();
-        mExtraEditText3 = in.readString();
-        mIndex = in.readInt();
-        mTimeZone = TimeZone.getTimeZone(in.readString());
-        mSyncState = in.readParcelable(SyncState.class.getClassLoader());
-        mSource = Source.Parcel;
+        file = TextUtils.isEmpty(fileName) ? null : new File(fileName);
+        fileLastModifiedTime = in.readLong();
+        date = new Date(in.readLong());
+        isReimbursable = (in.readByte() != 0);
+        isFullPage = (in.readByte() != 0);
+        isSelected = (in.readByte() != 0);
+        extraEditText1 = in.readString();
+        extraEditText2 = in.readString();
+        extraEditText3 = in.readString();
+        index = in.readInt();
+        timeZone = TimeZone.getTimeZone(in.readString());
+        syncState = in.readParcelable(SyncState.class.getClassLoader());
+        source = Source.Parcel;
         customOrderId = in.readLong();
     }
 
     @Override
     public int getId() {
-        return mId;
+        return id;
     }
 
     @NonNull
     @Override
     public Trip getTrip() {
-        return mTrip;
+        return trip;
     }
 
     @NonNull
     @Override
     public PaymentMethod getPaymentMethod() {
-        return mPaymentMethod;
+        return paymentMethod;
     }
 
     @NonNull
     @Override
     public String getName() {
-        return mName;
+        return name;
     }
 
     @Override
     public boolean hasImage() {
-        if (mFile != null) {
-            return mFile.getName().endsWith(".jpg") || mFile.getName().endsWith(".jpeg") || mFile.getName().endsWith(".png");
+        if (file != null) {
+            return file.getName().endsWith(".jpg") || file.getName().endsWith(".jpeg") || file.getName().endsWith(".png");
         } else {
             return false;
         }
@@ -150,8 +141,8 @@ public final class DefaultReceiptImpl implements Receipt {
 
     @Override
     public boolean hasPDF() {
-        if (mFile != null) {
-            return mFile.getName().endsWith(".pdf");
+        if (file != null) {
+            return file.getName().endsWith(".pdf");
         } else {
             return false;
         }
@@ -160,26 +151,26 @@ public final class DefaultReceiptImpl implements Receipt {
     @Nullable
     @Override
     public File getImage() {
-        return mFile;
+        return file;
     }
 
     @Nullable
     @Override
     public File getPDF() {
-        return mFile;
+        return file;
     }
 
     @Nullable
     @Override
     public File getFile() {
-        return mFile;
+        return file;
     }
 
     @NonNull
     @Override
     public String getFilePath() {
-        if (mFile != null) {
-            return mFile.getAbsolutePath();
+        if (file != null) {
+            return file.getAbsolutePath();
         } else {
             return "";
         }
@@ -188,8 +179,8 @@ public final class DefaultReceiptImpl implements Receipt {
     @NonNull
     @Override
     public String getFileName() {
-        if (mFile != null) {
-            return mFile.getName();
+        if (file != null) {
+            return file.getName();
         } else {
             return "";
         }
@@ -197,75 +188,75 @@ public final class DefaultReceiptImpl implements Receipt {
 
     @Override
     public long getFileLastModifiedTime() {
-        return mFileLastModifiedTime;
+        return fileLastModifiedTime;
     }
 
     @NonNull
     @Override
     public Source getSource() {
-        return mSource;
+        return source;
     }
 
     @NonNull
     @Override
     public Category getCategory() {
-        return mCategory;
+        return category;
     }
 
     @NonNull
     @Override
     public String getComment() {
-        return mComment;
+        return comment;
     }
 
     @NonNull
     @Override
     public Price getPrice() {
-        return mPrice;
+        return price;
     }
 
     @NonNull
     @Override
     public Price getTax() {
-        return mTax;
+        return tax;
     }
 
     @NonNull
     @Override
     public Date getDate() {
-        return mDate;
+        return date;
     }
 
     @NonNull
     @Override
     public String getFormattedDate(@NonNull Context context, @NonNull String separator) {
-        return ModelUtils.getFormattedDate(mDate, (mTimeZone != null) ? mTimeZone : TimeZone.getDefault(), context, separator);
+        return ModelUtils.getFormattedDate(date, (timeZone != null) ? timeZone : TimeZone.getDefault(), context, separator);
     }
 
     @NonNull
     @Override
     public TimeZone getTimeZone() {
-        return (mTimeZone != null) ? mTimeZone : TimeZone.getDefault();
+        return (timeZone != null) ? timeZone : TimeZone.getDefault();
     }
 
     @Override
     public boolean isReimbursable() {
-        return mIsReimbursable;
+        return isReimbursable;
     }
 
     @Override
     public boolean isFullPage() {
-        return mIsFullPage;
+        return isFullPage;
     }
 
     @Override
     public boolean isSelected() {
-        return mIsSelected;
+        return isSelected;
     }
 
     @Override
     public int getIndex() {
-        return mIndex;
+        return index;
     }
 
     @Override
@@ -276,77 +267,77 @@ public final class DefaultReceiptImpl implements Receipt {
     @Nullable
     @Override
     public String getExtraEditText1() {
-        if (DatabaseHelper.NO_DATA.equals(mExtraEditText1)) {
+        if (DatabaseHelper.NO_DATA.equals(extraEditText1)) {
             return null;
         } else {
-            return mExtraEditText1;
+            return extraEditText1;
         }
     }
 
     @Nullable
     @Override
     public String getExtraEditText2() {
-        if (DatabaseHelper.NO_DATA.equals(mExtraEditText2)) {
+        if (DatabaseHelper.NO_DATA.equals(extraEditText2)) {
             return null;
         } else {
-            return mExtraEditText2;
+            return extraEditText2;
         }
     }
 
     @Nullable
     @Override
     public String getExtraEditText3() {
-        if (DatabaseHelper.NO_DATA.equals(mExtraEditText3)) {
+        if (DatabaseHelper.NO_DATA.equals(extraEditText3)) {
             return null;
         } else {
-            return mExtraEditText3;
+            return extraEditText3;
         }
     }
 
     @Override
     public boolean hasExtraEditText1() {
-        return (mExtraEditText1 != null) && !mExtraEditText1.equals(DatabaseHelper.NO_DATA);
+        return (extraEditText1 != null) && !extraEditText1.equals(DatabaseHelper.NO_DATA);
     }
 
     @Override
     public boolean hasExtraEditText2() {
-        return (mExtraEditText2 != null) && !mExtraEditText2.equals(DatabaseHelper.NO_DATA);
+        return (extraEditText2 != null) && !extraEditText2.equals(DatabaseHelper.NO_DATA);
     }
 
     @Override
     public boolean hasExtraEditText3() {
-        return (mExtraEditText3 != null) && !mExtraEditText3.equals(DatabaseHelper.NO_DATA);
+        return (extraEditText3 != null) && !extraEditText3.equals(DatabaseHelper.NO_DATA);
     }
 
     @NonNull
     @Override
     public SyncState getSyncState() {
-        return mSyncState;
+        return syncState;
     }
 
     @Override
     public String toString() {
         return "DefaultReceiptImpl{" +
-                "mId=" + mId +
-                ", mName='" + mName + '\'' +
-                ", trip=" + mTrip.getName() +
-                ", mPaymentMethod=" + mPaymentMethod +
-                ", mIndex=" + mIndex +
-                ", mComment='" + mComment + '\'' +
-                ", mCategory=" + mCategory +
-                ", mPrice=" + mPrice.getCurrencyFormattedPrice() +
-                ", mTax=" + mTax +
-                ", mDate=" + mDate +
-                ", mTimeZone=" + mTimeZone.getID() +
-                ", mIsReimbursable=" + mIsReimbursable +
-                ", mIsFullPage=" + mIsFullPage +
-                ", mSource=" + mSource +
-                ", mExtraEditText1='" + mExtraEditText1 + '\'' +
-                ", mExtraEditText2='" + mExtraEditText2 + '\'' +
-                ", mExtraEditText3='" + mExtraEditText3 + '\'' +
-                ", mIsSelected=" + mIsSelected +
-                ", mFile=" + mFile +
-                ", mFileLastModifiedTime=" + mFileLastModifiedTime +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", trip=" + trip.getName() +
+                ", paymentMethod=" + paymentMethod +
+                ", index=" + index +
+                ", comment='" + comment + '\'' +
+                ", category=" + category +
+                ", price=" + price.getCurrencyFormattedPrice() +
+                ", tax=" + tax +
+                ", date=" + date +
+                ", timeZone=" + timeZone.getID() +
+                ", isReimbursable=" + isReimbursable +
+                ", isFullPage=" + isFullPage +
+                ", source=" + source +
+                ", extraEditText1='" + extraEditText1 + '\'' +
+                ", extraEditText2='" + extraEditText2 + '\'' +
+                ", extraEditText3='" + extraEditText3 + '\'' +
+                ", isSelected=" + isSelected +
+                ", file=" + file +
+                ", fileLastModifiedTime=" + fileLastModifiedTime +
                 ", customOrderId=" + customOrderId +
                 '}';
     }
@@ -358,51 +349,51 @@ public final class DefaultReceiptImpl implements Receipt {
 
         DefaultReceiptImpl that = (DefaultReceiptImpl) o;
 
-        if (mId != that.mId) return false;
-        if (mIsReimbursable != that.mIsReimbursable) return false;
-        if (mIsFullPage != that.mIsFullPage) return false;
-        if (!mTrip.equals(that.mTrip)) return false;
-        if (!mPaymentMethod.equals(that.mPaymentMethod)) return false;
-        if (mIndex != that.mIndex) return false;
-        if (!mName.equals(that.mName)) return false;
-        if (!mComment.equals(that.mComment)) return false;
-        if (!mCategory.equals(that.mCategory)) return false;
-        if (!mPrice.equals(that.mPrice)) return false;
-        if (!mTax.equals(that.mTax)) return false;
-        if (!mDate.equals(that.mDate)) return false;
-        if (!mTimeZone.equals(that.mTimeZone)) return false;
-        if (mExtraEditText1 != null ? !mExtraEditText1.equals(that.mExtraEditText1) : that.mExtraEditText1 != null)
+        if (id != that.id) return false;
+        if (isReimbursable != that.isReimbursable) return false;
+        if (isFullPage != that.isFullPage) return false;
+        if (!trip.equals(that.trip)) return false;
+        if (!paymentMethod.equals(that.paymentMethod)) return false;
+        if (index != that.index) return false;
+        if (!name.equals(that.name)) return false;
+        if (!comment.equals(that.comment)) return false;
+        if (!category.equals(that.category)) return false;
+        if (!price.equals(that.price)) return false;
+        if (!tax.equals(that.tax)) return false;
+        if (!date.equals(that.date)) return false;
+        if (!timeZone.equals(that.timeZone)) return false;
+        if (extraEditText1 != null ? !extraEditText1.equals(that.extraEditText1) : that.extraEditText1 != null)
             return false;
-        if (mExtraEditText2 != null ? !mExtraEditText2.equals(that.mExtraEditText2) : that.mExtraEditText2 != null)
+        if (extraEditText2 != null ? !extraEditText2.equals(that.extraEditText2) : that.extraEditText2 != null)
             return false;
-        if (mExtraEditText3 != null ? !mExtraEditText3.equals(that.mExtraEditText3) : that.mExtraEditText3 != null)
+        if (extraEditText3 != null ? !extraEditText3.equals(that.extraEditText3) : that.extraEditText3 != null)
             return false;
-        if (mFileLastModifiedTime != that.mFileLastModifiedTime) return false;
+        if (fileLastModifiedTime != that.fileLastModifiedTime) return false;
         if (customOrderId != that.customOrderId) return false;
-        return mFile != null ? mFile.equals(that.mFile) : that.mFile == null;
+        return file != null ? file.equals(that.file) : that.file == null;
 
     }
 
     @Override
     public int hashCode() {
-        int result = mId;
-        result = 31 * result + mTrip.hashCode();
-        result = 31 * result + mPaymentMethod.hashCode();
-        result = 31 * result + mIndex;
-        result = 31 * result + mName.hashCode();
-        result = 31 * result + mComment.hashCode();
-        result = 31 * result + mCategory.hashCode();
-        result = 31 * result + mPrice.hashCode();
-        result = 31 * result + mTax.hashCode();
-        result = 31 * result + mDate.hashCode();
-        result = 31 * result + mTimeZone.hashCode();
-        result = 31 * result + (mIsReimbursable ? 1 : 0);
-        result = 31 * result + (mIsFullPage ? 1 : 0);
-        result = 31 * result + (mExtraEditText1 != null ? mExtraEditText1.hashCode() : 0);
-        result = 31 * result + (mExtraEditText2 != null ? mExtraEditText2.hashCode() : 0);
-        result = 31 * result + (mExtraEditText3 != null ? mExtraEditText3.hashCode() : 0);
-        result = 31 * result + (mFile != null ? mFile.hashCode() : 0);
-        result = 31 * result + (int) mFileLastModifiedTime;
+        int result = id;
+        result = 31 * result + trip.hashCode();
+        result = 31 * result + paymentMethod.hashCode();
+        result = 31 * result + index;
+        result = 31 * result + name.hashCode();
+        result = 31 * result + comment.hashCode();
+        result = 31 * result + category.hashCode();
+        result = 31 * result + price.hashCode();
+        result = 31 * result + tax.hashCode();
+        result = 31 * result + date.hashCode();
+        result = 31 * result + timeZone.hashCode();
+        result = 31 * result + (isReimbursable ? 1 : 0);
+        result = 31 * result + (isFullPage ? 1 : 0);
+        result = 31 * result + (extraEditText1 != null ? extraEditText1.hashCode() : 0);
+        result = 31 * result + (extraEditText2 != null ? extraEditText2.hashCode() : 0);
+        result = 31 * result + (extraEditText3 != null ? extraEditText3.hashCode() : 0);
+        result = 31 * result + (file != null ? file.hashCode() : 0);
+        result = 31 * result + (int) fileLastModifiedTime;
         result = 31 * result + (int) (customOrderId ^ (customOrderId >>> 32));
         return result;
     }
@@ -432,7 +423,7 @@ public final class DefaultReceiptImpl implements Receipt {
         dest.writeString(getExtraEditText2());
         dest.writeString(getExtraEditText3());
         dest.writeInt(getIndex());
-        dest.writeString(mTimeZone.getID());
+        dest.writeString(timeZone.getID());
         dest.writeParcelable(getSyncState(), flags);
         dest.writeLong(getCustomOrderId());
     }
@@ -454,7 +445,7 @@ public final class DefaultReceiptImpl implements Receipt {
     @Override
     public int compareTo(@NonNull Receipt receipt) {
         if (customOrderId == receipt.getCustomOrderId()) {
-            return receipt.getDate().compareTo(mDate);
+            return receipt.getDate().compareTo(date);
         } else {
             return -Long.compare(customOrderId, receipt.getCustomOrderId());
         }

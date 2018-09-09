@@ -910,7 +910,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     @org.jetbrains.annotations.Nullable
     @Override
     public Receipt getEditableItem() {
-        return getArguments() != null ? getArguments().getParcelable(Receipt.PARCEL_KEY) : null;
+        return getArguments() != null ? getArguments().getParcelable(Receipt.Companion.getPARCEL_KEY()) : null;
     }
 
     @Override

@@ -46,7 +46,7 @@ public class ReceiptMoveCopyDialogFragment extends DialogFragment implements Dia
     public static ReceiptMoveCopyDialogFragment newInstance(@NonNull Receipt receipt) {
         final ReceiptMoveCopyDialogFragment fragment = new ReceiptMoveCopyDialogFragment();
         final Bundle args = new Bundle();
-        args.putParcelable(Receipt.PARCEL_KEY, receipt);
+        args.putParcelable(Receipt.Companion.getPARCEL_KEY(), receipt);
         fragment.setArguments(args);
         return fragment;
     }
@@ -60,7 +60,7 @@ public class ReceiptMoveCopyDialogFragment extends DialogFragment implements Dia
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mReceipt = getArguments().getParcelable(Receipt.PARCEL_KEY);
+        mReceipt = getArguments().getParcelable(Receipt.Companion.getPARCEL_KEY());
         mTripTableEventsListener = new UpdateAdapterTrips();
     }
 

@@ -66,7 +66,7 @@ public class FragmentProvider {
     public ReceiptCreateEditFragment newCreateReceiptFragment(@NonNull Trip trip, @Nullable File file, @Nullable OcrResponse ocrResponse) {
         final Bundle args = new Bundle();
         args.putParcelable(Trip.PARCEL_KEY, trip);
-        args.putParcelable(Receipt.PARCEL_KEY, null);
+        args.putParcelable(Receipt.Companion.getPARCEL_KEY(), null);
         args.putSerializable(ARG_FILE, file);
         args.putSerializable(ARG_OCR, ocrResponse);
 
@@ -84,7 +84,7 @@ public class FragmentProvider {
     public ReceiptCreateEditFragment newEditReceiptFragment(@NonNull Trip trip, @NonNull Receipt receiptToEdit) {
         final Bundle args = new Bundle();
         args.putParcelable(Trip.PARCEL_KEY, trip);
-        args.putParcelable(Receipt.PARCEL_KEY, receiptToEdit);
+        args.putParcelable(Receipt.Companion.getPARCEL_KEY(), receiptToEdit);
         args.putSerializable(ARG_FILE, null);
         args.putSerializable(ARG_OCR, null);
 
@@ -100,7 +100,7 @@ public class FragmentProvider {
     @NonNull
     public ReceiptImageFragment newReceiptImageFragment(@NonNull Receipt receipt) {
         Bundle args = new Bundle();
-        args.putParcelable(Receipt.PARCEL_KEY, receipt);
+        args.putParcelable(Receipt.Companion.getPARCEL_KEY(), receipt);
 
         return attachArguments(ReceiptImageFragment.newInstance(), args);
     }

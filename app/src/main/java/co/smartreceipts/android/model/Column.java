@@ -13,8 +13,6 @@ import co.smartreceipts.android.sync.model.Syncable;
  */
 public interface Column<T> extends Syncable, Draggable<Column<T>> {
 
-    int UNKNOWN_ID = -1;
-
     /**
      * Gets the column type of this particular column
      *

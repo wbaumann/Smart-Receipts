@@ -10,6 +10,7 @@ import com.hadisatrio.optional.Optional;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.util.UUID;
 
 import co.smartreceipts.android.model.Category;
 import co.smartreceipts.android.model.PaymentMethod;
@@ -66,6 +67,7 @@ public final class ReceiptDatabaseAdapter implements SelectionBackedDatabaseAdap
     public Receipt readForSelection(@NonNull Cursor cursor, @NonNull Trip trip, boolean isDescending) {
 
         final int idIndex = cursor.getColumnIndex(ReceiptsTable.COLUMN_ID);
+        final int uuidIndex = cursor.getColumnIndex(ReceiptsTable.COLUMN_UUID);
         final int pathIndex = cursor.getColumnIndex(ReceiptsTable.COLUMN_PATH);
         final int nameIndex = cursor.getColumnIndex(ReceiptsTable.COLUMN_NAME);
         final int categoryIdIndex = cursor.getColumnIndex(ReceiptsTable.COLUMN_CATEGORY_ID);
@@ -85,6 +87,7 @@ public final class ReceiptDatabaseAdapter implements SelectionBackedDatabaseAdap
         final int orderIdIndex = cursor.getColumnIndex(ReceiptsTable.COLUMN_CUSTOM_ORDER_ID);
 
         final int id = cursor.getInt(idIndex);
+        final UUID uuid = UUID.fromString(cursor.getString(uuidIndex));
         final String path = cursor.getString(pathIndex);
         final String name = cursor.getString(nameIndex);
 
@@ -124,15 +127,16 @@ public final class ReceiptDatabaseAdapter implements SelectionBackedDatabaseAdap
                 .orNull();
 
         final PaymentMethod paymentMethod = mPaymentMethodTable.findByPrimaryKey(paymentMethodId)
-                        .map(Optional::of)
-                        .onErrorReturn(ignored -> Optional.absent())
-                        .blockingGet()
-                        .orNull();
+                .map(Optional::of)
+                .onErrorReturn(ignored -> Optional.absent())
+                .blockingGet()
+                .orNull();
 
         final int index = isDescending ? cursor.getCount() - cursor.getPosition() : cursor.getPosition() + 1;
 
         final ReceiptBuilderFactory builder = new ReceiptBuilderFactory(id);
-        builder.setTrip(trip)
+        builder.setUuid(uuid)
+                .setTrip(trip)
                 .setName(name)
                 .setFile(file)
                 .setDate(date)
@@ -160,7 +164,7 @@ public final class ReceiptDatabaseAdapter implements SelectionBackedDatabaseAdap
         /*
          * Please note that a very frustrating bug exists here. Android cursors only return the first 6
          * characters of a price string if that string contains a '.' character. It returns all of them
-         * if not. This means we'll break for prices over 5 digits unless we are using a comma separator, 
+         * if not. This means we'll break for prices over 5 digits unless we are using a comma separator,
          * which we'd do in the EU. Stupid check below to un-break this. Stupid Android.
          *
          * TODO: Longer term, everything should be saved with a decimal point
@@ -202,6 +206,7 @@ public final class ReceiptDatabaseAdapter implements SelectionBackedDatabaseAdap
         values.put(ReceiptsTable.COLUMN_ISO4217, receipt.getPrice().getCurrencyCode());
         values.put(ReceiptsTable.COLUMN_REIMBURSABLE, receipt.isReimbursable());
         values.put(ReceiptsTable.COLUMN_NOTFULLPAGEIMAGE, !receipt.isFullPage());
+        values.put(ReceiptsTable.COLUMN_UUID, receipt.getUuid().toString());
 
         // Add file
         final File file = receipt.getFile();
@@ -212,9 +217,8 @@ public final class ReceiptDatabaseAdapter implements SelectionBackedDatabaseAdap
         }
 
         // Add payment method if one exists
-        if (receipt.getPaymentMethod() != null) {
-            values.put(ReceiptsTable.COLUMN_PAYMENT_METHOD_ID, receipt.getPaymentMethod().getId());
-        }
+        values.put(ReceiptsTable.COLUMN_PAYMENT_METHOD_ID, receipt.getPaymentMethod().getId());
+
 
         // Note: We replace the commas here with decimals to avoid database bugs around parsing decimal values
         // TODO: Ensure this logic works for prices like "1,234.56"
@@ -242,8 +246,10 @@ public final class ReceiptDatabaseAdapter implements SelectionBackedDatabaseAdap
 
     @NonNull
     @Override
-    public Receipt build(@NonNull Receipt receipt, @NonNull PrimaryKey<Receipt, Integer> primaryKey, @NonNull DatabaseOperationMetadata databaseOperationMetadata) {
+    public Receipt build(@NonNull Receipt receipt, @NonNull PrimaryKey<Receipt, Integer> primaryKey,
+                         @NonNull UUID uuid, @NonNull DatabaseOperationMetadata databaseOperationMetadata) {
         return new ReceiptBuilderFactory(primaryKey.getPrimaryKeyValue(receipt), receipt)
+                .setUuid(uuid)
                 .setSyncState(mSyncStateAdapter.get(receipt.getSyncState(), databaseOperationMetadata)).build();
     }
 

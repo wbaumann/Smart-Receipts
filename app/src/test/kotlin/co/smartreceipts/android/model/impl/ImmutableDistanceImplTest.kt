@@ -1,19 +1,19 @@
 package co.smartreceipts.android.model.impl
 
-import android.os.Parcel
 import co.smartreceipts.android.DefaultObjects
 import co.smartreceipts.android.currency.PriceCurrency
 import co.smartreceipts.android.model.Distance
 import co.smartreceipts.android.model.Trip
+import co.smartreceipts.android.model.factory.DistanceBuilderFactory
 import co.smartreceipts.android.sync.model.SyncState
 import co.smartreceipts.android.utils.TestLocaleToggler
+import co.smartreceipts.android.utils.testParcel
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertTrue
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.core.IsNot.not
 import org.junit.After
 import org.junit.Assert
-import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -32,6 +32,7 @@ class ImmutableDistanceImplTest {
         private const val EPSILON = 1.0 / Distance.RATE_PRECISION
 
         private const val ID = 5
+        private val DIST_UUID = UUID.randomUUID()
         private const val LOCATION = "Location"
         private val DISTANCE = BigDecimal(12.55)
         private val RATE = BigDecimal(0.33)
@@ -42,7 +43,7 @@ class ImmutableDistanceImplTest {
     }
 
     // Class under test
-    private lateinit var distance: ImmutableDistanceImpl
+    private lateinit var distance: Distance
 
     private lateinit var trip: Trip
     private lateinit var syncState: SyncState
@@ -52,18 +53,8 @@ class ImmutableDistanceImplTest {
         TestLocaleToggler.setDefaultLocale(Locale.US)
         trip = DefaultObjects.newDefaultTrip()
         syncState = DefaultObjects.newDefaultSyncState()
-        distance = ImmutableDistanceImpl(
-            ID,
-            trip,
-            LOCATION,
-            DISTANCE,
-            RATE,
-            CURRENCY,
-            DATE,
-            TIMEZONE,
-            COMMENT,
-            syncState
-        )
+        distance = DistanceBuilderFactory(ID).setUuid(DIST_UUID).setTrip(trip).setLocation(LOCATION).setDistance(DISTANCE).setRate(RATE)
+            .setCurrency(CURRENCY).setDate(DATE).setTimezone(TIMEZONE).setComment(COMMENT).setSyncState(syncState).build()
     }
 
     @After
@@ -74,6 +65,11 @@ class ImmutableDistanceImplTest {
     @Test
     fun getId() {
         assertEquals(ID, distance.id)
+    }
+
+    @Test
+    fun getUuid() {
+        assertEquals(DIST_UUID, distance.uuid)
     }
 
     @Test
@@ -123,19 +119,8 @@ class ImmutableDistanceImplTest {
 
     @Test
     fun getCurrencyFormattedRateFor3DigitPrecisionRate() {
-        val distance = ImmutableDistanceImpl(
-            ID,
-            trip,
-            LOCATION,
-            DISTANCE,
-            BigDecimal(0.535),
-            CURRENCY,
-            DATE,
-            TIMEZONE,
-            COMMENT,
-            syncState
-        )
-        assertEquals("$0.535", distance.currencyFormattedRate)
+        val newDistance = DistanceBuilderFactory(distance).setRate(BigDecimal(0.535)).build()
+        assertEquals("$0.535", newDistance.currencyFormattedRate)
     }
 
     @Test
@@ -152,50 +137,20 @@ class ImmutableDistanceImplTest {
     fun compareTo() {
         assertTrue(
             distance.compareTo(
-                ImmutableDistanceImpl(
-                    ID,
-                    trip,
-                    LOCATION,
-                    DISTANCE,
-                    RATE,
-                    CURRENCY,
-                    DATE,
-                    TIMEZONE,
-                    COMMENT,
-                    syncState
-                )
+                DistanceBuilderFactory(ID).setUuid(DIST_UUID).setTrip(trip).setLocation(LOCATION).setDistance(DISTANCE).setRate(RATE)
+                    .setCurrency(CURRENCY).setDate(DATE).setTimezone(TIMEZONE).setComment(COMMENT).setSyncState(syncState).build()
             ) == 0
         )
         assertTrue(
             distance.compareTo(
-                ImmutableDistanceImpl(
-                    ID,
-                    trip,
-                    LOCATION,
-                    DISTANCE,
-                    RATE,
-                    CURRENCY,
-                    Date(DATE.time * 2),
-                    TIMEZONE,
-                    COMMENT,
-                    syncState
-                )
+                DistanceBuilderFactory(ID).setUuid(DIST_UUID).setTrip(trip).setLocation(LOCATION).setDistance(DISTANCE).setRate(RATE)
+                    .setCurrency(CURRENCY).setDate(DATE.time * 2).setTimezone(TIMEZONE).setComment(COMMENT).setSyncState(syncState).build()
             ) > 0
         )
         assertTrue(
             distance.compareTo(
-                ImmutableDistanceImpl(
-                    ID,
-                    trip,
-                    LOCATION,
-                    DISTANCE,
-                    RATE,
-                    CURRENCY,
-                    Date(0),
-                    TIMEZONE,
-                    COMMENT,
-                    syncState
-                )
+                DistanceBuilderFactory(ID).setUuid(DIST_UUID).setTrip(trip).setLocation(LOCATION).setDistance(DISTANCE).setRate(RATE)
+                    .setCurrency(CURRENCY).setDate(Date(0)).setTimezone(TIMEZONE).setComment(COMMENT).setSyncState(syncState).build()
             ) < 0
         )
     }
@@ -205,18 +160,8 @@ class ImmutableDistanceImplTest {
         Assert.assertEquals(distance, distance)
         Assert.assertEquals(
             distance,
-            ImmutableDistanceImpl(
-                ID,
-                trip,
-                LOCATION,
-                DISTANCE,
-                RATE,
-                CURRENCY,
-                DATE,
-                TIMEZONE,
-                COMMENT,
-                syncState
-            )
+            DistanceBuilderFactory(ID).setUuid(DIST_UUID).setTrip(trip).setLocation(LOCATION).setDistance(DISTANCE).setRate(RATE)
+                .setCurrency(CURRENCY).setDate(DATE).setTimezone(TIMEZONE).setComment(COMMENT).setSyncState(syncState).build()
         )
         assertThat(distance, not(equalTo(Any())))
         assertThat(distance, not(equalTo(mock(Distance::class.java))))
@@ -224,18 +169,8 @@ class ImmutableDistanceImplTest {
             distance,
             not(
                 equalTo(
-                    ImmutableDistanceImpl(
-                        -1,
-                        trip,
-                        LOCATION,
-                        DISTANCE,
-                        RATE,
-                        CURRENCY,
-                        DATE,
-                        TIMEZONE,
-                        COMMENT,
-                        syncState
-                    )
+                    DistanceBuilderFactory(-1).setUuid(DIST_UUID).setTrip(trip).setLocation(LOCATION).setDistance(DISTANCE).setRate(RATE)
+                        .setCurrency(CURRENCY).setDate(DATE).setTimezone(TIMEZONE).setComment(COMMENT).setSyncState(syncState).build()
                 )
             )
         )
@@ -243,18 +178,10 @@ class ImmutableDistanceImplTest {
             distance,
             not(
                 equalTo(
-                    ImmutableDistanceImpl(
-                        ID,
-                        mock(Trip::class.java),
-                        LOCATION,
-                        DISTANCE,
-                        RATE,
-                        CURRENCY,
-                        DATE,
-                        TIMEZONE,
-                        COMMENT,
-                        syncState
+                    DistanceBuilderFactory(ID).setUuid(DIST_UUID).setTrip(mock(Trip::class.java)).setLocation(LOCATION).setDistance(DISTANCE).setRate(
+                        RATE
                     )
+                        .setCurrency(CURRENCY).setDate(DATE).setTimezone(TIMEZONE).setComment(COMMENT).setSyncState(syncState).build()
                 )
             )
         )
@@ -262,18 +189,8 @@ class ImmutableDistanceImplTest {
             distance,
             not(
                 equalTo(
-                    ImmutableDistanceImpl(
-                        ID,
-                        trip,
-                        "bad",
-                        DISTANCE,
-                        RATE,
-                        CURRENCY,
-                        DATE,
-                        TIMEZONE,
-                        COMMENT,
-                        syncState
-                    )
+                    DistanceBuilderFactory(ID).setUuid(DIST_UUID).setTrip(trip).setLocation("bad").setDistance(DISTANCE).setRate(RATE)
+                        .setCurrency(CURRENCY).setDate(DATE).setTimezone(TIMEZONE).setComment(COMMENT).setSyncState(syncState).build()
                 )
             )
         )
@@ -281,18 +198,9 @@ class ImmutableDistanceImplTest {
             distance,
             not(
                 equalTo(
-                    ImmutableDistanceImpl(
-                        ID,
-                        trip,
-                        LOCATION,
-                        BigDecimal(0),
-                        RATE,
-                        CURRENCY,
-                        DATE,
-                        TIMEZONE,
-                        COMMENT,
-                        syncState
-                    )
+                    DistanceBuilderFactory(ID).setUuid(DIST_UUID).setTrip(trip).setLocation(LOCATION).setDistance(BigDecimal(0))
+                        .setRate(RATE).setCurrency(CURRENCY).setDate(DATE).setTimezone(TIMEZONE).setComment(COMMENT).setSyncState(syncState)
+                        .build()
                 )
             )
         )
@@ -300,18 +208,9 @@ class ImmutableDistanceImplTest {
             distance,
             not(
                 equalTo(
-                    ImmutableDistanceImpl(
-                        ID,
-                        trip,
-                        LOCATION,
-                        DISTANCE,
-                        BigDecimal(0),
-                        CURRENCY,
-                        DATE,
-                        TIMEZONE,
-                        COMMENT,
-                        syncState
-                    )
+                    DistanceBuilderFactory(ID).setUuid(DIST_UUID).setTrip(trip).setLocation(LOCATION).setDistance(DISTANCE)
+                        .setRate(BigDecimal(0)).setCurrency(CURRENCY).setDate(DATE).setTimezone(TIMEZONE).setComment(COMMENT)
+                        .setSyncState(syncState).build()
                 )
             )
         )
@@ -319,18 +218,9 @@ class ImmutableDistanceImplTest {
             distance,
             not(
                 equalTo(
-                    ImmutableDistanceImpl(
-                        ID,
-                        trip,
-                        LOCATION,
-                        DISTANCE,
-                        RATE,
-                        PriceCurrency.getInstance("EUR"),
-                        DATE,
-                        TIMEZONE,
-                        COMMENT,
-                        syncState
-                    )
+                    DistanceBuilderFactory(ID).setUuid(DIST_UUID).setTrip(trip).setLocation(LOCATION).setDistance(DISTANCE).setRate(RATE)
+                        .setCurrency(PriceCurrency.getInstance("EUR")).setDate(DATE).setTimezone(TIMEZONE).setComment(COMMENT)
+                        .setSyncState(syncState).build()
                 )
             )
         )
@@ -338,18 +228,9 @@ class ImmutableDistanceImplTest {
             distance,
             not(
                 equalTo(
-                    ImmutableDistanceImpl(
-                        ID,
-                        trip,
-                        LOCATION,
-                        DISTANCE,
-                        RATE,
-                        CURRENCY,
-                        Date(System.currentTimeMillis()),
-                        TIMEZONE,
-                        COMMENT,
-                        syncState
-                    )
+                    DistanceBuilderFactory(ID).setUuid(DIST_UUID).setTrip(trip).setLocation(LOCATION).setDistance(DISTANCE).setRate(RATE)
+                        .setCurrency(CURRENCY).setDate(Date(System.currentTimeMillis())).setTimezone(TIMEZONE).setComment(COMMENT)
+                        .setSyncState(syncState).build()
                 )
             )
         )
@@ -357,18 +238,19 @@ class ImmutableDistanceImplTest {
             distance,
             not(
                 equalTo(
-                    ImmutableDistanceImpl(
-                        ID,
-                        trip,
-                        LOCATION,
-                        DISTANCE,
-                        RATE,
-                        CURRENCY,
-                        DATE,
-                        TIMEZONE,
-                        "bad",
-                        syncState
-                    )
+                    DistanceBuilderFactory(ID).setUuid(DIST_UUID).setTrip(trip).setLocation(LOCATION).setDistance(DISTANCE).setRate(RATE)
+                        .setCurrency(CURRENCY).setDate(DATE).setTimezone(TIMEZONE).setComment("bad").setSyncState(syncState).build()
+                )
+            )
+        )
+
+        assertThat(
+            distance,
+            not(
+                equalTo(
+                    DistanceBuilderFactory(ID).setUuid(UUID.randomUUID()).setTrip(trip).setLocation(LOCATION).setDistance(DISTANCE)
+                        .setRate(RATE).setCurrency(CURRENCY).setDate(DATE).setTimezone(TIMEZONE).setComment(COMMENT).setSyncState(syncState)
+                        .build()
                 )
             )
         )
@@ -376,12 +258,10 @@ class ImmutableDistanceImplTest {
 
     @Test
     fun parcelEquality() {
-        val parcel = Parcel.obtain()
-        distance.writeToParcel(parcel, 0)
-        parcel.setDataPosition(0)
+        val distanceFromParcel = distance.testParcel()
 
-        val distance = ImmutableDistanceImpl.CREATOR.createFromParcel(parcel)
-        assertNotNull(distance)
-        assertEquals(distance, this.distance)
+        junit.framework.Assert.assertNotSame(distance, distanceFromParcel)
+        assertEquals(distance, distanceFromParcel)
+
     }
 }

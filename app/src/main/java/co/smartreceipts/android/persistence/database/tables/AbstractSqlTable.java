@@ -121,7 +121,7 @@ public abstract class AbstractSqlTable<ModelType, PrimaryKeyType> implements Tab
 
     protected synchronized void onUpgradeToAddUUID(@NonNull SQLiteDatabase db, int oldVersion) {
         if (oldVersion <= 18) { // Add a uuid to all app database tables
-            final String addNewColumn = "ALTER TABLE " + getTableName() + " ADD " + COLUMN_UUID + " TEXT DEFAULT '' ";
+            final String addNewColumn = "ALTER TABLE " + getTableName() + " ADD " + COLUMN_UUID + " TEXT";
             db.execSQL(addNewColumn);
 
             // assign random values
@@ -281,9 +281,11 @@ public abstract class AbstractSqlTable<ModelType, PrimaryKeyType> implements Tab
     public synchronized Optional<ModelType> insertBlocking(@NonNull ModelType modelType, @NonNull DatabaseOperationMetadata databaseOperationMetadata) {
         final ContentValues values = databaseAdapter.write(modelType, databaseOperationMetadata);
 
-        if (!values.containsKey(COLUMN_UUID)) { // todo   31.08.18 while merge?
+        // to be sure that entity_uuid is not missed
+        if (!values.containsKey(COLUMN_UUID) || UUID.fromString(values.getAsString(COLUMN_UUID)).equals(Syncable.Companion.getMISSING_UUID())) {
             values.put(COLUMN_UUID, UUID.randomUUID().toString());
         }
+        UUID uuid = UUID.fromString(values.getAsString(COLUMN_UUID));
 
         if (getWritableDatabase().insertOrThrow(getTableName(), null, values) != -1) {
             if (Integer.class.equals(primaryKey.getPrimaryKeyClass())) {
@@ -301,7 +303,7 @@ public abstract class AbstractSqlTable<ModelType, PrimaryKeyType> implements Tab
                     // Note: We do some quick hacks around generics here to ensure the types are consistent
                     final PrimaryKey<ModelType, PrimaryKeyType> autoIncrementPrimaryKey = (PrimaryKey<ModelType, PrimaryKeyType>) new AutoIncrementIdPrimaryKey<>((PrimaryKey<ModelType, Integer>) primaryKey, id);
 
-                    final ModelType insertedItem = databaseAdapter.build(modelType, autoIncrementPrimaryKey, databaseOperationMetadata);
+                    final ModelType insertedItem = databaseAdapter.build(modelType, autoIncrementPrimaryKey, uuid, databaseOperationMetadata);
                     if (cachedResults != null) {
                         cachedResults.add(insertedItem);
                         if (insertedItem instanceof Comparable<?>) {
@@ -316,7 +318,8 @@ public abstract class AbstractSqlTable<ModelType, PrimaryKeyType> implements Tab
                 }
             } else {
                 // If it's not an auto-increment id, just grab whatever the definition is...
-                final ModelType insertedItem = databaseAdapter.build(modelType, primaryKey, databaseOperationMetadata);
+                // TODO: 17.09.2018 all tables have autoincrement key id now...
+                final ModelType insertedItem = databaseAdapter.build(modelType, primaryKey, uuid, databaseOperationMetadata);
                 if (cachedResults != null) {
                     cachedResults.add(insertedItem);
                     if (insertedItem instanceof Comparable<?>) {
@@ -332,28 +335,46 @@ public abstract class AbstractSqlTable<ModelType, PrimaryKeyType> implements Tab
 
     @SuppressWarnings("unchecked")
     public synchronized Optional<ModelType> updateBlocking(@NonNull ModelType oldModelType, @NonNull ModelType newModelType, @NonNull DatabaseOperationMetadata databaseOperationMetadata) {
+
+        if (!(oldModelType instanceof Syncable)) {
+            return Optional.absent();
+        }
+
         final ContentValues values = databaseAdapter.write(newModelType, databaseOperationMetadata);
-        final String oldPrimaryKeyValue = primaryKey.getPrimaryKeyValue(oldModelType).toString();
+
+        // to be sure that entity_uuid will never be changed
+        if (values.containsKey(COLUMN_UUID)) {
+            values.remove(COLUMN_UUID);
+        }
+
 
         final boolean updateSuccess;
-        if (databaseOperationMetadata.getOperationFamilyType() == OperationFamilyType.Sync && oldModelType instanceof Syncable) {
+        final Syncable syncableOldModel = (Syncable) oldModelType;
+        final UUID uuid = syncableOldModel.getUuid();
+        final String oldPrimaryKeyValue = primaryKey.getPrimaryKeyValue(oldModelType).toString();
+
+        if (databaseOperationMetadata.getOperationFamilyType() == OperationFamilyType.Sync) {
             // For sync operations, ensure that this only succeeds if we haven't already updated this item more recently
-            final Syncable syncableOldModel = (Syncable) oldModelType;
-            updateSuccess = getWritableDatabase().update(getTableName(), values, primaryKey.getPrimaryKeyColumn() + " = ? AND " + AbstractSqlTable.COLUMN_LAST_LOCAL_MODIFICATION_TIME + " >= ?", new String[]{oldPrimaryKeyValue, Long.toString(syncableOldModel.getSyncState().getLastLocalModificationTime().getTime())}) > 0;
+            updateSuccess = getWritableDatabase().update(getTableName(), values, primaryKey.getPrimaryKeyColumn() +
+                            " = ? AND " + AbstractSqlTable.COLUMN_LAST_LOCAL_MODIFICATION_TIME + " >= ?",
+                    new String[]{oldPrimaryKeyValue, Long.toString(syncableOldModel.getSyncState().getLastLocalModificationTime().getTime())}) > 0;
         } else {
-            updateSuccess = getWritableDatabase().update(getTableName(), values, primaryKey.getPrimaryKeyColumn() + " = ?", new String[]{oldPrimaryKeyValue}) > 0;
+            updateSuccess = getWritableDatabase().update(getTableName(), values, primaryKey.getPrimaryKeyColumn() + " = ?",
+                    new String[]{oldPrimaryKeyValue}) > 0;
         }
 
         if (updateSuccess) {
             final ModelType updatedItem;
+
             if (Integer.class.equals(primaryKey.getPrimaryKeyClass())) {
                 // If it's an auto-increment key, ensure we're re-using the same id as the old key
                 final PrimaryKey<ModelType, PrimaryKeyType> autoIncrementPrimaryKey = (PrimaryKey<ModelType, PrimaryKeyType>) new AutoIncrementIdPrimaryKey<>((PrimaryKey<ModelType, Integer>) primaryKey, (Integer) primaryKey.getPrimaryKeyValue(oldModelType));
-                updatedItem = databaseAdapter.build(newModelType, autoIncrementPrimaryKey, databaseOperationMetadata);
+                updatedItem = databaseAdapter.build(newModelType, autoIncrementPrimaryKey, uuid, databaseOperationMetadata);
             } else {
                 // Otherwise, we'll use whatever the user defined...
-                updatedItem = databaseAdapter.build(newModelType, primaryKey, databaseOperationMetadata);
+                updatedItem = databaseAdapter.build(newModelType, primaryKey, uuid, databaseOperationMetadata);
             }
+
             if (cachedResults != null) {
                 boolean wasCachedResultRemoved = cachedResults.remove(oldModelType);
                 if (!wasCachedResultRemoved) {
@@ -372,23 +393,20 @@ public abstract class AbstractSqlTable<ModelType, PrimaryKeyType> implements Tab
                         Logger.warn(this, "Primary key {} was never found in our cache.", primaryKeyValue);
                     }
                 }
-                if (newModelType instanceof Syncable) {
-                    final Syncable syncable = (Syncable) newModelType;
-                    if (!syncable.getSyncState().isMarkedForDeletion(SyncProvider.GoogleDrive)) {
-                        cachedResults.add(updatedItem);
-                    }
-                } else {
+
+                if (!((Syncable) newModelType).getSyncState().isMarkedForDeletion(SyncProvider.GoogleDrive)) {
                     cachedResults.add(updatedItem);
                 }
+
                 if (updatedItem instanceof Comparable<?>) {
                     Collections.sort((List<? extends Comparable>) cachedResults);
                 }
             }
             return Optional.of(updatedItem);
+
         } else {
             return Optional.absent();
         }
-
     }
 
     public synchronized Optional<ModelType> deleteBlocking(@NonNull ModelType modelType, @NonNull DatabaseOperationMetadata databaseOperationMetadata) {

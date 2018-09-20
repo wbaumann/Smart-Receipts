@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 
 import com.google.common.base.Preconditions;
 
+import java.util.UUID;
+
 import co.smartreceipts.android.model.Trip;
 import co.smartreceipts.android.model.factory.TripBuilderFactory;
 import co.smartreceipts.android.persistence.database.operations.DatabaseOperationMetadata;
@@ -37,6 +39,7 @@ public final class TripDatabaseAdapter implements DatabaseAdapter<Trip, PrimaryK
     @NonNull
     public Trip read(@NonNull Cursor cursor) {
         final int idIndex = cursor.getColumnIndex(CategoriesTable.COLUMN_ID);
+        final int uuidIndex = cursor.getColumnIndex(CategoriesTable.COLUMN_UUID);
         final int nameIndex = cursor.getColumnIndex(TripsTable.COLUMN_NAME);
         final int fromIndex = cursor.getColumnIndex(TripsTable.COLUMN_FROM);
         final int toIndex = cursor.getColumnIndex(TripsTable.COLUMN_TO);
@@ -47,6 +50,7 @@ public final class TripDatabaseAdapter implements DatabaseAdapter<Trip, PrimaryK
         final int defaultCurrencyIndex = cursor.getColumnIndex(TripsTable.COLUMN_DEFAULT_CURRENCY);
 
         final int id = cursor.getInt(idIndex);
+        final UUID uuid = UUID.fromString(cursor.getString(uuidIndex));
         final String name = cursor.getString(nameIndex);
         final long from = cursor.getLong(fromIndex);
         final long to = cursor.getLong(toIndex);
@@ -59,6 +63,7 @@ public final class TripDatabaseAdapter implements DatabaseAdapter<Trip, PrimaryK
 
         return new TripBuilderFactory()
                 .setId(id)
+                .setUuid(uuid)
                 .setDirectory(storageManager.mkdir(name))
                 .setStartDate(from)
                 .setEndDate(to)
@@ -84,6 +89,7 @@ public final class TripDatabaseAdapter implements DatabaseAdapter<Trip, PrimaryK
         values.put(TripsTable.COLUMN_COMMENT, trip.getComment());
         values.put(TripsTable.COLUMN_COST_CENTER, trip.getCostCenter());
         values.put(TripsTable.COLUMN_DEFAULT_CURRENCY, trip.getDefaultCurrencyCode());
+        values.put(TripsTable.COLUMN_UUID, trip.getUuid().toString());
         if (databaseOperationMetadata.getOperationFamilyType() == OperationFamilyType.Sync) {
             values.putAll(syncStateAdapter.write(trip.getSyncState()));
         } else {
@@ -94,13 +100,13 @@ public final class TripDatabaseAdapter implements DatabaseAdapter<Trip, PrimaryK
 
     @Override
     @NonNull
-    public Trip build(@NonNull Trip trip, @NonNull PrimaryKey<Trip, Integer> primaryKey, @NonNull DatabaseOperationMetadata databaseOperationMetadata) {
+    public Trip build(@NonNull Trip trip, @NonNull PrimaryKey<Trip, Integer> primaryKey, @NonNull UUID uuid, @NonNull DatabaseOperationMetadata databaseOperationMetadata) {
         Integer id = primaryKey.getPrimaryKeyValue(trip);
         return new TripBuilderFactory(trip)
                 .setId(id)
+                .setUuid(uuid)
                 .setDirectory(storageManager.getFile(trip.getName()))
                 .setSyncState(syncStateAdapter.get(trip.getSyncState(), databaseOperationMetadata))
                 .build();
     }
-
 }

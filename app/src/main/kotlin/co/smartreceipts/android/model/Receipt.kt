@@ -43,14 +43,14 @@ interface Receipt : Parcelable, Priceable, Draggable<Receipt>, Syncable {
      *
      * @return a representation of the file path via [.getFile] and [File.getAbsolutePath].
      */
-    val filePath: String?
+    val filePath: String
 
     /**
      * Gets the name of this Receipt's file from [.getFile].
      *
      * @return a representation of the file name via [.getFile] and [File.getName].
      */
-    val fileName: String?
+    val fileName: String
 
     /**
      * Java uses immutable [File], so when we rename our files as part of a receipt update, we might rename it
@@ -202,7 +202,7 @@ interface Receipt : Parcelable, Priceable, Draggable<Receipt>, Syncable {
 
     companion object {
 
-        val PARCEL_KEY = Receipt::class.java.name
+        val PARCEL_KEY: String = Receipt::class.java.name
     }
 
 }

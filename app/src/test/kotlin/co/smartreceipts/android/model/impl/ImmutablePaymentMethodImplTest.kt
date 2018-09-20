@@ -1,17 +1,20 @@
 package co.smartreceipts.android.model.impl
 
-import android.os.Parcel
 import co.smartreceipts.android.DefaultObjects
 import co.smartreceipts.android.model.PaymentMethod
 import co.smartreceipts.android.sync.model.SyncState
+import co.smartreceipts.android.utils.testParcel
+import junit.framework.Assert.assertEquals
+import junit.framework.Assert.assertNotSame
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.core.IsNot.not
-import org.junit.Assert.*
+import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.mock
 import org.robolectric.RobolectricTestRunner
+import java.util.*
 
 @RunWith(RobolectricTestRunner::class)
 class ImmutablePaymentMethodImplTest {
@@ -19,8 +22,9 @@ class ImmutablePaymentMethodImplTest {
     companion object {
 
         private const val ID = 5
+        private val PM_UUID = UUID.randomUUID()
         private const val METHOD = "method"
-        private const val CUSTOM_ORDER_ID = 2
+        private const val CUSTOM_ORDER_ID: Long = 2
     }
 
     // Class under test
@@ -31,8 +35,7 @@ class ImmutablePaymentMethodImplTest {
     @Before
     fun setUp() {
         syncState = DefaultObjects.newDefaultSyncState()
-        paymentMethod =
-                ImmutablePaymentMethodImpl(ID, METHOD, syncState, CUSTOM_ORDER_ID.toLong())
+        paymentMethod = ImmutablePaymentMethodImpl(ID, PM_UUID, METHOD, syncState, CUSTOM_ORDER_ID)
     }
 
     @Test
@@ -52,7 +55,7 @@ class ImmutablePaymentMethodImplTest {
 
     @Test
     fun getCustomOrderId() {
-        assertEquals(CUSTOM_ORDER_ID.toLong(), paymentMethod.customOrderId)
+        assertEquals(CUSTOM_ORDER_ID, paymentMethod.customOrderId)
     }
 
     @Test
@@ -60,20 +63,16 @@ class ImmutablePaymentMethodImplTest {
         assertEquals(paymentMethod, paymentMethod)
         assertEquals(
             paymentMethod,
-            ImmutablePaymentMethodImpl(ID, METHOD, syncState, CUSTOM_ORDER_ID.toLong())
+            ImmutablePaymentMethodImpl(ID, PM_UUID, METHOD, syncState, CUSTOM_ORDER_ID)
         )
         assertThat(paymentMethod, not(equalTo(Any())))
         assertThat(paymentMethod, not(equalTo(mock(PaymentMethod::class.java))))
+        assertThat(paymentMethod,not(equalTo(ImmutablePaymentMethodImpl(-1, PM_UUID, METHOD, syncState, CUSTOM_ORDER_ID))))
         assertThat(
             paymentMethod,
             not(
                 equalTo(
-                    ImmutablePaymentMethodImpl(
-                        -1,
-                        METHOD,
-                        syncState,
-                        CUSTOM_ORDER_ID.toLong()
-                    )
+                    ImmutablePaymentMethodImpl(ID, PM_UUID, "abcd", syncState, CUSTOM_ORDER_ID)
                 )
             )
         )
@@ -81,12 +80,7 @@ class ImmutablePaymentMethodImplTest {
             paymentMethod,
             not(
                 equalTo(
-                    ImmutablePaymentMethodImpl(
-                        ID,
-                        "abcd",
-                        syncState,
-                        CUSTOM_ORDER_ID.toLong()
-                    )
+                    ImmutablePaymentMethodImpl(ID, PM_UUID, "abcd", syncState, (CUSTOM_ORDER_ID + 1))
                 )
             )
         )
@@ -94,12 +88,7 @@ class ImmutablePaymentMethodImplTest {
             paymentMethod,
             not(
                 equalTo(
-                    ImmutablePaymentMethodImpl(
-                        ID,
-                        "abcd",
-                        syncState,
-                        (CUSTOM_ORDER_ID + 1).toLong()
-                    )
+                    ImmutablePaymentMethodImpl(ID, UUID.randomUUID(), METHOD, syncState, (CUSTOM_ORDER_ID + 1))
                 )
             )
         )
@@ -107,21 +96,18 @@ class ImmutablePaymentMethodImplTest {
 
     @Test
     fun parcelEquality() {
-        val parcel = Parcel.obtain()
-        paymentMethod.writeToParcel(parcel, 0)
-        parcel.setDataPosition(0)
+        val paymentMethodFromParcel = paymentMethod.testParcel()
 
-        val paymentMethod = ImmutablePaymentMethodImpl.CREATOR.createFromParcel(parcel)
-        assertNotNull(paymentMethod)
-        assertEquals(paymentMethod, this.paymentMethod)
+        assertNotSame(paymentMethod, paymentMethodFromParcel)
+        assertEquals(paymentMethod, paymentMethodFromParcel)
     }
 
     @Test
     fun compare() {
         val paymentMethod2 =
-            ImmutablePaymentMethodImpl(ID, METHOD, syncState, (CUSTOM_ORDER_ID + 1).toLong())
+            ImmutablePaymentMethodImpl(ID, PM_UUID, METHOD, syncState, (CUSTOM_ORDER_ID + 1))
         val paymentMethod0 =
-            ImmutablePaymentMethodImpl(ID, METHOD, syncState, (CUSTOM_ORDER_ID - 1).toLong())
+            ImmutablePaymentMethodImpl(ID, PM_UUID, METHOD, syncState, (CUSTOM_ORDER_ID - 1))
 
         val list = mutableListOf<ImmutablePaymentMethodImpl>().apply {
             add(paymentMethod)

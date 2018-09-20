@@ -10,6 +10,7 @@ import co.smartreceipts.android.model.impl.columns.SettingUserIdColumn
 import co.smartreceipts.android.model.impl.columns.receipts.ReceiptColumnDefinitions.ActualDefinition.*
 import co.smartreceipts.android.settings.UserPreferenceManager
 import co.smartreceipts.android.sync.model.SyncState
+import co.smartreceipts.android.sync.model.Syncable
 import co.smartreceipts.android.sync.model.impl.DefaultSyncState
 import co.smartreceipts.android.workers.reports.ReportResourcesManager
 import java.util.*
@@ -121,11 +122,12 @@ constructor(
         id: Int,
         columnType: Int,
         syncState: SyncState,
-        customOrderId: Long
+        customOrderId: Long,
+        uuid: UUID
     ): Column<Receipt> {
         for (definition in actualDefinitions) {
             if (columnType == definition.columnType) {
-                return getColumnFromDefinition(definition, id, syncState, customOrderId)
+                return getColumnFromDefinition(definition, id, syncState, customOrderId, uuid)
             }
         }
 
@@ -139,7 +141,7 @@ constructor(
             // don't add column if column name is empty (useful for flex cases)
             if (!reportResourcesManager.getFlexString(definition.columnHeaderId).isEmpty()) {
 
-                val column = getColumnFromDefinition(definition, Column.UNKNOWN_ID, DefaultSyncState())
+                val column = getColumnFromDefinition(definition)
                 columns.add(column)
             }
 
@@ -149,7 +151,7 @@ constructor(
     }
 
     override fun getDefaultInsertColumn(): Column<Receipt> =
-        BlankColumn(Column.UNKNOWN_ID, DefaultSyncState(), java.lang.Long.MAX_VALUE)
+        BlankColumn(Syncable.MISSING_ID, DefaultSyncState(), java.lang.Long.MAX_VALUE, Syncable.MISSING_UUID)
 
     override fun getColumnTypeByHeaderValue(header: String): Int {
 
@@ -167,46 +169,47 @@ constructor(
         return -1
     }
 
-    fun getColumnFromDefinition(
+    private fun getColumnFromDefinition(
         definition: ActualDefinition,
-        id: Int = Column.UNKNOWN_ID,
+        id: Int = Syncable.MISSING_ID,
         syncState: SyncState = DefaultSyncState(),
-        customOrderId: Long = 0
+        customOrderId: Long = 0,
+        uuid: UUID = Syncable.MISSING_UUID
     ): AbstractColumnImpl<Receipt> {
         val localizedContext = reportResourcesManager.getLocalizedContext()
 
         return when (definition) {
-            BLANK -> BlankColumn(id, syncState, customOrderId)
-            CATEGORY_CODE -> ReceiptCategoryCodeColumn(id, syncState, customOrderId)
-            CATEGORY_NAME -> ReceiptCategoryNameColumn(id, syncState, customOrderId)
-            USER_ID -> SettingUserIdColumn(id, syncState, preferences, customOrderId)
-            REPORT_NAME -> ReportNameColumn(id, syncState, customOrderId)
-            REPORT_START_DATE -> ReportStartDateColumn(id, syncState, localizedContext, preferences, customOrderId)
-            REPORT_END_DATE -> ReportEndDateColumn(id, syncState, localizedContext, preferences, customOrderId)
-            REPORT_COMMENT -> ReportCommentColumn(id, syncState, customOrderId)
-            REPORT_COST_CENTER -> ReportCostCenterColumn(id, syncState, customOrderId)
-            IMAGE_FILE_NAME -> ReceiptFileNameColumn(id, syncState, customOrderId)
-            IMAGE_PATH -> ReceiptFilePathColumn(id, syncState, customOrderId)
-            COMMENT -> ReceiptCommentColumn(id, syncState, customOrderId)
-            CURRENCY -> ReceiptCurrencyCodeColumn(id, syncState, customOrderId)
-            DATE -> ReceiptDateColumn(id, syncState, localizedContext, preferences, customOrderId)
-            NAME -> ReceiptNameColumn(id, syncState, customOrderId)
-            PRICE -> ReceiptPriceColumn(id, syncState, customOrderId)
-            PRICE_MINUS_TAX -> ReceiptPriceMinusTaxColumn(id, syncState, preferences, customOrderId)
-            PRICE_EXCHANGED -> ReceiptExchangedPriceColumn(id, syncState, localizedContext, customOrderId)
-            TAX -> ReceiptTaxColumn(id, syncState, customOrderId)
-            TAX_EXCHANGED -> ReceiptExchangedTaxColumn(id, syncState, localizedContext, customOrderId)
-            PRICE_PLUS_TAX_EXCHANGED -> ReceiptNetExchangedPricePlusTaxColumn(id, syncState, localizedContext, preferences, customOrderId)
-            PRICE_MINUS_TAX_EXCHANGED -> ReceiptNetExchangedPriceMinusTaxColumn(id, syncState, localizedContext, preferences, customOrderId)
-            EXCHANGE_RATE -> ReceiptExchangeRateColumn(id, syncState, customOrderId)
-            PICTURED -> ReceiptIsPicturedColumn(id, syncState, localizedContext, customOrderId)
-            REIMBURSABLE -> ReceiptIsReimbursableColumn(id, syncState, localizedContext, customOrderId)
-            INDEX -> ReceiptIndexColumn(id, syncState, customOrderId)
-            ID -> ReceiptIdColumn(id, syncState, customOrderId)
-            PAYMENT_METHOD -> ReceiptPaymentMethodColumn(id, syncState, customOrderId)
-            EXTRA_EDITTEXT_1 -> ReceiptExtra1Column(id, syncState, customOrderId)
-            EXTRA_EDITTEXT_2 -> ReceiptExtra2Column(id, syncState, customOrderId)
-            EXTRA_EDITTEXT_3 -> ReceiptExtra3Column(id, syncState, customOrderId)
+            BLANK -> BlankColumn(id, syncState, customOrderId, uuid)
+            CATEGORY_CODE -> ReceiptCategoryCodeColumn(id, syncState, customOrderId, uuid)
+            CATEGORY_NAME -> ReceiptCategoryNameColumn(id, syncState, customOrderId, uuid)
+            USER_ID -> SettingUserIdColumn(id, syncState, preferences, customOrderId, uuid)
+            REPORT_NAME -> ReportNameColumn(id, syncState, customOrderId, uuid)
+            REPORT_START_DATE -> ReportStartDateColumn(id, syncState, localizedContext, preferences, customOrderId, uuid)
+            REPORT_END_DATE -> ReportEndDateColumn(id, syncState, localizedContext, preferences, customOrderId, uuid)
+            REPORT_COMMENT -> ReportCommentColumn(id, syncState, customOrderId, uuid)
+            REPORT_COST_CENTER -> ReportCostCenterColumn(id, syncState, customOrderId, uuid)
+            IMAGE_FILE_NAME -> ReceiptFileNameColumn(id, syncState, customOrderId, uuid)
+            IMAGE_PATH -> ReceiptFilePathColumn(id, syncState, customOrderId, uuid)
+            COMMENT -> ReceiptCommentColumn(id, syncState, customOrderId, uuid)
+            CURRENCY -> ReceiptCurrencyCodeColumn(id, syncState, customOrderId, uuid)
+            DATE -> ReceiptDateColumn(id, syncState, localizedContext, preferences, customOrderId, uuid)
+            NAME -> ReceiptNameColumn(id, syncState, customOrderId, uuid)
+            PRICE -> ReceiptPriceColumn(id, syncState, customOrderId, uuid)
+            PRICE_MINUS_TAX -> ReceiptPriceMinusTaxColumn(id, syncState, preferences, customOrderId, uuid)
+            PRICE_EXCHANGED -> ReceiptExchangedPriceColumn(id, syncState, localizedContext, customOrderId, uuid)
+            TAX -> ReceiptTaxColumn(id, syncState, customOrderId, uuid)
+            TAX_EXCHANGED -> ReceiptExchangedTaxColumn(id, syncState, localizedContext, customOrderId, uuid)
+            PRICE_PLUS_TAX_EXCHANGED -> ReceiptNetExchangedPricePlusTaxColumn(id, syncState, localizedContext, preferences, customOrderId, uuid)
+            PRICE_MINUS_TAX_EXCHANGED -> ReceiptNetExchangedPriceMinusTaxColumn(id, syncState, localizedContext, preferences, customOrderId, uuid)
+            EXCHANGE_RATE -> ReceiptExchangeRateColumn(id, syncState, customOrderId, uuid)
+            PICTURED -> ReceiptIsPicturedColumn(id, syncState, localizedContext, customOrderId, uuid)
+            REIMBURSABLE -> ReceiptIsReimbursableColumn(id, syncState, localizedContext, customOrderId, uuid)
+            INDEX -> ReceiptIndexColumn(id, syncState, customOrderId, uuid)
+            ID -> ReceiptIdColumn(id, syncState, customOrderId, uuid)
+            PAYMENT_METHOD -> ReceiptPaymentMethodColumn(id, syncState, customOrderId, uuid)
+            EXTRA_EDITTEXT_1 -> ReceiptExtra1Column(id, syncState, customOrderId, uuid)
+            EXTRA_EDITTEXT_2 -> ReceiptExtra2Column(id, syncState, customOrderId, uuid)
+            EXTRA_EDITTEXT_3 -> ReceiptExtra3Column(id, syncState, customOrderId, uuid)
         }
     }
 

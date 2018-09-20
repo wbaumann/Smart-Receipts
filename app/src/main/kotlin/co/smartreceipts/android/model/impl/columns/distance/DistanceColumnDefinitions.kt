@@ -10,6 +10,7 @@ import co.smartreceipts.android.model.impl.columns.AbstractColumnImpl
 import co.smartreceipts.android.model.impl.columns.distance.DistanceColumnDefinitions.ActualDefinition.*
 import co.smartreceipts.android.settings.UserPreferenceManager
 import co.smartreceipts.android.sync.model.SyncState
+import co.smartreceipts.android.sync.model.Syncable
 import co.smartreceipts.android.sync.model.impl.DefaultSyncState
 import co.smartreceipts.android.workers.reports.ReportResourcesManager
 import java.util.*
@@ -52,11 +53,12 @@ class DistanceColumnDefinitions(
         id: Int,
         columnType: Int,
         syncState: SyncState,
-        ignoredCustomOrderId: Long
+        ignoredCustomOrderId: Long,
+        ignoredUUID: UUID
     ): Column<Distance> {
         for (definition in actualDefinitions) {
             if (columnType == definition.columnType) {
-                return getColumnFromClass(id, definition, syncState)
+                return getColumnFromClass(definition, id, syncState)
             }
         }
         throw IllegalArgumentException("Unknown column type: $columnType")
@@ -65,26 +67,21 @@ class DistanceColumnDefinitions(
     override fun getAllColumns(): List<Column<Distance>> {
         val columns = ArrayList<AbstractColumnImpl<Distance>>(actualDefinitions.size)
         for (definition in actualDefinitions) {
-            val column = getColumnFromClass(
-                Column.UNKNOWN_ID,
-                definition, DefaultSyncState()
-            )
-            columns.add(column)
-
+            columns.add(getColumnFromClass(definition))
         }
         return ArrayList<Column<Distance>>(columns)
     }
 
     override fun getDefaultInsertColumn(): Column<Distance> {
         // Hack for the distance default until we let users dynamically set columns. Actually, this will never be called
-        return getColumnFromClass(Column.UNKNOWN_ID, DISTANCE, DefaultSyncState())
+        return getColumnFromClass(DISTANCE)
     }
 
 
     private fun getColumnFromClass(
-        id: Int,
         definition: ActualDefinition,
-        syncState: SyncState
+        id: Int = Syncable.MISSING_ID,
+        syncState: SyncState = DefaultSyncState()
     ): AbstractColumnImpl<Distance> {
         val localizedContext = reportResourcesManager.getLocalizedContext()
 

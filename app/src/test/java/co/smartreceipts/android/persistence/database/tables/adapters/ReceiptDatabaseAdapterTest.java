@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.Collections;
 import java.util.TimeZone;
+import java.util.UUID;
 
 import co.smartreceipts.android.model.Category;
 import co.smartreceipts.android.model.PaymentMethod;
@@ -50,13 +51,15 @@ public class ReceiptDatabaseAdapterTest {
     private static final int ID = 5;
     private static final int PRIMARY_KEY_ID = 11;
 
+    private static final UUID RECEIPT_UUID = UUID.randomUUID();
     private static final int PARENT_TRIP_ID = 128;
     private static final File PARENT_DIR = new File(System.getProperty("java.io.tmpdir"), "Trip");
     private static final File RECEIPT_FILE = new File(PARENT_DIR, "Image.jpg");
     private static final String NAME = "Name";
     private static final int CATEGORY_ID = 15;
     private static final String CATEGORY_NAME = "Category";
-    private static final Category CATEGORY = new ImmutableCategoryImpl(CATEGORY_ID, CATEGORY_NAME, "code");
+    private static final UUID CATEGORY_UUID = UUID.randomUUID();
+    private static final Category CATEGORY = new ImmutableCategoryImpl(CATEGORY_ID, CATEGORY_UUID, CATEGORY_NAME, "code");
     private static final double PRICE = 12.55d;
     private static final double TAX = 2.50d;
     private static final String CURRENCY_CODE = "USD";
@@ -68,10 +71,11 @@ public class ReceiptDatabaseAdapterTest {
     private static final String COMMENT = "Comment";
     private static final boolean REIMBURSABLE = true;
     private static final int PAYMENT_METHOD_ID = 2;
+    private static final UUID PAYMENT_METHOD_UUID = UUID.randomUUID();
     private static final int DESCENDING_INDEX = 3;
     private static final int ASCENDING_INDEX = 2;
     private static final int CURSOR_COUNT = 4;
-    private static final PaymentMethod PAYMENT_METHOD = new ImmutablePaymentMethodImpl(PAYMENT_METHOD_ID, "method");
+    private static final PaymentMethod PAYMENT_METHOD = new ImmutablePaymentMethodImpl(PAYMENT_METHOD_ID, PAYMENT_METHOD_UUID, "method");
     private static final boolean FULL_PAGE = true;
     private static final String EXTRA1 = "extra1";
     private static final String EXTRA2 = "extra2";
@@ -140,6 +144,7 @@ public class ReceiptDatabaseAdapterTest {
         final int extraEdittext2Index = 18;
         final int extraEdittext3Index = 19;
         final int customOrderIdIndex = 20;
+        final int uuidIndex = 21;
 
         when(mCursor.getColumnIndex(ReceiptsTable.COLUMN_ID)).thenReturn(idIndex);
         when(mCursor.getColumnIndex(ReceiptsTable.COLUMN_PATH)).thenReturn(pathIndex);
@@ -160,6 +165,7 @@ public class ReceiptDatabaseAdapterTest {
         when(mCursor.getColumnIndex(ReceiptsTable.COLUMN_EXTRA_EDITTEXT_2)).thenReturn(extraEdittext2Index);
         when(mCursor.getColumnIndex(ReceiptsTable.COLUMN_EXTRA_EDITTEXT_3)).thenReturn(extraEdittext3Index);
         when(mCursor.getColumnIndex(ReceiptsTable.COLUMN_CUSTOM_ORDER_ID)).thenReturn(customOrderIdIndex);
+        when(mCursor.getColumnIndex(ReceiptsTable.COLUMN_UUID)).thenReturn(uuidIndex);
 
         when(mCursor.getInt(idIndex)).thenReturn(ID);
         when(mCursor.getString(pathIndex)).thenReturn(RECEIPT_FILE.getName());
@@ -182,6 +188,7 @@ public class ReceiptDatabaseAdapterTest {
         when(mCursor.getLong(customOrderIdIndex)).thenReturn(CUSTOM_ORDER_ID);
         when(mCursor.getCount()).thenReturn(CURSOR_COUNT);
         when(mCursor.getPosition()).thenReturn(ASCENDING_INDEX - 1);
+        when(mCursor.getString(uuidIndex)).thenReturn(RECEIPT_UUID.toString());
 
         when(mReceipt.getId()).thenReturn(ID);
         when(mReceipt.getFile()).thenReturn(RECEIPT_FILE);
@@ -203,6 +210,7 @@ public class ReceiptDatabaseAdapterTest {
         when(mReceipt.getIndex()).thenReturn(DESCENDING_INDEX);
         when(mReceipt.getSource()).thenReturn(Source.Undefined);
         when(mReceipt.getSyncState()).thenReturn(mSyncState);
+        when(mReceipt.getUuid()).thenReturn(RECEIPT_UUID);
 
         when(mTrip.getId()).thenReturn(PARENT_TRIP_ID);
         when(mTrip.getName()).thenReturn(PARENT_DIR.getName());
@@ -242,6 +250,7 @@ public class ReceiptDatabaseAdapterTest {
     public void read() throws Exception {
         // Note: Full page is backwards in the database
         final Receipt receipt = new ReceiptBuilderFactory(ID)
+                .setUuid(RECEIPT_UUID)
                 .setTrip(mTrip)
                 .setName(NAME)
                 .setPrice(PRICE)
@@ -273,6 +282,7 @@ public class ReceiptDatabaseAdapterTest {
 
         // Note: Full page is backwards in the database
         final Receipt receipt = new ReceiptBuilderFactory(ID)
+                .setUuid(RECEIPT_UUID)
                 .setTrip(mTrip)
                 .setName(NAME)
                 .setPrice(PRICE)
@@ -301,6 +311,7 @@ public class ReceiptDatabaseAdapterTest {
     public void readForSelectionDescending() throws Exception {
         // Note: Full page is backwards in the database
         final Receipt receipt = new ReceiptBuilderFactory(ID)
+                .setUuid(RECEIPT_UUID)
                 .setTrip(mTrip)
                 .setName(NAME)
                 .setPrice(PRICE)
@@ -329,6 +340,7 @@ public class ReceiptDatabaseAdapterTest {
     public void readForSelectionAscending() throws Exception {
         // Note: Full page is backwards in the database
         final Receipt receipt = new ReceiptBuilderFactory(ID)
+                .setUuid(RECEIPT_UUID)
                 .setTrip(mTrip)
                 .setName(NAME)
                 .setPrice(PRICE)
@@ -359,6 +371,7 @@ public class ReceiptDatabaseAdapterTest {
 
         // Note: Full page is backwards in the database
         final Receipt receipt = new ReceiptBuilderFactory(ID)
+                .setUuid(RECEIPT_UUID)
                 .setTrip(mTrip)
                 .setName(NAME)
                 .setPrice(PRICE)
@@ -389,6 +402,7 @@ public class ReceiptDatabaseAdapterTest {
 
         // Note: Full page is backwards in the database
         final Receipt receipt = new ReceiptBuilderFactory(ID)
+                .setUuid(RECEIPT_UUID)
                 .setTrip(mTrip)
                 .setName(NAME)
                 .setPrice(PRICE)
@@ -420,6 +434,7 @@ public class ReceiptDatabaseAdapterTest {
 
         // Note: Full page is backwards in the database
         final Receipt receipt = new ReceiptBuilderFactory(ID)
+                .setUuid(RECEIPT_UUID)
                 .setTrip(mTrip)
                 .setName(NAME)
                 .setPrice(PRICE)
@@ -472,6 +487,7 @@ public class ReceiptDatabaseAdapterTest {
         assertEquals(EXTRA2, contentValues.getAsString(ReceiptsTable.COLUMN_EXTRA_EDITTEXT_2));
         assertEquals(EXTRA3, contentValues.getAsString(ReceiptsTable.COLUMN_EXTRA_EDITTEXT_3));
         assertEquals(CUSTOM_ORDER_ID, (long) contentValues.getAsLong(ReceiptsTable.COLUMN_CUSTOM_ORDER_ID));
+        assertEquals(RECEIPT_UUID.toString(), contentValues.getAsString(ReceiptsTable.COLUMN_UUID));
         assertEquals(sync, contentValues.getAsString(sync));
         assertFalse(contentValues.containsKey(ReceiptsTable.COLUMN_ID));
     }
@@ -504,6 +520,7 @@ public class ReceiptDatabaseAdapterTest {
         assertEquals(EXTRA2, contentValues.getAsString(ReceiptsTable.COLUMN_EXTRA_EDITTEXT_2));
         assertEquals(EXTRA3, contentValues.getAsString(ReceiptsTable.COLUMN_EXTRA_EDITTEXT_3));
         assertEquals(CUSTOM_ORDER_ID, (long) contentValues.getAsLong(ReceiptsTable.COLUMN_CUSTOM_ORDER_ID));
+        assertEquals(RECEIPT_UUID.toString(), contentValues.getAsString(ReceiptsTable.COLUMN_UUID));
         assertEquals(sync, contentValues.getAsString(sync));
         assertFalse(contentValues.containsKey(ReceiptsTable.COLUMN_ID));
     }
@@ -511,6 +528,7 @@ public class ReceiptDatabaseAdapterTest {
     @Test
     public void build() throws Exception {
         final Receipt receipt = new ReceiptBuilderFactory(PRIMARY_KEY_ID)
+                .setUuid(RECEIPT_UUID)
                 .setTrip(mTrip)
                 .setName(NAME)
                 .setPrice(PRICE)
@@ -532,8 +550,8 @@ public class ReceiptDatabaseAdapterTest {
                 .setExtraEditText3(EXTRA3)
                 .setSyncState(mGetSyncState)
                 .build();
-        assertEquals(receipt, mReceiptDatabaseAdapter.build(mReceipt, mPrimaryKey, mock(DatabaseOperationMetadata.class)));
-        assertEquals(receipt.getSyncState(), mReceiptDatabaseAdapter.build(mReceipt, mPrimaryKey, mock(DatabaseOperationMetadata.class)).getSyncState());
+        assertEquals(receipt, mReceiptDatabaseAdapter.build(mReceipt, mPrimaryKey, RECEIPT_UUID, mock(DatabaseOperationMetadata.class)));
+        assertEquals(receipt.getSyncState(), mReceiptDatabaseAdapter.build(mReceipt, mPrimaryKey, RECEIPT_UUID, mock(DatabaseOperationMetadata.class)).getSyncState());
     }
 
 }

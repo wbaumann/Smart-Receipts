@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import com.google.common.base.Preconditions;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 import co.smartreceipts.android.model.Distance;
 import co.smartreceipts.android.model.Trip;
@@ -49,6 +50,7 @@ public final class DistanceDatabaseAdapter implements SelectionBackedDatabaseAda
     @Override
     public Distance readForSelection(@NonNull Cursor cursor, @NonNull Trip trip, boolean isDescending) {
         final int idIndex = cursor.getColumnIndex(DistanceTable.COLUMN_ID);
+        final int uuidIndex = cursor.getColumnIndex(DistanceTable.COLUMN_UUID);
         final int locationIndex = cursor.getColumnIndex(DistanceTable.COLUMN_LOCATION);
         final int distanceIndex = cursor.getColumnIndex(DistanceTable.COLUMN_DISTANCE);
         final int dateIndex = cursor.getColumnIndex(DistanceTable.COLUMN_DATE);
@@ -58,6 +60,7 @@ public final class DistanceDatabaseAdapter implements SelectionBackedDatabaseAda
         final int commentIndex = cursor.getColumnIndex(DistanceTable.COLUMN_COMMENT);
 
         final int id = cursor.getInt(idIndex);
+        final UUID uuid = UUID.fromString(cursor.getString(uuidIndex));
         final String location = cursor.getString(locationIndex);
         final BigDecimal distance = BigDecimal.valueOf(cursor.getDouble(distanceIndex));
         final long date = cursor.getLong(dateIndex);
@@ -68,6 +71,7 @@ public final class DistanceDatabaseAdapter implements SelectionBackedDatabaseAda
         final SyncState syncState = mSyncStateAdapter.read(cursor);
 
         return new DistanceBuilderFactory(id)
+                .setUuid(uuid)
                 .setTrip(trip)
                 .setLocation(location)
                 .setDistance(distance)
@@ -93,6 +97,7 @@ public final class DistanceDatabaseAdapter implements SelectionBackedDatabaseAda
         values.put(DistanceTable.COLUMN_RATE, distance.getRate().doubleValue());
         values.put(DistanceTable.COLUMN_RATE_CURRENCY, distance.getPrice().getCurrencyCode());
         values.put(DistanceTable.COLUMN_COMMENT, distance.getComment().trim());
+        values.put(DistanceTable.COLUMN_UUID, distance.getUuid().toString());
         if (databaseOperationMetadata.getOperationFamilyType() == OperationFamilyType.Sync) {
             values.putAll(mSyncStateAdapter.write(distance.getSyncState()));
         } else {
@@ -104,7 +109,11 @@ public final class DistanceDatabaseAdapter implements SelectionBackedDatabaseAda
 
     @NonNull
     @Override
-    public Distance build(@NonNull Distance distance, @NonNull PrimaryKey<Distance, Integer> primaryKey, @NonNull DatabaseOperationMetadata databaseOperationMetadata) {
-        return new DistanceBuilderFactory(primaryKey.getPrimaryKeyValue(distance), distance).setSyncState(mSyncStateAdapter.get(distance.getSyncState(), databaseOperationMetadata)).build();
+    public Distance build(@NonNull Distance distance, @NonNull PrimaryKey<Distance, Integer> primaryKey, @NonNull UUID uuid,
+                          @NonNull DatabaseOperationMetadata databaseOperationMetadata) {
+        return new DistanceBuilderFactory(primaryKey.getPrimaryKeyValue(distance), distance)
+                .setUuid(uuid)
+                .setSyncState(mSyncStateAdapter.get(distance.getSyncState(), databaseOperationMetadata))
+                .build();
     }
 }

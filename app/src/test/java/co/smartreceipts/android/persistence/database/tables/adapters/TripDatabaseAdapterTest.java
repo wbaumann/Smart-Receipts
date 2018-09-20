@@ -13,6 +13,7 @@ import org.robolectric.RobolectricTestRunner;
 import java.io.File;
 import java.sql.Date;
 import java.util.TimeZone;
+import java.util.UUID;
 
 import co.smartreceipts.android.model.Source;
 import co.smartreceipts.android.model.Trip;
@@ -35,6 +36,7 @@ import static org.mockito.Mockito.when;
 public class TripDatabaseAdapterTest {
 
     private static final int ID = 15;
+    private static final UUID TRIP_UUID = UUID.randomUUID();
     private static final String NAME = "Trip";
 //    private static final String PRIMARY_KEY_NAME = "Trip_PK_Update";
     private static final long START_DATE = 1409703721000L;
@@ -83,6 +85,7 @@ public class TripDatabaseAdapterTest {
         final int costCenterIndex = 7;
         final int defaultCurrencyIndex = 8;
         final int idIndex = 9;
+        final int uuidIndex = 10;
 
         when(mCursor.getColumnIndex("id")).thenReturn(idIndex);
         when(mCursor.getColumnIndex("name")).thenReturn(nameIndex);
@@ -93,6 +96,7 @@ public class TripDatabaseAdapterTest {
         when(mCursor.getColumnIndex("trips_comment")).thenReturn(commentIndex);
         when(mCursor.getColumnIndex("trips_cost_center")).thenReturn(costCenterIndex);
         when(mCursor.getColumnIndex("trips_default_currency")).thenReturn(defaultCurrencyIndex);
+        when(mCursor.getColumnIndex("entity_uuid")).thenReturn(uuidIndex);
 
         when(mCursor.getInt(idIndex)).thenReturn(ID);
         when(mCursor.getString(nameIndex)).thenReturn(NAME);
@@ -103,6 +107,7 @@ public class TripDatabaseAdapterTest {
         when(mCursor.getString(commentIndex)).thenReturn(COMMENT);
         when(mCursor.getString(costCenterIndex)).thenReturn(COST_CENTER);
         when(mCursor.getString(defaultCurrencyIndex)).thenReturn(CURRENCY_CODE);
+        when(mCursor.getString(uuidIndex)).thenReturn(TRIP_UUID.toString());
 
 
         when(mTrip.getId()).thenReturn(ID);
@@ -116,6 +121,7 @@ public class TripDatabaseAdapterTest {
         when(mTrip.getDefaultCurrencyCode()).thenReturn(CURRENCY_CODE);
         when(mTrip.getSource()).thenReturn(Source.Undefined);
         when(mTrip.getSyncState()).thenReturn(mSyncState);
+        when(mTrip.getUuid()).thenReturn(TRIP_UUID);
 
         when(mPrimaryKey.getPrimaryKeyValue(mTrip)).thenReturn(ID);
 
@@ -133,6 +139,7 @@ public class TripDatabaseAdapterTest {
     public void read() throws Exception {
         final Trip trip = new TripBuilderFactory()
                 .setId(ID)
+                .setUuid(TRIP_UUID)
                 .setDirectory(mStorageManager.getFile(NAME))
                 .setStartDate(START_DATE)
                 .setEndDate(END_DATE)
@@ -164,6 +171,7 @@ public class TripDatabaseAdapterTest {
         assertEquals(COMMENT, contentValues.getAsString("trips_comment"));
         assertEquals(COST_CENTER, contentValues.getAsString("trips_cost_center"));
         assertEquals(CURRENCY_CODE, contentValues.getAsString("trips_default_currency"));
+        assertEquals(TRIP_UUID.toString(), contentValues.getAsString("entity_uuid"));
         assertEquals(sync, contentValues.getAsString(sync));
         assertFalse(contentValues.containsKey("miles_new"));
         assertFalse(contentValues.containsKey("trips_filters"));
@@ -188,6 +196,7 @@ public class TripDatabaseAdapterTest {
         assertEquals(COMMENT, contentValues.getAsString("trips_comment"));
         assertEquals(COST_CENTER, contentValues.getAsString("trips_cost_center"));
         assertEquals(CURRENCY_CODE, contentValues.getAsString("trips_default_currency"));
+        assertEquals(TRIP_UUID.toString(), contentValues.getAsString("entity_uuid"));
         assertEquals(sync, contentValues.getAsString(sync));
         assertFalse(contentValues.containsKey("miles_new"));
         assertFalse(contentValues.containsKey("trips_filters"));
@@ -199,6 +208,7 @@ public class TripDatabaseAdapterTest {
     public void build() throws Exception {
         final Trip trip = new TripBuilderFactory()
                 .setId(ID)
+                .setUuid(TRIP_UUID)
                 .setDirectory(mStorageManager.getFile(NAME))
                 .setStartDate(START_DATE)
                 .setEndDate(END_DATE)
@@ -210,8 +220,8 @@ public class TripDatabaseAdapterTest {
                 .setSourceAsCache()
                 .setSyncState(mGetSyncState)
                 .build();
-        assertEquals(trip, mTripDatabaseAdapter.build(mTrip, mPrimaryKey, mock(DatabaseOperationMetadata.class)));
-        assertEquals(trip.getSyncState(), mTripDatabaseAdapter.build(mTrip, mPrimaryKey, mock(DatabaseOperationMetadata.class)).getSyncState());
+        assertEquals(trip, mTripDatabaseAdapter.build(mTrip, mPrimaryKey, TRIP_UUID, mock(DatabaseOperationMetadata.class)));
+        assertEquals(trip.getSyncState(), mTripDatabaseAdapter.build(mTrip, mPrimaryKey, TRIP_UUID, mock(DatabaseOperationMetadata.class)).getSyncState());
     }
 
 }

@@ -85,7 +85,7 @@ public class GroupingController {
     private Observable<SumPaymentMethodGroupingResult> getSummationByPaymentMethod(Trip trip) {
         return getReceiptsStream(trip)
                 .filter(receipt -> !preferenceManager.get(UserPreference.Receipts.OnlyIncludeReimbursable) || receipt.isReimbursable())
-                .filter(receipt -> !receipt.getPaymentMethod().equals(ImmutablePaymentMethodImpl.NONE)) // thus, we ignore receipts without defined payment method
+                .filter(receipt -> !receipt.getPaymentMethod().equals(ImmutablePaymentMethodImpl.Companion.getNONE())) // thus, we ignore receipts without defined payment method
                 .groupBy(Receipt::getPaymentMethod)
                 .flatMap(paymentMethodReceiptGroupedObservable -> paymentMethodReceiptGroupedObservable
                         .toList()

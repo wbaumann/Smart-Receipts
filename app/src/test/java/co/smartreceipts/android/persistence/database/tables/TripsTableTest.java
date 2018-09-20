@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.UUID;
 
 import co.smartreceipts.android.model.Trip;
 import co.smartreceipts.android.model.factory.TripBuilderFactory;
@@ -30,6 +31,7 @@ import co.smartreceipts.android.persistence.database.defaults.TableDefaultsCusto
 import co.smartreceipts.android.persistence.database.operations.DatabaseOperationMetadata;
 import co.smartreceipts.android.settings.UserPreferenceManager;
 import co.smartreceipts.android.settings.catalog.UserPreference;
+import co.smartreceipts.android.sync.model.Syncable;
 import wb.android.storage.StorageManager;
 
 import static co.smartreceipts.android.persistence.database.tables.AbstractSqlTable.COLUMN_ID;
@@ -55,10 +57,10 @@ public class TripsTableTest {
     // Use the to verify that sort ordering is on the End Date (i.e. End3 > End1 > End2)
     private static final long START_DATE_2 = 1409703721000L;
     private static final long START_DATE_1 = 1409703722000L;
-    private static final long END_DATE_2   = 1409703793000L;
-    private static final long END_DATE_1   = 1409703794000L;
+    private static final long END_DATE_2 = 1409703793000L;
+    private static final long END_DATE_1 = 1409703794000L;
     private static final long START_DATE_3 = 1409703891000L;
-    private static final long END_DATE_3   = 1409703893000L;
+    private static final long END_DATE_3 = 1409703893000L;
 
     private static final String START_TIMEZONE = TimeZone.getAvailableIDs()[0];
     private static final String END_TIMEZONE = TimeZone.getAvailableIDs()[1];
@@ -78,16 +80,16 @@ public class TripsTableTest {
 
     @Mock
     PersistenceManager mPersistenceManager;
-    
+
     @Mock
     StorageManager mStorageManager;
-    
+
     @Mock
     UserPreferenceManager mPreferences;
 
     @Captor
     ArgumentCaptor<String> mSqlCaptor;
-    
+
     SQLiteOpenHelper mSQLiteOpenHelper;
 
     Trip mTrip1;
@@ -101,7 +103,7 @@ public class TripsTableTest {
         MockitoAnnotations.initMocks(this);
 
         mSQLiteOpenHelper = new TestSQLiteOpenHelper(RuntimeEnvironment.application);
-        
+
         when(mPersistenceManager.getStorageManager()).thenReturn(mStorageManager);
         when(mPersistenceManager.getPreferenceManager()).thenReturn(mPreferences);
         when(mStorageManager.getFile(NAME_1)).thenReturn(new File(NAME_1));
@@ -111,7 +113,7 @@ public class TripsTableTest {
         when(mStorageManager.mkdir(NAME_2)).thenReturn(new File(NAME_2));
         when(mStorageManager.mkdir(NAME_3)).thenReturn(new File(NAME_3));
         when(mPreferences.get(UserPreference.General.DefaultCurrency)).thenReturn(USER_PREFERENCES_CURRENCY_CODE);
-        
+
         mTripsTable = new TripsTable(mSQLiteOpenHelper, mPersistenceManager.getStorageManager(), mPersistenceManager.getPreferenceManager());
 
         // Now create the table and insert some defaults
@@ -343,6 +345,21 @@ public class TripsTableTest {
         final List<Trip> trips = mTripsTable.get().blockingGet();
         // Also confirm the new one is first b/c of date ordering
         assertEquals(trips, Arrays.asList(trip, mTrip1, mTrip2));
+        assertFalse(trip.getUuid().equals(Syncable.Companion.getMISSING_UUID()));
+    }
+
+    @Test
+    public void insertWithSameName() {
+        mTripsTable.insert(mBuilder.setDirectory(mStorageManager.getFile(NAME_3)).build(), new DatabaseOperationMetadata())
+                .test()
+                .assertComplete()
+                .assertNoErrors()
+                .assertValueCount(1);
+
+        mTripsTable.insert(mBuilder.setDirectory(mStorageManager.getFile(NAME_3)).build(), new DatabaseOperationMetadata())
+                .test()
+                .assertNotComplete()
+                .assertError(Exception.class);
     }
 
     @Test
@@ -362,9 +379,12 @@ public class TripsTableTest {
 
     @Test
     public void update() {
-        final Trip updatedTrip = mTripsTable.update(mTrip1, mBuilder.setDirectory(mStorageManager.getFile(NAME_3)).build(), new DatabaseOperationMetadata()).blockingGet();
+        final UUID oldUuid = mTrip1.getUuid();
+
+        final Trip updatedTrip = mTripsTable.update(mTrip1, mBuilder.setDirectory(mStorageManager.getFile(NAME_3)).setUuid(UUID.randomUUID()).build(), new DatabaseOperationMetadata()).blockingGet();
         assertNotNull(updatedTrip);
         assertFalse(mTrip1.equals(updatedTrip));
+        assertEquals(oldUuid, updatedTrip.getUuid());
 
         final List<Trip> trips = mTripsTable.get().blockingGet();
         assertEquals(trips, Arrays.asList(updatedTrip, mTrip2));

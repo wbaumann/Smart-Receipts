@@ -103,10 +103,7 @@ import co.smartreceipts.android.widget.rxbinding2.RxTextViewExtensions;
 import co.smartreceipts.android.widget.tooltip.report.backup.data.BackupReminderTooltipStorage;
 import dagger.android.support.AndroidSupportInjection;
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 import wb.android.flex.Flex;
 
 import static java.util.Collections.emptyList;
@@ -286,7 +283,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     }
 
     Trip getParentTrip() {
-        return getArguments().getParcelable(Trip.PARCEL_KEY);
+        return getArguments().getParcelable(Trip.Companion.getPARCEL_KEY());
     }
 
     File getFile() {
@@ -518,7 +515,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
             public void onGetSuccess(@NonNull List<PaymentMethod> list) {
                 if (isAdded()) {
                     List<PaymentMethod> paymentMethods = new ArrayList<>(list);
-                    paymentMethods.add(ImmutablePaymentMethodImpl.NONE);
+                    paymentMethods.add(ImmutablePaymentMethodImpl.Companion.getNONE());
 
                     paymentMethodsAdapter.update(paymentMethods);
                     paymentMethodsSpinner.setAdapter(paymentMethodsAdapter);

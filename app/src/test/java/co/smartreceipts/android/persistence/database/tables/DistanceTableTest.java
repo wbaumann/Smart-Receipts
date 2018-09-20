@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.UUID;
 
 import co.smartreceipts.android.model.Distance;
 import co.smartreceipts.android.model.Trip;
@@ -29,6 +30,7 @@ import co.smartreceipts.android.persistence.database.defaults.TableDefaultsCusto
 import co.smartreceipts.android.persistence.database.operations.DatabaseOperationMetadata;
 import co.smartreceipts.android.settings.UserPreferenceManager;
 import co.smartreceipts.android.settings.catalog.UserPreference;
+import co.smartreceipts.android.sync.model.Syncable;
 import io.reactivex.Single;
 
 import static org.junit.Assert.assertEquals;
@@ -244,6 +246,8 @@ public class DistanceTableTest {
 
         final List<Distance> distances = mDistanceTable.get().blockingGet();
         assertEquals(distances, Arrays.asList(mDistance1, mDistance2, distance));
+        assertNotNull(distance.getUuid());
+        assertFalse(distance.getUuid().equals(Syncable.Companion.getMISSING_UUID()));
     }
 
     @Test
@@ -263,9 +267,15 @@ public class DistanceTableTest {
 
     @Test
     public void update() {
-        final Distance updatedDistance = mDistanceTable.update(mDistance1, mBuilder.setDistance(DISTANCE_3).setLocation(LOCATION_3).setTrip(mTrip3).build(), new DatabaseOperationMetadata()).blockingGet();
+        final UUID oldUuid = mDistance1.getUuid();
+        final UUID newUuid = UUID.randomUUID();
+
+        final Distance updatedDistance = mDistanceTable.update(mDistance1, mBuilder.setDistance(DISTANCE_3).setUuid(newUuid)
+                .setLocation(LOCATION_3).setTrip(mTrip3).build(), new DatabaseOperationMetadata()).blockingGet();
+
         assertNotNull(updatedDistance);
         assertFalse(mDistance1.equals(updatedDistance));
+        assertEquals(oldUuid, updatedDistance.getUuid());
 
         final List<Distance> distances = mDistanceTable.get().blockingGet();
         assertEquals(distances, Arrays.asList(updatedDistance, mDistance2));

@@ -4,9 +4,12 @@ import android.support.annotation.NonNull;
 
 import com.google.common.base.Preconditions;
 
+import java.util.UUID;
+
 import co.smartreceipts.android.model.PaymentMethod;
 import co.smartreceipts.android.model.impl.ImmutablePaymentMethodImpl;
 import co.smartreceipts.android.sync.model.SyncState;
+import co.smartreceipts.android.sync.model.Syncable;
 import co.smartreceipts.android.sync.model.impl.DefaultSyncState;
 
 /**
@@ -16,6 +19,7 @@ import co.smartreceipts.android.sync.model.impl.DefaultSyncState;
 public class PaymentMethodBuilderFactory implements BuilderFactory<PaymentMethod> {
 
     private int _id;
+    private UUID _uuid;
     private String _method;
     private SyncState _syncState;
     private long _customOrderId;
@@ -24,7 +28,8 @@ public class PaymentMethodBuilderFactory implements BuilderFactory<PaymentMethod
      * Default constructor for this class
      */
     public PaymentMethodBuilderFactory() {
-        _id = MISSING_ID;
+        _id = Syncable.MISSING_ID;
+        _uuid = Syncable.Companion.getMISSING_UUID();
         _method = "";
         _syncState = new DefaultSyncState();
         _customOrderId = 0;
@@ -38,6 +43,17 @@ public class PaymentMethodBuilderFactory implements BuilderFactory<PaymentMethod
      */
     public PaymentMethodBuilderFactory setId(int id) {
         _id = id;
+        return this;
+    }
+
+    /**
+     * Defines the uuid for this object
+     *
+     * @param uuid - the uuid
+     * @return this {@link PaymentMethodBuilderFactory} for method chaining
+     */
+    public PaymentMethodBuilderFactory setUuid(UUID uuid) {
+        _uuid = uuid;
         return this;
     }
 
@@ -74,6 +90,6 @@ public class PaymentMethodBuilderFactory implements BuilderFactory<PaymentMethod
      */
     @NonNull
     public PaymentMethod build() {
-        return new ImmutablePaymentMethodImpl(_id, _method, _syncState, _customOrderId);
+        return new ImmutablePaymentMethodImpl(_id, _uuid, _method, _syncState, _customOrderId);
     }
 }

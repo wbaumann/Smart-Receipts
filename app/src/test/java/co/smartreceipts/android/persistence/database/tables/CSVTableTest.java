@@ -17,6 +17,7 @@ import org.robolectric.RuntimeEnvironment;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import co.smartreceipts.android.model.Column;
 import co.smartreceipts.android.model.Receipt;
@@ -50,7 +51,7 @@ public class CSVTableTest {
 
     @Mock
     ReportResourcesManager reportResourcesManager;
-    
+
     @Mock
     UserPreferenceManager preferences;
 
@@ -81,8 +82,8 @@ public class CSVTableTest {
 
         // Now create the table and insert some defaults
         csvTable.onCreate(sqliteOpenHelper.getWritableDatabase(), tableDefaultsCustomizer);
-        receiptNameColumn = csvTable.insert(new ReceiptNameColumn(-1, new DefaultSyncState(), 0), new DatabaseOperationMetadata()).blockingGet();
-        receiptPriceColumn = csvTable.insert(new ReceiptPriceColumn(-1, new DefaultSyncState(), 0), new DatabaseOperationMetadata()).blockingGet();
+        receiptNameColumn = csvTable.insert(new ReceiptNameColumn(-1, new DefaultSyncState(), 0, UUID.randomUUID()), new DatabaseOperationMetadata()).blockingGet();
+        receiptPriceColumn = csvTable.insert(new ReceiptPriceColumn(-1, new DefaultSyncState(), 0, UUID.randomUUID()), new DatabaseOperationMetadata()).blockingGet();
         assertNotNull(receiptNameColumn);
         assertNotNull(receiptPriceColumn);
     }
@@ -196,7 +197,7 @@ public class CSVTableTest {
         final String insertData = "INSERT INTO " + csvTable.getTableName()
                 + " (" + COLUMN_ID + ", " + baseColumns + ") "
                 + "SELECT " + AbstractColumnTable.DEPRECATED_COLUMN_ID_AS_NAME + ", " + baseColumns
-                + " FROM " + csvTable.getTableName() + "_tmp"+ ";";
+                + " FROM " + csvTable.getTableName() + "_tmp" + ";";
         assertEquals(sqlCaptor.getAllValues().get(3), insertData);
 
         assertEquals(sqlCaptor.getAllValues().get(4), "DROP TABLE " + csvTable.getTableName() + "_tmp" + ";");
@@ -236,12 +237,14 @@ public class CSVTableTest {
 
     @Test
     public void insert() {
+        final UUID uuid = UUID.randomUUID();
         final Column<Receipt> column = csvTable.insert(new ReceiptCategoryNameColumn(-1,
-                new DefaultSyncState()), new DatabaseOperationMetadata()).blockingGet();
+                new DefaultSyncState(), 0, uuid), new DatabaseOperationMetadata()).blockingGet();
         assertNotNull(column);
 
         assertEquals(ReceiptColumnDefinitions.ActualDefinition.CATEGORY_NAME.getColumnType(), column.getType());
         assertEquals(ReceiptColumnDefinitions.ActualDefinition.CATEGORY_NAME.getColumnHeaderId(), column.getHeaderStringResId());
+        assertEquals(uuid, column.getUuid());
 
         final List<Column<Receipt>> columns = csvTable.get().blockingGet();
         assertEquals(columns, Arrays.asList(receiptNameColumn, receiptPriceColumn, column));
@@ -249,12 +252,15 @@ public class CSVTableTest {
 
     @Test
     public void update() {
+        final UUID oldUuid = receiptNameColumn.getUuid();
+
         final Column<Receipt> column = csvTable.update(receiptNameColumn,
-                new ReceiptCategoryNameColumn(-1, new DefaultSyncState()),
+                new ReceiptCategoryNameColumn(-1, new DefaultSyncState(), 0, UUID.randomUUID()),
                 new DatabaseOperationMetadata())
                 .blockingGet();
         assertNotNull(column);
         assertEquals(ReceiptColumnDefinitions.ActualDefinition.CATEGORY_NAME.getColumnType(), column.getType());
+        assertEquals(oldUuid, column.getUuid());
 
         final List<Column<Receipt>> columns = csvTable.get().blockingGet();
         assertEquals(columns, Arrays.asList(column, receiptPriceColumn));

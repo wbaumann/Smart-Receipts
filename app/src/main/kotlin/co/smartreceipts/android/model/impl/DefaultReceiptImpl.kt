@@ -17,6 +17,7 @@ import java.util.*
 @Parcelize
 class DefaultReceiptImpl constructor(
     override val id: Int,
+    override val uuid: UUID,
     override val index: Int, // Tracks the index in the list (if specified)
     override val trip: Trip,
     override val file: File?,
@@ -32,22 +33,25 @@ class DefaultReceiptImpl constructor(
     override val isFullPage: Boolean,
     override val isSelected: Boolean,
     override val source: Source,
-    override val extraEditText1: String?,
-    override val extraEditText2: String?,
-    override val extraEditText3: String?,
+    private val extraEditTextOne: String?,
+    private val extraEditTextTwo: String?,
+    private val extraEditTextThree: String?,
     override val syncState: SyncState,
     override val customOrderId: Long
     ) : Receipt {
 
-    override val fileName: String?
+    override val extraEditText1: String? = if (DatabaseHelper.NO_DATA == extraEditTextOne) null else extraEditTextOne
+    override val extraEditText2: String? = if (DatabaseHelper.NO_DATA == extraEditTextTwo) null else extraEditTextTwo
+    override val extraEditText3: String? = if (DatabaseHelper.NO_DATA == extraEditTextThree) null else extraEditTextThree
+
+    override val fileName: String
         get() = file?.name ?: ""
 
     override val fileLastModifiedTime: Long
         get() = file?.lastModified() ?: -1
 
-    override val filePath: String?
+    override val filePath: String
         get() = file?.absolutePath ?: ""
-
 
     override fun hasImage(): Boolean {
         return file?.name?.run { endsWith(".jpg") || endsWith(".jpeg") || endsWith(".png") } ?: false
@@ -61,21 +65,16 @@ class DefaultReceiptImpl constructor(
         return ModelUtils.getFormattedDate(date, timeZone, context, separator)
     }
 
-    override fun hasExtraEditText1(): Boolean {
-        return extraEditText1 != null && extraEditText1 != DatabaseHelper.NO_DATA
-    }
+    override fun hasExtraEditText1(): Boolean = extraEditText1 != null
 
-    override fun hasExtraEditText2(): Boolean {
-        return extraEditText2 != null && extraEditText2 != DatabaseHelper.NO_DATA
-    }
+    override fun hasExtraEditText2(): Boolean = extraEditText2 != null
 
-    override fun hasExtraEditText3(): Boolean {
-        return extraEditText3 != null && extraEditText3 != DatabaseHelper.NO_DATA
-    }
+    override fun hasExtraEditText3(): Boolean = extraEditText3 != null
 
     override fun toString(): String {
         return "DefaultReceiptImpl{" +
                 "id=" + id +
+                ", uuid='" + uuid.toString() +
                 ", name='" + name + '\''.toString() +
                 ", trip=" + trip.name +
                 ", paymentMethod=" + paymentMethod +
@@ -106,6 +105,7 @@ class DefaultReceiptImpl constructor(
         val that = o as DefaultReceiptImpl?
 
         if (id != that!!.id) return false
+        if (uuid != that.uuid) return false
         if (isReimbursable != that.isReimbursable) return false
         if (isFullPage != that.isFullPage) return false
         if (trip != that.trip) return false
@@ -132,6 +132,7 @@ class DefaultReceiptImpl constructor(
 
     override fun hashCode(): Int {
         var result = id
+        result = 31 * result + uuid.hashCode()
         result = 31 * result + trip.hashCode()
         result = 31 * result + paymentMethod.hashCode()
         result = 31 * result + index

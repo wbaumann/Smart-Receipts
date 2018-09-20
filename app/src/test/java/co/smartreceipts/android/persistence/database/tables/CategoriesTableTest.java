@@ -17,6 +17,7 @@ import org.robolectric.RuntimeEnvironment;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import co.smartreceipts.android.model.Category;
 import co.smartreceipts.android.model.factory.CategoryBuilderFactory;
@@ -24,6 +25,7 @@ import co.smartreceipts.android.persistence.DatabaseHelper;
 import co.smartreceipts.android.persistence.database.defaults.TableDefaultsCustomizer;
 import co.smartreceipts.android.persistence.database.operations.DatabaseOperationMetadata;
 import co.smartreceipts.android.persistence.database.tables.ordering.OrderingPreferencesManager;
+import co.smartreceipts.android.sync.model.Syncable;
 
 import static co.smartreceipts.android.persistence.database.tables.AbstractSqlTable.COLUMN_CUSTOM_ORDER_ID;
 import static co.smartreceipts.android.persistence.database.tables.AbstractSqlTable.COLUMN_DRIVE_IS_SYNCED;
@@ -246,12 +248,16 @@ public class CategoriesTableTest {
         final String name = "abc";
         final String code = "abc";
         final int customOrderId = 5;
+
         final Category insertCategory = new CategoryBuilderFactory().setName(name).setCode(code).setCustomOrderId(customOrderId).build();
         Category insertedCategory = mCategoriesTable.insert(insertCategory, new DatabaseOperationMetadata()).blockingGet();
 
         assertEquals(insertCategory.getName(), insertedCategory.getName());
         assertEquals(insertCategory.getCode(), insertedCategory.getCode());
         assertEquals(insertCategory.getCustomOrderId(), insertedCategory.getCustomOrderId());
+        assertNotNull(insertedCategory.getUuid());
+        assertTrue(insertCategory.getUuid().equals(Syncable.Companion.getMISSING_UUID()));
+        assertFalse(insertedCategory.getUuid().equals(Syncable.Companion.getMISSING_UUID()));
 
         final List<Category> categories = mCategoriesTable.get().blockingGet();
         assertEquals(categories, Arrays.asList(insertedCategory, mCategory1, mCategory2));
@@ -262,18 +268,24 @@ public class CategoriesTableTest {
         final String name = "NewName";
         final String code = "NewCode";
         final int customOrderId = 5;
-        final Category updateCategory = new CategoryBuilderFactory().setName(name).setCode(code).setCustomOrderId(customOrderId).build();
+        final UUID newUuid = UUID.randomUUID();
+
+        final Category updateCategory = new CategoryBuilderFactory().setUuid(newUuid).setName(name).setCode(code).setCustomOrderId(customOrderId).build();
         Category updatedCategory = mCategoriesTable.update(mCategory1, updateCategory, new DatabaseOperationMetadata()).blockingGet();
 
         assertNotNull(updatedCategory);
         assertEquals(name, updatedCategory.getName());
         assertEquals(code, updatedCategory.getCode());
         assertEquals(customOrderId, updatedCategory.getCustomOrderId());
+        assertEquals(customOrderId, updatedCategory.getCustomOrderId());
         assertFalse(mCategory1.equals(updatedCategory));
+        assertEquals(mCategory1.getUuid(), updatedCategory.getUuid());
+
 
         final List<Category> categories = mCategoriesTable.get().blockingGet();
         assertTrue(categories.contains(new CategoryBuilderFactory()
                 .setId(mCategory1.getId())
+                .setUuid(mCategory1.getUuid())
                 .setName(name)
                 .setCode(code)
                 .setCustomOrderId(customOrderId)

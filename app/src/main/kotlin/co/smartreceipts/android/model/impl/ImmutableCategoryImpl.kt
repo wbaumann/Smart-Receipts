@@ -4,10 +4,12 @@ import co.smartreceipts.android.model.Category
 import co.smartreceipts.android.sync.model.SyncState
 import co.smartreceipts.android.sync.model.impl.DefaultSyncState
 import kotlinx.android.parcel.Parcelize
+import java.util.*
 
 @Parcelize
 class ImmutableCategoryImpl @JvmOverloads constructor(
     override val id: Int,
+    override val uuid: UUID,
     override val name: String,
     override val code: String,
     override val syncState: SyncState = DefaultSyncState(),
@@ -31,6 +33,7 @@ class ImmutableCategoryImpl @JvmOverloads constructor(
         other as ImmutableCategoryImpl
 
         if (id != other.id) return false
+        if (uuid != other.uuid) return false
         if (name != other.name) return false
         if (code != other.code) return false
         if (customOrderId != other.customOrderId) return false
@@ -40,6 +43,7 @@ class ImmutableCategoryImpl @JvmOverloads constructor(
 
     override fun hashCode(): Int {
         var result = id
+        result = 31 * result + uuid.hashCode()
         result = 31 * result + name.hashCode()
         result = 31 * result + code.hashCode()
         result = 31 * result + customOrderId.hashCode()

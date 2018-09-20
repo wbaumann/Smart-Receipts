@@ -38,10 +38,7 @@ public class ByRowDatabaseMerger implements DatabaseMerger {
     @NonNull
     @Override
     public Completable merge(@NonNull DatabaseHelper currentDatabase, @NonNull DatabaseHelper importedBackupDatabase) {
-        // TODO: 31.08.2018 review merging process due to tables changes (new uuid column)
-        // TODO: 31.08.2018 add UUID column value for newly created objects
-        // TODO: 01.09.2018 add UUID field to models
-        // TODO: 01.09.2018 add uuid testing for tables
+        // TODO:  31.08.2018 review merging process due to tables changes (new uuid column)
         return Completable.fromAction(() -> {
             Logger.info(ByRowDatabaseMerger.this, "Importing database entries by row, preferring the existing item where appropriate");
 

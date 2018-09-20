@@ -10,6 +10,7 @@ import co.smartreceipts.android.model.impl.columns.AbstractColumnImpl
 import co.smartreceipts.android.model.impl.columns.categories.CategoryColumnDefinitions.ActualDefinition.*
 import co.smartreceipts.android.persistence.database.controllers.grouping.results.SumCategoryGroupingResult
 import co.smartreceipts.android.sync.model.SyncState
+import co.smartreceipts.android.sync.model.Syncable
 import co.smartreceipts.android.sync.model.impl.DefaultSyncState
 import co.smartreceipts.android.workers.reports.ReportResourcesManager
 import java.util.*
@@ -43,12 +44,13 @@ class CategoryColumnDefinitions(private val reportResourcesManager: ReportResour
         id: Int,
         columnType: Int,
         syncState: SyncState,
-        ignoredCustomOrderId: Long
+        ignoredCustomOrderId: Long,
+        ignoredUuid: UUID
     ): Column<SumCategoryGroupingResult> {
         for (definition in actualDefinitions) {
 
             if (columnType == definition.columnType) {
-                return getColumnFromClass(id, definition, syncState)
+                return getColumnFromClass(definition, id, syncState)
             }
         }
         throw IllegalArgumentException("Unknown column type: $columnType")
@@ -60,7 +62,7 @@ class CategoryColumnDefinitions(private val reportResourcesManager: ReportResour
         for (definition in actualDefinitions) {
             // don't include PRICE_EXCHANGED definition if all receipts have same currency
             if (!(definition == PRICE_EXCHANGED && !multiCurrency)) {
-                columns.add(getColumnFromClass(Column.UNKNOWN_ID, definition, DefaultSyncState()))
+                columns.add(getColumnFromClass(definition))
             }
         }
 
@@ -69,14 +71,14 @@ class CategoryColumnDefinitions(private val reportResourcesManager: ReportResour
     }
 
     override fun getDefaultInsertColumn(): Column<SumCategoryGroupingResult> {
-        return getColumnFromClass(Column.UNKNOWN_ID, NAME, DefaultSyncState())
+        return getColumnFromClass(NAME)
     }
 
 
     private fun getColumnFromClass(
-        id: Int,
         definition: ActualDefinition,
-        syncState: SyncState
+        id: Int = Syncable.MISSING_ID,
+        syncState: SyncState = DefaultSyncState()
     ): AbstractColumnImpl<SumCategoryGroupingResult> {
         return when (definition) {
             NAME -> CategoryNameColumn(id, syncState)

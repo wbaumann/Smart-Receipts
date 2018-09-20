@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.UUID;
 
 import co.smartreceipts.android.model.Category;
 import co.smartreceipts.android.model.PaymentMethod;
@@ -52,6 +53,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -62,20 +64,21 @@ import static org.mockito.Mockito.when;
 @RunWith(RobolectricTestRunner.class)
 public class ReceiptsTableTest {
 
-    // TODO: 31.08.2018 deal with tests like onUpgrade()
-
     private static final double PRICE_1 = 12.55d;
     private static final String NAME_1 = "Name1";
     private static final int TRIP_ID_1 = 96;
-    public static final Date DATE_1 = new Date(1200000000000L);
+    private static final Date DATE_1 = new Date(1200000000000L);
+    private static final UUID UUID_1 = UUID.randomUUID();
     private static final double PRICE_2 = 140d;
     private static final String NAME_2 = "Name2";
     private static final int TRIP_ID_2 = 97;
     public static final Date DATE_2 = new Date(1300000000000L);
+    private static final UUID UUID_2 = UUID.randomUUID();
     private static final double PRICE_3 = 12.123;
     private static final String NAME_3 = "Name3";
     private static final int TRIP_ID_3 = 98;
     public static final Date DATE_3 = new Date(1400000000000L);
+    private static final UUID UUID_3 = UUID.randomUUID();
 
     private static final String CURRENCY_CODE = "USD";
 
@@ -176,8 +179,10 @@ public class ReceiptsTableTest {
                 .setCurrency(CURRENCY_CODE)
                 .setIsFullPage(false)
                 .setPaymentMethod(mPaymentMethod);
-        mReceipt1 = mReceiptsTable.insert(mBuilder.setName(NAME_1).setPrice(PRICE_1).setTrip(mTrip1).setDate(DATE_1).setIndex(1).build(), new DatabaseOperationMetadata()).blockingGet();
-        mReceipt2 = mReceiptsTable.insert(mBuilder.setName(NAME_2).setPrice(PRICE_2).setTrip(mTrip2).setDate(DATE_2).setIndex(2).build(), new DatabaseOperationMetadata()).blockingGet();
+        mReceipt1 = mReceiptsTable.insert(mBuilder.setName(NAME_1).setPrice(PRICE_1).setTrip(mTrip1).setDate(DATE_1).setIndex(1).setUuid(UUID_1).build(),
+                new DatabaseOperationMetadata()).blockingGet();
+        mReceipt2 = mReceiptsTable.insert(mBuilder.setName(NAME_2).setPrice(PRICE_2).setTrip(mTrip2).setDate(DATE_2).setIndex(2).setUuid(UUID_2).build(),
+                new DatabaseOperationMetadata()).blockingGet();
     }
 
     @After
@@ -499,13 +504,13 @@ public class ReceiptsTableTest {
                 AbstractSqlTable.COLUMN_DRIVE_IS_SYNCED, AbstractSqlTable.COLUMN_DRIVE_MARKED_FOR_DELETION,
                 AbstractSqlTable.COLUMN_LAST_LOCAL_MODIFICATION_TIME});
 
-        verify(mSQLiteDatabase, verificationMode).execSQL("INSERT INTO " + ReceiptsTable.TABLE_NAME + "_copy" + " ( " + finalColumns + " ) "
+        verify(mSQLiteDatabase, atLeastOnce()).execSQL("INSERT INTO " + ReceiptsTable.TABLE_NAME + "_copy" + " ( " + finalColumns + " ) "
                 + "SELECT " + finalColumns
                 + " FROM " + ReceiptsTable.TABLE_NAME + " ;");
 
-        verify(mSQLiteDatabase, verificationMode).execSQL("DROP TABLE " + ReceiptsTable.TABLE_NAME + ";");
+        verify(mSQLiteDatabase, atLeastOnce()).execSQL("DROP TABLE " + ReceiptsTable.TABLE_NAME + ";");
 
-        verify(mSQLiteDatabase, verificationMode).execSQL("ALTER TABLE " + ReceiptsTable.TABLE_NAME + "_copy" + " RENAME TO " + ReceiptsTable.TABLE_NAME + ";");
+        verify(mSQLiteDatabase, atLeastOnce()).execSQL("ALTER TABLE " + ReceiptsTable.TABLE_NAME + "_copy" + " RENAME TO " + ReceiptsTable.TABLE_NAME + ";");
     }
 
     @Test
@@ -544,7 +549,8 @@ public class ReceiptsTableTest {
 
     @Test
     public void insert() {
-        final Receipt receipt = mReceiptsTable.insert(mBuilder.setName(NAME_3).setPrice(PRICE_3).setTrip(mTrip3).setDate(DATE_3).setIndex(3).build(), new DatabaseOperationMetadata()).blockingGet();
+        final Receipt receipt = mReceiptsTable.insert(mBuilder.setName(NAME_3).setPrice(PRICE_3).setTrip(mTrip3).setDate(DATE_3).setIndex(3).setUuid(UUID_3).build(),
+                new DatabaseOperationMetadata()).blockingGet();
         assertNotNull(receipt);
 
         final List<Receipt> receipts = mReceiptsTable.get().blockingGet();
@@ -578,9 +584,13 @@ public class ReceiptsTableTest {
 
     @Test
     public void update() {
-        final Receipt updatedReceipt = mReceiptsTable.update(mReceipt1, mBuilder.setName(NAME_3).setPrice(PRICE_3).setTrip(mTrip3).setDate(DATE_3).setIndex(2).build(), new DatabaseOperationMetadata()).blockingGet();
+        final Receipt updatedReceipt = mReceiptsTable.update(mReceipt1,
+                mBuilder.setName(NAME_3).setPrice(PRICE_3).setTrip(mTrip3).setDate(DATE_3).setIndex(2).setUuid(UUID_3).build(),
+                new DatabaseOperationMetadata()).blockingGet();
+
         assertNotNull(updatedReceipt);
         assertFalse(mReceipt1.equals(updatedReceipt));
+        assertEquals(UUID_1, updatedReceipt.getUuid());
 
         final List<Receipt> receipts = mReceiptsTable.get().blockingGet();
         assertEquals(receipts, Arrays.asList(updatedReceipt, new ReceiptBuilderFactory(mReceipt2).setIndex(1).build())); // Note: The receipt with the more recent date appears first

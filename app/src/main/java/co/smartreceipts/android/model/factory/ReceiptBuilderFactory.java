@@ -9,11 +9,12 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.TimeZone;
+import java.util.UUID;
 
+import co.smartreceipts.android.currency.PriceCurrency;
 import co.smartreceipts.android.model.Category;
 import co.smartreceipts.android.model.PaymentMethod;
 import co.smartreceipts.android.model.Price;
-import co.smartreceipts.android.currency.PriceCurrency;
 import co.smartreceipts.android.model.Receipt;
 import co.smartreceipts.android.model.Source;
 import co.smartreceipts.android.model.Trip;
@@ -22,6 +23,7 @@ import co.smartreceipts.android.model.impl.DefaultReceiptImpl;
 import co.smartreceipts.android.model.impl.ImmutablePaymentMethodImpl;
 import co.smartreceipts.android.receipts.ordering.ReceiptsOrderer;
 import co.smartreceipts.android.sync.model.SyncState;
+import co.smartreceipts.android.sync.model.Syncable;
 import co.smartreceipts.android.sync.model.impl.DefaultSyncState;
 
 /**
@@ -29,8 +31,6 @@ import co.smartreceipts.android.sync.model.impl.DefaultSyncState;
  * implementation, which will be used to generate instances of {@link co.smartreceipts.android.model.Receipt} objects
  */
 public class ReceiptBuilderFactory implements BuilderFactory<Receipt> {
-
-    private static final int UNKNOWN_ID = -1;
 
     private Trip _trip;
     private PaymentMethod _paymentMethod;
@@ -50,9 +50,10 @@ public class ReceiptBuilderFactory implements BuilderFactory<Receipt> {
     private Source _source;
     private SyncState _syncState;
     private long _order_id;
+    private UUID _uuid;
 
     public ReceiptBuilderFactory() {
-        this(UNKNOWN_ID);
+        this(Syncable.MISSING_ID);
     }
 
     public ReceiptBuilderFactory(int id) {
@@ -67,6 +68,7 @@ public class ReceiptBuilderFactory implements BuilderFactory<Receipt> {
         _source = Source.Undefined;
         _syncState = new DefaultSyncState();
         _order_id = ReceiptsOrderer.Companion.getDefaultCustomOrderId(_date);
+        _uuid = Syncable.Companion.getMISSING_UUID();
     }
 
     public ReceiptBuilderFactory(@NonNull Receipt receipt) {
@@ -91,11 +93,17 @@ public class ReceiptBuilderFactory implements BuilderFactory<Receipt> {
         _source = receipt.getSource();
         _syncState = receipt.getSyncState();
         _order_id = receipt.getCustomOrderId();
+        _uuid = receipt.getUuid();
     }
 
     public ReceiptBuilderFactory(int id, @NonNull Receipt receipt) {
         this(receipt);
         _id = id;
+    }
+
+    public ReceiptBuilderFactory setUuid(@NonNull UUID uuid) {
+        _uuid = uuid;
+        return this;
     }
 
     public ReceiptBuilderFactory setTrip(@NonNull Trip trip) {
@@ -263,8 +271,8 @@ public class ReceiptBuilderFactory implements BuilderFactory<Receipt> {
     @Override
     @NonNull
     public Receipt build() {
-        return new DefaultReceiptImpl(_id, _index, _trip, _file,
-                _paymentMethod == null ? ImmutablePaymentMethodImpl.NONE : _paymentMethod, _name,
+        return new DefaultReceiptImpl(_id, _uuid, _index, _trip, _file,
+                _paymentMethod == null ? ImmutablePaymentMethodImpl.Companion.getNONE() : _paymentMethod, _name,
                 _category == null ? new CategoryBuilderFactory().build() : _category, _comment,
                 _priceBuilderFactory.build(), _taxBuilderFactory.build(), _date, _timezone,
                 _isReimbursable, _isFullPage, _isSelected, _source, _extraEditText1,

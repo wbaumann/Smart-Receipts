@@ -23,7 +23,7 @@ abstract class AbstractExchangedPriceColumn(
     uuid: UUID
 ) : AbstractColumnImpl<Receipt>(id, definition, syncState, customOrderId, uuid) {
 
-    override fun getValue(receipt: Receipt): String? {
+    override fun getValue(receipt: Receipt): String {
         val price = getPrice(receipt)
         val exchangeRate = price.exchangeRate
         val baseCurrency = receipt.trip.tripCurrency

@@ -15,6 +15,7 @@ import co.smartreceipts.android.sync.model.impl.DefaultSyncState
 import co.smartreceipts.android.workers.reports.ReportResourcesManager
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 /**
  * Provides specific definitions for all [co.smartreceipts.android.model.Receipt] [co.smartreceipts.android.model.Column]
@@ -31,7 +32,10 @@ constructor(
      * Note: Column types must be unique, because they are saved to the DB
      * Column type must be >= 0
      */
-    enum class ActualDefinition : ActualColumnDefinition {
+    enum class ActualDefinition(override val columnType: Int,
+                                @StringRes override val columnHeaderId: Int,
+                                @StringRes vararg legacyHeaderIds: Int
+    ) : ActualColumnDefinition {
         BLANK(0, R.string.column_item_blank, R.string.original_column_item_blank_en_us_name),
         CATEGORY_CODE(1, R.string.column_item_category_code, R.string.original_column_item_category_code_en_us_name),
         CATEGORY_NAME(2, R.string.column_item_category_name, R.string.original_column_item_category_name_en_us_name),
@@ -65,35 +69,19 @@ constructor(
         EXTRA_EDITTEXT_2(101, R.string.RECEIPTMENU_FIELD_EXTRA_EDITTEXT_2),
         EXTRA_EDITTEXT_3(102, R.string.RECEIPTMENU_FIELD_EXTRA_EDITTEXT_3);
 
-        private val columnType: Int
-        private val stringResId: Int
-        private val legacyStringResIds: MutableList<Int>
+
+        val legacyStringResIds: MutableList<Int>
 
         /**
          * Allows us to specify a legacy item that we've updated our name from, since columns are keyed off the name itself (so what happens
          * if we change the column name... probably not the best design here but we'll revisit later)
-         *
-         * @param columnType         the type number of the column
-         * @param stringResId        the current id
-         * @param legacyStringResIds the list of legacy id
          */
-        constructor(columnType: Int, @StringRes stringResId: Int, @StringRes vararg legacyStringResIds: Int) {
-            this.columnType = columnType
-            this.stringResId = stringResId
+        init {
             this.legacyStringResIds = ArrayList()
-
-            for (legacyStringResId in legacyStringResIds) {
-                this.legacyStringResIds.add(legacyStringResId)
+            for (legacyHeaderResId in legacyHeaderIds) {
+                this.legacyStringResIds.add(legacyHeaderResId)
             }
-
         }
-
-        override fun getColumnType() = columnType
-
-        override fun getColumnHeaderId() = stringResId
-
-        fun getLegacyStringResIds() = legacyStringResIds
-
     }
 
     fun getCsvDefaults(): List<Column<Receipt>> =
@@ -159,7 +147,7 @@ constructor(
             if (reportResourcesManager.getFlexString(actualDefinition.columnHeaderId) == header) {
                 return actualDefinition.columnType
             }
-            for (legacyStringResId in actualDefinition.getLegacyStringResIds()) {
+            for (legacyStringResId in actualDefinition.legacyStringResIds) {
                 if (legacyStringResId > 0 && reportResourcesManager.getFlexString(legacyStringResId) == header) {
                     return actualDefinition.columnType
                 }

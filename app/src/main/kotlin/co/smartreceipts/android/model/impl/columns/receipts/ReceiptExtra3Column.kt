@@ -17,5 +17,5 @@ class ReceiptExtra3Column(id: Int, syncState: SyncState, customOrderId: Long, uu
         uuid
     ) {
 
-    override fun getValue(receipt: Receipt): String? = receipt.extraEditText3
+    override fun getValue(receipt: Receipt): String = receipt.extraEditText3.orEmpty()
 }

@@ -17,9 +17,9 @@ abstract class AbstractColumnImpl<T> @JvmOverloads constructor(
     override val uuid: UUID = Syncable.MISSING_UUID
 ) : Column<T> {
 
-    override fun getType() = columnDefinition.columnType
+    override val type: Int = columnDefinition.columnType
 
-    override fun getHeaderStringResId() = columnDefinition.columnHeaderId
+    override val headerStringResId = columnDefinition.columnHeaderId
 
     override fun getFooter(rows: List<T>) = ""
 

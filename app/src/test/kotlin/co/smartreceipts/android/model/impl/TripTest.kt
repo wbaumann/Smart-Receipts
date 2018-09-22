@@ -27,7 +27,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 @RunWith(RobolectricTestRunner::class)
-class DefaultTripImplTest {
+class TripTest {
 
     companion object {
 
@@ -45,7 +45,7 @@ class DefaultTripImplTest {
     }
 
     // Class under test
-    private lateinit var trip: DefaultTripImpl
+    private lateinit var trip: Trip
 
     private lateinit var syncState: SyncState
 
@@ -57,7 +57,7 @@ class DefaultTripImplTest {
         MockitoAnnotations.initMocks(this)
         TestLocaleToggler.setDefaultLocale(Locale.US)
         syncState = DefaultObjects.newDefaultSyncState()
-        trip = DefaultTripImpl(
+        trip = Trip(
             ID, TRIP_UUID, DIRECTORY, START_DATE, START_TIMEZONE, END_DATE, END_TIMEZONE, CURRENCY, COMMENT,
             COST_CENTER, Source.Undefined, syncState
         )
@@ -162,7 +162,7 @@ class DefaultTripImplTest {
     fun compareTo() {
         assertTrue(
             trip.compareTo(
-                DefaultTripImpl(
+                Trip(
                     ID, TRIP_UUID, DIRECTORY, START_DATE, START_TIMEZONE, END_DATE, END_TIMEZONE, CURRENCY, COMMENT, COST_CENTER,
                     Source.Undefined, syncState
                 )
@@ -170,7 +170,7 @@ class DefaultTripImplTest {
         )
         assertTrue(
             trip.compareTo(
-                DefaultTripImpl(
+                Trip(
                     ID, TRIP_UUID, DIRECTORY, START_DATE, START_TIMEZONE, Date(END_DATE.time * 2), END_TIMEZONE, CURRENCY, COMMENT,
                     COST_CENTER, Source.Undefined, syncState
                 )
@@ -178,7 +178,7 @@ class DefaultTripImplTest {
         )
         assertTrue(
             trip.compareTo(
-                DefaultTripImpl(
+                Trip(
                     ID, TRIP_UUID, DIRECTORY, START_DATE, START_TIMEZONE, Date(0), END_TIMEZONE, CURRENCY, COMMENT, COST_CENTER,
                     Source.Undefined, syncState
                 )
@@ -191,8 +191,8 @@ class DefaultTripImplTest {
         assertEquals(trip, trip)
         assertEquals(
             trip,
-            DefaultTripImpl(
-                ID,  TRIP_UUID, DIRECTORY, START_DATE, START_TIMEZONE, END_DATE, END_TIMEZONE, CURRENCY, COMMENT, COST_CENTER,
+            Trip(
+                ID, TRIP_UUID, DIRECTORY, START_DATE, START_TIMEZONE, END_DATE, END_TIMEZONE, CURRENCY, COMMENT, COST_CENTER,
                 Source.Undefined, syncState
             )
         )
@@ -202,7 +202,7 @@ class DefaultTripImplTest {
             trip,
             not(
                 equalTo(
-                    DefaultTripImpl(
+                    Trip(
                         ID, TRIP_UUID, File(""), START_DATE, START_TIMEZONE, END_DATE, END_TIMEZONE, CURRENCY, COMMENT, COST_CENTER,
                         Source.Undefined, syncState
                     )
@@ -213,7 +213,7 @@ class DefaultTripImplTest {
             trip,
             not(
                 equalTo(
-                    DefaultTripImpl(
+                    Trip(
                         ID, TRIP_UUID, DIRECTORY, Date(System.currentTimeMillis()), START_TIMEZONE, END_DATE, END_TIMEZONE, CURRENCY,
                         COMMENT, COST_CENTER, Source.Undefined, syncState
                     )
@@ -224,7 +224,7 @@ class DefaultTripImplTest {
             trip,
             not(
                 equalTo(
-                    DefaultTripImpl(
+                    Trip(
                         ID, TRIP_UUID, DIRECTORY, START_DATE, TimeZone.getTimeZone(TimeZone.getAvailableIDs()[2]), END_DATE, END_TIMEZONE,
                         CURRENCY, COMMENT, COST_CENTER, Source.Undefined, syncState
                     )
@@ -235,7 +235,7 @@ class DefaultTripImplTest {
             trip,
             not(
                 equalTo(
-                    DefaultTripImpl(
+                    Trip(
                         ID, TRIP_UUID, DIRECTORY, START_DATE, START_TIMEZONE, Date(System.currentTimeMillis()), END_TIMEZONE, CURRENCY,
                         COMMENT, COST_CENTER, Source.Undefined, syncState
                     )
@@ -246,7 +246,7 @@ class DefaultTripImplTest {
             trip,
             not(
                 equalTo(
-                    DefaultTripImpl(
+                    Trip(
                         ID, TRIP_UUID, DIRECTORY, START_DATE, START_TIMEZONE, END_DATE, TimeZone.getTimeZone(TimeZone.getAvailableIDs()[2]),
                         CURRENCY, COMMENT, COST_CENTER, Source.Undefined, syncState
                     )
@@ -257,7 +257,7 @@ class DefaultTripImplTest {
             trip,
             not(
                 equalTo(
-                    DefaultTripImpl(
+                    Trip(
                         ID, TRIP_UUID, DIRECTORY, START_DATE, START_TIMEZONE, END_DATE, END_TIMEZONE,
                         PriceCurrency.getInstance("EUR"), COMMENT, COST_CENTER, Source.Undefined, syncState
                     )
@@ -268,7 +268,7 @@ class DefaultTripImplTest {
             trip,
             not(
                 equalTo(
-                    DefaultTripImpl(
+                    Trip(
                         ID, TRIP_UUID, DIRECTORY, START_DATE, START_TIMEZONE, END_DATE, END_TIMEZONE, CURRENCY, "bad",
                         COST_CENTER, Source.Undefined, syncState
                     )
@@ -279,7 +279,7 @@ class DefaultTripImplTest {
             trip,
             not(
                 equalTo(
-                    DefaultTripImpl(
+                    Trip(
                         ID, TRIP_UUID, DIRECTORY, START_DATE, START_TIMEZONE, END_DATE, END_TIMEZONE, CURRENCY, COMMENT, "bad",
                         Source.Undefined, syncState
                     )
@@ -288,12 +288,12 @@ class DefaultTripImplTest {
         )
 
         // Special equals cases (source, price, and daily subtotal don't cound):
-        val tripWithPrice = DefaultTripImpl(
+        val tripWithPrice = Trip(
             ID, TRIP_UUID, DIRECTORY, START_DATE, START_TIMEZONE, END_DATE, END_TIMEZONE, CURRENCY, COMMENT,
             COST_CENTER, Source.Undefined, syncState
         )
 
-        val tripWithDailySubTotal = DefaultTripImpl(
+        val tripWithDailySubTotal = Trip(
             ID, TRIP_UUID, DIRECTORY, START_DATE, START_TIMEZONE, END_DATE, END_TIMEZONE, CURRENCY, COMMENT,
             COST_CENTER, Source.Undefined, syncState
         )
@@ -302,7 +302,7 @@ class DefaultTripImplTest {
         tripWithDailySubTotal.dailySubTotal = price!!
         assertEquals(
             trip,
-            DefaultTripImpl(
+            Trip(
                 ID, TRIP_UUID, DIRECTORY, START_DATE, START_TIMEZONE, END_DATE, END_TIMEZONE, CURRENCY, COMMENT, COST_CENTER,
                 Source.Parcel, syncState
             )

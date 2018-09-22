@@ -17,7 +17,6 @@ import co.smartreceipts.android.model.Trip;
 import co.smartreceipts.android.model.factory.CategoryBuilderFactory;
 import co.smartreceipts.android.model.factory.PaymentMethodBuilderFactory;
 import co.smartreceipts.android.model.gson.ExchangeRate;
-import co.smartreceipts.android.model.impl.DefaultTripImpl;
 import co.smartreceipts.android.model.impl.ImmutablePriceImpl;
 import co.smartreceipts.android.sync.model.SyncState;
 import co.smartreceipts.android.sync.model.Syncable;
@@ -35,7 +34,7 @@ public class DefaultObjects {
 
     @NonNull
     public static Trip newDefaultTrip() {
-        return new DefaultTripImpl(Syncable.MISSING_ID, Syncable.Companion.getMISSING_UUID(),
+        return new Trip(Syncable.MISSING_ID, Syncable.Companion.getMISSING_UUID(),
                 new File(new File("").getAbsolutePath()),
                 new Date(System.currentTimeMillis()), TimeZone.getDefault(),
                 new Date(System.currentTimeMillis()), TimeZone.getDefault(),

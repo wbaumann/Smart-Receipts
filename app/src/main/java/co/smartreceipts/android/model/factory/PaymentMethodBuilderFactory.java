@@ -7,7 +7,6 @@ import com.google.common.base.Preconditions;
 import java.util.UUID;
 
 import co.smartreceipts.android.model.PaymentMethod;
-import co.smartreceipts.android.model.impl.ImmutablePaymentMethodImpl;
 import co.smartreceipts.android.sync.model.SyncState;
 import co.smartreceipts.android.sync.model.Syncable;
 import co.smartreceipts.android.sync.model.impl.DefaultSyncState;
@@ -90,6 +89,6 @@ public class PaymentMethodBuilderFactory implements BuilderFactory<PaymentMethod
      */
     @NonNull
     public PaymentMethod build() {
-        return new ImmutablePaymentMethodImpl(_id, _uuid, _method, _syncState, _customOrderId);
+        return new PaymentMethod(_id, _uuid, _method, _syncState, _customOrderId);
     }
 }

@@ -19,8 +19,6 @@ import co.smartreceipts.android.model.Receipt;
 import co.smartreceipts.android.model.Source;
 import co.smartreceipts.android.model.Trip;
 import co.smartreceipts.android.model.gson.ExchangeRate;
-import co.smartreceipts.android.model.impl.DefaultReceiptImpl;
-import co.smartreceipts.android.model.impl.ImmutablePaymentMethodImpl;
 import co.smartreceipts.android.receipts.ordering.ReceiptsOrderer;
 import co.smartreceipts.android.sync.model.SyncState;
 import co.smartreceipts.android.sync.model.Syncable;
@@ -271,8 +269,8 @@ public class ReceiptBuilderFactory implements BuilderFactory<Receipt> {
     @Override
     @NonNull
     public Receipt build() {
-        return new DefaultReceiptImpl(_id, _uuid, _index, _trip, _file,
-                _paymentMethod == null ? ImmutablePaymentMethodImpl.Companion.getNONE() : _paymentMethod, _name,
+        return new Receipt(_id, _uuid, _index, _trip, _file,
+                _paymentMethod == null ? PaymentMethod.Companion.getNONE() : _paymentMethod, _name,
                 _category == null ? new CategoryBuilderFactory().build() : _category, _comment,
                 _priceBuilderFactory.build(), _taxBuilderFactory.build(), _date, _timezone,
                 _isReimbursable, _isFullPage, _isSelected, _source, _extraEditText1,

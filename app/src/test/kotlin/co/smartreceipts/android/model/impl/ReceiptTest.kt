@@ -22,7 +22,7 @@ import java.sql.Date
 import java.util.*
 
 @RunWith(RobolectricTestRunner::class)
-class DefaultReceiptImplTest {
+class ReceiptTest {
 
     companion object {
 
@@ -43,7 +43,7 @@ class DefaultReceiptImplTest {
     }
 
     // Class under test
-    private lateinit var receipt: DefaultReceiptImpl
+    private lateinit var receipt: Receipt
 
     private lateinit var trip: Trip
     private lateinit var file: File
@@ -64,7 +64,7 @@ class DefaultReceiptImplTest {
         price = DefaultObjects.newDefaultPrice()
         tax = DefaultObjects.newDefaultTax()
         syncState = DefaultObjects.newDefaultSyncState()
-        receipt = DefaultReceiptImpl(
+        receipt = Receipt(
             ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DATE, TIMEZONE, REIMBURSABLE,
             FULL_PAGE, IS_SELECTED, Source.Undefined, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
         )
@@ -158,11 +158,11 @@ class DefaultReceiptImplTest {
 
     @Test
     fun getExtraEditText1() {
-        val nullExtra1Receipt = DefaultReceiptImpl(
+        val nullExtra1Receipt = Receipt(
             ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DATE, TIMEZONE, REIMBURSABLE, FULL_PAGE,
             IS_SELECTED, Source.Undefined, null, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
         )
-        val noDataExtra1Receipt = DefaultReceiptImpl(
+        val noDataExtra1Receipt = Receipt(
             ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DATE, TIMEZONE, REIMBURSABLE, FULL_PAGE,
             IS_SELECTED, Source.Undefined, DatabaseHelper.NO_DATA, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
         )
@@ -177,11 +177,11 @@ class DefaultReceiptImplTest {
 
     @Test
     fun getExtraEditText2() {
-        val nullExtra2Receipt = DefaultReceiptImpl(
+        val nullExtra2Receipt = Receipt(
             ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DATE, TIMEZONE, REIMBURSABLE, FULL_PAGE,
             IS_SELECTED, Source.Undefined, EXTRA1, null, EXTRA3, syncState, CUSTOM_ORDER
         )
-        val noDataExtra2Receipt = DefaultReceiptImpl(
+        val noDataExtra2Receipt = Receipt(
             ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DATE, TIMEZONE, REIMBURSABLE, FULL_PAGE,
             IS_SELECTED, Source.Undefined, EXTRA1, DatabaseHelper.NO_DATA, EXTRA3, syncState, CUSTOM_ORDER
         )
@@ -196,11 +196,11 @@ class DefaultReceiptImplTest {
 
     @Test
     fun getExtraEditText3() {
-        val nullExtra3Receipt = DefaultReceiptImpl(
+        val nullExtra3Receipt = Receipt(
             ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DATE, TIMEZONE, REIMBURSABLE, FULL_PAGE,
             IS_SELECTED, Source.Undefined, EXTRA1, EXTRA2, null, syncState, CUSTOM_ORDER
         )
-        val noDataExtra3Receipt = DefaultReceiptImpl(
+        val noDataExtra3Receipt = Receipt(
             ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DATE, TIMEZONE, REIMBURSABLE, FULL_PAGE,
             IS_SELECTED, Source.Undefined, EXTRA1, EXTRA2, DatabaseHelper.NO_DATA, syncState, CUSTOM_ORDER
         )
@@ -222,7 +222,7 @@ class DefaultReceiptImplTest {
     fun compareTo() {
         assertTrue(
             receipt.compareTo(
-                DefaultReceiptImpl(
+                Receipt(
                     ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DATE, TIMEZONE, REIMBURSABLE,
                     FULL_PAGE, IS_SELECTED, Source.Undefined, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
                 )
@@ -230,7 +230,7 @@ class DefaultReceiptImplTest {
         )
         assertTrue(
             receipt.compareTo(
-                DefaultReceiptImpl(
+                Receipt(
                     ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, Date(DATE.time * 2), TIMEZONE,
                     REIMBURSABLE, FULL_PAGE, IS_SELECTED, Source.Undefined, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
                 )
@@ -238,7 +238,7 @@ class DefaultReceiptImplTest {
         )
         assertTrue(
             receipt.compareTo(
-                DefaultReceiptImpl(
+                Receipt(
                     ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, Date(0), TIMEZONE,
                     REIMBURSABLE, FULL_PAGE, IS_SELECTED, Source.Undefined, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
                 )
@@ -251,7 +251,7 @@ class DefaultReceiptImplTest {
         Assert.assertEquals(receipt.hashCode().toLong(), receipt.hashCode().toLong())
         Assert.assertEquals(
             receipt.hashCode().toLong(),
-            DefaultReceiptImpl(
+            Receipt(
                 ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DATE, TIMEZONE, REIMBURSABLE,
                 FULL_PAGE, IS_SELECTED, Source.Undefined, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
             ).hashCode().toLong()
@@ -260,7 +260,7 @@ class DefaultReceiptImplTest {
             receipt.hashCode(),
             not(
                 equalTo(
-                    DefaultReceiptImpl(
+                    Receipt(
                         -1, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DATE, TIMEZONE,
                         REIMBURSABLE, FULL_PAGE, IS_SELECTED, Source.Undefined, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
                     ).hashCode()
@@ -271,7 +271,7 @@ class DefaultReceiptImplTest {
             receipt.hashCode(),
             not(
                 equalTo(
-                    DefaultReceiptImpl(
+                    Receipt(
                         ID, REC_UUID, INDEX + 1, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DATE,
                         TIMEZONE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, Source.Undefined, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
                     ).hashCode()
@@ -282,7 +282,7 @@ class DefaultReceiptImplTest {
             receipt.hashCode(),
             not(
                 equalTo(
-                    DefaultReceiptImpl(
+                    Receipt(
                         ID, REC_UUID, INDEX, mock(Trip::class.java), file, paymentMethod, NAME, category, COMMENT, price, tax, DATE,
                         TIMEZONE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, Source.Undefined, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
                     ).hashCode()
@@ -293,7 +293,7 @@ class DefaultReceiptImplTest {
             receipt.hashCode(),
             not(
                 equalTo(
-                    DefaultReceiptImpl(
+                    Receipt(
                         ID, REC_UUID, INDEX, trip, mock(File::class.java), paymentMethod, NAME, category, COMMENT, price, tax, DATE,
                         TIMEZONE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, Source.Undefined, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
                     ).hashCode()
@@ -304,7 +304,7 @@ class DefaultReceiptImplTest {
             receipt.hashCode(),
             not(
                 equalTo(
-                    DefaultReceiptImpl(
+                    Receipt(
                         ID, REC_UUID, INDEX, trip, file, mock(PaymentMethod::class.java), NAME, category, COMMENT, price, tax, DATE,
                         TIMEZONE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, Source.Undefined, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
                     ).hashCode()
@@ -315,7 +315,7 @@ class DefaultReceiptImplTest {
             receipt.hashCode(),
             not(
                 equalTo(
-                    DefaultReceiptImpl(
+                    Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, "bad", category, COMMENT, price, tax, DATE, TIMEZONE,
                         REIMBURSABLE, FULL_PAGE, IS_SELECTED, Source.Undefined, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
                     ).hashCode()
@@ -326,7 +326,7 @@ class DefaultReceiptImplTest {
             receipt.hashCode(),
             not(
                 equalTo(
-                    DefaultReceiptImpl(
+                    Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, mock(Category::class.java), COMMENT, price, tax, DATE,
                         TIMEZONE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, Source.Undefined, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
                     ).hashCode()
@@ -337,7 +337,7 @@ class DefaultReceiptImplTest {
             receipt.hashCode(),
             not(
                 equalTo(
-                    DefaultReceiptImpl(
+                    Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, "bad", price, tax, DATE, TIMEZONE,
                         REIMBURSABLE, FULL_PAGE, IS_SELECTED, Source.Undefined, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
                     ).hashCode()
@@ -348,7 +348,7 @@ class DefaultReceiptImplTest {
             receipt.hashCode(),
             not(
                 equalTo(
-                    DefaultReceiptImpl(
+                    Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, mock(Price::class.java), tax, DATE,
                         TIMEZONE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, Source.Undefined, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
                     ).hashCode()
@@ -359,7 +359,7 @@ class DefaultReceiptImplTest {
             receipt.hashCode(),
             not(
                 equalTo(
-                    DefaultReceiptImpl(
+                    Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, mock(Price::class.java), DATE,
                         TIMEZONE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, Source.Undefined, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
                     ).hashCode()
@@ -370,7 +370,7 @@ class DefaultReceiptImplTest {
             receipt.hashCode(),
             not(
                 equalTo(
-                    DefaultReceiptImpl(
+                    Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax,
                         Date(System.currentTimeMillis()), TIMEZONE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, Source.Undefined, EXTRA1, EXTRA2,
                         EXTRA3, syncState, CUSTOM_ORDER
@@ -382,7 +382,7 @@ class DefaultReceiptImplTest {
             receipt.hashCode(),
             not(
                 equalTo(
-                    DefaultReceiptImpl(
+                    Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DATE, TIMEZONE, !REIMBURSABLE,
                         FULL_PAGE, IS_SELECTED, Source.Undefined, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
                     ).hashCode()
@@ -393,7 +393,7 @@ class DefaultReceiptImplTest {
             receipt.hashCode(),
             not(
                 equalTo(
-                    DefaultReceiptImpl(
+                    Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DATE, TIMEZONE, REIMBURSABLE,
                         !FULL_PAGE, IS_SELECTED, Source.Undefined, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
                     ).hashCode()
@@ -404,7 +404,7 @@ class DefaultReceiptImplTest {
             receipt.hashCode(),
             not(
                 equalTo(
-                    DefaultReceiptImpl(
+                    Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DATE, TIMEZONE, REIMBURSABLE,
                         FULL_PAGE, IS_SELECTED, Source.Undefined, "bad", EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
                     ).hashCode()
@@ -415,7 +415,7 @@ class DefaultReceiptImplTest {
             receipt.hashCode(),
             not(
                 equalTo(
-                    DefaultReceiptImpl(
+                    Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DATE, TIMEZONE, REIMBURSABLE,
                         FULL_PAGE, IS_SELECTED, Source.Undefined, EXTRA1, "bad", EXTRA3, syncState, CUSTOM_ORDER
                     ).hashCode()
@@ -426,7 +426,7 @@ class DefaultReceiptImplTest {
             receipt.hashCode(),
             not(
                 equalTo(
-                    DefaultReceiptImpl(
+                    Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DATE, TIMEZONE, REIMBURSABLE,
                         FULL_PAGE, IS_SELECTED, Source.Undefined, EXTRA1, EXTRA2, "bad", syncState, CUSTOM_ORDER
                     ).hashCode()
@@ -437,14 +437,14 @@ class DefaultReceiptImplTest {
         // Special equals cases (we don't check on the sources don't count, and selected doesn't count):
         Assert.assertEquals(
             receipt.hashCode().toLong(),
-            DefaultReceiptImpl(
+            Receipt(
                 ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DATE, TIMEZONE, REIMBURSABLE,
                 FULL_PAGE, IS_SELECTED, Source.Parcel, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
             ).hashCode().toLong()
         )
         Assert.assertEquals(
             receipt.hashCode().toLong(),
-            DefaultReceiptImpl(
+            Receipt(
                 ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DATE, TIMEZONE, REIMBURSABLE,
                 FULL_PAGE, !IS_SELECTED, Source.Undefined, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
             ).hashCode().toLong()
@@ -456,7 +456,7 @@ class DefaultReceiptImplTest {
         Assert.assertEquals(receipt, receipt)
         Assert.assertEquals(
             receipt,
-            DefaultReceiptImpl(
+            Receipt(
                 ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DATE, TIMEZONE, REIMBURSABLE,
                 FULL_PAGE, IS_SELECTED, Source.Undefined, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
             )
@@ -467,7 +467,7 @@ class DefaultReceiptImplTest {
             receipt,
             not(
                 equalTo(
-                    DefaultReceiptImpl(
+                    Receipt(
                         -1, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DATE, TIMEZONE,
                         REIMBURSABLE, FULL_PAGE, IS_SELECTED, Source.Undefined, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
                     )
@@ -478,7 +478,7 @@ class DefaultReceiptImplTest {
             receipt,
             not(
                 equalTo(
-                    DefaultReceiptImpl(
+                    Receipt(
                         ID, REC_UUID, INDEX + 1, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DATE, TIMEZONE,
                         REIMBURSABLE, FULL_PAGE, IS_SELECTED, Source.Undefined, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
                     )
@@ -489,7 +489,7 @@ class DefaultReceiptImplTest {
             receipt,
             not(
                 equalTo(
-                    DefaultReceiptImpl(
+                    Receipt(
                         ID, REC_UUID, INDEX, mock(Trip::class.java), file, paymentMethod, NAME, category, COMMENT, price, tax, DATE,
                         TIMEZONE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, Source.Undefined, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
                     )
@@ -500,7 +500,7 @@ class DefaultReceiptImplTest {
             receipt,
             not(
                 equalTo(
-                    DefaultReceiptImpl(
+                    Receipt(
                         ID, REC_UUID, INDEX, trip, mock(File::class.java), paymentMethod, NAME, category, COMMENT, price, tax, DATE,
                         TIMEZONE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, Source.Undefined, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
                     )
@@ -511,7 +511,7 @@ class DefaultReceiptImplTest {
             receipt,
             not(
                 equalTo(
-                    DefaultReceiptImpl(
+                    Receipt(
                         ID, REC_UUID, INDEX, trip, file, mock(PaymentMethod::class.java), NAME, category, COMMENT, price, tax, DATE,
                         TIMEZONE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, Source.Undefined, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
                     )
@@ -522,7 +522,7 @@ class DefaultReceiptImplTest {
             receipt,
             not(
                 equalTo(
-                    DefaultReceiptImpl(
+                    Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, "bad", category, COMMENT, price, tax, DATE, TIMEZONE,
                         REIMBURSABLE, FULL_PAGE, IS_SELECTED, Source.Undefined, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
                     )
@@ -533,7 +533,7 @@ class DefaultReceiptImplTest {
             receipt,
             not(
                 equalTo(
-                    DefaultReceiptImpl(
+                    Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, mock(Category::class.java), COMMENT, price, tax, DATE,
                         TIMEZONE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, Source.Undefined, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
                     )
@@ -544,7 +544,7 @@ class DefaultReceiptImplTest {
             receipt,
             not(
                 equalTo(
-                    DefaultReceiptImpl(
+                    Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, "bad", price, tax, DATE, TIMEZONE,
                         REIMBURSABLE, FULL_PAGE, IS_SELECTED, Source.Undefined, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
                     )
@@ -555,7 +555,7 @@ class DefaultReceiptImplTest {
             receipt,
             not(
                 equalTo(
-                    DefaultReceiptImpl(
+                    Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, mock(Price::class.java), tax, DATE,
                         TIMEZONE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, Source.Undefined, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
                     )
@@ -566,7 +566,7 @@ class DefaultReceiptImplTest {
             receipt,
             not(
                 equalTo(
-                    DefaultReceiptImpl(
+                    Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, mock(Price::class.java), DATE,
                         TIMEZONE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, Source.Undefined, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
                     )
@@ -577,7 +577,7 @@ class DefaultReceiptImplTest {
             receipt,
             not(
                 equalTo(
-                    DefaultReceiptImpl(
+                    Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax,
                         Date(System.currentTimeMillis()), TIMEZONE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, Source.Undefined, EXTRA1, EXTRA2,
                         EXTRA3, syncState, CUSTOM_ORDER
@@ -589,7 +589,7 @@ class DefaultReceiptImplTest {
             receipt,
             not(
                 equalTo(
-                    DefaultReceiptImpl(
+                    Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DATE, TIMEZONE, !REIMBURSABLE,
                         FULL_PAGE, IS_SELECTED, Source.Undefined, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
                     )
@@ -600,7 +600,7 @@ class DefaultReceiptImplTest {
             receipt,
             not(
                 equalTo(
-                    DefaultReceiptImpl(
+                    Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DATE, TIMEZONE, REIMBURSABLE,
                         !FULL_PAGE, IS_SELECTED, Source.Undefined, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
                     )
@@ -611,7 +611,7 @@ class DefaultReceiptImplTest {
             receipt,
             not(
                 equalTo(
-                    DefaultReceiptImpl(
+                    Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DATE, TIMEZONE, REIMBURSABLE,
                         FULL_PAGE, IS_SELECTED, Source.Undefined, "bad", EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
                     )
@@ -622,7 +622,7 @@ class DefaultReceiptImplTest {
             receipt,
             not(
                 equalTo(
-                    DefaultReceiptImpl(
+                    Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DATE, TIMEZONE, REIMBURSABLE,
                         FULL_PAGE, IS_SELECTED, Source.Undefined, EXTRA1, "bad", EXTRA3, syncState, CUSTOM_ORDER
                     )
@@ -633,7 +633,7 @@ class DefaultReceiptImplTest {
             receipt,
             not(
                 equalTo(
-                    DefaultReceiptImpl(
+                    Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DATE, TIMEZONE, REIMBURSABLE,
                         FULL_PAGE, IS_SELECTED, Source.Undefined, EXTRA1, EXTRA2, "bad", syncState, CUSTOM_ORDER
                     )
@@ -644,14 +644,14 @@ class DefaultReceiptImplTest {
         // Special equals cases (we don't check on the sources don't count, and selected doesn't count):
         Assert.assertEquals(
             receipt,
-            DefaultReceiptImpl(
+            Receipt(
                 ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DATE, TIMEZONE, REIMBURSABLE,
                 FULL_PAGE, IS_SELECTED, Source.Parcel, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
             )
         )
         Assert.assertEquals(
             receipt,
-            DefaultReceiptImpl(
+            Receipt(
                 ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DATE, TIMEZONE, REIMBURSABLE,
                 FULL_PAGE, !IS_SELECTED, Source.Undefined, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
             )

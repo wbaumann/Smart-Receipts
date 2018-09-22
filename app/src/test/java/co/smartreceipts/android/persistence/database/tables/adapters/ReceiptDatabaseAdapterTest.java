@@ -27,8 +27,6 @@ import co.smartreceipts.android.model.Source;
 import co.smartreceipts.android.model.Trip;
 import co.smartreceipts.android.model.factory.ReceiptBuilderFactory;
 import co.smartreceipts.android.model.gson.ExchangeRate;
-import co.smartreceipts.android.model.impl.ImmutableCategoryImpl;
-import co.smartreceipts.android.model.impl.ImmutablePaymentMethodImpl;
 import co.smartreceipts.android.persistence.database.operations.DatabaseOperationMetadata;
 import co.smartreceipts.android.persistence.database.operations.OperationFamilyType;
 import co.smartreceipts.android.persistence.database.tables.ReceiptsTable;
@@ -59,7 +57,7 @@ public class ReceiptDatabaseAdapterTest {
     private static final int CATEGORY_ID = 15;
     private static final String CATEGORY_NAME = "Category";
     private static final UUID CATEGORY_UUID = UUID.randomUUID();
-    private static final Category CATEGORY = new ImmutableCategoryImpl(CATEGORY_ID, CATEGORY_UUID, CATEGORY_NAME, "code");
+    private static final Category CATEGORY = new Category(CATEGORY_ID, CATEGORY_UUID, CATEGORY_NAME, "code");
     private static final double PRICE = 12.55d;
     private static final double TAX = 2.50d;
     private static final String CURRENCY_CODE = "USD";
@@ -75,7 +73,7 @@ public class ReceiptDatabaseAdapterTest {
     private static final int DESCENDING_INDEX = 3;
     private static final int ASCENDING_INDEX = 2;
     private static final int CURSOR_COUNT = 4;
-    private static final PaymentMethod PAYMENT_METHOD = new ImmutablePaymentMethodImpl(PAYMENT_METHOD_ID, PAYMENT_METHOD_UUID, "method");
+    private static final PaymentMethod PAYMENT_METHOD = new PaymentMethod(PAYMENT_METHOD_ID, PAYMENT_METHOD_UUID, "method");
     private static final boolean FULL_PAGE = true;
     private static final String EXTRA1 = "extra1";
     private static final String EXTRA2 = "extra2";

@@ -14,7 +14,6 @@ import java.util.UUID;
 import co.smartreceipts.android.currency.PriceCurrency;
 import co.smartreceipts.android.model.Source;
 import co.smartreceipts.android.model.Trip;
-import co.smartreceipts.android.model.impl.DefaultTripImpl;
 import co.smartreceipts.android.sync.model.SyncState;
 import co.smartreceipts.android.sync.model.Syncable;
 import co.smartreceipts.android.sync.model.impl.DefaultSyncState;
@@ -169,7 +168,7 @@ public final class TripBuilderFactory implements BuilderFactory<Trip> {
     @Override
     @NonNull
     public Trip build() {
-        return new DefaultTripImpl(_id, _uuid, _dir, _startDate, _startTimeZone, _endDate, _endTimeZone, _defaultCurrency,
+        return new Trip(_id, _uuid, _dir, _startDate, _startTimeZone, _endDate, _endTimeZone, _defaultCurrency,
                 _comment, _costCenter, _source, _syncState);
     }
 }

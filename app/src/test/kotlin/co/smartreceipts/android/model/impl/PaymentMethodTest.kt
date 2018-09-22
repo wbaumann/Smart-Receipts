@@ -17,7 +17,7 @@ import org.robolectric.RobolectricTestRunner
 import java.util.*
 
 @RunWith(RobolectricTestRunner::class)
-class ImmutablePaymentMethodImplTest {
+class PaymentMethodTest {
 
     companion object {
 
@@ -28,14 +28,14 @@ class ImmutablePaymentMethodImplTest {
     }
 
     // Class under test
-    private lateinit var paymentMethod: ImmutablePaymentMethodImpl
+    private lateinit var paymentMethod: PaymentMethod
 
     private lateinit var syncState: SyncState
 
     @Before
     fun setUp() {
         syncState = DefaultObjects.newDefaultSyncState()
-        paymentMethod = ImmutablePaymentMethodImpl(ID, PM_UUID, METHOD, syncState, CUSTOM_ORDER_ID)
+        paymentMethod = PaymentMethod(ID, PM_UUID, METHOD, syncState, CUSTOM_ORDER_ID)
     }
 
     @Test
@@ -63,16 +63,16 @@ class ImmutablePaymentMethodImplTest {
         assertEquals(paymentMethod, paymentMethod)
         assertEquals(
             paymentMethod,
-            ImmutablePaymentMethodImpl(ID, PM_UUID, METHOD, syncState, CUSTOM_ORDER_ID)
+            PaymentMethod(ID, PM_UUID, METHOD, syncState, CUSTOM_ORDER_ID)
         )
         assertThat(paymentMethod, not(equalTo(Any())))
         assertThat(paymentMethod, not(equalTo(mock(PaymentMethod::class.java))))
-        assertThat(paymentMethod,not(equalTo(ImmutablePaymentMethodImpl(-1, PM_UUID, METHOD, syncState, CUSTOM_ORDER_ID))))
+        assertThat(paymentMethod,not(equalTo(PaymentMethod(-1, PM_UUID, METHOD, syncState, CUSTOM_ORDER_ID))))
         assertThat(
             paymentMethod,
             not(
                 equalTo(
-                    ImmutablePaymentMethodImpl(ID, PM_UUID, "abcd", syncState, CUSTOM_ORDER_ID)
+                    PaymentMethod(ID, PM_UUID, "abcd", syncState, CUSTOM_ORDER_ID)
                 )
             )
         )
@@ -80,7 +80,7 @@ class ImmutablePaymentMethodImplTest {
             paymentMethod,
             not(
                 equalTo(
-                    ImmutablePaymentMethodImpl(ID, PM_UUID, "abcd", syncState, (CUSTOM_ORDER_ID + 1))
+                    PaymentMethod(ID, PM_UUID, "abcd", syncState, (CUSTOM_ORDER_ID + 1))
                 )
             )
         )
@@ -88,7 +88,7 @@ class ImmutablePaymentMethodImplTest {
             paymentMethod,
             not(
                 equalTo(
-                    ImmutablePaymentMethodImpl(ID, UUID.randomUUID(), METHOD, syncState, (CUSTOM_ORDER_ID + 1))
+                    PaymentMethod(ID, UUID.randomUUID(), METHOD, syncState, (CUSTOM_ORDER_ID + 1))
                 )
             )
         )
@@ -105,11 +105,11 @@ class ImmutablePaymentMethodImplTest {
     @Test
     fun compare() {
         val paymentMethod2 =
-            ImmutablePaymentMethodImpl(ID, PM_UUID, METHOD, syncState, (CUSTOM_ORDER_ID + 1))
+            PaymentMethod(ID, PM_UUID, METHOD, syncState, (CUSTOM_ORDER_ID + 1))
         val paymentMethod0 =
-            ImmutablePaymentMethodImpl(ID, PM_UUID, METHOD, syncState, (CUSTOM_ORDER_ID - 1))
+            PaymentMethod(ID, PM_UUID, METHOD, syncState, (CUSTOM_ORDER_ID - 1))
 
-        val list = mutableListOf<ImmutablePaymentMethodImpl>().apply {
+        val list = mutableListOf<PaymentMethod>().apply {
             add(paymentMethod)
             add(paymentMethod2)
             add(paymentMethod0)

@@ -8,7 +8,6 @@ import java.util.UUID;
 
 import co.smartreceipts.android.model.Category;
 import co.smartreceipts.android.model.PaymentMethod;
-import co.smartreceipts.android.model.impl.ImmutableCategoryImpl;
 import co.smartreceipts.android.sync.model.SyncState;
 import co.smartreceipts.android.sync.model.Syncable;
 import co.smartreceipts.android.sync.model.impl.DefaultSyncState;
@@ -113,6 +112,6 @@ public class CategoryBuilderFactory implements BuilderFactory<Category> {
      */
     @NonNull
     public Category build() {
-        return new ImmutableCategoryImpl(id, uuid, name, code, syncState, customOrderId);
+        return new Category(id, uuid, name, code, syncState, customOrderId);
     }
 }

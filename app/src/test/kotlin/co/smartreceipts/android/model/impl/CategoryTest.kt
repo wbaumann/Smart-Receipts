@@ -17,7 +17,7 @@ import org.robolectric.RobolectricTestRunner
 import java.util.*
 
 @RunWith(RobolectricTestRunner::class)
-class ImmutableCategoryImplTest {
+class CategoryTest {
 
     companion object {
 
@@ -29,7 +29,7 @@ class ImmutableCategoryImplTest {
     }
 
     // Class under test
-    private lateinit var immutableCategory: ImmutableCategoryImpl
+    private lateinit var immutableCategory: Category
 
     private lateinit var syncState: SyncState
 
@@ -37,7 +37,7 @@ class ImmutableCategoryImplTest {
     fun setUp() {
         syncState = DefaultObjects.newDefaultSyncState()
         immutableCategory =
-                ImmutableCategoryImpl(ID, CAT_UUID, NAME, CODE, syncState, CUSTOM_ORDER_ID)
+                Category(ID, CAT_UUID, NAME, CODE, syncState, CUSTOM_ORDER_ID)
     }
 
     @Test
@@ -70,19 +70,19 @@ class ImmutableCategoryImplTest {
         assertEquals(immutableCategory, immutableCategory)
         assertEquals(
             immutableCategory,
-            ImmutableCategoryImpl(ID, CAT_UUID, NAME, CODE, syncState, CUSTOM_ORDER_ID)
+            Category(ID, CAT_UUID, NAME, CODE, syncState, CUSTOM_ORDER_ID)
         )
         assertThat(immutableCategory, not(equalTo(Any())))
         assertThat(immutableCategory, not(equalTo(mock(Category::class.java))))
         assertThat(
             immutableCategory,
-            not(equalTo(ImmutableCategoryImpl(0, CAT_UUID, NAME, CODE, syncState, CUSTOM_ORDER_ID)))
+            not(equalTo(Category(0, CAT_UUID, NAME, CODE, syncState, CUSTOM_ORDER_ID)))
         )
         assertThat(
             immutableCategory,
             not(
                 equalTo(
-                    ImmutableCategoryImpl(ID, CAT_UUID, "wrong", CODE, syncState, CUSTOM_ORDER_ID)
+                    Category(ID, CAT_UUID, "wrong", CODE, syncState, CUSTOM_ORDER_ID)
                 )
             )
         )
@@ -90,7 +90,7 @@ class ImmutableCategoryImplTest {
             immutableCategory,
             not(
                 equalTo(
-                    ImmutableCategoryImpl(ID, CAT_UUID, NAME, "wrong", syncState, CUSTOM_ORDER_ID)
+                    Category(ID, CAT_UUID, NAME, "wrong", syncState, CUSTOM_ORDER_ID)
                 )
             )
         )
@@ -98,24 +98,24 @@ class ImmutableCategoryImplTest {
             immutableCategory,
             not(
                 equalTo(
-                    ImmutableCategoryImpl(ID, CAT_UUID, NAME, "wrong", syncState, (CUSTOM_ORDER_ID + 1))
+                    Category(ID, CAT_UUID, NAME, "wrong", syncState, (CUSTOM_ORDER_ID + 1))
                 )
             )
         )
         assertThat(
             immutableCategory,
-            not(equalTo(ImmutableCategoryImpl(ID, UUID.randomUUID(), NAME, CODE, syncState, CUSTOM_ORDER_ID)))
+            not(equalTo(Category(ID, UUID.randomUUID(), NAME, CODE, syncState, CUSTOM_ORDER_ID)))
         )
     }
 
     @Test
     fun compare() {
         val category2 =
-            ImmutableCategoryImpl(ID, CAT_UUID, NAME, CODE, syncState, (CUSTOM_ORDER_ID + 1))
+            Category(ID, CAT_UUID, NAME, CODE, syncState, (CUSTOM_ORDER_ID + 1))
         val category0 =
-            ImmutableCategoryImpl(ID, CAT_UUID, NAME, CODE, syncState, (CUSTOM_ORDER_ID - 1))
+            Category(ID, CAT_UUID, NAME, CODE, syncState, (CUSTOM_ORDER_ID - 1))
 
-        val list = mutableListOf<ImmutableCategoryImpl>().apply {
+        val list = mutableListOf<Category>().apply {
             add(immutableCategory)
             add(category2)
             add(category0)

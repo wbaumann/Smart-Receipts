@@ -25,7 +25,7 @@ import java.sql.Date
 import java.util.*
 
 @RunWith(RobolectricTestRunner::class)
-class ImmutableDistanceImplTest {
+class DistanceTest {
 
     companion object {
 

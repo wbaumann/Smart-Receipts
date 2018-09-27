@@ -83,7 +83,7 @@ class Receipt constructor(
     private val extraEditTextThree: String?,
     override val syncState: SyncState,
     override val customOrderId: Long
-    ) : Parcelable, Priceable, Draggable<Receipt>, Syncable {
+    ) : Keyed, Parcelable, Priceable, Draggable<Receipt>, Syncable {
 
     val extraEditText1: String? = if (DatabaseHelper.NO_DATA == extraEditTextOne) null else extraEditTextOne
     val extraEditText2: String? = if (DatabaseHelper.NO_DATA == extraEditTextTwo) null else extraEditTextTwo
@@ -235,7 +235,7 @@ class Receipt constructor(
     }
 
     companion object {
-        val PARCEL_KEY: String = Receipt::class.java.name
+        @JvmField val PARCEL_KEY: String = Receipt::class.java.name
     }
 
 }

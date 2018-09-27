@@ -153,9 +153,9 @@ public class DistanceDialogFragment extends DialogFragment implements Editor<Dis
     private static DistanceDialogFragment newInstance(@NonNull Trip trip, @Nullable Distance distance, @Nullable Date suggestedDate) {
         final DistanceDialogFragment dialog = new DistanceDialogFragment();
         final Bundle args = new Bundle();
-        args.putParcelable(Trip.Companion.getPARCEL_KEY(), trip);
+        args.putParcelable(Trip.PARCEL_KEY, trip);
         if (distance != null) {
-            args.putParcelable(Distance.Companion.getPARCEL_KEY(), distance);
+            args.putParcelable(Distance.PARCEL_KEY, distance);
         }
         if (suggestedDate != null) {
             args.putLong(ARG_SUGGESTED_DATE, suggestedDate.getTime() + 1);
@@ -173,10 +173,10 @@ public class DistanceDialogFragment extends DialogFragment implements Editor<Dis
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        trip = getArguments().getParcelable(Trip.Companion.getPARCEL_KEY());
+        trip = getArguments().getParcelable(Trip.PARCEL_KEY);
         Preconditions.checkNotNull(trip, "A valid trip is required");
 
-        updateableDistance = getArguments().getParcelable(Distance.Companion.getPARCEL_KEY());
+        updateableDistance = getArguments().getParcelable(Distance.PARCEL_KEY);
 
         // Default to "now" if not suggested date was set
         final Time now = new Time();

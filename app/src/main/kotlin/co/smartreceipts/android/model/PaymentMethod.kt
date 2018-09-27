@@ -22,7 +22,7 @@ class PaymentMethod @JvmOverloads constructor (
     override val syncState: SyncState = DefaultSyncState(),
     override val customOrderId: Long = 0
 
-) : Parcelable, Syncable, Draggable<PaymentMethod> {
+) : Keyed, Parcelable, Syncable, Draggable<PaymentMethod> {
 
     override fun toString() = method
 

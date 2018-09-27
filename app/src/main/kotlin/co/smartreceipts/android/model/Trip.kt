@@ -64,7 +64,7 @@ class Trip @JvmOverloads constructor(
      */
     var dailySubTotal: Price = PriceBuilderFactory().setPrice(0.0).setCurrency(tripCurrency).build()
 
-) : Parcelable, Priceable, Comparable<Trip>, Syncable {
+) : Keyed, Parcelable, Priceable, Comparable<Trip>, Syncable {
 
     /**
      * The name of this trip (this will be the name of [.getDirectory]
@@ -209,6 +209,6 @@ class Trip @JvmOverloads constructor(
     }
 
     companion object {
-        val PARCEL_KEY: String = Trip::class.java.name
+        @JvmField val PARCEL_KEY: String = Trip::class.java.name
     }
 }

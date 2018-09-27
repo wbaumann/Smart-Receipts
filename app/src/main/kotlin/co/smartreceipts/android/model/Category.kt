@@ -15,7 +15,7 @@ class Category @JvmOverloads constructor(
     val code: String, // The "code" associated with this category
     override val syncState: SyncState = DefaultSyncState(),
     override val customOrderId: Long = id.toLong()
-) : Parcelable, Syncable, Draggable<Category> {
+) : Keyed, Parcelable, Syncable, Draggable<Category> {
 
     override fun toString() = name
 

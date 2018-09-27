@@ -1,13 +1,12 @@
 package co.smartreceipts.android.model
 
 import android.support.annotation.StringRes
-
 import co.smartreceipts.android.sync.model.Syncable
 
 /**
  * Provides a contract for how each individual column in a report should operate
  */
-interface Column<T> : Syncable, Draggable<Column<T>> {
+interface Column<T> : Keyed, Syncable, Draggable<Column<T>> {
 
     /**
      * Gets the column type of this particular column

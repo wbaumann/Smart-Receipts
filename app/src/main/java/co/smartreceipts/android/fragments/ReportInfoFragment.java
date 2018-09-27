@@ -75,7 +75,7 @@ public class ReportInfoFragment extends WBFragment implements GenerateNavigator,
         Logger.debug(this, "onCreate");
         setHasOptionsMenu(true);
         if (savedInstanceState == null) {
-            trip = getArguments().getParcelable(Trip.Companion.getPARCEL_KEY());
+            trip = getArguments().getParcelable(Trip.PARCEL_KEY);
         } else {
             trip = savedInstanceState.getParcelable(KEY_OUT_TRIP);
         }

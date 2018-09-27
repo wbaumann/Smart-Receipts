@@ -47,12 +47,7 @@ class Distance(
      * The user defined comment [String] for this receipt
      */
     val comment: String
-) : Parcelable, Priceable, Comparable<Distance>, Syncable {
-
-    companion object {
-        val PARCEL_KEY: String = Distance::class.java.name
-        const val RATE_PRECISION = 3
-    }
+) : Keyed, Parcelable, Priceable, Comparable<Distance>, Syncable {
 
     /**
      * A "decimal-formatted" distance [String], which would appear to the end user as "25.20" or "25,20" instead of
@@ -130,6 +125,11 @@ class Distance(
         result = 31 * result + timeZone.hashCode()
         result = 31 * result + comment.hashCode()
         return result
+    }
+
+    companion object {
+        @JvmField val PARCEL_KEY: String = Distance::class.java.name
+        const val RATE_PRECISION = 3
     }
 
 }

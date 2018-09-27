@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import co.smartreceipts.android.model.Keyed;
 import co.smartreceipts.android.persistence.database.defaults.TableDefaultsCustomizer;
 import co.smartreceipts.android.persistence.database.operations.DatabaseOperationMetadata;
 import co.smartreceipts.android.persistence.database.operations.OperationFamilyType;
@@ -282,7 +283,7 @@ public abstract class AbstractSqlTable<ModelType, PrimaryKeyType> implements Tab
         final ContentValues values = databaseAdapter.write(modelType, databaseOperationMetadata);
 
         // to be sure that entity_uuid is not missed
-        if (!values.containsKey(COLUMN_UUID) || UUID.fromString(values.getAsString(COLUMN_UUID)).equals(Syncable.Companion.getMISSING_UUID())) {
+        if (!values.containsKey(COLUMN_UUID) || UUID.fromString(values.getAsString(COLUMN_UUID)).equals(Keyed.Companion.getMISSING_UUID())) {
             values.put(COLUMN_UUID, UUID.randomUUID().toString());
         }
         UUID uuid = UUID.fromString(values.getAsString(COLUMN_UUID));
@@ -336,7 +337,7 @@ public abstract class AbstractSqlTable<ModelType, PrimaryKeyType> implements Tab
     @SuppressWarnings("unchecked")
     public synchronized Optional<ModelType> updateBlocking(@NonNull ModelType oldModelType, @NonNull ModelType newModelType, @NonNull DatabaseOperationMetadata databaseOperationMetadata) {
 
-        if (!(oldModelType instanceof Syncable)) {
+        if (!(oldModelType instanceof Syncable && oldModelType instanceof Keyed)) {
             return Optional.absent();
         }
 
@@ -350,7 +351,7 @@ public abstract class AbstractSqlTable<ModelType, PrimaryKeyType> implements Tab
 
         final boolean updateSuccess;
         final Syncable syncableOldModel = (Syncable) oldModelType;
-        final UUID uuid = syncableOldModel.getUuid();
+        final UUID uuid = ((Keyed)oldModelType).getUuid();
         final String oldPrimaryKeyValue = primaryKey.getPrimaryKeyValue(oldModelType).toString();
 
         if (databaseOperationMetadata.getOperationFamilyType() == OperationFamilyType.Sync) {

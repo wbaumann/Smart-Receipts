@@ -33,10 +33,6 @@ public final class PriceCurrency implements Parcelable {
     // Saved to reduce Memory Allocs for heavy calls
     private final Map<Integer, NumberFormat> numberFormatCache = new ConcurrentHashMap<>();
 
-    protected PriceCurrency(Parcel in) {
-        this(in.readString());
-    }
-
     @NonNull
     public static PriceCurrency getInstance(@NonNull String currencyCode) {
         // Note: I'm not concerned if we have a few duplicate entries (ie this isn't fully thread safe) as the objects are all equal
@@ -135,7 +131,7 @@ public final class PriceCurrency implements Parcelable {
     public static final Creator<PriceCurrency> CREATOR = new Creator<PriceCurrency>() {
         @Override
         public PriceCurrency createFromParcel(Parcel in) {
-            return new PriceCurrency(in);
+            return PriceCurrency.getInstance(in.readString());
         }
 
         @Override

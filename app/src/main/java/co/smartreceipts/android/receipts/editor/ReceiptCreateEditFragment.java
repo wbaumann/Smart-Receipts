@@ -282,7 +282,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     }
 
     Trip getParentTrip() {
-        return getArguments().getParcelable(Trip.Companion.getPARCEL_KEY());
+        return getArguments().getParcelable(Trip.PARCEL_KEY);
     }
 
     File getFile() {
@@ -906,7 +906,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     @org.jetbrains.annotations.Nullable
     @Override
     public Receipt getEditableItem() {
-        return getArguments() != null ? getArguments().getParcelable(Receipt.Companion.getPARCEL_KEY()) : null;
+        return getArguments() != null ? getArguments().getParcelable(Receipt.PARCEL_KEY) : null;
     }
 
     @Override

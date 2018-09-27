@@ -31,7 +31,7 @@ public class ReceiptRemoveAttachmentDialogFragment extends DialogFragment {
     public static ReceiptRemoveAttachmentDialogFragment newInstance(@NonNull Receipt receipt) {
         final ReceiptRemoveAttachmentDialogFragment dialogFragment = new ReceiptRemoveAttachmentDialogFragment();
         final Bundle args = new Bundle();
-        args.putParcelable(Receipt.Companion.getPARCEL_KEY(), receipt);
+        args.putParcelable(Receipt.PARCEL_KEY, receipt);
         dialogFragment.setArguments(args);
         return dialogFragment;
     }
@@ -45,7 +45,7 @@ public class ReceiptRemoveAttachmentDialogFragment extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        receipt = getArguments().getParcelable(Receipt.Companion.getPARCEL_KEY());
+        receipt = getArguments().getParcelable(Receipt.PARCEL_KEY);
         Preconditions.checkNotNull(receipt, "ReceiptAttachmentDialogFragment requires a valid Receipt");
     }
 

@@ -50,7 +50,7 @@ public class FragmentProvider {
     @NonNull
     public ReportInfoFragment newReportInfoFragment(@NonNull Trip trip) {
         Bundle args = new Bundle();
-        args.putParcelable(Trip.Companion.getPARCEL_KEY(), trip);
+        args.putParcelable(Trip.PARCEL_KEY, trip);
 
         return attachArguments(ReportInfoFragment.newInstance(), args);
     }
@@ -65,8 +65,8 @@ public class FragmentProvider {
     @NonNull
     public ReceiptCreateEditFragment newCreateReceiptFragment(@NonNull Trip trip, @Nullable File file, @Nullable OcrResponse ocrResponse) {
         final Bundle args = new Bundle();
-        args.putParcelable(Trip.Companion.getPARCEL_KEY(), trip);
-        args.putParcelable(Receipt.Companion.getPARCEL_KEY(), null);
+        args.putParcelable(Trip.PARCEL_KEY, trip);
+        args.putParcelable(Receipt.PARCEL_KEY, null);
         args.putSerializable(ARG_FILE, file);
         args.putSerializable(ARG_OCR, ocrResponse);
 
@@ -83,8 +83,8 @@ public class FragmentProvider {
     @NonNull
     public ReceiptCreateEditFragment newEditReceiptFragment(@NonNull Trip trip, @NonNull Receipt receiptToEdit) {
         final Bundle args = new Bundle();
-        args.putParcelable(Trip.Companion.getPARCEL_KEY(), trip);
-        args.putParcelable(Receipt.Companion.getPARCEL_KEY(), receiptToEdit);
+        args.putParcelable(Trip.PARCEL_KEY, trip);
+        args.putParcelable(Receipt.PARCEL_KEY, receiptToEdit);
         args.putSerializable(ARG_FILE, null);
         args.putSerializable(ARG_OCR, null);
 
@@ -100,7 +100,7 @@ public class FragmentProvider {
     @NonNull
     public ReceiptImageFragment newReceiptImageFragment(@NonNull Receipt receipt) {
         Bundle args = new Bundle();
-        args.putParcelable(Receipt.Companion.getPARCEL_KEY(), receipt);
+        args.putParcelable(Receipt.PARCEL_KEY, receipt);
 
         return attachArguments(ReceiptImageFragment.newInstance(), args);
     }
@@ -157,7 +157,7 @@ public class FragmentProvider {
     public TripCreateEditFragment newEditTripFragment(@NonNull Trip tripToEdit) {
         // Note: Don't pass the list of existing trips here, since we can have a conflict on the same name when editing
         Bundle args = new Bundle();
-        args.putParcelable(Trip.Companion.getPARCEL_KEY(), tripToEdit);
+        args.putParcelable(Trip.PARCEL_KEY, tripToEdit);
         return attachArguments(TripCreateEditFragment.newInstance(), args);
     }
 

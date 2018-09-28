@@ -12,10 +12,10 @@ import java.util.TimeZone;
 import java.util.UUID;
 
 import co.smartreceipts.android.currency.PriceCurrency;
+import co.smartreceipts.android.model.Keyed;
 import co.smartreceipts.android.model.Source;
 import co.smartreceipts.android.model.Trip;
 import co.smartreceipts.android.sync.model.SyncState;
-import co.smartreceipts.android.sync.model.Syncable;
 import co.smartreceipts.android.sync.model.impl.DefaultSyncState;
 
 /**
@@ -35,8 +35,8 @@ public final class TripBuilderFactory implements BuilderFactory<Trip> {
     private Source _source;
 
     public TripBuilderFactory() {
-        _id = Syncable.MISSING_ID;
-        _uuid = Syncable.Companion.getMISSING_UUID();
+        _id = Keyed.MISSING_ID;
+        _uuid = Keyed.Companion.getMISSING_UUID();
         _dir = new File("");
         _comment = "";
         _costCenter = "";

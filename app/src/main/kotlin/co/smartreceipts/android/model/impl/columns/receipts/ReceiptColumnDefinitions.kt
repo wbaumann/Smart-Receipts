@@ -10,7 +10,6 @@ import co.smartreceipts.android.model.impl.columns.SettingUserIdColumn
 import co.smartreceipts.android.model.impl.columns.receipts.ReceiptColumnDefinitions.ActualDefinition.*
 import co.smartreceipts.android.settings.UserPreferenceManager
 import co.smartreceipts.android.sync.model.SyncState
-import co.smartreceipts.android.sync.model.Syncable
 import co.smartreceipts.android.sync.model.impl.DefaultSyncState
 import co.smartreceipts.android.workers.reports.ReportResourcesManager
 import java.util.*
@@ -139,7 +138,7 @@ constructor(
     }
 
     override fun getDefaultInsertColumn(): Column<Receipt> =
-        BlankColumn(Syncable.MISSING_ID, DefaultSyncState(), java.lang.Long.MAX_VALUE, Syncable.MISSING_UUID)
+        BlankColumn(Keyed.MISSING_ID, DefaultSyncState(), java.lang.Long.MAX_VALUE, Keyed.MISSING_UUID)
 
     override fun getColumnTypeByHeaderValue(header: String): Int {
 
@@ -159,10 +158,10 @@ constructor(
 
     private fun getColumnFromDefinition(
         definition: ActualDefinition,
-        id: Int = Syncable.MISSING_ID,
+        id: Int = Keyed.MISSING_ID,
         syncState: SyncState = DefaultSyncState(),
         customOrderId: Long = 0,
-        uuid: UUID = Syncable.MISSING_UUID
+        uuid: UUID = Keyed.MISSING_UUID
     ): AbstractColumnImpl<Receipt> {
         val localizedContext = reportResourcesManager.getLocalizedContext()
 

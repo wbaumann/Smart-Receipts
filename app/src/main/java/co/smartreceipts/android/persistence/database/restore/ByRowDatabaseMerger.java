@@ -45,10 +45,10 @@ public class ByRowDatabaseMerger implements DatabaseMerger {
             final DatabaseOperationMetadata databaseOperationMetadata = new DatabaseOperationMetadata(OperationFamilyType.Import);
 
             Logger.info(ByRowDatabaseMerger.this, "Removing all existing pdf entries as we lack a good conflict resolution tool.");
-            currentDatabase.getPDFTable().deleteAllTableRowsBlockiing();
+            currentDatabase.getPDFTable().deleteAllTableRowsBlocking();
 
             Logger.info(ByRowDatabaseMerger.this, "Removing all existing csv entries as we lack a good conflict resolution tool.");
-            currentDatabase.getCSVTable().deleteAllTableRowsBlockiing();
+            currentDatabase.getCSVTable().deleteAllTableRowsBlocking();
 
             final List<Column<Receipt>> pdfColumns = importedBackupDatabase.getPDFTable().getBlocking();
             Logger.info(ByRowDatabaseMerger.this, "Importing {} pdf column entries", pdfColumns.size());

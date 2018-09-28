@@ -13,6 +13,7 @@ import java.util.UUID;
 
 import co.smartreceipts.android.currency.PriceCurrency;
 import co.smartreceipts.android.model.Category;
+import co.smartreceipts.android.model.Keyed;
 import co.smartreceipts.android.model.PaymentMethod;
 import co.smartreceipts.android.model.Price;
 import co.smartreceipts.android.model.Receipt;
@@ -21,7 +22,6 @@ import co.smartreceipts.android.model.Trip;
 import co.smartreceipts.android.model.gson.ExchangeRate;
 import co.smartreceipts.android.receipts.ordering.ReceiptsOrderer;
 import co.smartreceipts.android.sync.model.SyncState;
-import co.smartreceipts.android.sync.model.Syncable;
 import co.smartreceipts.android.sync.model.impl.DefaultSyncState;
 
 /**
@@ -51,7 +51,7 @@ public class ReceiptBuilderFactory implements BuilderFactory<Receipt> {
     private UUID _uuid;
 
     public ReceiptBuilderFactory() {
-        this(Syncable.MISSING_ID);
+        this(Keyed.MISSING_ID);
     }
 
     public ReceiptBuilderFactory(int id) {
@@ -66,7 +66,7 @@ public class ReceiptBuilderFactory implements BuilderFactory<Receipt> {
         _source = Source.Undefined;
         _syncState = new DefaultSyncState();
         _order_id = ReceiptsOrderer.Companion.getDefaultCustomOrderId(_date);
-        _uuid = Syncable.Companion.getMISSING_UUID();
+        _uuid = Keyed.Companion.getMISSING_UUID();
     }
 
     public ReceiptBuilderFactory(@NonNull Receipt receipt) {

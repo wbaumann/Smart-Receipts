@@ -5,12 +5,12 @@ import co.smartreceipts.android.R
 import co.smartreceipts.android.model.ActualColumnDefinition
 import co.smartreceipts.android.model.Column
 import co.smartreceipts.android.model.ColumnDefinitions
+import co.smartreceipts.android.model.Keyed
 import co.smartreceipts.android.model.comparators.ColumnNameComparator
 import co.smartreceipts.android.model.impl.columns.AbstractColumnImpl
 import co.smartreceipts.android.model.impl.columns.categories.CategoryColumnDefinitions.ActualDefinition.*
 import co.smartreceipts.android.persistence.database.controllers.grouping.results.SumCategoryGroupingResult
 import co.smartreceipts.android.sync.model.SyncState
-import co.smartreceipts.android.sync.model.Syncable
 import co.smartreceipts.android.sync.model.impl.DefaultSyncState
 import co.smartreceipts.android.workers.reports.ReportResourcesManager
 import java.util.*
@@ -73,7 +73,7 @@ class CategoryColumnDefinitions(private val reportResourcesManager: ReportResour
 
     private fun getColumnFromClass(
         definition: ActualDefinition,
-        id: Int = Syncable.MISSING_ID,
+        id: Int = Keyed.MISSING_ID,
         syncState: SyncState = DefaultSyncState()
     ): AbstractColumnImpl<SumCategoryGroupingResult> {
         return when (definition) {

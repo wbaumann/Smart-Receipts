@@ -8,8 +8,8 @@ import java.util.UUID;
 
 import co.smartreceipts.android.model.Column;
 import co.smartreceipts.android.model.ColumnDefinitions;
+import co.smartreceipts.android.model.Keyed;
 import co.smartreceipts.android.sync.model.SyncState;
-import co.smartreceipts.android.sync.model.Syncable;
 import co.smartreceipts.android.sync.model.impl.DefaultSyncState;
 
 /**
@@ -27,8 +27,8 @@ public final class ColumnBuilderFactory<T> implements BuilderFactory<Column<T>> 
 
     public ColumnBuilderFactory(@NonNull ColumnDefinitions<T> columnDefinitions) {
         this.columnDefinitions = columnDefinitions;
-        id = Syncable.MISSING_ID;
-        uuid = Syncable.Companion.getMISSING_UUID();
+        id = Keyed.MISSING_ID;
+        uuid = Keyed.Companion.getMISSING_UUID();
         columnType = 0;
         syncState = new DefaultSyncState();
         customOrderId = 0;

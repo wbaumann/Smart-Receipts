@@ -14,11 +14,11 @@ import java.util.UUID;
 
 import co.smartreceipts.android.currency.PriceCurrency;
 import co.smartreceipts.android.model.Distance;
+import co.smartreceipts.android.model.Keyed;
 import co.smartreceipts.android.model.Price;
 import co.smartreceipts.android.model.Trip;
 import co.smartreceipts.android.model.utils.ModelUtils;
 import co.smartreceipts.android.sync.model.SyncState;
-import co.smartreceipts.android.sync.model.Syncable;
 import co.smartreceipts.android.sync.model.impl.DefaultSyncState;
 
 /**
@@ -42,12 +42,12 @@ public final class DistanceBuilderFactory implements BuilderFactory<Distance> {
     private SyncState _syncState;
 
     public DistanceBuilderFactory() {
-        this(Syncable.MISSING_ID);
+        this(Keyed.MISSING_ID);
     }
 
     public DistanceBuilderFactory(int id) {
         _id = id;
-        _uuid = Syncable.Companion.getMISSING_UUID();
+        _uuid = Keyed.Companion.getMISSING_UUID();
         _location = "";
         _distance = BigDecimal.ZERO;
         _date = new Date(System.currentTimeMillis());

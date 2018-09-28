@@ -36,7 +36,7 @@ import io.reactivex.Single;
  * @param <ModelType>      the model object that CRUD operations here should return
  * @param <PrimaryKeyType> the primary key type (e.g. Integer, String) that is used by the primary key column
  */
-public abstract class AbstractSqlTable<ModelType, PrimaryKeyType> implements Table<ModelType, PrimaryKeyType> {
+public abstract class AbstractSqlTable<ModelType extends Keyed, PrimaryKeyType> implements Table<ModelType, PrimaryKeyType> {
 
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_UUID = "entity_uuid";
@@ -142,7 +142,7 @@ public abstract class AbstractSqlTable<ModelType, PrimaryKeyType> implements Tab
                         Logger.debug(this, "Updating UUID value to {}", uuid);
 
                         if (db.update(getTableName(), columnValues, COLUMN_ID + "= ?", new String[]{Integer.toString(id)}) == 0) {
-                            Logger.error(this, "Column update error happened");
+                            throw new IllegalStateException("Column update error happened");
                         }
                     } while (cursor.moveToNext());
                 }
@@ -337,7 +337,7 @@ public abstract class AbstractSqlTable<ModelType, PrimaryKeyType> implements Tab
     @SuppressWarnings("unchecked")
     public synchronized Optional<ModelType> updateBlocking(@NonNull ModelType oldModelType, @NonNull ModelType newModelType, @NonNull DatabaseOperationMetadata databaseOperationMetadata) {
 
-        if (!(oldModelType instanceof Syncable && oldModelType instanceof Keyed)) {
+        if (!(oldModelType instanceof Syncable)) {
             return Optional.absent();
         }
 
@@ -351,7 +351,6 @@ public abstract class AbstractSqlTable<ModelType, PrimaryKeyType> implements Tab
 
         final boolean updateSuccess;
         final Syncable syncableOldModel = (Syncable) oldModelType;
-        final UUID uuid = ((Keyed)oldModelType).getUuid();
         final String oldPrimaryKeyValue = primaryKey.getPrimaryKeyValue(oldModelType).toString();
 
         if (databaseOperationMetadata.getOperationFamilyType() == OperationFamilyType.Sync) {
@@ -370,10 +369,10 @@ public abstract class AbstractSqlTable<ModelType, PrimaryKeyType> implements Tab
             if (Integer.class.equals(primaryKey.getPrimaryKeyClass())) {
                 // If it's an auto-increment key, ensure we're re-using the same id as the old key
                 final PrimaryKey<ModelType, PrimaryKeyType> autoIncrementPrimaryKey = (PrimaryKey<ModelType, PrimaryKeyType>) new AutoIncrementIdPrimaryKey<>((PrimaryKey<ModelType, Integer>) primaryKey, (Integer) primaryKey.getPrimaryKeyValue(oldModelType));
-                updatedItem = databaseAdapter.build(newModelType, autoIncrementPrimaryKey, uuid, databaseOperationMetadata);
+                updatedItem = databaseAdapter.build(newModelType, autoIncrementPrimaryKey, oldModelType.getUuid(), databaseOperationMetadata);
             } else {
                 // Otherwise, we'll use whatever the user defined...
-                updatedItem = databaseAdapter.build(newModelType, primaryKey, uuid, databaseOperationMetadata);
+                updatedItem = databaseAdapter.build(newModelType, primaryKey, oldModelType.getUuid(), databaseOperationMetadata);
             }
 
             if (cachedResults != null) {
@@ -463,7 +462,7 @@ public abstract class AbstractSqlTable<ModelType, PrimaryKeyType> implements Tab
     }
 
     @Override
-    public synchronized void deleteAllTableRowsBlockiing() {
+    public synchronized void deleteAllTableRowsBlocking() {
         getWritableDatabase().execSQL("DELETE FROM " + getTableName());
         clearCache();
     }

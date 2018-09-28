@@ -6,9 +6,9 @@ import com.google.common.base.Preconditions;
 
 import java.util.UUID;
 
+import co.smartreceipts.android.model.Keyed;
 import co.smartreceipts.android.model.PaymentMethod;
 import co.smartreceipts.android.sync.model.SyncState;
-import co.smartreceipts.android.sync.model.Syncable;
 import co.smartreceipts.android.sync.model.impl.DefaultSyncState;
 
 /**
@@ -27,8 +27,8 @@ public class PaymentMethodBuilderFactory implements BuilderFactory<PaymentMethod
      * Default constructor for this class
      */
     public PaymentMethodBuilderFactory() {
-        _id = Syncable.MISSING_ID;
-        _uuid = Syncable.Companion.getMISSING_UUID();
+        _id = Keyed.MISSING_ID;
+        _uuid = Keyed.Companion.getMISSING_UUID();
         _method = "";
         _syncState = new DefaultSyncState();
         _customOrderId = 0;

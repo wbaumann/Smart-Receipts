@@ -7,9 +7,9 @@ import com.google.common.base.Preconditions;
 import java.util.UUID;
 
 import co.smartreceipts.android.model.Category;
+import co.smartreceipts.android.model.Keyed;
 import co.smartreceipts.android.model.PaymentMethod;
 import co.smartreceipts.android.sync.model.SyncState;
-import co.smartreceipts.android.sync.model.Syncable;
 import co.smartreceipts.android.sync.model.impl.DefaultSyncState;
 
 /**
@@ -29,8 +29,8 @@ public class CategoryBuilderFactory implements BuilderFactory<Category> {
      * Default constructor for this class
      */
     public CategoryBuilderFactory() {
-        id = Syncable.MISSING_ID;
-        uuid = Syncable.Companion.getMISSING_UUID();
+        id = Keyed.MISSING_ID;
+        uuid = Keyed.Companion.getMISSING_UUID();
         name = "";
         code = "";
         syncState = new DefaultSyncState();

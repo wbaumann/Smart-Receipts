@@ -120,7 +120,9 @@ public class CategoriesListFragment extends DraggableEditableListFragment<Catego
                             .setName(newName)
                             .setCode(newCode)
                             .setCustomOrderId(isEdit ? editCategory.getCustomOrderId() : Long.MAX_VALUE);
-                    if (isEdit) categoryBuilderFactory.setUuid(editCategory.getUuid());
+                    if (isEdit) {
+                        categoryBuilderFactory.setUuid(editCategory.getUuid());
+                    }
                     final Category category = categoryBuilderFactory.build();
 
                     if (isEdit) {

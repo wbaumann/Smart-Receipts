@@ -2,15 +2,11 @@ package co.smartreceipts.android.model.impl.columns.distance
 
 import android.support.annotation.StringRes
 import co.smartreceipts.android.R
-import co.smartreceipts.android.model.ActualColumnDefinition
-import co.smartreceipts.android.model.Column
-import co.smartreceipts.android.model.ColumnDefinitions
-import co.smartreceipts.android.model.Distance
+import co.smartreceipts.android.model.*
 import co.smartreceipts.android.model.impl.columns.AbstractColumnImpl
 import co.smartreceipts.android.model.impl.columns.distance.DistanceColumnDefinitions.ActualDefinition.*
 import co.smartreceipts.android.settings.UserPreferenceManager
 import co.smartreceipts.android.sync.model.SyncState
-import co.smartreceipts.android.sync.model.Syncable
 import co.smartreceipts.android.sync.model.impl.DefaultSyncState
 import co.smartreceipts.android.workers.reports.ReportResourcesManager
 import java.util.*
@@ -75,7 +71,7 @@ class DistanceColumnDefinitions(
 
     private fun getColumnFromClass(
         definition: ActualDefinition,
-        id: Int = Syncable.MISSING_ID,
+        id: Int = Keyed.MISSING_ID,
         syncState: SyncState = DefaultSyncState()
     ): AbstractColumnImpl<Distance> {
         val localizedContext = reportResourcesManager.getLocalizedContext()

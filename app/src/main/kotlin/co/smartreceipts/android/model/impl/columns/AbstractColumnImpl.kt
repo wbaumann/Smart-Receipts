@@ -2,8 +2,8 @@ package co.smartreceipts.android.model.impl.columns
 
 import co.smartreceipts.android.model.ActualColumnDefinition
 import co.smartreceipts.android.model.Column
+import co.smartreceipts.android.model.Keyed
 import co.smartreceipts.android.sync.model.SyncState
-import co.smartreceipts.android.sync.model.Syncable
 import java.util.*
 
 /**
@@ -14,7 +14,7 @@ abstract class AbstractColumnImpl<T> @JvmOverloads constructor(
     private val columnDefinition: ActualColumnDefinition,
     override val syncState: SyncState,
     override val customOrderId: Long = 0,
-    override val uuid: UUID = Syncable.MISSING_UUID
+    override val uuid: UUID = Keyed.MISSING_UUID
 ) : Column<T> {
 
     override val type: Int = columnDefinition.columnType

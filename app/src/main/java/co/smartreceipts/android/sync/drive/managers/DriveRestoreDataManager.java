@@ -230,32 +230,53 @@ public class DriveRestoreDataManager {
             Cursor tripsCursor = null;
             try {
                 importDb = SQLiteDatabase.openDatabase(temporaryDatabaseFile.getAbsolutePath(), null, SQLiteDatabase.OPEN_READONLY);
-                final String[] selection = new String[]{AbstractSqlTable.COLUMN_DRIVE_SYNC_ID, ReceiptsTable.COLUMN_PARENT_TRIP_ID, ReceiptsTable.COLUMN_PATH};
-                receiptsCursor = importDb.query(ReceiptsTable.TABLE_NAME, selection, AbstractSqlTable.COLUMN_DRIVE_SYNC_ID + " IS NOT NULL AND " + ReceiptsTable.COLUMN_PATH + " IS NOT NULL AND " + AbstractSqlTable.COLUMN_DRIVE_MARKED_FOR_DELETION + " = ?", new String[]{Integer.toString(0)}, null, null, null);
-                if (receiptsCursor != null && receiptsCursor.moveToFirst()) {
-                    final int driveIdIndex = receiptsCursor.getColumnIndex(AbstractSqlTable.COLUMN_DRIVE_SYNC_ID);
-                    final int parentIdIndex = receiptsCursor.getColumnIndex(ReceiptsTable.COLUMN_PARENT_TRIP_ID);
-                    final int pathIndex = receiptsCursor.getColumnIndex(ReceiptsTable.COLUMN_PATH);
-                    do {
-                        final String driveId = receiptsCursor.getString(driveIdIndex);
-                        final String path = receiptsCursor.getString(pathIndex);
-                        final int parentId = receiptsCursor.getInt(parentIdIndex);
 
-                        // getting trip name by id (trip name is unique column)
-                        tripsCursor = importDb.query(TripsTable.TABLE_NAME, new String[]{TripsTable.COLUMN_NAME},
-                                TripsTable.COLUMN_ID + " = ?", new String[]{Integer.toString(parentId)}, null, null, null, "1");
+                if (importDb.getVersion() < 19) { // using old approach (receipts reference to trip name)
+                    final String[] selection = new String[]{AbstractSqlTable.COLUMN_DRIVE_SYNC_ID, ReceiptsTable.COLUMN_PARENT, ReceiptsTable.COLUMN_PATH};
+                    receiptsCursor = importDb.query(ReceiptsTable.TABLE_NAME, selection, AbstractSqlTable.COLUMN_DRIVE_SYNC_ID + " IS NOT NULL AND " + ReceiptsTable.COLUMN_PATH + " IS NOT NULL AND " + AbstractSqlTable.COLUMN_DRIVE_MARKED_FOR_DELETION + " = ?", new String[]{Integer.toString(0)}, null, null, null);
+                    if (receiptsCursor != null && receiptsCursor.moveToFirst()) {
+                        final int driveIdIndex = receiptsCursor.getColumnIndex(AbstractSqlTable.COLUMN_DRIVE_SYNC_ID);
+                        final int parentIndex = receiptsCursor.getColumnIndex(ReceiptsTable.COLUMN_PARENT);
+                        final int pathIndex = receiptsCursor.getColumnIndex(ReceiptsTable.COLUMN_PATH);
 
-                        if (tripsCursor != null && tripsCursor.moveToFirst()) {
-                            final int tripNameIndex = tripsCursor.getColumnIndex(TripsTable.COLUMN_NAME);
-                            final String tripName = tripsCursor.getString(tripNameIndex);
-
-                            if (driveId != null && tripName != null && !TextUtils.isEmpty(path) && !DatabaseHelper.NO_DATA.equals(path)) {
-                                emitter.onNext(new PartialReceipt(driveId, tripName, path));
+                        do {
+                            final String driveId = receiptsCursor.getString(driveIdIndex);
+                            final String parent = receiptsCursor.getString(parentIndex);
+                            final String path = receiptsCursor.getString(pathIndex);
+                            if (driveId != null && parent != null && !TextUtils.isEmpty(path) && !DatabaseHelper.NO_DATA.equals(path)) {
+                                emitter.onNext(new PartialReceipt(driveId, parent, path));
                             }
                         }
-
+                        while (receiptsCursor.moveToNext());
                     }
-                    while (receiptsCursor.moveToNext());
+                } else { // using new approach (receipts reference to trip id)
+                    final String[] selection = new String[]{AbstractSqlTable.COLUMN_DRIVE_SYNC_ID, ReceiptsTable.COLUMN_PARENT_TRIP_ID, ReceiptsTable.COLUMN_PATH};
+                    receiptsCursor = importDb.query(ReceiptsTable.TABLE_NAME, selection, AbstractSqlTable.COLUMN_DRIVE_SYNC_ID + " IS NOT NULL AND " + ReceiptsTable.COLUMN_PATH + " IS NOT NULL AND " + AbstractSqlTable.COLUMN_DRIVE_MARKED_FOR_DELETION + " = ?", new String[]{Integer.toString(0)}, null, null, null);
+                    if (receiptsCursor != null && receiptsCursor.moveToFirst()) {
+                        final int driveIdIndex = receiptsCursor.getColumnIndex(AbstractSqlTable.COLUMN_DRIVE_SYNC_ID);
+                        final int parentIdIndex = receiptsCursor.getColumnIndex(ReceiptsTable.COLUMN_PARENT_TRIP_ID);
+                        final int pathIndex = receiptsCursor.getColumnIndex(ReceiptsTable.COLUMN_PATH);
+                        do {
+                            final String driveId = receiptsCursor.getString(driveIdIndex);
+                            final String path = receiptsCursor.getString(pathIndex);
+                            final int parentId = receiptsCursor.getInt(parentIdIndex);
+
+                            // getting trip name by id (trip name is unique column)
+                            tripsCursor = importDb.query(TripsTable.TABLE_NAME, new String[]{TripsTable.COLUMN_NAME},
+                                    TripsTable.COLUMN_ID + " = ?", new String[]{Integer.toString(parentId)}, null, null, null, "1");
+
+                            if (tripsCursor != null && tripsCursor.moveToFirst()) {
+                                final int tripNameIndex = tripsCursor.getColumnIndex(TripsTable.COLUMN_NAME);
+                                final String tripName = tripsCursor.getString(tripNameIndex);
+
+                                if (driveId != null && tripName != null && !TextUtils.isEmpty(path) && !DatabaseHelper.NO_DATA.equals(path)) {
+                                    emitter.onNext(new PartialReceipt(driveId, tripName, path));
+                                }
+                            }
+
+                        }
+                        while (receiptsCursor.moveToNext());
+                    }
                 }
                 emitter.onComplete();
             } finally {

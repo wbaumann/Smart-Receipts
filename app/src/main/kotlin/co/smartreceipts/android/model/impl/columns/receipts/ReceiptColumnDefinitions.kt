@@ -156,7 +156,7 @@ constructor(
         return -1
     }
 
-    private fun getColumnFromDefinition(
+    public fun getColumnFromDefinition(
         definition: ActualDefinition,
         id: Int = Keyed.MISSING_ID,
         syncState: SyncState = DefaultSyncState(),

@@ -20,12 +20,12 @@ import java.util.List;
 import java.util.UUID;
 
 import co.smartreceipts.android.model.Category;
+import co.smartreceipts.android.model.Keyed;
 import co.smartreceipts.android.model.factory.CategoryBuilderFactory;
 import co.smartreceipts.android.persistence.DatabaseHelper;
 import co.smartreceipts.android.persistence.database.defaults.TableDefaultsCustomizer;
 import co.smartreceipts.android.persistence.database.operations.DatabaseOperationMetadata;
 import co.smartreceipts.android.persistence.database.tables.ordering.OrderingPreferencesManager;
-import co.smartreceipts.android.sync.model.Syncable;
 
 import static co.smartreceipts.android.persistence.database.tables.AbstractSqlTable.COLUMN_CUSTOM_ORDER_ID;
 import static co.smartreceipts.android.persistence.database.tables.AbstractSqlTable.COLUMN_DRIVE_IS_SYNCED;
@@ -203,6 +203,22 @@ public class CategoriesTableTest {
     }
 
     @Test
+    public void onUpgradeFromV18() {
+        final int oldVersion = 18;
+        final int newVersion = DatabaseHelper.DATABASE_VERSION;
+
+        final TableDefaultsCustomizer customizer = mock(TableDefaultsCustomizer.class);
+        mCategoriesTable.onUpgrade(mSQLiteDatabase, oldVersion, newVersion, customizer);
+        verify(mSQLiteDatabase, atLeastOnce()).execSQL(mSqlCaptor.capture());
+        verify(customizer, never()).insertCategoryDefaults(mCategoriesTable);
+
+        List<String> allValues = mSqlCaptor.getAllValues();
+        assertEquals(1, allValues.size());
+
+        assertEquals(allValues.get(0), String.format("ALTER TABLE %s ADD entity_uuid TEXT", CategoriesTable.TABLE_NAME));
+    }
+
+    @Test
     public void onUpgradeAlreadyOccurred() {
         final int oldVersion = DatabaseHelper.DATABASE_VERSION;
         final int newVersion = DatabaseHelper.DATABASE_VERSION;
@@ -256,8 +272,8 @@ public class CategoriesTableTest {
         assertEquals(insertCategory.getCode(), insertedCategory.getCode());
         assertEquals(insertCategory.getCustomOrderId(), insertedCategory.getCustomOrderId());
         assertNotNull(insertedCategory.getUuid());
-        assertTrue(insertCategory.getUuid().equals(Syncable.Companion.getMISSING_UUID()));
-        assertFalse(insertedCategory.getUuid().equals(Syncable.Companion.getMISSING_UUID()));
+        assertTrue(insertCategory.getUuid().equals(Keyed.Companion.getMISSING_UUID()));
+        assertFalse(insertedCategory.getUuid().equals(Keyed.Companion.getMISSING_UUID()));
 
         final List<Category> categories = mCategoriesTable.get().blockingGet();
         assertEquals(categories, Arrays.asList(insertedCategory, mCategory1, mCategory2));

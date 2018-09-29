@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.TimeZone;
 import java.util.UUID;
 
+import co.smartreceipts.android.model.Keyed;
 import co.smartreceipts.android.model.Trip;
 import co.smartreceipts.android.model.factory.TripBuilderFactory;
 import co.smartreceipts.android.persistence.DatabaseHelper;
@@ -31,11 +32,23 @@ import co.smartreceipts.android.persistence.database.defaults.TableDefaultsCusto
 import co.smartreceipts.android.persistence.database.operations.DatabaseOperationMetadata;
 import co.smartreceipts.android.settings.UserPreferenceManager;
 import co.smartreceipts.android.settings.catalog.UserPreference;
-import co.smartreceipts.android.sync.model.Syncable;
 import wb.android.storage.StorageManager;
 
 import static co.smartreceipts.android.persistence.database.tables.AbstractSqlTable.COLUMN_ID;
-import static co.smartreceipts.android.persistence.database.tables.TripsTable.*;
+import static co.smartreceipts.android.persistence.database.tables.TripsTable.COLUMN_COMMENT;
+import static co.smartreceipts.android.persistence.database.tables.TripsTable.COLUMN_COST_CENTER;
+import static co.smartreceipts.android.persistence.database.tables.TripsTable.COLUMN_DEFAULT_CURRENCY;
+import static co.smartreceipts.android.persistence.database.tables.TripsTable.COLUMN_DRIVE_IS_SYNCED;
+import static co.smartreceipts.android.persistence.database.tables.TripsTable.COLUMN_DRIVE_MARKED_FOR_DELETION;
+import static co.smartreceipts.android.persistence.database.tables.TripsTable.COLUMN_DRIVE_SYNC_ID;
+import static co.smartreceipts.android.persistence.database.tables.TripsTable.COLUMN_FILTERS;
+import static co.smartreceipts.android.persistence.database.tables.TripsTable.COLUMN_FROM;
+import static co.smartreceipts.android.persistence.database.tables.TripsTable.COLUMN_FROM_TIMEZONE;
+import static co.smartreceipts.android.persistence.database.tables.TripsTable.COLUMN_LAST_LOCAL_MODIFICATION_TIME;
+import static co.smartreceipts.android.persistence.database.tables.TripsTable.COLUMN_NAME;
+import static co.smartreceipts.android.persistence.database.tables.TripsTable.COLUMN_PROCESSING_STATUS;
+import static co.smartreceipts.android.persistence.database.tables.TripsTable.COLUMN_TO;
+import static co.smartreceipts.android.persistence.database.tables.TripsTable.COLUMN_TO_TIMEZONE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -345,7 +358,7 @@ public class TripsTableTest {
         final List<Trip> trips = mTripsTable.get().blockingGet();
         // Also confirm the new one is first b/c of date ordering
         assertEquals(trips, Arrays.asList(trip, mTrip1, mTrip2));
-        assertFalse(trip.getUuid().equals(Syncable.Companion.getMISSING_UUID()));
+        assertFalse(trip.getUuid().equals(Keyed.Companion.getMISSING_UUID()));
     }
 
     @Test

@@ -10,6 +10,7 @@ import java.util.TimeZone;
 
 import co.smartreceipts.android.currency.PriceCurrency;
 import co.smartreceipts.android.model.Category;
+import co.smartreceipts.android.model.Keyed;
 import co.smartreceipts.android.model.PaymentMethod;
 import co.smartreceipts.android.model.Price;
 import co.smartreceipts.android.model.Source;
@@ -19,7 +20,6 @@ import co.smartreceipts.android.model.factory.PaymentMethodBuilderFactory;
 import co.smartreceipts.android.model.gson.ExchangeRate;
 import co.smartreceipts.android.model.impl.ImmutablePriceImpl;
 import co.smartreceipts.android.sync.model.SyncState;
-import co.smartreceipts.android.sync.model.Syncable;
 import co.smartreceipts.android.sync.model.impl.DefaultSyncState;
 import co.smartreceipts.android.sync.model.impl.Identifier;
 import co.smartreceipts.android.sync.model.impl.IdentifierMap;
@@ -34,7 +34,7 @@ public class DefaultObjects {
 
     @NonNull
     public static Trip newDefaultTrip() {
-        return new Trip(Syncable.MISSING_ID, Syncable.Companion.getMISSING_UUID(),
+        return new Trip(Keyed.MISSING_ID, Keyed.Companion.getMISSING_UUID(),
                 new File(new File("").getAbsolutePath()),
                 new Date(System.currentTimeMillis()), TimeZone.getDefault(),
                 new Date(System.currentTimeMillis()), TimeZone.getDefault(),

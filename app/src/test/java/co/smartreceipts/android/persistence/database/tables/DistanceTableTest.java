@@ -23,6 +23,7 @@ import java.util.TimeZone;
 import java.util.UUID;
 
 import co.smartreceipts.android.model.Distance;
+import co.smartreceipts.android.model.Keyed;
 import co.smartreceipts.android.model.Trip;
 import co.smartreceipts.android.model.factory.DistanceBuilderFactory;
 import co.smartreceipts.android.persistence.DatabaseHelper;
@@ -30,7 +31,6 @@ import co.smartreceipts.android.persistence.database.defaults.TableDefaultsCusto
 import co.smartreceipts.android.persistence.database.operations.DatabaseOperationMetadata;
 import co.smartreceipts.android.settings.UserPreferenceManager;
 import co.smartreceipts.android.settings.catalog.UserPreference;
-import co.smartreceipts.android.sync.model.Syncable;
 import io.reactivex.Single;
 
 import static org.junit.Assert.assertEquals;
@@ -209,6 +209,29 @@ public class DistanceTableTest {
     }
 
     @Test
+    public void onUpgradeFromV18() {
+        final int oldVersion = 18;
+        final int newVersion = DatabaseHelper.DATABASE_VERSION;
+
+        final TableDefaultsCustomizer customizer = mock(TableDefaultsCustomizer.class);
+        mDistanceTable.onUpgrade(mSQLiteDatabase, oldVersion, newVersion, customizer);
+        verify(mSQLiteDatabase, atLeastOnce()).execSQL(mSqlCaptor.capture());
+        verifyZeroInteractions(customizer);
+
+        assertEquals(mSqlCaptor.getAllValues().get(0), String.format("ALTER TABLE %s ADD parentKey INTEGER REFERENCES %s ON DELETE CASCADE",
+                mDistanceTable.getTableName(), TripsTable.TABLE_NAME));
+        assertEquals(mSqlCaptor.getAllValues().get(1), String.format("UPDATE %s SET parentKey = ( SELECT %s FROM %s WHERE %s = parent LIMIT 1 )",
+                mDistanceTable.getTableName(), TripsTable.COLUMN_ID, TripsTable.TABLE_NAME, TripsTable.COLUMN_NAME));
+        assertTrue(mSqlCaptor.getAllValues().get(2).contains("CREATE TABLE " + mDistanceTable.getTableName() + "_copy (id INTEGER PRIMARY KEY AUTOINCREMENT"));
+        assertTrue(mSqlCaptor.getAllValues().get(3).contains(String.format("INSERT INTO %s_copy", mDistanceTable.getTableName())));
+        assertTrue(mSqlCaptor.getAllValues().get(3).contains(String.format("FROM %s", mDistanceTable.getTableName())));
+        assertEquals(mSqlCaptor.getAllValues().get(4), "DROP TABLE " + mDistanceTable.getTableName() + ";");
+        assertEquals(mSqlCaptor.getAllValues().get(5), String.format("ALTER TABLE %s_copy RENAME TO %s;", mDistanceTable.getTableName(), mDistanceTable.getTableName()));
+        assertEquals(mSqlCaptor.getAllValues().get(6), String.format("ALTER TABLE %s ADD entity_uuid TEXT", mDistanceTable.getTableName()));
+
+    }
+
+    @Test
     public void onUpgradeAlreadyOccurred() {
         final int oldVersion = DatabaseHelper.DATABASE_VERSION;
         final int newVersion = DatabaseHelper.DATABASE_VERSION;
@@ -247,7 +270,7 @@ public class DistanceTableTest {
         final List<Distance> distances = mDistanceTable.get().blockingGet();
         assertEquals(distances, Arrays.asList(mDistance1, mDistance2, distance));
         assertNotNull(distance.getUuid());
-        assertFalse(distance.getUuid().equals(Syncable.Companion.getMISSING_UUID()));
+        assertFalse(distance.getUuid().equals(Keyed.Companion.getMISSING_UUID()));
     }
 
     @Test

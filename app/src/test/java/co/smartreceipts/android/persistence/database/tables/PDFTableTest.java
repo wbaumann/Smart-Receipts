@@ -204,6 +204,22 @@ public class PDFTableTest {
     }
 
     @Test
+    public void onUpgradeFromV18() {
+        final int oldVersion = 18;
+        final int newVersion = DatabaseHelper.DATABASE_VERSION;
+
+        final TableDefaultsCustomizer customizer = mock(TableDefaultsCustomizer.class);
+        pdfTable.onUpgrade(sqliteDatabase, oldVersion, newVersion, customizer);
+        verify(sqliteDatabase, atLeastOnce()).execSQL(sqlCaptor.capture());
+        verify(customizer, never()).insertPDFDefaults(pdfTable);
+
+        final List<String> allValues = sqlCaptor.getAllValues();
+        assertEquals(1, allValues.size());
+
+        assertEquals(allValues.get(0), "ALTER TABLE " + PDFTable.TABLE_NAME + " ADD entity_uuid TEXT");
+    }
+
+    @Test
     public void onUpgradeAlreadyOccurred() {
         final int oldVersion = DatabaseHelper.DATABASE_VERSION;
         final int newVersion = DatabaseHelper.DATABASE_VERSION;

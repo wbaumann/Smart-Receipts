@@ -204,6 +204,22 @@ public class CSVTableTest {
     }
 
     @Test
+    public void onUpgradeFromV18() {
+        final int oldVersion = 18;
+        final int newVersion = DatabaseHelper.DATABASE_VERSION;
+
+        final TableDefaultsCustomizer customizer = mock(TableDefaultsCustomizer.class);
+        csvTable.onUpgrade(database, oldVersion, newVersion, customizer);
+        verify(database, atLeastOnce()).execSQL(sqlCaptor.capture());
+        verify(customizer, never()).insertCSVDefaults(csvTable);
+
+        List<String> allValues = sqlCaptor.getAllValues();
+        assertEquals(1, allValues.size());
+
+        assertEquals(allValues.get(0), String.format("ALTER TABLE %s ADD entity_uuid TEXT", CSVTable.TABLE_NAME));
+    }
+
+    @Test
     public void onUpgradeAlreadyOccurred() {
         final int oldVersion = DatabaseHelper.DATABASE_VERSION;
         final int newVersion = DatabaseHelper.DATABASE_VERSION;

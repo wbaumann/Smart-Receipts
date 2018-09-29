@@ -20,13 +20,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import co.smartreceipts.android.model.Keyed;
 import co.smartreceipts.android.model.PaymentMethod;
 import co.smartreceipts.android.model.factory.PaymentMethodBuilderFactory;
 import co.smartreceipts.android.persistence.DatabaseHelper;
 import co.smartreceipts.android.persistence.database.defaults.TableDefaultsCustomizer;
 import co.smartreceipts.android.persistence.database.operations.DatabaseOperationMetadata;
 import co.smartreceipts.android.persistence.database.tables.ordering.OrderingPreferencesManager;
-import co.smartreceipts.android.sync.model.Syncable;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -208,6 +208,22 @@ public class PaymentMethodsTableTest {
     }
 
     @Test
+    public void onUpgradeFromV18() {
+        final int oldVersion = 18;
+        final int newVersion = DatabaseHelper.DATABASE_VERSION;
+
+        final TableDefaultsCustomizer customizer = mock(TableDefaultsCustomizer.class);
+        mPaymentMethodsTable.onUpgrade(mSQLiteDatabase, oldVersion, newVersion, customizer);
+        verify(mSQLiteDatabase, atLeastOnce()).execSQL(mSqlCaptor.capture());
+        verify(customizer, never()).insertPaymentMethodDefaults(mPaymentMethodsTable);
+
+        final List<String> allValues = mSqlCaptor.getAllValues();
+        assertEquals(1, allValues.size());
+        assertEquals(allValues.get(0), "ALTER TABLE " + mPaymentMethodsTable.getTableName() + " ADD entity_uuid TEXT");
+
+    }
+
+    @Test
     public void onUpgradeAlreadyOccurred() {
         final int oldVersion = DatabaseHelper.DATABASE_VERSION;
         final int newVersion = DatabaseHelper.DATABASE_VERSION;
@@ -230,7 +246,7 @@ public class PaymentMethodsTableTest {
 
         assertNotNull(paymentMethod);
         assertEquals(METHOD3, paymentMethod.getMethod());
-        assertFalse(paymentMethod.getUuid().equals(Syncable.Companion.getMISSING_UUID()));
+        assertFalse(paymentMethod.getUuid().equals(Keyed.Companion.getMISSING_UUID()));
         assertEquals(0, paymentMethod.getCustomOrderId());
 
         final List<PaymentMethod> paymentMethods = mPaymentMethodsTable.get().blockingGet();

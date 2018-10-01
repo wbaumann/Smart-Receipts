@@ -86,6 +86,9 @@ android {
         implementation "com.android.support:exifinterface:$SUPPORT_LIBRARY_VERSION"
         implementation "com.android.support:design:$SUPPORT_LIBRARY_VERSION"
 
+        // Note: We don't use custom tabs, but it stops the support library from complaining about mixed versions
+        implementation "com.android.support:customtabs:$SUPPORT_LIBRARY_VERSION"
+
         implementation "com.android.support:multidex:$MULTIDEX_VERSION"
 
 		implementation "com.android.support.constraint:constraint-layout:$CONSTRAINT_LAYOUT_VERSION"
@@ -120,11 +123,7 @@ android {
         implementation "com.github.barteksc:pdfium-android:$PDFIUM_VERSION"
 
         implementation "org.slf4j:slf4j-api:$SLF4J_VERSION"
-        implementation "com.github.tony19:logback-android-core:$LOGBACK_VERSION"
-        implementation("com.github.tony19:logback-android-classic:$LOGBACK_VERSION") {
-            // workaround issue #73
-            exclude group: 'com.google.android', module: 'android'
-        }
+        implementation "com.github.tony19:logback-android:$LOGBACK_VERSION"
 
         // Note: Periodically check for updates here so we can revert to the official version
         // implementation "com.github.PhilJay:MPAndroidChart:$MP_ANDROID_CHART_VERSION"
@@ -152,6 +151,11 @@ android {
         testImplementation "org.mockito:mockito-core:$MOCKITO_VERSION"
         testImplementation "com.nhaarman:mockito-kotlin:$MOCKITO_KOTLIN_VERSION"
 
+        // Espresso Tests
+        androidTestImplementation "com.android.support.test.espresso:espresso-core:$ESPRESSO_VERSION"
+        androidTestImplementation "com.android.support.test:runner:$ANDROID_TEST_RUNNER_VERSION"
+        androidTestImplementation "com.android.support.test:rules:$ANDROID_TEST_RUNNER_VERSION"
+
         // Leak Canary
         debugImplementation "com.squareup.leakcanary:leakcanary-android:$LEAK_CANARY_VERSION"
         releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$LEAK_CANARY_VERSION"
@@ -162,10 +166,6 @@ android {
 
         // Free ads
         freeImplementation "com.google.android.gms:play-services-ads:$ADMOB_VERSION"
-        freeImplementation ("com.adincube.sdk:AdinCube-Java-1626ebe:$ADS_ADINCUBE_VERSION@aar") {
-            transitive = true
-        }
-        freeImplementation "com.inmobi.monetization:inmobi-ads:$IN_MOBI_VERSION"
     }
 
     // Note: This version is controlled in the base build file

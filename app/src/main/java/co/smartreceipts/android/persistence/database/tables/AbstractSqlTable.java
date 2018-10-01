@@ -284,6 +284,7 @@ public abstract class AbstractSqlTable<ModelType extends Keyed, PrimaryKeyType> 
 
         // to be sure that entity_uuid is not missed
         if (!values.containsKey(COLUMN_UUID) || UUID.fromString(values.getAsString(COLUMN_UUID)).equals(Keyed.Companion.getMISSING_UUID())) {
+            Logger.warn(this, "Assigning random UUID to new model before inserting");
             values.put(COLUMN_UUID, UUID.randomUUID().toString());
         }
         UUID uuid = UUID.fromString(values.getAsString(COLUMN_UUID));
@@ -319,7 +320,6 @@ public abstract class AbstractSqlTable<ModelType extends Keyed, PrimaryKeyType> 
                 }
             } else {
                 // If it's not an auto-increment id, just grab whatever the definition is...
-                // TODO: 17.09.2018 all tables have autoincrement key id now...
                 final ModelType insertedItem = databaseAdapter.build(modelType, primaryKey, uuid, databaseOperationMetadata);
                 if (cachedResults != null) {
                     cachedResults.add(insertedItem);
@@ -337,26 +337,23 @@ public abstract class AbstractSqlTable<ModelType extends Keyed, PrimaryKeyType> 
     @SuppressWarnings("unchecked")
     public synchronized Optional<ModelType> updateBlocking(@NonNull ModelType oldModelType, @NonNull ModelType newModelType, @NonNull DatabaseOperationMetadata databaseOperationMetadata) {
 
-        if (!(oldModelType instanceof Syncable)) {
-            return Optional.absent();
-        }
-
         final ContentValues values = databaseAdapter.write(newModelType, databaseOperationMetadata);
 
         // to be sure that entity_uuid will never be changed
         if (values.containsKey(COLUMN_UUID)) {
+            Logger.warn(this, "Removing UUID to avoid influence on the existing value");
             values.remove(COLUMN_UUID);
         }
 
 
         final boolean updateSuccess;
-        final Syncable syncableOldModel = (Syncable) oldModelType;
         final String oldPrimaryKeyValue = primaryKey.getPrimaryKeyValue(oldModelType).toString();
 
-        if (databaseOperationMetadata.getOperationFamilyType() == OperationFamilyType.Sync) {
+        if (databaseOperationMetadata.getOperationFamilyType() == OperationFamilyType.Sync && oldModelType instanceof Syncable) {
             // For sync operations, ensure that this only succeeds if we haven't already updated this item more recently
+            final Syncable syncableOldModel = (Syncable) oldModelType;
             updateSuccess = getWritableDatabase().update(getTableName(), values, primaryKey.getPrimaryKeyColumn() +
-                            " = ? AND " + AbstractSqlTable.COLUMN_LAST_LOCAL_MODIFICATION_TIME + " >= ?",
+                    " = ? AND " + AbstractSqlTable.COLUMN_LAST_LOCAL_MODIFICATION_TIME + " >= ?",
                     new String[]{oldPrimaryKeyValue, Long.toString(syncableOldModel.getSyncState().getLastLocalModificationTime().getTime())}) > 0;
         } else {
             updateSuccess = getWritableDatabase().update(getTableName(), values, primaryKey.getPrimaryKeyColumn() + " = ?",
@@ -394,7 +391,12 @@ public abstract class AbstractSqlTable<ModelType extends Keyed, PrimaryKeyType> 
                     }
                 }
 
-                if (!((Syncable) newModelType).getSyncState().isMarkedForDeletion(SyncProvider.GoogleDrive)) {
+                if (newModelType instanceof Syncable) {
+                    final Syncable syncable = (Syncable) newModelType;
+                    if (!syncable.getSyncState().isMarkedForDeletion(SyncProvider.GoogleDrive)) {
+                        cachedResults.add(updatedItem);
+                    }
+                } else {
                     cachedResults.add(updatedItem);
                 }
 

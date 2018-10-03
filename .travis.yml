@@ -16,6 +16,10 @@ cache:
     # Android build cache (see http://tools.android.com/tech-docs/build-cache)
     - $HOME/.android/build-cache
 
+env:
+  global:
+    - ADB_INSTALL_TIMEOUT=8 # minutes (2 minutes by default)
+
 android:
   components:
   - tools
@@ -57,14 +61,14 @@ before_install:
 
 # Emulator Management: Create and Start... It takes a while for this to actually begin
 - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a --tag google_apis
-- emulator -avd test -no-window &
+- emulator -avd test -no-skin -no-window &
 
 before_script:
 - android-wait-for-emulator
 - adb shell input keyevent 82 &
 
 script:
-- "./gradlew clean connectedAndroidTest"
+- "./gradlew clean connectedFreeDebugAndroidTest connectedPlusFlavorDebugAndroidTest"
 # - "./gradlew clean test"
 
 

@@ -22,11 +22,14 @@ android:
   - tools
   - platform-tools
   - build-tools-28.0.3
+
+  # Target SDK Level
   - android-26
 
   # Emulator component
   - android-22
   - sys-img-armeabi-v7a-google_apis-22
+  - addon-google_apis-google-22
 
   # Additional components
   - addon-google_apis-google-27
@@ -53,7 +56,7 @@ before_install:
 - chmod +x gradlew
 
 # Emulator Management: Create, Start and Wait
-- echo no | android create avd --force -n test -t android-22 --abi default/armeabi-v7a
+- echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a --tag google_apis
 - emulator -avd test -no-audio -no-window &
 - android-wait-for-emulator
 - adb shell input keyevent 82 &

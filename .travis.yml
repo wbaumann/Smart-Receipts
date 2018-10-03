@@ -1,6 +1,21 @@
 language: android
 jdk: oraclejdk8
 sudo: required # See https://github.com/travis-ci/travis-ci/issues/5582
+
+before_cache:
+  # Do not cache a few Gradle files/directories (see https://docs.travis-ci.com/user/languages/java/#Caching)
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  directories:
+    # Gradle dependencies
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+
+    # Android build cache (see http://tools.android.com/tech-docs/build-cache)
+    - $HOME/.android/build-cache
+
 android:
   components:
   - tools
@@ -10,6 +25,7 @@ android:
   - android-26
 
   # Emulator component
+  - android-22
   - sys-img-armeabi-v7a-google_apis-22
 
   # Additional components
@@ -44,6 +60,7 @@ before_install:
 
 script:
 - "./gradlew clean build test connectedCheck"
+
 after_failure:
 - echo "Build FAILED"
 

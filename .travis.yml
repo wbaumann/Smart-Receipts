@@ -55,14 +55,18 @@ before_install:
 - echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
 - chmod +x gradlew
 
-# Emulator Management: Create, Start and Wait
+# Emulator Management: Create and Start... It takes a while for this to actually begin
 - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a --tag google_apis
 - emulator -avd test -no-window &
+
+before_script:
 - android-wait-for-emulator
 - adb shell input keyevent 82 &
 
 script:
-- "./gradlew clean build test connectedCheck"
+- "./gradlew clean connectedAndroidTest"
+# - "./gradlew clean test"
+
 
 after_failure:
 - echo "Build FAILED"
@@ -73,4 +77,3 @@ after_failure:
 
 # app
 - cat app/build/reports/lint-results.xml
-- cat app/build/reports/lint-results.html

@@ -60,6 +60,12 @@ android {
             includeAndroidResources = true
             all {
                 jvmArgs '-noverify'
+                maxParallelForks = 2
+                testLogging {
+                    events "failed", "skipped"
+                    showStackTraces = true
+                    exceptionFormat = "full"
+                }
             }
         }
     }

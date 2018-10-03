@@ -60,8 +60,7 @@ android {
             includeAndroidResources = true
             all {
                 jvmArgs '-noverify'
-                maxParallelForks = 4
-                forkEvery = 150 // The number of tests to run per thread before spawing a new test process
+                maxParallelForks = 2
                 testLogging {
                     events "failed", "skipped"
                     showStackTraces = true

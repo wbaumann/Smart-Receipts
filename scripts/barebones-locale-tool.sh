@@ -13,11 +13,14 @@ else
 	printf "twine.txt already exists - check why, delete it and repeat.\n"
 fi
 
-if [ -e twine-log.txt ]; then
-	touch twine-log.txt
+if [ ! -e scripts/logs/twine-log.txt ]; then
+	mkdir scripts/logs
+else
+	rm scripts/logs/twine-log.txt
 fi
-chmod 777 twine-log.txt	
-printf "Created twine-log.txt file with 777 unix permissions.\n"
+touch scripts/logs/twine-log.txt
+chmod 777 scripts/logs/twine-log.txt	
+printf "Created scripts/logs/twine-log.txt file with 777 unix permissions.\n"
 
 if [ ! -d iOSValues ]; then
 	mkdir iOSValues
@@ -51,18 +54,18 @@ fi
 
 # Twine-ify everyhting
 # First get all the language codes by parsing folder names
-list=`find ../app/src/main/res -maxdepth 1 -type d -name '*values-*' -exec basename {} \;`
+list=`find app/src/main/res -maxdepth 1 -type d -name '*values-*' -exec basename {} \;`
 printf "\nStarting Conversions\n"
 echo "-----------------------"
 for dir in $list
 do
 	# Then Slurp Android locale Files
-	if [ -e ../app/src/main/res/${dir}/strings.xml ]; then
-		twine consume-localization-file twine.txt ../app/src/main/res/${dir}/strings.xml --format android --consume-all --consume-comments --developer-language en >> twine-log.txt
+	if [ -e app/src/main/res/${dir}/strings.xml ]; then
+		twine consume-localization-file twine.txt app/src/main/res/${dir}/strings.xml --format android --consume-all --consume-comments --developer-language en >> scripts/logs/twine-log.txt
 
 	fi
-	if [ -e ../app/src/main/res/${dir}/preferences.xml ]; then
-		twine consume-localization-file twine.txt ../app/src/main/res/${dir}/preferences.xml --format android --consume-all --consume-comments --developer-language en >> twine-log.txt
+	if [ -e app/src/main/res/${dir}/preferences.xml ]; then
+		twine consume-localization-file twine.txt app/src/main/res/${dir}/preferences.xml --format android --consume-all --consume-comments --developer-language en >> scripts/logs/twine-log.txt
 	fi
 	
 	# Create iOS locale files
@@ -72,11 +75,11 @@ do
 	if [ ${lang} != "sw600dp" ] && [ ${lang} != "large" ]; then
 		# "Tranlsating" into iOS
 		newDir="iOSValues/${lang}.lproj"
-		echo "New Language - ${lang} - Starting Now \n" >> twine-log.txt
+		echo "New Language - ${lang} - Starting Now \n" >> scripts/logs/twine-log.txt
 		mkdir ${newDir}
 		printf "Created iOS value folder for languge: ${lang}\n"
-		twine generate-localization-file twine.txt ${newDir}/SharedLocalizable.strings --lang ${lang} >> twine-log.txt
-		echo "End of Language\n" >> twine-log.txt
+		twine generate-localization-file twine.txt ${newDir}/SharedLocalizable.strings --lang ${lang} >> scripts/logs/twine-log.txt
+		echo "End of Language\n" >> scripts/logs/twine-log.txt
 		printf "Converted language file for: ${lang} from Android -> iOS\n"
 		
 		# Run diffs to check for differences
@@ -93,12 +96,11 @@ do
 	fi
 done
 
-# Fix twine's dumb us.lproj folder issue
-printf "Copied new file to repository.\n"
-mv SmartReceiptsiOS/SmartReceipts/Supporting\ Files/us.lproj/SharedLocalizable.strings SmartReceiptsiOS/SmartReceipts/Supporting\ Files/en.lproj/SharedLocalizable.strings
-printf "Moving us.lproj strings file -> en.lproj.\n"
-rm -rf SmartReceiptsiOS/SmartReceipts/Supporting\ Files/us.lproj
-printf "Removed us.lproj.\n"
+# Fix twine's dumb us.lproj folder issue - uncomment if it repeats
+#mv SmartReceiptsiOS/SmartReceipts/Supporting\ Files/us.lproj/SharedLocalizable.strings SmartReceiptsiOS/SmartReceipts/Supporting\ Files/en.lproj/SharedLocalizable.strings
+#printf "Moving us.lproj strings file -> en.lproj.\n"
+#rm -rf SmartReceiptsiOS/SmartReceipts/Supporting\ Files/us.lproj
+#printf "Removed us.lproj.\n"
 
 ## Push changes to repo
 cd SmartReceiptsIOS
@@ -131,10 +133,10 @@ fi
 # Clean up after yourself - delete everything
 printf "\nCleaning Up!\n"
 echo "----------------"
-rm twine.txt
+#rm twine.txt
 printf "Removed twine.txt\n"
-rm -Rf iOSValues
+#rm -Rf iOSValues
 printf "Removed the iOSValues folder\n"
-rm -Rf SmartReceiptsiOS
+#rm -Rf SmartReceiptsiOS
 printf "Removed the cloned git repo for SmartReceiptsiOS\n"
-printf "Make sure to check twine-log.txt for any errors that twine sent out.\n"
+printf "Make sure to check scripts/logs/twine-log.txt for any errors that twine sent out.\n"

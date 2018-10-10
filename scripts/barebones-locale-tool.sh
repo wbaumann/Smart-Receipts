@@ -52,7 +52,7 @@ else
 	printf "Already cloned iOS repo - check why, delete it and repeat.\n"
 fi
 
-# Twine-ify everyhting
+# Twine-ify all-non en langs
 # First get all the language codes by parsing folder names
 list=`find app/src/main/res -maxdepth 1 -type d -name '*values-*' -exec basename {} \;`
 printf "\nStarting Conversions\n"
@@ -96,6 +96,37 @@ do
 	fi
 done
 
+# Twine-ify English alone because twine's bulk-import feature works poorly
+# First Slurp Android locale Files
+if [ -e app/src/main/res/values/strings.xml ]; then
+	twine consume-localization-file twine.txt app/src/main/res/values/strings.xml --format android --consume-all --consume-comments --developer-language en >> scripts/logs/twine-log.txt
+
+fi
+if [ -e app/src/main/res/values/preferences.xml ]; then
+	twine consume-localization-file twine.txt app/src/main/res/values/preferences.xml --format android --consume-all --consume-comments --developer-language en >> scripts/logs/twine-log.txt
+fi
+
+# "Tranlsating" into iOS
+newDir="iOSValues/en.lproj"
+echo "Hard-Coded English Language Import - Starting Now \n" >> scripts/logs/twine-log.txt
+mkdir ${newDir}
+printf "Created iOS value folder for languge: en\n"
+twine generate-localization-file twine.txt ${newDir}/SharedLocalizable.strings --lang en >> scripts/logs/twine-log.txt
+echo "End of Language\n" >> scripts/logs/twine-log.txt
+printf "Converted language file for: en from Android -> iOS\n"
+
+# Run diffs to check for differences
+git diff --no-index --word-diff ${newDir}/SharedLocalizable.strings SmartReceiptsiOS/SmartReceipts/Supporting\ Files/en.lproj/SharedLocalizable.strings > en-diff.txt
+eval $command
+# If file size is not 0, then there was a difference between the two files - move files
+if [ -s en-diff.txt ]; then
+	printf "Found differences between SharedLocalizable.strings files for languge: en\n"
+	mv ${newDir}/SharedLocalizable.strings SmartReceiptsiOS/SmartReceipts/Supporting\ Files/en.lproj/SharedLocalizable.strings >> en-diff.txt
+	printf "Copied new file to repository.\n"
+fi
+# Clean diff files
+rm en-diff.txt
+
 # Fix twine's dumb us.lproj folder issue - uncomment if it repeats
 #mv SmartReceiptsiOS/SmartReceipts/Supporting\ Files/us.lproj/SharedLocalizable.strings SmartReceiptsiOS/SmartReceipts/Supporting\ Files/en.lproj/SharedLocalizable.strings
 #printf "Moving us.lproj strings file -> en.lproj.\n"
@@ -103,6 +134,8 @@ done
 #printf "Removed us.lproj.\n"
 
 ## Push changes to repo
+printf "Start Interacting With GitHub\n"
+echo "-----------------------"
 cd SmartReceiptsIOS
 echo "Forking repository into https://github.com/twine-botty-bot/SmartReceiptsiOS"
 hub fork
@@ -133,10 +166,10 @@ fi
 # Clean up after yourself - delete everything
 printf "\nCleaning Up!\n"
 echo "----------------"
-#rm twine.txt
+rm twine.txt
 printf "Removed twine.txt\n"
-#rm -Rf iOSValues
+rm -Rf iOSValues
 printf "Removed the iOSValues folder\n"
-#rm -Rf SmartReceiptsiOS
+rm -Rf SmartReceiptsiOS
 printf "Removed the cloned git repo for SmartReceiptsiOS\n"
 printf "Make sure to check scripts/logs/twine-log.txt for any errors that twine sent out.\n"

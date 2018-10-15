@@ -49,7 +49,7 @@ before_install:
 - chmod +x gradlew
 
 script:
-- "./gradlew clean test"
+- "./gradlew clean translateToiOS"
 
 after_failure:
 - echo "Build FAILED"

@@ -1,0 +1,4224 @@
+[[Uncategorized]]
+	[sr_app_name]
+		comment = =================== App Details =====================
+		ru = Smart Receipts
+		de = Smart Receipts
+		es = Smart Receipts
+		fr = Smart Receipts
+		iw = Smart Receipts
+		pt = Smart Receipts
+		uk = Смарт Чеки
+	[menu_main_settings]
+		comment = ================ Main Menu Options ==================
+		ru = Settings
+		de = Einstellungen
+		es = Ajustes
+		fr = Paramètres
+		iw = הגדרות
+		pt = Configurações
+		uk = Налаштування
+	[menu_main_categories]
+		ru = Categories
+		de = Kategorien
+		es = Categorías
+		fr = Catégories
+		iw = קטגוריות
+		pt = Categorias
+		uk = Категорії
+	[menu_main_csv]
+		ru = Customize CSV Output
+		de = Passen Sie die CSV-Ausgabe an
+		es = Personalizar salida CSV
+		fr = Personnaliser le fichier CSV
+		iw = `CSV התאם אישית פלט `
+		pt = Personalizar saída CSV
+		uk = Налаштування CSV
+	[menu_main_pdf]
+		ru = Customize PDF Output
+		de = Passen Sie die PDF-Ausgabe an
+		es = Personalizar salida PDF
+		fr = Personnaliser le fichier PDF
+		iw = `PDF התאם אישית פלט `
+		pt = Personalizar saída PDF
+		uk = Налаштування PDF
+	[menu_main_ocr_configuration]
+		ru = Automatic Scans (OCR)
+		de = Automatische Scans (OCR)
+		es = Escaneos automáticos (OCR)
+		fr = Scans automatiques (OCR)
+		iw = (OCR) סריקות אוטומטיות
+		pt = Varredura automática (OCR)
+		uk = Автоматичне сканування (OCR)
+	[menu_main_export]
+		ru = Backup
+		de = Sicherungskopie
+		es = Copia de seguridad
+		fr = Sauvegarde
+		iw = גיבוי
+		pt = Backup
+		uk = Резервна копія
+	[menu_main_usage_guide]
+		ru = Usage Guide
+		de = Gebrauchsanleitung
+		es = Guía de uso
+		fr = Guide d'utilisation
+		pt = Guia de Uso
+		uk = Керівництво з використання
+	[add]
+		comment = ================ General Strings ==================
+		ru = Add
+		de = Hinzufügen
+		es = Agregar
+		fr = Ajouter
+		iw = הוסף
+		pt = Adicionar
+		uk = Додати
+	[column_item]
+		ru = Column %@
+		de = Spalte %@
+		es = Columna %@
+		fr = Colonne %@
+		iw = %@ עמודה
+		pt = Coluna %@
+		uk = Колонка %@
+	[copy]
+		ru = Copy
+		de = Kopieren
+		es = Copiar
+		fr = Copier
+		iw = העתק
+		pt = Copiar
+		uk = Копіювати
+	[daily_total]
+		ru = Daily Total: %@
+		de = Gesamt pro Tag: %@
+		es = Total diario: %@
+		fr = Total quotidien : %@
+		iw = %@ :סה״כ יומי
+		pt = Total diário: %@
+		uk = Загалом у день: %@
+	[day]
+		ru = %@ Day
+		de = %@ Tag
+		es = %@ día
+		fr = %@ Jour
+		iw = יום %@
+		pt = %@ dia
+		uk = %@ День
+	[days]
+		ru = %@ Days
+		de = %@ Tage
+		es = %@ días
+		fr = %@ Jours
+		iw = ימים %@
+		pt = %@ dias
+		uk = %@ Дні
+	[delete]
+		ru = Delete
+		de = Löschen
+		es = Eliminar
+		fr = Supprimer
+		iw = מחק
+		pt = Excluir
+		uk = Видалити
+	[delete_item]
+		ru = Delete %@?
+		de = %@ Löschen?
+		es = ¿Eliminar %@?
+		fr = Supprimer %@ ?
+		iw = \?%@ מחק
+		pt = Excluir %@?
+		uk = Видалити %@?
+	[delete_sync_information]
+		ru = Any remotely synchronized data for this item will also be deleted.
+		de = Alle remote-synchronisierten Daten für dieses Objekt werden ebenfalls gelöscht.
+		es = Todos los datos sincronizados remotamente para este ítem también serán eliminados.
+		fr = Toutes les données synchronisées à distance pour cet élément seront également supprimées.
+		iw = כל מידע מסונכרן לענן על הפריט הזה יימחק גם הוא.
+		pt = Todos os dados sincronizados remotamente com esre item também serão excluídos.
+		uk = Будь-які дистанційно синхронізовані дані для цього розділу також будуть видалені.
+	[distance]
+		ru = Distance
+		de = Strecke
+		es = Distancia
+		fr = Distance
+		iw = מרחק
+		pt = Distância
+		uk = Відстань
+	[distance_total_item]
+		ru = Dist. Total: %@
+		de = Strecke insgesamt: %@
+		es = Dist. Total: %@
+		fr = Dist. Totale : %@
+		iw = %@ :סה״כ מרחק
+		pt = Dist. Total: %@
+		uk = Відстань, загалом: %@
+	[edit]
+		ru = Edit
+		de = Bearbeiten
+		es = Editar
+		fr = Modifier
+		iw = ערוך
+		pt = Editar
+		uk = Редагувати
+	[export]
+		ru = Export
+		de = Export
+		es = Exportar
+		fr = Exporter
+		iw = ייצא
+		pt = Exportar
+		uk = Експорт
+	[feedback]
+		ru = %@ - Feedback
+		de = %@ - Feedback
+		es = %@ - Comentario
+		fr = %@ - Commentaires
+		iw = משוב - %@
+		pt = %@ - Feedback
+		uk = %@ - Відгук
+	[image]
+		ru = Image
+		de = Bild
+		es = Imagen
+		fr = Image
+		iw = תמונה
+		pt = Imagem
+		uk = Зображення
+	[import_string]
+		ru = Import
+		de = Import
+		es = Importar
+		fr = Importer
+		iw = ייבא
+		pt = Importar
+		uk = Імпорт
+	[import_string_item]
+		ru = Import %@
+		de = Import %@
+		es = Importar %@
+		fr = Importer %@
+		iw = %@ ייבא
+		pt = Importar %@
+		uk = Імпорт %@
+	[item_code]
+		ru = Code:
+		de = Code:
+		es = Código:
+		fr = Code :
+		iw = :קוד
+		pt = Código:
+		uk = Код:
+	[item_name]
+		ru = Name:
+		de = Name:
+		es = Nombre:
+		fr = Nom :
+		iw = :שם
+		pt = Nome:
+		uk = Ім'я:
+	[move]
+		ru = Move
+		de = Verschieben
+		es = Mover
+		fr = Déplacer
+		iw = הזז
+		pt = Mover
+		uk = Перемістити
+	[move_copy_item]
+		ru = Move/Copy %@?
+		de = Verschieben/Kopieren %@?
+		es = ¿Mover/copiar %@?
+		fr = Déplacer/Copier %@ ?
+		iw = \?%@ הזז/העתק את
+		pt = Deseja mover/copiar %@?
+		uk = Перемістити/Копіювати %@?
+	[next_id]
+		ru = Next ID: %d
+		de = Nächste ID: %d
+		es = Siguiente ID: %d
+		fr = ID suivant : %d
+		iw = %@ :המזהה הבא
+		pt = Próxima ID: %d
+		uk = Наступний ID: %d
+	[no]
+		ru = No
+		de = Nein
+		es = No
+		fr = Non
+		iw = לא
+		pt = Nº
+		uk = Ні
+	[pdf]
+		ru = PDF
+		de = PDF
+		es = PDF
+		fr = PDF
+		iw = PDF
+		pt = PDF
+		uk = PDF
+	[report]
+		ru = Report
+		de = Bericht
+		es = Informe
+		fr = Rapport
+		iw = דו״ח
+		pt = Relatório
+		uk = Звіт
+	[report_attached]
+		ru = 1 report attached
+		de = 1 Bericht beigefügt
+		es = 1 informe adjunto
+		fr = 1 rapport joint
+		iw = דוח 1 מצורף
+		pt = Um relatório anexo
+		uk = 1 Звіт прикладений
+	[reports_attached]
+		ru = %@ reports attached
+		de = %@ Berichte beigefügt
+		es = %@ informes adjuntos
+		fr = %@ rapports joints
+		iw = דוחות מצורפים %@
+		pt = %@ relatórios anexos
+		uk = %@ звітів прикладено
+	[save]
+		ru = Save
+		de = Speichern
+		es = Guardar
+		fr = Enregistrer
+		iw = שמור
+		pt = Salvar
+		uk = Зберегти
+	[send_email]
+		ru = Send File…
+		de = Datei senden…
+		es = Enviar archivo…
+		fr = Envoyer le fichier…
+		iw = …שלח קובץ
+		pt = Enviando arquivo…
+		uk = Відправити файл…
+	[support]
+		ru = %@ - Support
+		de = %@ - Unterstützung
+		es = %@ - Soporte
+		fr = %@ - Assistance
+		iw = תמיכה - %@
+		pt = %@ - Suporte
+		uk = %@ - Підтримка
+	[total]
+		ru = Total
+		de = Gesamt
+		es = Total
+		fr = Total
+		iw = סה״כ
+		pt = Total
+		uk = Загалом:
+	[undefined]
+		ru = Undefined
+		de = Undefiniert
+		es = Sin definir
+		fr = Non défini
+		iw = לא מוגדר
+		pt = Indeterminado
+		uk = Не визначено
+	[update]
+		ru = Update
+		de = Aktualisieren
+		es = Actualizar
+		fr = Mettre à jour
+		iw = עדכן
+		pt = Atualizar
+		uk = Оновити
+	[yes]
+		ru = Yes
+		de = Ja
+		es = Sí
+		fr = Oui
+		iw = כן
+		pt = Sim
+		uk = Так
+	[yes_as_pdf]
+		ru = Yes - As PDF
+		de = Ja - als PDF
+		es = Sí: como PDF
+		fr = Oui - sous PDF
+		iw = PDF כן - בתור
+		pt = Sim - Como PDF
+		uk = Так - у вигляді PDF
+	[reorder]
+		ru = Reorder
+		de = Umsortieren
+		es = Reordenar
+		fr = Réorganiser
+		iw = שנה סדר
+		pt = Reordenar
+		uk = Змінити порядок
+	[share]
+		ru = Share
+		de = Senden
+		es = Enviar
+		fr = Envoyer
+		iw = שתף
+		pt = Enviar
+		uk = Поділитися
+	[pro_subscription]
+		comment = =============== Subscriptions ================
+		ru = Smart Receipts Plus
+		de = Smart-Plus-Receipts
+		es = Smart Receipts Plus
+		fr = Smart Receipts Plus
+		iw = Smart Receipts Plus
+		pt = Smart Receipts Plus
+		uk = Смарт Чеки Плюс
+	[missing_ad_suggest_removal_upsell]
+		comment = ================ No More Ads =================
+		ru = Tired of ads? Tap to start an ad-free trial
+		de = Werbung entfernen? Tippen Sie, um eine anzeigenfreie Testversion zu starten
+		es = ¿Cansado de los anuncios? Toca para comenzar una prueba gratuita sin anuncios
+		fr = Marre des pubs ? Cliquez pour commencer un essai sans pub
+		iw = נמאס לך מפרסומות? לחץ להתחלת תקופת נסיון ללא פרסומות
+		pt = Está cansado de anúncios? Clique para testar a versão sem anúncios
+		uk = Втомились від реклами? Натисніть, щоб спробувати версію без реклами
+	[report_info_graphs]
+		comment = ============= Report Navigation ==============
+		ru = Graphs
+		de = Grafiken
+		es = Gráficos
+		fr = Graphiques
+		iw = גרפים
+		pt = Gráficos
+		uk = Графіки
+	[report_info_receipts]
+		ru = Receipts
+		de = Belege
+		es = Recibos
+		fr = Reçus
+		iw = קבלות
+		pt = Recibos
+		uk = Чеки
+	[report_info_distance]
+		ru = Distance
+		de = Kilometer
+		es = Distancia
+		fr = Distance
+		iw = מרחק
+		pt = Distância
+		uk = Відстані
+	[report_info_generate]
+		ru = Generate
+		de = Bericht
+		es = Generar
+		fr = Créer
+		iw = ייצר
+		pt = Gerar
+		uk = Створити
+	[report_header_from]
+		comment = ============= Report Generation ==============
+		ru = From: %@
+		de = Von: %@
+		es = Desde: %@
+		fr = De : %@
+		iw = %@ :מאת
+		pt = De: %@
+		uk = Від: %@
+	[report_header_to]
+		ru = To: %@
+		de = An: %@
+		es = Hasta: %@
+		fr = À : %@
+		iw = %@ :אל
+		pt = Para: %@
+		uk = До: %@
+	[report_header_receipts_total]
+		ru = Receipts Total: %@
+		de = Belege Gesamt: %@
+		es = Total de recibos: %@
+		fr = Total des reçus : %@
+		iw = %@ :סה״כ קבלות
+		pt = Total de recibos: %@
+		uk = Загалом за чеками: %@
+	[report_header_receipts_total_tax]
+		ru = Tax Total: %@
+		de = MwSt: %@
+		es = Total de impuesto: %@
+		fr = Total des taxes : %@
+		iw = %@ :סה״כ מס
+		pt = Total de impostos: %@
+		uk = Податок, загалом: %@
+	[report_header_receipts_total_no_tax]
+		ru = Receipts Total (Without Tax): %@
+		de = Einnahmen Gesamt (ohne Steuer): %@
+		es = Total de recibos (sin impuesto): %@
+		fr = Total des reçus (Hors taxe) : %@
+		iw = %@ :סה״כ קבלות (ללא מס)
+		pt = Total de recibos (sem impostos): %@
+		uk = Загалом за чеками (без податку): %@
+	[report_header_receipts_total_with_tax]
+		ru = Receipts Total (With Tax): %@
+		de = Einnahmen Gesamt (mit Steuer): %@
+		es = Total de recibos (con impuesto): %@
+		fr = Total des reçus (Compris taxe): %@
+		iw = %@ :סה״כ קבלות (עם מס)
+		pt = Total de recibos (com impostos): %@
+		uk = Загалом за чеками (з податком): %@
+	[report_header_distance_total]
+		ru = Distance Total: %@
+		de = Strecke Gesamt: %@
+		es = Distancia total: %@
+		fr = Distance totale : %@
+		iw = %@ :סה״כ מרחק
+		pt = Distância Total: %@
+		uk = Відстань, загалом: %@
+	[report_header_receipts_total_reimbursable]
+		ru = Grand Total (Reimbursable): %@
+		de = Gesamtsumme (Erstattungsfähig): %@
+		es = Gran total (reembolsable): %@
+		fr = Total (Remboursable) : %@
+		iw = %@ :סה״כ (זכאי להחזרים)
+		pt = Total (reembolsáveis): %@
+		uk = Загалом (що відшкодовуються): %@
+	[report_header_grand_total]
+		ru = Grand Total: %@
+		de = Gesamtsumme: %@
+		es = Gran total: %@
+		fr = Total : %@
+		iw = %@ :סה״כ
+		pt = Total: %@
+		uk = Загалом: %@
+	[report_header_cost_center]
+		ru = Cost Center: %@
+		de = Kostenstelle: %@
+		es = Centro de costos: %@
+		fr = Centre de coûts : %@
+		iw = %@ :מרכז מחיר
+		pt = Centro de custos: %@
+		uk = Центр витрат: %@
+	[report_header_comment]
+		ru = Report Comment: %@
+		de = Kommentar melden: %@
+		es = Comentario del informe: %@
+		fr = Commentaire sur le rapport : %@
+		iw = %@ :הערה לדוח
+		pt = Comentários em relatórios: %@
+		uk = Коментар: %@
+	[report_pdf_generation_error]
+		ru = There was an error generating the report
+		de = Es gab einen Fehler bei der Erstellung des Berichts
+		es = Ocurrió un error al generar el informe
+		fr = Une erreur est survenue lors de la création du rapport
+		iw = שגיאה בייצור הדוח
+		pt = Ocorreu um erro ao gerar o relatório
+		uk = При створенні звіту сталася помилка
+	[report_pdf_error_too_many_columns_title]
+		ru = Too many columns
+		de = Zu viele Spalten
+		es = Demasiadas columnas
+		fr = Trop de colonnes
+		iw = יותר מדי עמודות
+		pt = Excesso de colunas
+		uk = Занадто багато колонок
+	[report_pdf_error_too_many_columns_message]
+		ru = There is not enough space to fit all the columns in the report. Please try limiting the number of columns in Settings.
+		de = Es gibt nicht genug Platz, um alle Spalten in den Bericht aufzunehmen. Bitte versuchen Sie die Anzahl der Spalten in den Einstellungen zu begrenzen.
+		es = No hay suficiente espacio para incluir todas las columnas en el informe. Por favor intenta limitar el número de columnas en Ajustes.
+		fr = Espace insuffisant pour insérer toutes les colonnes dans le rapport. Veuillez essayer de limiter le nombre de colonnes dans les paramètres.
+		iw = .אין מספיק מקום ע״מ להכיל את כל העמודות בדוח. אנא נסה להגביל את מספר העמודות בהגדרות
+		pt = Não há espaço suficiente para todas as colunas no relatório. Tente limitar o número de colunas nas Configurações
+		uk = Бракує місця, щоб розмістити всі колонки в звіті. Будь ласка, спробуйте обмежити кількість колонок в налаштуваннях.
+	[report_pdf_error_too_many_columns_message_landscape]
+		ru = There is not enough space to fit all the columns in the report. Please try limiting the number of columns in Settings or use landscape mode.
+		de = Es gibt nicht genug Platz, um alle Spalten in den Bericht einzufügen. Bitte versuchen Sie die Anzahl der Spalten in den Einstellungen zu begrenzen oder Querformat verwenden.
+		es = No hay suficiente espacio para incluir todas las columnas en el informe. Por favor intenta limitar el número de columnas en Ajustes o usa el modo horizontal.
+		fr = Espace insuffisant pour insérer toutes les colonnes dans le rapport. Veuillez essayer de limiter le nombre de colonnes dans les paramètres ou essayer d'utiliser le mode paysage.
+		iw = .אין מספיק מקום ע״מ להכיל את כל העמודות בדוח. אנא נסה להגביל את מספר העמודות בהגדרות או עבור למצב מסך מאוזן
+		pt = Não há espaço suficiente para todas as colunas no relatório. Tente limitar o número de colunas nas Configurações
+		uk = Бракує місця, щоб розмістити всі колонки в звіті. Будь ласка, спробуйте обмежити кількість колонок в налаштуваннях або використовувати ландшафтний режим.
+	[report_pdf_error_go_to_settings]
+		ru = Go to settings
+		de = Zu den Einstellungen gehen
+		es = Ir a Ajustes
+		fr = Aller aux paramètres
+		iw = עבור להגדרות
+		pt = Acesse as Configurações
+		uk = Перейти до налаштувань
+	[ocr_informational_tooltip_configure_text]
+		comment = ===================== ocr ========================
+		ru = [Optional] Configure Automatic Scans? Tap here.
+		de = (Optional) Automatische Scans konfigurieren ? Hier klicken.
+		es = (Opcional) ¿Configurar escaneos automáticos? Toca aquí.
+		fr = (Optionnel) Configurer les scans automatiques ? Appuyez ici.
+		iw = (רשות) רוצה להגדיר סריקות אוטומטיות? לחץ כאן
+		pt = (Opcional) Deseja configurar as varreduras automáticas? Clique aqui
+		uk = (Необов'язково) Налаштувати автоматичне сканування? Натисніть тут.
+	[ocr_status_title]
+		ru = Performing Scan (OCR):
+		de = Scan durchführen (OCR):
+		es = Realizando escaneo (OCR):
+		fr = Scan en cours (OCR) :
+		iw = :OCR מבצע סריקת
+		pt = Realizando varredura (OCR):
+		uk = Проводиться сканування (OCR):
+	[ocr_status_message_uploading_image]
+		ru = Uploading Receipt…
+		de = Beleg hochladen…
+		es = Cargando recibo…
+		fr = Importation du reçu…
+		iw = …מעלה קבלה
+		pt = Enviando recibo…
+		uk = Завантаження чека…
+	[ocr_status_message_performing_scan]
+		ru = Scanning for Receipt Metadata…
+		de = Beleg scannen \nMetadaten …
+		es = Escaneando metadatos del recibo…
+		fr = Recherche des métadonnées du reçu…
+		iw = סורק עבור מטא-דאטה של קבלה…
+		pt = Realizando varredura de metadados de recibos…
+		uk = Сканування метаданих чека…
+	[ocr_status_message_fetching_results]
+		ru = Fetching Results…
+		de = Ergebnisse holen…
+		es = Obteniendo resultados…
+		fr = Récupération des résultats…
+		iw = מביא תוצאות…
+		pt = Obtendo resultados…
+		uk = Обробка результатів…
+	[ocr_configuration_scans_remaining]
+		ru = OCR Scans Remaining: %d
+		de = Restliche OCR Scans: %d
+		es = Escaneos OCR restantes: %d
+		fr = Scans OCR restants : %d
+		iw = %d :שנותרו (OCR) סריקות אוטומטיות
+		pt = Varreduras OCR restantes: %d
+		uk = Сканів OCR залишилось: %d
+	[ocr_configuration_my_account]
+		ru = %@
+		de = %@
+		es = %@
+		fr = %@
+		iw = %@
+		pt = %@
+		uk = %@
+	[ocr_configuration_welcome]
+		ru = Automatic Scans (OCR):
+		de = Automatische Scans (OCR):
+		es = Escaneos automáticos (OCR):
+		fr = Scans automatiques (OCR) :
+		iw = (OCR) סריקות אוטומטיות
+		pt = Varreduras automáticas (OCR):
+		uk = Автоматичне сканування (OCR):
+	[ocr_configuration_information]
+		ru = Smart Receipts has integrated with Taggun to provide automatic scanning (ie OCR) services, which can extract receipt metadata like the price, tax, date, and merchant name from your photos.
+		de = Smart Receipts ist mit Taggun integriert um automatisches Scannen zu ermöglichen (z.B. OCR), die Beleg-Metadaten wie Preis, Steuern, Datum und Händlernamen aus Ihren Fotos extrahieren können.
+		es = Smart Receipts ha sido integrada con Taggun para proporcionar servicios de escaneo automático (es decir, OCR), que pueden extraer metadatos de los recibos, tales como precio, impuestos, fecha y nombre del comerciante de sus fotos.
+		fr = Smart Receipts s’est intégré à Taggun pour fournir des services de scans automatiques (OCR) qui peuvent extraire des métadonnées des reçus comme le prix, les taxes, la date et le nom du commerçant à partir de vos photos.
+		iw = Smart Receipts has integrated with Taggun to provide automatic scanning (ie OCR) services, which can extract receipt metadata like the price, tax, date, and merchant name from your photos.
+		pt = O Smart Receipts fez a integração com o Taggun para fornecer um serviço de varreduras automáticas (como OCR), que podem extrair metadados de recibos como preços, impostos, data e nome dos fornecedores, das suas fotos.
+		uk = Смарт Чеки інтегровані з Taggun для забезпечення сервісів автоматичного сканування (тобто OCR), які можуть витягувати метадані чеків, такі як ціна, податок, дати і дані продавця з ваших фото.
+	[ocr_configuration_information_line2]
+		ru = We use a combination of Google Vision and Machine Learning to quickly (often in 5 seconds or less) deliver results, which will become increasingly accurate over time. Since these services have a per-usage charge, we will charge for each receipt scan below.
+		de = Wir verwenden eine Kombination von Google Vision and Machine Learning um schnell (oft in 5 Sekunden oder weniger) Ergebnisse zu liefern, die mit der Zeit immer genauer werden. Da diese Dienste eine Gegebühr pro Nutzung haben, werden wir jeden untenstehenden Belegscan verrechnen.
+		es = Usamos una combinación de Google Visión y aprendizaje automático para entregar resultados rápidamente (con frecuencia en menos de 5 segundos), lo que será cada vez más preciso con el tiempo. Como estos servicios cobran por cada uso, nosotros cobramos por cada recibo escaneado a continuación.
+		fr = Nous utilisons une combinaison de Google Vision et de Machine Learning pour fournir rapidement des résultats (souvent en 5 secondes ou moins) qui deviendront de plus en plus précis au fil du temps. Puisque ces services ont un coût par utilisation, nous facturerons pour chaque scan de reçu ci-dessous.
+		iw = We use a combination of Google Vision and Machine Learning to quickly (often in 5 seconds or less) deliver results, which will become increasingly accurate over time. Since these services have a per-usage charge, we will charge for each receipt scan below.
+		pt = Utilizamos uma combinação de Google Vision e Machine Learning para gerar resultados rapidamente (normalmente em 5 segundos ou menos), que ficarão cada vez mais precisos. Como esses serviços têm um preço por utilização, cobraremos por digitalização.
+		uk = Ми використовуємо комбінацію Google Vision і машинного навчання, щоб швидко (часто протягом 5 секунд або менше) забезпечити результати, які будуть ставати все більш точними з плином часу. Так як ці сервіси стягують плату за використання, ми будемо стягувати плату за сканування кожної квитанції.
+	[ocr_is_enabled]
+		ru = Enable Automatic Scans (OCR)?
+		de = Aktivieren der automatischen Scans (OCR)?
+		es = ¿Habilitar escaneos automáticos (OCR)?
+		fr = Activer les scans automatiques (OCR) ?
+		iw = \?(OCR) הפעל סריקות אוטומטיות
+		pt = Deseja habilitar as Varreduras automáticas (OCR)?
+		uk = Увімкнути автоматичне сканування (OCR)?
+	[ocr_save_scans_to_improve_results]
+		ru = Allow us to save images to improve accuracy?
+		de = Dürfen wir Bilder speichern, um die Genauigkeit zu verbessern?
+		es = ¿Nos permites guardar las imágenes para mejorar la precisión?
+		fr = Nous autoriser à enregistrer des images pour améliorer la précision ?
+		iw = \?אפשר לנו לשמור תמונות על מנת לשפר את התוצאות
+		pt = Deseja permitir que o app armazene imagens para aumentar a precisão?
+		uk = Дозвольте нам зберігати зображення, щоб підвищити точність?
+	[ocr_configuration_available_purchases]
+		ru = Available Purchases - Tap to Buy:
+		de = Verfügbare Käufe - Tippen Sie, um zu kaufen:
+		es = Compras disponibles. Toca para comprar:
+		fr = Achats disponibles - Appuyez pour acheter :
+		iw = :רכישות אפשריות - לחץ לקנות
+		pt = Compras disponíveis - Toque para comprar:
+		uk = Доступні покупки - Натисніть, щоб купити:
+	[ocr_configuration_information_line3]
+		ru = To try OCR, all new users get 2 free scans! Please remember that OCR is an optional feature and can be disabled at any time.
+		de = Um OCR auzuprobieren, erhalten alle neuen Benutzer 2 kostenlose Scans! Bitte beachten Sie, dass OCR eine optionale Funktion ist und jederzeit deaktiviert werden kann.
+		es = Para probar OCR, todos los usuarios nuevos obtienen 2 escaneos gratuitos. Recuerde que la OCR es una función opcional y puede desactivarse en cualquier momento.
+		fr = Pour essayer OCR, tous les nouveaux utilisateurs obtiennent 2 scans gratuits! N'oubliez pas que l'OCR est une fonction facultative et peut être désactivé à tout moment.
+		iw = To try OCR, all new users get 2 free scans! Please remember that OCR is an optional feature and can be disabled at any time.
+		pt = Para tentar o OCR, todos os novos usuários recebem 2 varreduras gratuitas! Lembre-se de que o OCR é um recurso opcional e pode ser desativado a qualquer momento.
+		uk = Щоб спробувати OCR, всі нові користувачі отримають 2 безкоштовних сканування! Будь ласка, пам'ятайте, що OCR є додатковою функцією, і її можна будь-коли вимкнути.
+	[category_null]
+		comment = ================ Categories ==================
+		ru = <Category>
+		de = <Kategorie>
+		es = <Categoría>
+		fr = <Catégorie>
+		iw = <קטגוריה>
+		pt = <Categoria>
+		uk = <Категорія>
+	[category_null_code]
+		ru = NUL
+		de = NUL
+		es = NULO
+		fr = NUL
+		iw = NUL
+		pt = NUL
+		uk = NUL
+	[category_airfare]
+		ru = Airfare
+		de = Flugpreis
+		es = Tarifa aérea
+		fr = Prix du billet d'avion
+		iw = טיסות
+		pt = Tarifa áerea
+		uk = Вартість авіаквитка
+	[category_airfare_code]
+		ru = AIRP
+		de = AIRP
+		es = AERP
+		fr = AVION
+		iw = AIRP
+		pt = TAR
+		uk = АВІА
+	[category_breakfast]
+		ru = Breakfast
+		de = Frühstück
+		es = Desayuno
+		fr = Petit-déjeuner
+		iw = ארוחת בוקר
+		pt = Café da manhã
+		uk = Сніданок
+	[category_breakfast_code]
+		ru = BRFT
+		de = BRFT
+		es = DESA
+		fr = PETIT DÉJ.
+		iw = BRFT
+		pt = CFDM
+		uk = СНДНК
+	[category_dinner]
+		ru = Dinner
+		de = Abendessen
+		es = Cena
+		fr = Dîner
+		iw = ארוחת ערב
+		pt = Jantar
+		uk = Вечеря
+	[category_dinner_code]
+		ru = DINN
+		de = DINN
+		es = CENA
+		fr = DÎNER
+		iw = DINN
+		pt = JANT
+		uk = ВЧР
+	[category_entertainment]
+		ru = Entertainment
+		de = Unterhaltung
+		es = Entretenimiento
+		fr = Divertissement
+		iw = בידור
+		pt = Entretenimento
+		uk = Дозвілля
+	[category_entertainment_code]
+		ru = ENT
+		de = ENT
+		es = ENTR
+		fr = DIV
+		iw = ENT
+		pt = ENT
+		uk = ДОЗ
+	[category_gasoline]
+		ru = Gasoline
+		de = Benzin
+		es = Gasolina
+		fr = Essence
+		iw = דלק
+		pt = Gasolina
+		uk = Бензин
+	[category_gasoline_code]
+		ru = GAS
+		de = GAS
+		es = GASO
+		fr = ESS
+		iw = GAS
+		pt = GAS
+		uk = БЕНЗИН
+	[category_gift]
+		ru = Gift
+		de = Geschenk
+		es = Obsequio
+		fr = Cadeau
+		iw = מתנה
+		pt = Presente
+		uk = Подарунок
+	[category_gift_code]
+		ru = GIFT
+		de = GIFT
+		es = OBSE
+		fr = CADEAU
+		iw = GIFT
+		pt = PRES
+		uk = ПОДАРУНОК
+	[category_hotel]
+		ru = Hotel
+		de = Hotel
+		es = Hotel
+		fr = Hôtel
+		iw = מלון
+		pt = Hotel
+		uk = Готель
+	[category_hotel_code]
+		ru = HTL
+		de = HTL
+		es = HOTE
+		fr = HTL
+		iw = HTL
+		pt = HTL
+		uk = ГОТЛ
+	[category_laundry]
+		ru = Laundry
+		de = Wäsche
+		es = Lavandería
+		fr = Blanchisserie
+		iw = כביסה
+		pt = Lavanderia
+		uk = Пральня
+	[category_laundry_code]
+		ru = LAUN
+		de = Laun
+		es = LAVA
+		fr = BLAN
+		iw = LAUN
+		pt = LAV
+		uk = ПРАННЯ
+	[category_lunch]
+		ru = Lunch
+		de = Mittagessen
+		es = Almuerzo
+		fr = Déjeuner
+		iw = ארוחת צהריים
+		pt = Almoço
+		uk = Обід
+	[category_lunch_code]
+		ru = LNCH
+		de = LNCH
+		es = ALMU
+		fr = DÉJ
+		iw = LNCH
+		pt = ALM
+		uk = ОБІД
+	[category_other]
+		ru = Other
+		de = Andere
+		es = Otros
+		fr = Autre
+		iw = שונות
+		pt = Outros
+		uk = Інше
+	[category_other_code]
+		ru = MISC
+		de = MISC
+		es = MISC
+		fr = DIVERS
+		iw = MISC
+		pt = OUT
+		uk = РІЗНЕ
+	[category_parking_tolls]
+		ru = Parking/Tolls
+		de = Parkplatz / Maut
+		es = Estacionamiento/peajes
+		fr = Parking/Péages
+		iw = חנייה/עמלות
+		pt = Estacionamento/Pedágios
+		uk = Парковка/Збори
+	[category_parking_tolls_code]
+		ru = PARK
+		de = PARK
+		es = ESTA
+		fr = PARC
+		iw = PARK
+		pt = ESTP
+		uk = ПАРК
+	[category_postage_shipping]
+		ru = Postage/Shipping
+		de = Porto / Versand
+		es = Porte de correo/envío
+		fr = Frais de ports/Livraison
+		iw = דואר/משלוחים
+		pt = Correio/Remessas
+		uk = Пошта/Посилки
+	[category_postage_shipping_code]
+		ru = POST
+		de = POST
+		es = CORR
+		fr = POSTE
+		iw = POST
+		pt = CORR
+		uk = ПОШТА
+	[category_car_rental]
+		ru = Car Rental
+		de = Autovermietung
+		es = Renta de automóviles
+		fr = Location de voiture
+		iw = שכירת רכב
+		pt = Aluguel de Veículos
+		uk = Прокат авто
+	[category_car_rental_code]
+		ru = RCAR
+		de = RCAR
+		es = RAUT
+		fr = LOC
+		iw = RCAR
+		pt = ALGV
+		uk = ПРОКАТ
+	[category_taxi_bus]
+		ru = Taxi/Bus
+		de = Taxi / Bus
+		es = Taxi/autobús
+		fr = Taxi/Bus
+		iw = מונית/אוטובוס
+		pt = Táxi/Ônibus
+		uk = Таксі/Автобус
+	[category_taxi_bus_code]
+		ru = TAXI
+		de = TAXI
+		es = TAXI
+		fr = TAXI
+		iw = TAXI
+		pt = TXON
+		uk = ТАКСІ
+	[category_telephone_fax]
+		ru = Telephone/Fax
+		de = Telefon / Fax
+		es = Teléfono/fax
+		fr = Téléphone/Fax
+		iw = טלפון/פקס
+		pt = Telefone/Fax
+		uk = Телефон/Факс
+	[category_telephone_fax_code]
+		ru = TELE
+		de = TELE
+		es = TELE
+		fr = TÉL
+		iw = TELE
+		pt = TELF
+		uk = ТЕЛЕ
+	[category_tip]
+		ru = Tip
+		de = Trinkgeld
+		es = Propinas
+		fr = Pourboire
+		iw = טיפ
+		pt = Gorjetas
+		uk = Чайові
+	[category_tip_code]
+		ru = TIP
+		de = TRINKGELD
+		es = PROP
+		fr = POURBOIRE
+		iw = TIP
+		pt = GORJ
+		uk = ЧАЙВ
+	[category_train]
+		ru = Train
+		de = Zug
+		es = Tren
+		fr = Train
+		iw = רכבת
+		pt = Trens
+		uk = Потяг
+	[category_train_code]
+		ru = TRN
+		de = TRN
+		es = TREN
+		fr = TRAIN
+		iw = TRN
+		pt = TRS
+		uk = ЗД
+	[category_books_periodicals]
+		ru = Books/Periodicals
+		de = Bücher / Zeitschriften
+		es = Libros/periódicos
+		fr = Livres/Périodiques
+		iw = ספרים/מגזינים
+		pt = Livros/Periódicos
+		uk = Книги/Журнали
+	[category_books_periodicals_code]
+		ru = ZBKP
+		de = ZBKP
+		es = LBPD
+		fr = ZBKP
+		iw = ZBKP
+		pt = LIVP
+		uk = КНЖ
+	[category_cell_phone]
+		ru = Cell Phone
+		de = Handy
+		es = Celular
+		fr = Téléphone portable
+		iw = סלולרי
+		pt = Celular
+		uk = Мобільний телефон
+	[category_cell_phone_code]
+		ru = ZCEL
+		de = ZCEL
+		es = ZCEL
+		fr = ZCEL
+		iw = ZCEL
+		pt = CEL
+		uk = МОБ
+	[category_dues_subscriptions]
+		ru = Dues/Subscriptions
+		de = Gebühren/Beiträge
+		es = Cuotas/suscripciones
+		fr = Cotisations/Abonnements
+		iw = מנויים/הוראות קבע
+		pt = Mensalidades/Assinaturas
+		uk = Внески/Підписки
+	[category_dues_subscriptions_code]
+		ru = ZDUE
+		de = ZDUE
+		es = ZCUO
+		fr = ZDUE
+		iw = ZDUE
+		pt = MENS
+		uk = ВНК
+	[category_meals_justified]
+		ru = Meals (Justified)
+		de = Mahlzeiten (berechtigte)
+		es = Alimentos (justificadas)
+		fr = Repas (justifiés)
+		iw = ארוחות (בר-החזר)
+		pt = Refeições (autorizadas)
+		uk = Харчування (підтверджені)
+	[category_meals_justified_code]
+		ru = ZMEO
+		de = zMeO
+		es = ZALI
+		fr = ZMEO
+		iw = ZMEO
+		pt = REF
+		uk = ХАРЧ
+	[category_stationery_stations]
+		ru = Stations
+		de = Schreibwaren / Stationen
+		es = Tarjetas/estaciones
+		fr = Papeterie/Stations
+		iw = תחנות
+		pt = Material de escritório
+		uk = Канцтовари
+	[category_stationery_stations_code]
+		ru = ZSTS
+		de = ZSTS
+		es = ZEST
+		fr = ZSTS
+		iw = ZSTS
+		pt = MATE
+		uk = КАНЦ
+	[category_training_fees]
+		ru = Training Fees
+		de = Schulungsgebühren
+		es = Tarifas de capacitación
+		fr = Frais de formation
+		iw = עמלות אימון
+		pt = Tarifas de treinamento
+		uk = Витрати на навчання
+	[category_training_fees_code]
+		ru = ZTRN
+		de = ZTRN
+		es = ZCAP
+		fr = ZTRN
+		iw = ZTRN
+		pt = TT
+		uk = НАВЧ
+	[menu_receiptimage_retake]
+		comment = ================ Img Menu Options ===================
+		ru = Retake Photo
+		de = Foto noch einmal machen
+		es = Toma la foto de nuevo
+		fr = Reprendre une photo
+		iw = צלם מחדש
+		pt = Tirar foto novamente
+		uk = Зробити знімок повторно
+	[menu_receiptimage_rotate_ccw]
+		ru = Rotate CCW
+		de = Drehen gegen den Uhrzeigersinn
+		es = Rotar CSR
+		fr = Pivoter à gauche
+		iw = סובב נגד כיוון השעון
+		pt = Girar no sentido anti-horário
+		uk = Повернути проти годинникової стрілки
+	[menu_receiptimage_rotate_cw]
+		ru = Rotate CW
+		de = Drehen im Uhrzeigersinn
+		es = Rotar SR
+		fr = Pivoter à droite
+		iw = סובב עם כיוון השעון
+		pt = Girar no sentido horário
+		uk = Поворот за годинниковою стрілкою
+	[email_body_subject_5mb_warning]
+		comment = ===================== Email ======================
+		ru = The following attachment is over 5MB in size and may not properly attach: %@
+		de = Der folgende Anhang ist mehr als 5 MB groß und kann nicht richtig angehängt werden: %@
+		es = El siguiente adjunto tiene más de 5 MB y no se puede adjuntar correctamente: %@
+		fr = La pièce jointe ci-dessous fait plus de 5 Mo et ne peut pas être jointe correctement : %@
+		iw = %@ :הקובץ המצ\״ב גדול מ-5 מגהבייט, ולכן ייתכן שלא יוצמד כראוי
+		pt = O anexo a seguir tem mais de 5 MB de tamanho e não pode ser anexado: %@
+		uk = Файл має розмір більше 5 МБ і може бути не правильно прикріплений: %@
+	[progress_import]
+		comment = ============== Progress Messages =================
+		ru = Importing your files…
+		de = Importieren Ihrer Dateien…
+		es = Importando tus archivos…
+		fr = Importation de vos fichiers…
+		iw = מעלה את הקבצים שלך…
+		pt = Importando seus arquivos…
+		uk = Імпорт файлів…
+	[progress_building_reports]
+		ru = Building Reports…
+		de = Erzeuge Bericht…
+		es = Creación de informes…
+		fr = Construire des rapports…
+		iw = ...בונה דוחות
+		pt = Construindo relatórios…
+		uk = Генерація звітів…
+	[SD_WARNING]
+		comment = ============== Start Error Messages =================
+		ru = Warning: Your SD Card is not available or is mounted to your computer. Some images may be inaccessible. Switching to internal storage…
+		de = Warnung: Ihre SD-Karte ist nicht verfügbar oder an Ihrem Computer gemounted. Einige Bilder könnten nicht zugreifbar sein. Umschalten auf internen Speicher …
+		es = Advertencia: Tu tarjeta SD no está disponible o está montada en el computador. Algunas imágenes pueden ser inaccesibles. Cambiando a almacenamiento interno…
+		fr = Attention : votre carte SD n’est pas disponible ou est montée sur votre ordinateur. Certaines images peuvent être inaccessibles. Mise en mémoire interne…
+		iw = אזהרה: כרטיס הזכרון שלך לא זמין או מחובר למחשב שלך. חלק מהתמונות עלולות להיות בלתי נגישות. מחליף לזכרון פנימי…
+		pt = Aviso: Seu cartão SD não está disponível ou está instalado em seu computador. Algumas imagens podem estar inacessíveis. Alternando para armazenamento interno…
+		uk = Увага: Ваша SD-карта відсутня або підключена до вашого комп'ютера. Деякі зображення можуть бути недоступні. Переключення на внутрішню пам'ять…
+	[database_error]
+		ru = Error: Failed to save your receipt
+		de = Fehler: Fehler beim Speichern der Beleges
+		es = Error: No se pudo guardar tu recibo
+		fr = Erreur : Échec de l'enregistrement de votre reçu
+		iw = תקלה: שמירת קבלה נכשלה
+		pt = Erro: Falha ao salvar recibo
+		uk = Помилка: Не вдається зберегти ваш чек
+	[database_get_error]
+		ru = Error: Failed to fetch your data. Try re-launching the app.
+		de = Fehler: Fehler beim Laden Ihrer Daten. Versuchen Sie die App neu zu starten.
+		es = Error: No se pudo obtener tu información. Intenta reiniciar la app.
+		fr = Erreur : Échec de la récupération de vos données. Essayez de relancer l'appli.
+		iw = .תקלה: בלתי אפשרי לגשת למידע שלך. אנא הפעל מחדש את האפליקציה
+		pt = Erro: Falha ao obter dados. Tente reinicializar o app.
+		uk = Помилка: Не вдалося завантажити дані. Спробуйте перезапустити додаток.
+	[IMG_OPEN_ERROR]
+		ru = Error: The image is currently inaccessible or corrupted. Your SD Card may be unavailable or mounted to your computer. If not, click the menu button to retake the photo.
+		de = Fehler: Das Bild ist derzeit nicht zugänglich oder beschädigt. SD-Karte ist nicht verfügbar oder am Computer montiert. Wenn nicht, klicken Sie auf die Menü-Taste, um das Foto erneut aufzunehmen.
+		es = Error: La imagen actualmente es inaccesible o está dañada. Tu tarjeta SD puede no estar disponible o estar montada en el computador. Si no lo está, haz clic en el botón menú para tomar de nuevo la foto.
+		fr = Erreur : L’image est actuellement inaccessible ou corrompue. Votre carte SD peut être indisponible ou montée sur votre ordinateur. Si ce n’est pas le cas, cliquez sur le bouton du menu pour reprendre la photo.
+		iw = .תקלה: התמונה כרגע בלתי נגישה או פגומה. כרטיס הזכרון שלך עלול להיות בלתי זמין או מחובר למחשב שלך. אם הוא לא, אנא לחץ על כפתור התפריט על מנת לצלם את התמונה מחדש.
+		pt = Erro: A imagem está inacessível ou corrompida. Seu cartão SD pode estar indisponível ou instalado em seu computador. Se esse não for o caso, clique no botão do menu para tirar a foto novamente
+		uk = Помилка: Зображення на даний час недоступно або пошкоджено. Ваша SD-карта може бути недоступна або підключена до вашого комп'ютера. Якщо це не так, натисніть кнопку меню, щоб зробити знімок ще раз.
+	[IMG_SAVE_ERROR]
+		ru = Error: The Image Failed to Save Properly
+		de = Fehler: Das Bild konnte nicht richtig gespeichert werden
+		es = Error: La imagen no se pudo guardar correctamente
+		fr = Erreur : L’image n’a pas été enregistrée correctement
+		iw = תקלה: התמונה לא נשמרה כראוי
+		pt = Erro: Falha ao salvar imagem
+		uk = Помилка: Не вдалося зберегти зображення належним чином
+	[FILE_SAVE_ERROR]
+		ru = Error: The File Failed to Save Properly
+		de = Fehler: Die Datei konnte nicht korrekt gespeichert werden
+		es = Error: El archivo no se pudo guardar correctamente.
+		fr = Erreur: Le fichier n’a pas pu être enregistré correctement.
+		iw = תקלה: הקובץ לא נשמר כראוי
+		pt = Erro: Falha ao salvar arquivo
+		uk = Помилка: Не вдалося зберегти файл належним чином
+	[ILLEGAL_CHAR_ERROR]
+		ru = Error: The name contains an illegal character
+		de = Fehler: Der Name enthält ein unzulässiges Zeichen
+		es = Error: El nombre contiene un carácter ilegal
+		fr = Erreur : Le nom contient un caractère illégal
+		iw = תקלה: שם הקובץ מכיל תו בלתי חורי
+		pt = Erro: O nome contém um caractere inválido
+		uk = Помилка: Ім'я містить неприпустимий символ
+	[SPACE_ERROR]
+		ru = Error: The name cannot begin with a space
+		de = Fehler: Der Name kann nicht mit einem Leerzeichen beginnen,
+		es = Error: El nombre no puede comenzar con un espacio
+		fr = Erreur : Le nom ne peut pas commencer par un espace
+		iw = תקלה: השם לא יכול להתחיל עם רווח
+		pt = Erro: O nome não pode começar com um espaço
+		uk = Помилка: Ім'я не може починатися з пробілу
+	[CALENDAR_TAB_ERROR]
+		ru = Error: Please Touch the Date TextBox to set the Date
+		de = Fehler: Bitte Tippen Sie auf die Datums-TextBox, um das Datum einzustellen
+		es = Error: Por favor toca la caja de texto de fecha para definir la fecha
+		fr = Erreur : Veuillez toucher la zone de texte de la date pour définir la date
+		iw = תקלה: אנא לחץ על תיבת הטקסט של התאריך על מנת לקבוע את התאריך
+		pt = Erro: Toque na Caixa de texto 'Data' para definir a data
+		uk = Помилка: Будь ласка, натисніть на поле дати для установки дати
+	[DURATION_ERROR]
+		ru = Error: The Start Date Must Occur Prior To The End Date
+		de = Fehler: Das Startdatum muss vor dem Enddatum liegen
+		es = Error: La fecha inicial debe ser antes de la fecha final
+		fr = Erreur : La date de début doit être avant la date de fin
+		iw = תקלה: תאריך ההתחלה חייב להיות לפני תאריך הסיום
+		pt = Erro: A data inicial deve anteceder a data final
+		uk = Помилка: Дата початку має передувати даті закінчення
+	[EXPORT_ERROR]
+		ru = Error: Failed to properly export your data.
+		de = Fehler: Ihre Daten wurden nicht ordnungsgemäß exportiert.
+		es = Error: No se pudo exportar correctamente tu información.
+		fr = Erreur : Impossible d'exporter correctement vos données.
+		iw = .תקלה: לא ניתן לייצא את המידע שלך כראוי
+		pt = Erro: Falha ao exportar dados
+		uk = Помилка: Не вдалося правильно експортувати ваші дані.
+	[IMPORT_ERROR]
+		ru = Error: Failed to recognize the file as importable
+		de = Fehler: Die Datei wurde nicht als importierbar erkannt
+		es = Error: No se pudo reconocer el archivo como importable
+		fr = Erreur : Impossible de reconnaître le fichier comme importable
+		iw = .תקלה: לא ניתן לזהות את הקובץ כבר-ייבוא
+		pt = Erro: Falha ao reconhecer o arquivo como importável
+		uk = Помилка: Не вдалося розпізнати файл як імпортуємий
+	[MOVE_ERROR]
+		ru = Error: Failed to move the receipt
+		de = Fehler: Fehler beim Verschieben des Belegs
+		es = Error: No se pudo mover el recibo
+		fr = Erreur : Impossible de déplacer le reçu
+		iw = תקלה: לא ניתן להזיז את הקבלה
+		pt = Erro: Falha ao mover o recibo
+		uk = Помилка: Не вдається перемістити чек
+	[COPY_ERROR]
+		ru = Error: Failed to copy the receipt
+		de = Fehler: Fehler beim Kopieren des Belegs
+		es = Error: No se pudo copiar el recibo
+		fr = Erreur : Impossible de copier le reçu
+		iw = תקלה: לא ניתן להעתיק את הקבלה
+		pt = Erro: Falha ao copiar o recibo
+		uk = Помилка: Не вдається скопіювати чек
+	[toast_warning_reset_exchange_rate]
+		ru = Warning: Changing the currency will reset ALL exchange rates
+		de = Achtung: Beim Ändern der Währung werden alle Wechselkurse zurückgesetzt
+		es = Advertencia: Cambiar la moneda restablecerá TODAS las tasas de cambio
+		fr = Attention : Changer la devise réinitialisera TOUS les taux de change
+		iw = אזהרה: שינוי המטבע יאתחל את כל המטבעות ושערי החליפין
+		pt = Aviso: Alterar a moeda redefine TODAS as taxas de câmbio
+		uk = Увага: зміна валюти скине ВСЕ курси валют
+	[toast_error_trip_exists]
+		ru = Error: An expense report with that name already exists
+		de = Fehler: Eine Kostenabrechnung mit diesem Namen existiert bereits
+		es = Error: Ya existe un informe de gastos con ese nombre
+		fr = Erreur : Une note de frais avec ce nom existe déjà
+		iw = תקלה: דוח בשם הזה קיים כבר
+		pt = Erro: Já existe um relatório de gastos com esse nome
+		uk = Помилка: звіт про витрати з цією назвою вже існує
+	[toast_receipt_copy]
+		comment = ============== Toast Messages =================
+		ru = Successfully copied the receipt
+		de = Beleg erfolgreich kopiert
+		es = El recibo se copió correctamente
+		fr = Reçu copié avec succès
+		iw = הקבלה הועתקה בהצלחה
+		pt = Recibo copiado com êxito
+		uk = Чек вдало скопійовано
+	[toast_receipt_move]
+		ru = Successfully moved the receipt
+		de = Beleg erfolgreich verschoben
+		es = El recibo se movió correctamente
+		fr = Reçu déplacé avec succès
+		iw = הקבלה הועברה בהצלחה
+		pt = Recibo movedo com êxito
+		uk = Чек вдало переміщено
+	[toast_receipt_image_added]
+		ru = Successfully added a new image to %@
+		de = Ein neues Bild erfolgreich auf %@ hinzugefügt
+		es = Se añadió correctamente una imagen nueva a %@
+		fr = Vous avez joint une nouvelle image à %@
+		iw = %@ :נוספה תמונה חדשה בהצלחה ל
+		pt = Nova imagem adicionada a %@ com êxito
+		uk = Нове зображення вдало додано до %@
+	[toast_receipt_image_replaced]
+		ru = Successfully replaced a new image for %@
+		de = `Bild für %@ erfolgreich ersetzt `
+		es = Se reemplazó correctamente una imagen nueva de %@
+		fr = Vous avez remplacé une nouvelle image pour %@
+		iw = %@ :הוחלפה בהצלחה התמונה של
+		pt = Nova imagem substituída por %@ com êxito
+		uk = Вдало замінено зображення в %@
+	[toast_receipt_pdf_added]
+		ru = Successfully added a new PDF to %@
+		de = Neues PDF erfolgreich auf %@ hinzugefügt
+		es = Se añadió correctamente un PDF nuevo a %@
+		fr = Vous avez joint un nouveau PDF à %@
+		iw = %@ :נוסף בהצלחה קובץ פידיאף ל
+		pt = Novo PDF adicionado a %@ com êxito
+		uk = Новий PDF вдало доданий в %@
+	[toast_receipt_pdf_replaced]
+		ru = Successfully replaced a new PDF for %@
+		de = PDF für %@ wurde erfolgreich ersetzt
+		es = Se reemplazó correctamente un PDF nuevo de %@
+		fr = Vous avez remplacé un nouveau PDF pour %@
+		iw = %@ :הוחלף בהצלחה קובץ פידיאף ל
+		pt = Novo PDF substituído por %@ com êxito
+		uk = Вдало замінений PDF в %@
+	[toast_import_complete]
+		ru = Successfully imported all files. Please re-launch the app.
+		de = Alle Dateien wurden erfolgreich importiert. Bitte starten Sie die App erneut
+		es = Se importaron correctamente todos los archivos. Por favor reinicia la app.
+		fr = Importation réussie de tous les fichiers. Veuillez relancer l'appli.
+		iw = .יובאו כל הקבצים בהצלחה. אנא אתחל את האפליקציה.
+		pt = Arquivos importados com êxito. Reinicialize o app.
+		uk = Всі файли вдало імпортовані. Будь ласка, перезапустіть додаток.
+	[toast_no_storage_permissions]
+		ru = Cannot import file without storage permissions
+		de = Kann Datei ohne Speicherberechtigungen nicht importieren
+		es = No se puede importar archivos sin permisos de almacenamiento
+		fr = Impossible d'importer des fichiers sans autorisation de stockage
+		iw = לא ניתן לייבא קובץ בלי הרשאות לאחסון של הטלפון
+		pt = Não é possível importar arquivos sem permissões de armazenamento
+		uk = Неможливо імпортувати файл без дозволу на читання
+	[toast_reorder_hint]
+		ru = Long press item to initiate dragging
+		de = Lange drücken, um das Ziehen zu starten
+		es = Mantenga pulsado el elemento para iniciar el arrastre
+		fr = Appui long sur l'élément pour lancer le glisser
+		iw = לחץ לחיצה ארוכה על הפריט על מנת להתחיל גרירה
+		pt = Pressione prolongadamente o item para iniciar o arrastar
+		uk = Утримуйте елемент, щоб почати перетягування
+	[toast_csv_report_distances]
+		ru = To create CSV report please check option %@
+		de = Um einen CSV-Bericht zu erstellen, aktivieren Sie die Option %@
+		es = Para crear un informe CSV, compruebe la opción %@
+		fr = Pour créer un rapport CSV, veuillez cocher l'option %@
+		iw = %@ :על מנת ליצור דוח אקסל אנא לחץ על
+		pt = Para criar um relatório CSV, marque a opção %@
+		uk = Щоб створити звіт у форматі CSV, будь ласка, поставте галочку %@
+	[attachment_error]
+		ru = Unable to attach this file.
+		de = Diese Datei kann nicht angehängt werden.
+		es = No se puede adjuntar este archivo.
+		fr = Impossible de joindre ce fichier.
+		iw = Unable to attach this file.
+		pt = Não é possível anexar este arquivo.
+		uk = Не вдається прикріпити цей файл.
+	[trip_adapter_list_item_to]
+		comment = ================== Trip Adapter =====================
+		ru = ` to `
+		de = bis
+		es = hasta
+		fr =  à
+		iw = ` אל `
+		pt = para
+		uk = ` до `
+	[trip_no_data]
+		ru = You don't seem to have any reports defined at the moment. Try clicking the "+" (plus) button to get started.\n\nSmart Receipts lets you create Expense reports, track receipts within each, and quickly generate PDF & CSV reports for your receipt totals. It's quick and easy! Also, be sure to check out the menu to customize the categories, reports, and other settings to best suit for your needs.
+		de = Sie scheinen zur Zeit keine definierten Berichte haben. Zum Beginnen tippen Sie auf die + (plus) Taste.\n\nSmart Receipts lässt Sie Kostenberichte erstellen, Kostenstellen verwalten und sehr schnell PDF & CSV-Berichte für Ihre Belegsummen generieren. Es ist schnell und einfach! Überprüfen Sie unbedingt das Menü, um die Kategorien, Berichte und anderen Einstellungen optimal an Ihre Bedürfnisse anzupassen.
+		es = No pareces tener informes definidos en el momento. Intenta hacer clic en el botón + (más) para comenzar.\n\nSmart Receipts te permite crear informes de gastos, controlar los recibos de cada uno y generar rápidamente informes en PDF y CSV para los totales de tus recibos. ¡Es fácil y rápido! También, asegúrate de revisar el menú para personalizar las categorías, informes y otros ajustes para que se adapten mejor a tus necesidades.
+		fr = Il semblerait que vous n’ayez aucun rapport défini pour le moment. Cliquez sur le bouton + (plus) pour commencer.\n\nSmart Receipts vous permet de créer des notes de frais, de suivre les reçus dans chacune d’elle et de créer rapidement des rapports PDF et CSV pour la totalité de vos reçus. C’est rapide et facile ! Assurez-vous également de consulter le menu pour personnaliser les catégories, les rapports et d’autres paramètres pour qu’ils répondent mieux à vos besoins.
+		iw = אין לך דוחות מוגדרים כרגע. נסה ללחוץ על + על מנת להתחיל. \n\n האפליקציה מאפשר לך ליצור דוחות הוצאה, לעקוב אחרי קבלות בכל אחד מהדוחות, ולייצר דוחות PDF וCSV להוצאות שלך. זה קל ופשוט! בנוסף, ניתן לבצע התאמה אישית לקטגוריות, דוחות ושאר הגדרות בתפריט ההגדרות על מנת להתאים את התוכנה לצרכיך.
+		pt = Você não parece ter nenhum relatório definido no momento. Tente clicar no botão '+' para começar. \n\nO Smart Receipts permite criar relatórios de gastos, rastrear recibos em cada um deles e gerar rapidamente relatórios PDF e CSV para as totalizações. É fácil e rápido! Certifique-se de conferir o menu para personalizar as categorias, relatórios e outras configurações para adequá-las às suas necessidades.
+		uk = Судячи з усього, в даний час у вас немає звітів. Натисніть на кнопку + (плюс), щоб почати.\n\nСмарт Чеки дозволяють створювати звіти про витрати, відстежувати чеки всередині кожного з них, і швидко створювати звіти в форматах PDF і CSV. Швидко та просто! Крім того, обов'язково ознайомтесь з меню, щоб налаштувати категорії, звіти та інші параметри для ваших потреб.
+	[receipt_no_data]
+		comment = ================= Receipt Adapter ===================
+		ru = You don't seem to have any receipts yet. Try tapping the "+" (plus) button to get started…
+		de = Sie scheinen noch keine Belege zu haben. Tippen Sie die + (plus) Taste um loszulegen.
+		es = Parece que aún no tienes recibos. Intenta tocar el botón + (más) para comenzar…
+		fr = Il semblerait que vous n'ayez encore aucun reçu. Appuyez sur le bouton + (plus) pour commencer…
+		iw = נראה שאין לך קבלות. לחץ על + על מנת להתחיל.…
+		pt = Parece que você ainda não tem nenhum recibo. Tente clicar no botão '+' para começar.
+		uk = Судячи з усього, у вас ще немає чеків. Спробуйте натиснути кнопку + (плюс), щоб почати…
+	[distance_no_data]
+		comment = ================= Distance Adapter ==================
+		ru = You don't seem to have any distance tracked yet. Try clicking the "+" (plus) button to get started.
+		de = `Sie scheinen noch keine Strecken erfasst zu haben. Tippen Sie die + (plus) Taste um loszulegen. `
+		es = Parece que aún no has hecho monitoreo de distancias. Intenta hacer clic en el botón + (más) para comenzar.
+		fr = Il semblerait que vous n'ayez encore aucune distance parcourue. Cliquez sur le bouton + (plus) pour commencer.
+		iw = לא תיעדת מרחק עדיין. נסה ללחוץ על + על מנת להתחיל.
+		pt = Parece que você ainda não dispõe de uma distância rastreada. Tente clicar no botão '+' para começar.
+		uk = Судячи з усього, у вас ще немає відстежуваних відстаней. Спробуйте натиснути кнопку + (плюс), щоб почати.
+	[distance_insert_failed]
+		ru = Error: Failed to create this distance item. Please make sure your phone is not mounted to your computer.
+		de = Fehler: Es ist nicht gelungen, diese Strecke zu erstellen. Bitte stellen Sie sicher, dass Ihr Telefon an Ihrem Computer angebracht ist.
+		es = Error: No se pudo crear este ítem de distancia. Asegúrate que tu teléfono no esté montado en tu computador.
+		fr = Erreur : Impossible de créer cet élément de distance. Veuillez vérifier que votre téléphone n’est pas monté sur votre ordinateur.
+		iw = תקלה: יצירת פריט המרחק נכשלה. אנא וודא שהמכשיר שלך לא מחובר למחשב.
+		pt = Erro: Falha ao criar esse item de distância. Certifique-se de que seu celular não está conectado ao seu computador.
+		uk = Помилка: Не вдається додати відстань. Будь ласка, переконайтеся, що ваш телефон не підключений до вашого комп'ютера.
+	[distance_update_failed]
+		ru = Error: Failed to update this distance item. Please make sure your phone is not mounted to your computer.
+		de = Fehler: Diese Strecke kann nicht aktualisiert werden. Bitte stellen Sie sicher, dass Ihr Telefon an Ihrem Computer angebracht ist.
+		es = Error: No se pudo actualizar este ítem de distancia. Asegúrate que tu teléfono no esté montado en tu computador.
+		fr = Erreur : Impossible de mettre à jour cet élément de distance. Veuillez vérifier que votre téléphone n’est pas monté sur votre ordinateur.
+		iw = תקלה: עדכון פריט המרחק נכשל. אנא וודא שהמכשיר שלך לא מחובר למחשב.
+		pt = Erro: Falha ao atualizar esse item de distância. Certifique-se de que seu celular não está conectado ao seu computador.
+		uk = Помилка: Не вдається оновити відстань. Будь ласка, переконайтеся, що ваш телефон не підключений до вашого комп'ютера.
+	[distance_delete_failed]
+		ru = Error: Failed to delete this distance item. Please make sure your phone is not mounted to your computer.
+		de = Fehler: Es ist nicht gelungen, diese Strecke zu löschen. Bitte stellen Sie sicher, dass Ihr Telefon an Ihrem Computer angebracht ist.
+		es = Error: No se pudo eliminar este ítem de distancia. Asegúrate que tu teléfono no esté montado en tu computador.
+		fr = Erreur : Impossible de supprimer cet élément de distance. Veuillez vérifier que votre téléphone n'est pas monté sur votre ordinateur.
+		iw = תקלה: מחיקת פירט המרחק נכשלה. אנא וודא שהמכשיר שלך לא מחובר למחשב.
+		pt = Erro: Falha ao excluir esse item de distância. Certifique-se de que seu celular não está conectado ao seu computador.
+		uk = Помилка: Не вдається видалити відстань. Будь ласка, переконайтеся, що ваш телефон не підключений до вашого комп'ютера.
+	[receipt_action_camera]
+		comment = ================= Receipt Actions ===================
+		ru = Picture
+		de = Bild
+		es = Imagen
+		fr = Photo
+		iw = צלם
+		pt = Imagem
+		uk = Зображення
+	[receipt_action_text]
+		ru = Text-Only
+		de = Nur Text
+		es = Solo texto
+		fr = Texte seulement
+		iw = טקסט
+		pt = Somente texto
+		uk = Тільки текст
+	[receipt_action_import]
+		ru = Import
+		de = Importieren
+		es = Importar
+		fr = Importer
+		iw = ייבא
+		pt = Importar
+		uk = Імпорт
+	[DIALOG_CANCEL]
+		comment = ================ DIALOG (GENERAL) ===================
+		ru = Cancel
+		de = Stornieren
+		es = Cancelar
+		fr = Annuler
+		iw = ביטול
+		pt = Cancelar
+		uk = Відміна
+	[DIALOG_EMAIL_CHECKBOX_PDF_FULL]
+		comment = ================== DIALOG_EMAIL =====================
+		ru = Full PDF Report
+		de = Vollständiger PDF Bericht
+		es = Informe PDF completo
+		fr = Rapport PDF complet
+		iw = דוח PDF מלא
+		pt = Relatório PDF completo
+		uk = Повний звіт у форматі PDF
+	[DIALOG_EMAIL_CHECKBOX_PDF_IMAGES]
+		ru = PDF Report - No Table
+		de = PDF Bericht - Keine Tabelle
+		es = Informe PDF - Sin tabla
+		fr = Rapport PDF - Aucun tableau
+		iw = דוח PDF ללא טבלה
+		pt = Relatório PDF - Sem tabelas
+		uk = PDF звіт - без таблиці
+	[DIALOG_EMAIL_CHECKBOX_CSV]
+		ru = CSV File
+		de = CSV-Datei
+		es = Archivo CSV
+		fr = Fichier CSV
+		iw = קובץ CSV
+		pt = Arquivo CSV
+		uk = Файл CSV
+	[DIALOG_EMAIL_CHECKBOX_ZIP_WITH_METADATA]
+		ru = ZIP - Receipt Files with Metadata
+		de = ZIP - Quittungs-Dateien mit Metadaten
+		es = ZIP - Archivos de recibo con metadatos
+		fr = ZIP - Fichiers de reçus avec métadonnées
+		iw = קובץ ZIP - קבצי קבלות עם מטא-דאטה
+		pt = ZIP - Arquivos de Recebimento com Metadados
+		uk = ZIP - файли чеків з метаданими
+	[DIALOG_EMAIL_CHECKBOX_ZIP]
+		ru = ZIP - Receipts Files
+		de = ZIP - Quittungs-Dateien
+		es = ZIP - Archivos de Recibos
+		fr = ZIP - Fichiers de reçus
+		iw = קובץ Zip - קבצי קבלות
+		pt = ZIP - Arquivos Receipts
+		uk = ZIP - файли чеків
+	[DIALOG_EMAIL_TOAST_NO_SELECTION]
+		ru = Please Check At Least One Report
+		de = Bitte wählen Sie mindestens einen Bericht
+		es = Por favor selecciona al menos un informe
+		fr = Veuillez vérifier au moins un rapport
+		iw = אנא סמן לפחות קבלה אחת
+		pt = Verifique pelo menos um relatório
+		uk = Будь ласка, виберіть принаймні один звіт
+	[DIALOG_EMAIL_TOAST_NO_RECEIPTS]
+		ru = There are No Receipts in this Report
+		de = Es gibt keine Belege in diesem Bericht
+		es = Este informe no tiene recibos
+		fr = Il n’y a aucun reçu dans ce rapport
+		iw = אין קבלות בדוח הזה
+		pt = Não há recibos nesse relatório
+		uk = Цей звіт не містить чеків
+	[generate_report_tooltip]
+		ru = Tap to configure the report layouts
+		de = Tippen Sie unten auf ein Berichtslayout.
+		es = Toca para configurar los diseños del informe
+		fr = Cliquez pour configurer la mise en page du rapport
+		iw = לחץ להגדרת תצוגת הדוח
+		pt = Toque para configurar os layouts dos relatórios
+		uk = Натисніть, щоб налаштувати зовнішній вигляд звіту
+	[DIALOG_TRIPMENU_HINT_NAME]
+		comment = ================= DIALOG_TRIPMENU ===================
+		ru = Name
+		de = Name
+		es = Nombre
+		fr = Nom
+		iw = שם
+		pt = Nome
+		uk = Ім'я
+	[DIALOG_TRIPMENU_HINT_START]
+		ru = Start Date
+		de = Anfangsdatum
+		es = Fecha inicial
+		fr = Date de début
+		iw = תאריך התחלה
+		pt = Data inicial
+		uk = Дата початку
+	[DIALOG_TRIPMENU_HINT_END]
+		ru = End Date
+		de = Enddatum
+		es = Fecha de final
+		fr = Date de fin
+		iw = תאריך סיום
+		pt = Data final
+		uk = Дата закінчення
+	[DIALOG_TRIPMENU_TITLE_NEW]
+		ru = New Expense Report
+		de = Neuer Ausgabenbericht
+		es = Nuevo informe de gastos
+		fr = Nouvelle note de frais
+		iw = דוח הוצאות חדש
+		pt = Novo relatório de gastos
+		uk = Новий звіт про витрати
+	[DIALOG_TRIPMENU_TITLE_EDIT]
+		ru = Edit Report
+		de = Bericht bearbeiten
+		es = Editar informe
+		fr = Modifier le rapport
+		iw = עריכת דוח
+		pt = Editar relatório
+		uk = Редагувати звіт
+	[DIALOG_TRIPMENU_TOAST_MISSING_FIELD]
+		ru = Please Fill Out All Fields
+		de = Bitte füllen Sie alle Felder aus
+		es = Por favor llena todos los campos
+		fr = Veuillez remplir tous les champs
+		iw = אנא מלא את כל השדות
+		pt = Preencha todos os campos
+		uk = Будь ласка, заповніть усі поля
+	[DIALOG_TRIP_DELETE_POSITIVE_BUTTON]
+		comment = =============== DIALOG_TRIP_DELETE ==================
+		ru = Delete
+		de = Löschen
+		es = Eliminar
+		fr = Supprimer
+		iw = מחק
+		pt = Excluir
+		uk = Видалити
+	[DIALOG_RECEIPTMENU_HINT_NAME]
+		comment = ================= DIALOG_RECEIPTMENU ===================
+		ru = Name
+		de = Name
+		es = Nombre
+		fr = Nom
+		iw = שם
+		pt = Nome
+		uk = Ім'я
+	[DIALOG_RECEIPTMENU_HINT_PRICE_SHORT]
+		ru = Price
+		de = Preis
+		es = Precio
+		fr = Prix
+		iw = מחיר
+		pt = Preço
+		uk = Вартість
+	[DIALOG_RECEIPTMENU_HINT_TAX]
+		ru = Tax
+		de = Steuer
+		es = Impuesto
+		fr = Taxe
+		iw = מס
+		pt = Impostos
+		uk = Податок
+	[DIALOG_RECEIPTMENU_HINT_CURRENCY]
+		ru = Currency
+		de = Währung
+		es = Moneda
+		fr = Devise
+		iw = מטבע
+		pt = Moeda
+		uk = Валюта
+	[DIALOG_RECEIPTMENU_HINT_EXCHANGE_RATE]
+		ru = Exchange Rate
+		de = Wechselkurs
+		es = Tasa de cambio
+		fr = Taux de change
+		iw = שער חליפין
+		pt = Taxa de câmbio
+		uk = Курс обміну
+	[DIALOG_RECEIPTMENU_HINT_EXCHANGE_RATE_FAILED]
+		ru = Exchange Rate Failed. Retry?
+		de = Wechselkurs fehlgeschlagen. Wiederholen?
+		es = Tasa de cambio falló. ¿Reintentar?
+		fr = Échec du taux de change. Réessayer ?
+		iw = שער חליפין נכשל. נסה שוב?
+		pt = Falha na taxa de câmbio. Deseja tentar novamente?
+		uk = Обмін не вдався. Повторити спробу?
+	[receipt_input_exchanged_result_hint]
+		ru = Base Currency Price
+		de = Basiswährung Preis
+		es = Precio de moneda de cotización
+		fr = Cours Devise Prix
+		iw = מחיר מטבע בסיסי
+		pt = Cotação Moeda Preço
+		uk = Валюта ціна
+	[DIALOG_RECEIPTMENU_HINT_DATE]
+		ru = Date
+		de = Datum
+		es = Fecha
+		fr = Date
+		iw = תאריך
+		pt = Data
+		uk = Дата
+	[DIALOG_RECEIPTMENU_HINT_CATEGORY]
+		ru = Category
+		de = Kategorie
+		es = Categoría
+		fr = Catégorie
+		iw = קטגוריה
+		pt = Categoria
+		uk = Категорія
+	[DIALOG_RECEIPTMENU_HINT_COMMENT]
+		ru = Comment
+		de = Kommentar
+		es = Comentario
+		fr = Commentaire
+		iw = הערה
+		pt = Observação
+		uk = Коментар
+	[DIALOG_RECEIPTMENU_HINT_COST_CENTER]
+		ru = Cost Center
+		de = Kostenstelle
+		es = Centro de costos
+		fr = Centre de coûts
+		iw = מרכז עלות
+		pt = Centro de custos
+		uk = Центр витрат
+	[DIALOG_RECEIPTMENU_HINT_EXPENSABLE]
+		ru = Reimbursable?
+		de = Erstattungsfähig?
+		es = ¿Reembolsable?
+		fr = Remboursable ?
+		iw = בר החזר?
+		pt = Reembolsável?
+		uk = Відшкодовується?
+	[DIALOG_RECEIPTMENU_HINT_FULLPAGE]
+		ru = ` Full-Page Image?`
+		de =  Ganzseitiges Bild?
+		es = ¿Imagen de página completa?
+		fr =  Image plein écran ?
+		iw = תמונה בדף מלא?
+		pt = Imagem em tela cheia?
+		uk = Зображення на всю сторінку?
+	[DIALOG_RECEIPTMENU_TITLE_NEW]
+		ru = New Receipt
+		de = Neuer Beleg
+		es = Nuevo recibo
+		fr = Nouveau reçu
+		iw = קבלה חדשה
+		pt = Novo recibo
+		uk = Новий чек
+	[DIALOG_RECEIPTMENU_TITLE_NEW_ID]
+		ru = New Receipt - %d
+		de = Neuer Beleg - %d
+		es = Nuevo recibo - %d
+		fr = Nouveau reçu - %d
+		iw = קבלה חדשה - %d
+		pt = Novo recibo - %d
+		uk = Новий чек - %d
+	[DIALOG_RECEIPTMENU_TITLE_EDIT]
+		ru = Edit Receipt
+		de = Beleg bearbeiten
+		es = Editar recibo
+		fr = Modifier le reçu
+		iw = עריכת קבלה
+		pt = Editar recibo
+		uk = Редагувати чек
+	[DIALOG_RECEIPTMENU_TITLE_EDIT_ID]
+		ru = Edit Receipt - %d
+		de = Beleg bearbeiten - %d
+		es = Editar recibo - %d
+		fr = Modifier le reçu - %d
+		iw = עריכת קבלה - %d
+		pt = Editar recibo - %d
+		uk = Редагувати чек - %d
+	[DIALOG_RECEIPTMENU_TOAST_BAD_DATE]
+		ru = Warning: This Receipt's Date falls outside the specified range for this Report
+		de = Warnung: Dieses Belegdatum liegt außerhalb des angegebenen Bereichs für diesen Bericht
+		es = Advertencia: Esta fecha del recibo está por fuera del intervalo de fechas del informe
+		fr = Avertissement : La date du reçu ne correspond pas à la période spécifiée pour ce rapport
+		iw = אזהרה: תאריך הקבלה הזו נופל מחוץ לטווח התאריכים של דוח ההוצאות הנוכחי
+		pt = Aviso: A data do recibo não se enquadra no intervalo determinado para esse relatório
+		uk = Увага: Дата цього чека виходить за межі вказаного діапазону для даного звіту
+	[manage_categories]
+		ru = Manage Categories
+		de = Kategorien verwalten
+		es = Administrar categorías
+		fr = Gérer les catégories
+		iw = נהל קטגוריות
+		pt = Gerenciar categorias
+		uk = Управління категоріями
+	[manage_payment_methods]
+		ru = Manage Payment Methods
+		de = Zahlungsmethoden verwalten
+		es = Administrar los métodos de pago
+		fr = Gérer les méthodes de paiement
+		iw = נהל אמצעי תשלום
+		pt = Gerenciar Métodos de Pagamento
+		uk = Управління методами сплати
+	[receipt_attach_photo]
+		comment = ================= DIALOG_RECEIPT_ATTACHMENT ===================
+		ru = Take a photo
+		de = Mach ein Foto
+		es = Toma una foto
+		fr = Prendre une photo
+		iw = צלם תמונה
+		pt = Tire uma foto
+		uk = Зробити фото
+	[receipt_attach_image]
+		ru = Pick a photo
+		de = Wähle ein Foto aus
+		es = Elige una foto
+		fr = Choisissez une photo
+		iw = בחר תמונה
+		pt = Escolha uma foto
+		uk = Обрати зображення
+	[receipt_attach_file]
+		ru = Attach file
+		de = Datei anhängen
+		es = Adjuntar archivo
+		fr = Pièce jointe
+		iw = צרף קובץ
+		pt = Anexar arquivo
+		uk = Прикріпити файл
+	[dialog_export_title]
+		comment = ==================== dialog export / import ======================
+		ru = Export your receipts?
+		de = Exportieren Sie Ihre Belege?
+		es = ¿Exportar los recibos?
+		fr = Exporter vos reçus ?
+		iw = ייצא את הקבלות שלך?
+		pt = Exportar recibos?
+		uk = Експортувати ваші чеки?
+	[dialog_export_text]
+		ru = You can reimport your data by clicking on the SmartReceipts.SMR file, which is generated by clicking below.
+		de = Sie können Ihre Daten durch Klicken auf die SmartReceipts.SMR Datei wieder importieren, die durch Klicken hier unten erstellt wird.
+		es = Puedes importar de nuevo tus datos haciendo clic en el archivo SmartReceipts.SMR, que se genera haciendo clic a continuación.
+		fr = Vous pouvez réimporter vos données en cliquant sur le fichier SmartReceipts.SMR qui est généré en cliquant ci-dessous.
+		iw = אתה יכול לייבא את המידע שלך מחדש על ידי לחיצה על קובץ SmartReceipts.SMR file , המיוצר על ידי לחיצה על הכפתור מטה.
+		pt = Você pode importar seus dados novamente clicando no arquivo SmartReceipts.SMR, que será gerado ao clicar abaixo
+		uk = Ви можете повторно імпортувати ваші дані, натиснувши на файл SmartReceipts.SMR, що генерується натисканням нижче.
+	[dialog_export_positive]
+		ru = Export
+		de = Exportieren
+		es = Exportar
+		fr = Exporter
+		iw = ייצוא
+		pt = Exportar
+		uk = Експорт
+	[dialog_import_positive]
+		ru = Import
+		de = Importieren
+		es = Importar
+		fr = Importer
+		iw = ייבוא
+		pt = Importar
+		uk = Імпорт
+	[dialog_import_text]
+		ru = Overwrite All Existing Data
+		de = Überschreiben Sie alle vorhandenen Daten
+		es = Sobrescribir todos los datos existentes
+		fr = Remplacer toutes les données existantes
+		iw = דריסת כל המידע הקיים
+		pt = Substituir todos os dados existentes
+		uk = Перезаписати всі існуючі дані
+	[dialog_export_working]
+		ru = Exporting your receipts…
+		de = Export Ihrer Belege …
+		es = Exportando tus recibos…
+		fr = Exportation de vos reçus…
+		iw = ייצוא הקבלות שלך…
+		pt = Exportando seus recibos…
+		uk = Експорт ваших чеків…
+	[backups]
+		comment = ===================== backup menu ========================
+		ru = Backups
+		de = Backups
+		es = Copias de seguridad
+		fr = Sauvegardes
+		iw = גיבויים
+		pt = Backups
+		uk = Резервні копії
+	[manual_backup_title]
+		ru = Manual Backups:
+		de = Manuelle Backups:
+		es = Copia de seguridad manual:
+		fr = Sauvegardes manuelles :
+		iw = גיבויים ידניים:
+		pt = Backups manuais
+		uk = Ручне резервне копіювання:
+	[manual_backup_description]
+		ru = Back up your data to keep your receipts safe! You can restore your data by importing the SmartReceipts.SMR backup file, which is generated via the "Backup" button below.
+		de = Sichern Sie Ihre Daten, um Ihre Belege zu schützen! Sie können Ihre Daten durch den Import der SmartReceipts.SMR Sicherungsdatei wiederherstellen, die unten über die Backup-Taste erstellt wird.
+		es = ¡Haz copia de seguridad para mantener seguros tus recibos! Puedes restaurar tus datos importando el archivo de respaldo SmartReceipts.SMR, que se genera por medio del botón Copia de seguridad que encuentras a continuación.
+		fr = Sauvegardez vos données pour conserver vos reçus en toute sécurité ! Vous pouvez restaurer vos données en important le fichier de sauvegarde SmartReceipts.SMR qui est généré par le bouton de sauvegarde ci-dessous.
+		iw = גבה את המידע שלך על מנת לשמור על הקבולות שלך. אתה יכול לשחזר את המידע שלך על ידי ייבוא של קובץ הגיבוי, שנוצר על ידי כפתור ״"גיבוי" למטה.
+		pt = Faça backup de seus dados para manter seus recibos seguros! Você pode restaurar seus dados importando o arquivo de backup SmartReceipts.SMR, que será gerado ao clicar no botão 'Backup' abaixo
+		uk = Виконуйте резервне копіювання даних, щоб захистити ваші чеки! Ви можете відновити дані, імпортувавши файл резервної копії SmartReceipts.SMR, що генерується натисканням кнопки "Бекап" нижче.
+	[manual_backup_export]
+		ru = Backup
+		de = Sicherungskopie
+		es = Copia de seguridad
+		fr = Sauvegarde
+		iw = גיבוי
+		pt = Backup
+		uk = Бекап
+	[manual_backup_import]
+		ru = Import
+		de = Importieren
+		es = Importar
+		fr = Importer
+		iw = ייבוא
+		pt = Importar
+		uk = Імпорт
+	[auto_backup_title]
+		ru = Automatic Backups [BETA]:
+		de = Automatische Backups [BETA]:
+		es = Copias de seguridad automáticas (BETA):
+		fr = Sauvegardes automatiques [BETA] :
+		iw = :גיבוי אוטומטי (ביטא)
+		pt = Backups automáticos [BETA]:
+		uk = Автоматичне резервне копіювання [BETA]:
+	[auto_backup_wifi_only]
+		ru = Use Wi-Fi Only
+		de = Verwenden Sie nur Wi-Fi
+		es = Usar solo Wi-Fi
+		fr = Utilisation du Wi-Fi uniquement
+		iw = השתמש בווייפיי בלבד
+		pt = Utilizar somente WiFi
+		uk = Використовувати тільки Wi-Fi
+	[auto_backup_warning_none]
+		ru = Warning: Automatic backups are not configured!\nYou may be at risk of losing your data.
+		de = Warnung: Automatische Backups sind nicht konfiguriert!\nSie könnten Ihre Daten verlieren.
+		es = Advertencia: ¡Las copias de seguridad automáticas no están configuradas! Estás en riesgo de perder tu información.
+		fr = Attention : Les sauvegardes automatiques ne sont pas configurées !\nVous risquez de perdre vos données.
+		iw = זהירות: גיבויים אוטומטיים לא הוגדרו! אתה עלול לאבד את המידע שלך.
+		pt = Aviso: Os backups automáticos não estão configurados!\nVocê corre o risco de perder seus dados.
+		uk = Увага: Автоматичне резервне копіювання не налаштоване! \nВи ризикуєте втратити ваші дані.
+	[auto_backup_warning_drive]
+		ru = Warning: Standard charges may apply for automatic backups over a mobile network.
+		de = Warnung: Für automatische Backups über ein Mobilfunknetz können Kosten anfallen.
+		es = Advertencia: Pueden aplicar cargos estándar por copias de seguridad automáticas realizadas por medio de la red móvil.
+		fr = Attention : Des frais standards peuvent s’appliquer pour des sauvegardes automatiques sur un réseau mobile.
+		iw = זהירות: אתה עלול להיות מחויב על ידי מפעיל הסלולר שלך על ידי יצירת גיבויים אוטומטיים ברשת הסלולרית.
+		pt = Aviso: Podem ocorrer cobranças padrão para realizar backups automáticos em redes móveis
+		uk = Увага: При автоматичному резервному копіюванні через мобільну мережу можуть застосовуватися стандартні тарифні розцінки.
+	[auto_backup_configure]
+		ru = Tap to Configure
+		de = Tippen Sie auf Konfigurieren
+		es = Toca para configurar
+		fr = Cliquez pour configurer
+		iw = לחץ להגדרות
+		pt = Toque para configurar
+		uk = Натисніть, щоб налаштувати
+	[auto_backup_source_none]
+		ru = None
+		de = Keiner
+		es = Ninguno
+		fr = Aucun
+		iw = כלום
+		pt = Nenhum
+		uk = Ні
+	[auto_backup_source_google_drive]
+		ru = Google Drive
+		de = Google Drive
+		es = Google Drive
+		fr = Google Drive
+		iw = Google Drive
+		pt = Google Drive
+		uk = Google Drive
+	[existing_backups_title]
+		ru = Existing Backups:
+		de = Vorhandene Backups:
+		es = Copias de seguridad existentes:
+		fr = Sauvegardes existantes :
+		iw = גיבויים קיימים
+		pt = Backups já existentes:
+		uk = Існуючі резервні копії:
+	[existing_remote_backup_current_device]
+		ru = %@ (Your Current Backup)
+		de = %@ (Ihr aktueller Backup)
+		es = %@ (Tu copia de seguridad actual)
+		fr = %@ (Votre sauvegarde existante)
+		iw = %@ (הגיבוי הנוכחי שלך)
+		pt = %@ (seu backup atual)
+		uk = %@ (Ваша поточна резервна копія)
+	[remote_backups_list_item_menu_restore]
+		ru = Restore
+		de = Wiederherstellen
+		es = Restaurar
+		fr = Restaurer
+		iw = שחזר
+		pt = Restaurar
+		uk = Відновити
+	[remote_backups_list_item_menu_delete]
+		ru = @string/delete
+		de = @string/delete
+		es = @string/delete
+		fr = @string/delete
+		iw = @string/delete
+		pt = @string/delete
+		uk = @string/delete
+	[remote_backups_list_item_menu_download_images]
+		ru = Download to ZIP
+		de = Auf ZIP herunterladen
+		es = Descargar a ZIP
+		fr = Télécharger en ZIP
+		iw = הורד כקובץ זיפ
+		pt = Baixar para ZIP
+		uk = Скачати в ZIP
+	[remote_backups_list_item_menu_download_images_debug]
+		ru = [Debug] Download
+		de = [Debug] Herunterladen
+		es = [Depuración] Descargar
+		fr = [Débogage] Télécharger
+		iw = [Debug] הורד
+		pt = [Debug] Download
+		uk = [Debug] Скачати
+	[dialog_remote_backup_delete_title]
+		ru = @string/delete
+		de = @string/delete
+		es = @string/delete
+		fr = @string/delete
+		iw = @string/delete
+		pt = @string/delete
+		uk = @string/delete
+	[dialog_remote_backup_delete_message]
+		ru = Are you sure you wish to delete your backup from the %@ device? This operation cannot be undone.
+		de = Sind Sie sicher, dass Sie Ihre Sicherungskopie vom %@ Gerät löschen wollen? Dieser Vorgang kann nicht rückgängig gemacht werden.
+		es = ¿Estás seguro que deseas eliminar tu copia de seguridad del dispositivo %@? Esta operación no se puede deshacer.
+		fr = Êtes-vous sûr de vouloir supprimer votre sauvegarde de l’appareil %@ ? Cette opération est irréversible.
+		iw = אתה בטוח שאתה רוצה למחוק את הגיבויים שלך ממכשיר %@? פעולה זו הינה בלתי הפיכה.
+		pt = Tem certeza de que deseja excluir o backup do dispositivo %@? Essa operação não pode ser desfeita.
+		uk = Ви впевнені, що хочете видалити резервну копію з пристрою %@? Ця операція не може бути скасована.
+	[dialog_remote_backup_delete_message_this_device]
+		ru = Are you sure you wish to delete your backup of this device? This operation cannot be undone. Please note that you may wish to turn off automatic backups after this operation completes or all local data may be re-synced.
+		de = Sind Sie sicher, dass Sie Ihren Backup auf diesem Gerät löschen wollen? Dieser Vorgang kann nicht rückgängig gemacht werden. Bitte beachten Sie, dass Sie die automatische Sicherung ausschalten sollten, sobald dieser Vorgang abgeschlossen ist - ansonsten werden alle lokalen Daten neu synchronisiert.
+		es = ¿Estás seguro que deseas eliminar tu copia de seguridad de este dispositivo? Esta operación no se puede deshacer. Por favor ten en cuenta que debes deshabilitar las copias de seguridad automáticas luego de terminar esta operación, o todos los datos locales pueden ser sincronizados de nuevo.
+		fr = Êtes-vous sûr de vouloir supprimer votre sauvegarde de cet appareil ? Cette opération est irréversible. Veuillez noter que vous pouvez désactiver les sauvegardes automatiques après cette opération ou toutes les données locales peuvent être resynchronisées.
+		iw = אתה בטוח שאתה רוצה למחוק את הגיבוי שלך מהמכשיר הזה? הפעולה הינה בלתי הפיכה. אנא שים לב שרצוי לכבות את פונקציית הגיבויים האוטומטיים אחרי שהפעולה הזו הושלמה או שכל המידע המקומי עלול להיות מסונכרן שוב.
+		pt = Tem certeza de que deseja excluir o backup deste dispositivo? Essa operação não pode ser desfeita. É possível desabilitar o backup automático depois que a operação for concluída, ou todos os dados locais serão sincronizados novamente.
+		uk = Ви впевнені, що хочете видалити резервну копію з цього пристрою? Ця операція не зможе бути скасована. Будь ласка, зверніть увагу, що ви можете відключити автоматичне резервне копіювання після того, як ця операція завершиться, або всі локальні дані можуть бути повторно синхронізовані.
+	[dialog_remote_backup_delete_positive]
+		ru = @string/delete
+		de = @string/delete
+		es = @string/delete
+		fr = @string/delete
+		iw = @string/delete
+		pt = @string/delete
+		uk = @string/delete
+	[dialog_remote_backup_delete_progress]
+		ru = Deleting your backup from the %@ device…
+		de = Löschen Sie Ihren Backup vom %@ Gerät …
+		es = Eliminando tu copia de seguridad del dispositivo %@…
+		fr = Suppression de votre sauvegarde de l'appareil %@…
+		iw = מחק את הגיבוי שלך ממכשיר %@ …
+		pt = Excluindo seu backup do dispositivo %@…
+		uk = Видалення резервної копії з пристрою %@…
+	[dialog_remote_backup_delete_toast_success]
+		ru = Successfully deleted this backup
+		de = Backup erfolgreich gelöscht
+		es = Copia de seguridad eliminada correctamente
+		fr = Sauvegarde supprimée avec succès
+		iw = הגיבוי נמחק בהצלחה
+		pt = Backup excluído com êxito
+		uk = Резервна копія вдало видалена
+	[dialog_remote_backup_delete_toast_failure]
+		ru = Failed to delete this backup
+		de = Löschen dieses Backups ist nicht erfolgt
+		es = No se pudo eliminar esta copia de seguridad
+		fr = Impossible de supprimer cette sauvegarde
+		iw = מחיקת הגיבוי נכשלה
+		pt = Falha ao excluir esse backup
+		uk = Не вдалося видалити цю резервну копію
+	[dialog_remote_backup_download_progress]
+		ru = Downloading images to ZIP File…
+		de = Herunterladen von Bildern auf ZIP-Datei …
+		es = Descargando imágenes a archivo ZIP…
+		fr = Téléchargement d'images vers le fichier ZIP…
+		iw = מוריד קבצים לקובץ זיפ…
+		pt = Baixando imagens para o arquivo ZIP…
+		uk = Завантаження зображень в ZIP-файл…
+	[dialog_remote_backup_drive_restore_title]
+		ru = Drive Restoration
+		de = Laufwerk Wiederherstellung
+		es = Restauración de Drive
+		fr = Restauration avec Google Drive
+		iw = שחזור דרייב
+		pt = Restauração de drive
+		uk = Відновлення диску
+	[dialog_remote_backup_drive_restore_message]
+		ru = We're having trouble syncing your data. To recover, we'd like to clear your Drive backup and re-sync. If you're seeing this message often, please reach out to us for further support.
+		de = Wir haben Probleme mit dem Synchronisieren Ihrer Daten. Zum Wiederherstellen möchten wir Ihr Backup-Laufwerk löschen und erneut synchronisieren. Wenn Sie diese Meldung häufig zu sehen bekommen, kontaktieren Sie uns für weitere Unterstützung.
+		es = Estamos teniendo problemas para sincronizar tus datos. Para recuperar, nos gustaría borrar tu copia de seguridad de Drive y sincronizar de nuevo. Si ves este mensaje con frecuencia, por favor contáctanos para obtener más asistencia.
+		fr = Nous rencontrons des difficultés pour synchroniser vos données. Pour les récupérer, nous aimerions effacer votre sauvegarde Drive et resynchroniser vos données. Si vous voyez ce message souvent, veuillez nous contacter pour une assistance supplémentaire.
+		iw = יש לנו בעיה עם סנכון המידע שלך. על מנת לטפל בנושא, נרצה למחוק את גיבוי הדרייב שלך ולסנכרן מחדש. אם אתה רואה את ההודעה הזו באופן קבוע, אנא צור קשר עם מפתח האפליקציה לתמיכה נוספת.
+		pt = Ocorreram problemas ao sincronizar seus dados. Para recuperá-los, vamos limpar o backup do Drive e ressincronizá-lo. Se essa mensagem estiver aparecendo com frequência, contate-nos para receber suporte adicional.
+		uk = Виникли проблеми при синхронізації ваших даних. Для їх відновлення ми хотіли б очистити резервну копію диску та повторити синхронізацію. Якщо ви часто бачите це повідомлення, зверніться до нас для отримання додаткової підтримки.
+	[dialog_remote_backup_restore_progress]
+		ru = Clearing your backup to prepare for re-sync…
+		de = Leeren des Backup zur Vorbereitung einer erneuten Synchronisierung…
+		es = Borrando tu copia de seguridad para preparar una resincronización…
+		fr = Effacement de votre sauvegarde pour préparer la resynchronisation…
+		iw = מוחק את הגיבוי על מנת להתכונן לסנכרון מחדש…
+		pt = Limpando o backup e preparando para a ressincronização…
+		uk = Очищення резервної копії для підготовки до повторної синхронізації…
+	[dialog_remote_backup_restore_toast_success]
+		ru = Successfully cleared the backup. Re-syncing…
+		de = Backup erfolgreich gelöscht. Re-Synchronisierung …
+		es = Se borró correctamente la copia de seguridad. Sincronizando de nuevo…
+		fr = Sauvegarde effacée avec succès. Resynchronisation…
+		iw = גיבוי נמחק בהצלחה. מסכנרן מחדש…
+		pt = Backup limpo com êxito. Ressincronizando…
+		uk = Резервна копія вдало очищена. Повторна синхронізація…
+	[dialog_remote_backup_restore_toast_failure]
+		ru = Failed to re-sync this backup
+		de = Resynchroniserung des Backups ist fehlgeschlagen
+		es = No se pudo sincronizar de nuevo esta copia de seguridad
+		fr = Impossible de resynchroniser cette sauvegarde
+		iw = נכשל בסנכרון מחדש של הגיבוי
+		pt = Falha ao ressincronizar este backup
+		uk = Не вдалося повторно синхронізувати цю резервну копію
+	[automatic_backups_info_dialog_message]
+		ru = Automatic backups are not currently enabled.
+		de = Automatische Backups sind derzeit nicht aktiviert.
+		es = Las copias de seguridad automáticas no están habilitadas en el momento.
+		fr = Les sauvegardes automatiques ne sont pas activées.
+		iw = גיבויים אוטומטיים אינם מופעלים כרגע.
+		pt = Os backups automáticos estão desabilitados
+		uk = Автоматичне резервне копіювання зараз вимкнено.
+	[automatic_backups_info_dialog_positive]
+		ru = Tap to Configure
+		de = Tippen Sie, um zu konfigurieren
+		es = Toca para configurar
+		fr = Appuyez pour configurer
+		iw = לחץ להגדרות
+		pt = Toque para configurar
+		uk = Натисніть, щоб налаштувати
+	[drive_sync_error_no_space]
+		ru = No Available Drive Storage Space
+		de = Kein verfügbar Laufwerk- Speicherplatz
+		es = No hay espacio de almacenamiento disponible en Drive
+		fr = Aucun espace de stockage Drive disponible
+		iw = אין מקום אחסון פנוי בדרייב
+		pt = Não há espaço de armazenamento disponível no Drive
+		uk = Немає вільного місця на диску
+	[drive_sync_error_no_permissions]
+		ru = Tap to Restore Drive Permissions
+		de = Tippen um Laufwerk Berechtigungen wiederherzustellen
+		es = Toca para restaurar los permisos de Drive
+		fr = Appuyez pour restaurer les autorisations de Google Drive
+		iw = לחץ לשחזור הרשאות בדרייב
+		pt = Toque para restaurar as permissões do Drive
+		uk = Натисніть, щоб відновити дозвіл на доступ до диска
+	[drive_sync_error_lost_data]
+		ru = Drive Configuration Error - Tap to Fix
+		de = Fehler Laufwerk Konfiguration - Tippen Sie auf Fix
+		es = Error de configuración de Drive: toca para corregir
+		fr = Erreur de configuration de Google Drive - Appuyez pour réparer
+		iw = טעות קונפיגורציה עם גוגל דרייב - לחץ לתיקון
+		pt = Erro na configuração do Drive - Toque para reparar
+		uk = Помилка конфігурації диска - Натисніть, щоб виправити
+	[login_toolbar_title]
+		comment = ==============-========== Login ==========================
+		ru = Log In / Sign Up
+		de = Einloggen / Anmelden
+		es = Iniciar sesión/Registrarse
+		fr = Se connecter/S'inscrire
+		iw = התחבר / הירשם
+		pt = Conectar-se/Registrar-se
+		uk = Вхід / Реєстрація
+	[login_title]
+		ru = Log In with your Smart Receipts Account to start using Automatic Scans (OCR)
+		de = Anmelden mit Ihrem Smart Receipts Konto, um automatische Scans mit (OCR) zu starten
+		es = Inicia sesión con tu cuenta de Smart Receipts para comenzar a usar los escaneos automáticos (OCR)
+		fr = Connectez-vous à votre compte Smart Receipts pour commencer à utiliser les scans automatiques (OCR)
+		iw = התחבר עם החשבון שלך על מנת להתחיל בסריקות אוטומטיות
+		pt = Conecte-se com sua conta Smart Receipts para começar a utilizar as varreduras automáticas (OCR)
+		uk = Увійдіть в обліковий запис Смарт Чеків, щоб почати використовувати автоматичне сканування (OCR)
+	[login_field_email_hint]
+		ru = Email Address
+		de = E-Mail-Adresse
+		es = Dirección de correo electrónico
+		fr = Adresse e-mail
+		iw = דואר אלקטרוני
+		pt = Endereço de e-mail
+		uk = Адреса ел. пошти
+	[login_field_password_hint]
+		ru = Password
+		de = Passwort
+		es = Contraseña
+		fr = Mot de passe
+		iw = סיסמא
+		pt = Senha
+		uk = Пароль
+	[sign_up_button_text]
+		ru = Sign Up
+		de = Anmelden
+		es = Registrarse
+		fr = S'inscrire
+		iw = הירשם
+		pt = Registrar-se
+		uk = Реєстрація
+	[login_button_text]
+		ru = Log In
+		de = Einloggen
+		es = Iniciar sesión
+		fr = Se connecter
+		iw = התחבר
+		pt = Conectar-se
+		uk = Увійти
+	[login_fields_hint_email]
+		ru = Please enter a valid email address:
+		de = Bitte geben Sie eine gültige E-Mail-Adresse ein:
+		es = Por favor introduce una dirección de correo electrónico válida:
+		fr = Veuillez entrer une adresse e-mail valide :
+		iw = אנא הכנס כתובת דואר אלקטרוני תקינה:
+		pt = Digite um endereço de e-mail válido:
+		uk = Будь ласка, введіть дійсну адресу електронної пошти:
+	[login_fields_hint_password]
+		ru = Passwords must be at least 8 characters:
+		de = Passwörter müssen mindestens 8 Zeichen lang sein:
+		es = La contraseña debe tener al menos 8 caracteres:
+		fr = Les mots de passe doivent faire au moins 8 caractères :
+		iw = סיסמאות חייבות להיות בעלות 8 תווים לפחות:
+		pt = A senha deve ter pelo menos 8 caracteres:
+		uk = Пароль повинен містити не менше 8 символів:
+	[login_fields_hint_valid]
+		ru = Tap below to log in or sign up:
+		de = Tippen Sie unten zum Einloggen oder Anmelden:
+		es = Toca abajo para iniciar sesión o registrarte:
+		fr = Appuyez ci-dessous pour vous connecter ou pour vous inscrire :
+		iw = לחץ למטה על מנת להתחבר או להירשם:
+		pt = Toque para conectar-se ou registrar-se:
+		uk = Натисніть нижче, щоб увійти або зареєструватися:
+	[login_success_toast]
+		ru = Login Success
+		de = Einloggen erfolgreich
+		es = Inicio de sesión correcto
+		fr = Connexion réussie
+		iw = התחברות התבצעה בהצלחה
+		pt = Conectado com êxito
+		uk = Вхід виконано вдало
+	[sign_up_success_toast]
+		ru = Sign Up Success
+		de = Registrierung erfolgreich
+		es = Registro correcto
+		fr = Inscription réussie
+		iw = הרשמה התבצעה בהצלחה
+		pt = Registrado com êxito
+		uk = Реєстрація завершена вдало
+	[login_failure_toast]
+		ru = Login Failed
+		de = Einloggen fehlgeschlagen
+		es = No se pudo iniciar la sesión
+		fr = Échec de la connexion
+		iw = התחברות נכשלה
+		pt = Falha ao conectar-se
+		uk = Увійти до системи не вдалося
+	[sign_up_failure_toast]
+		ru = Sign Up Failed
+		de = Anmeldung gescheitert
+		es = No se pudo registrar
+		fr = Échec de l'inscription
+		iw = הרשמה נכשלה
+		pt = Falha ao registrar-se
+		uk = Зареєструватися не вдалося
+	[login_failure_credentials_toast]
+		ru = Error: Incorrect Username or Password
+		de = Fehler: Falscher Benutzername oder Passwort
+		es = Error: Nombre de usuario o contraseña incorrecto
+		fr = Erreur : Nom d'utilisateur ou mot de passe incorrect
+		iw = שגיאה: שם משתמש או סיסמא לא נכונים
+		pt = Erro: nome de usuário ou senha incorretos
+		uk = Помилка: Неправильне ім'я користувача або пароль
+	[sign_up_failure_account_exists_toast]
+		ru = Error: This Email Already Exists - Try Logging In
+		de = Fehler: Diese E-Mail ist bereits vorhanden - Versuchen Sie einzuloggen
+		es = Error: Este correo electrónico ya existe. Intenta iniciar sesión
+		fr = Erreur : Cet e-mail existe déjà - Essayez de vous connecter
+		iw = שגיאה - כתובת הדואר האלקטורני קיימת כבר, נסה להתחבר
+		pt = Erro: esse e-mail já existe - Tente conectar-se
+		uk = Помилка: Ця електронна адреса вже існує. Спробуйте увійти до системи
+	[dialog_filter_positive_button]
+		comment = ==================== dialog filter =======================
+		ru = Add Filter
+		de = Filter hinzufügen
+		es = Añadir filtro
+		fr = Ajouter un filtre
+		iw = הוסף פילור
+		pt = Adicionar filtro
+		uk = Додати фільтр
+	[dialog_filter_negative_button]
+		ru = Remove Filter
+		de = Filter entfernen
+		es = Quitar filtro
+		fr = Supprimer le filtre
+		iw = הסר פילטר
+		pt = Remover filtro
+		uk = Видалити фільтр
+	[dialog_mileage_title_create]
+		comment = ==================== dialog miles ========================
+		ru = Add Distance
+		de = Strecke hinzufügen
+		es = Añadir distancia
+		fr = Ajouter la distance
+		iw = הוסף מרחק
+		pt = Adicionar distância
+		uk = Додати Відстань
+	[dialog_mileage_title_update]
+		ru = Update Distance
+		de = Strecke aktualisieren
+		es = Actualizar distancia
+		fr = Mettre à jour la distance
+		iw = עדכן מרחק
+		pt = Atualizar distância
+		uk = Оновити Відстань
+	[dialog_mileage_positive_create]
+		ru = Add
+		de = Hinzufügen
+		es = Agregar
+		fr = Ajouter
+		iw = הוסף
+		pt = Adicionar
+		uk = Додати
+	[dialog_mileage_positive_update]
+		ru = Update
+		de = Aktualisieren
+		es = Actualizar
+		fr = Mettre à jour
+		iw = עדכן
+		pt = Atualizar
+		uk = Оновити
+	[dialog_mileage_neutral_delete]
+		ru = Delete
+		de = Löschen
+		es = Eliminar
+		fr = Supprimer
+		iw = מחק
+		pt = Excluir
+		uk = Видалити
+	[RECEIPTMENU_FIELD_NAME]
+		comment = ================= RECEIPTMENU_FIELDS ===================
+		ru = Name
+		de = Name
+		es = Nombre
+		fr = Nom
+		iw = שם
+		pt = Nome
+		uk = Назва
+	[RECEIPTMENU_FIELD_PRICE]
+		ru = Price
+		de = Preis
+		es = Precio
+		fr = Prix
+		iw = מחיר
+		pt = Preço
+		uk = Вартість
+	[RECEIPTMENU_FIELD_TAX]
+		ru = Tax
+		de = Steuer
+		es = Impuesto
+		fr = Taxe
+		iw = מס
+		pt = Impostos
+		uk = Податок
+	[RECEIPTMENU_FIELD_CURRENCY]
+		ru = Currency
+		de = Währung
+		es = Moneda
+		fr = Devise
+		iw = מטבע
+		pt = Moeda
+		uk = Валюта
+	[RECEIPTMENU_FIELD_DATE]
+		ru = Date
+		de = Datum
+		es = Fecha
+		fr = Date
+		iw = תאריך
+		pt = Data
+		uk = Дата
+	[RECEIPTMENU_FIELD_CATEGORY]
+		ru = Category
+		de = Kategorie
+		es = Categoría
+		fr = Catégorie
+		iw = קטגוריה
+		pt = Categoria
+		uk = Категорія
+	[RECEIPTMENU_FIELD_COMMENT]
+		ru = Comment
+		de = Kommentar
+		es = Comentario
+		fr = Commentaire
+		iw = הערה
+		pt = Observação
+		uk = Коментар
+	[RECEIPTMENU_FIELD_EXTRA_EDITTEXT_1]
+		ru = 
+		de = 
+		es = 
+		fr = 
+		iw = 
+		pt = 
+		uk = 
+	[RECEIPTMENU_FIELD_EXTRA_EDITTEXT_2]
+		ru = 
+		de = 
+		es = 
+		fr = 
+		iw = 
+		pt = 
+		uk = 
+	[RECEIPTMENU_FIELD_EXTRA_EDITTEXT_3]
+		ru = 
+		de = 
+		es = 
+		fr = 
+		iw = 
+		pt = 
+		uk = 
+	[RECEIPTMENU_TAG_EXTRA_EDITTEXT_1]
+		comment = ================== RECEIPTMENU_TAGS ====================
+		ru = extra_edittext_1
+		de = extra_edittext_1
+		es = extra_edittext_1
+		fr = extra_edittext_1
+		iw = extra_edittext_1
+		pt = extra_edittext_1
+		uk = extra_edittext_1
+	[RECEIPTMENU_TAG_EXTRA_EDITTEXT_2]
+		ru = extra_edittext_2
+		de = extra_edittext_2
+		es = extra_edittext_2
+		fr = extra_edittext_2
+		iw = extra_edittext_2
+		pt = extra_edittext_2
+		uk = extra_edittext_2
+	[RECEIPTMENU_TAG_EXTRA_EDITTEXT_3]
+		ru = extra_edittext_3
+		de = extra_edittext_3
+		es = extra_edittext_3
+		fr = extra_edittext_3
+		iw = extra_edittext_3
+		pt = extra_edittext_3
+		uk = extra_edittext_3
+	[column_item_blank]
+		comment = ============== CSV/PDF Columns ==================
+		ru = Blank Column
+		de = leere Spalte
+		es = Columna en blanco
+		fr = Colonne vierge
+		iw = עמודה ריקה
+		pt = Coluna em branco
+		uk = Порожня колонка
+	[column_item_category_code]
+		ru = Category Code
+		de = Kategorie-Code
+		es = Código de la categoría
+		fr = Code de la catégorie
+		iw = קוד קטגוריה
+		pt = Código da categoria
+		uk = Код категорії
+	[column_item_category_name]
+		ru = Category Name
+		de = Kategoriename
+		es = Nombre de la categoría
+		fr = Nom de la catégorie
+		iw = שם קטגוריה
+		pt = Nome da categoria
+		uk = Назва категорії
+	[column_item_user_id]
+		ru = User ID
+		de = Benutzeridentifikation
+		es = Id. de usuario
+		fr = Identifiant de l'utilisateur
+		iw = מזהה משתמש
+		pt = ID do usuário
+		uk = ID користувача
+	[column_item_report_name]
+		ru = Report Name
+		de = Berichtsname
+		es = Nombre del informe
+		fr = Nom du rapport
+		iw = שם דוח
+		pt = Nome do relatório
+		uk = Назва звіту
+	[column_item_report_start_date]
+		ru = Report Start Date
+		de = Bericht Startdatum
+		es = Fecha inicial del informe
+		fr = Date de début du rapport
+		iw = תאריך תחילת דוח
+		pt = Data inicial do relatório
+		uk = Дата початку звіту
+	[column_item_report_end_date]
+		ru = Report End Date
+		de = Bericht Enddatum
+		es = Fecha final del informe
+		fr = Date de fin du rapport
+		iw = תאריך סוף דוח
+		pt = Data final do relatório
+		uk = Дата закінчення звіту
+	[column_item_report_comment]
+		ru = Report Comment
+		de = Kommentar melden
+		es = Comentario del informe
+		fr = Commentaire sur le rapport
+		iw = הערת דוח
+		pt = Observações no relatório
+		uk = Коментар до звіту
+	[column_item_report_cost_center]
+		ru = Report Cost Center
+		de = Kostenstellenbericht
+		es = Centro de costos del informe
+		fr = Centre de coûts du rapport
+		iw = מרכז עלות דוח
+		pt = Centro de custos do relatório
+		uk = Центр витрат у звіті
+	[column_item_image_file_name]
+		ru = Image Name
+		de = Bildname
+		es = Nombre de la imagen
+		fr = Nom de l'image
+		iw = שם תמונה
+		pt = Nome da imagem
+		uk = Ім'я зображення
+	[column_item_image_path]
+		ru = Image Path
+		de = Bildpfad
+		es = Ruta de la imagen
+		fr = Chemin de l'image
+		iw = נתיב לתמונה
+		pt = Diretório da imagem
+		uk = Шлях до зображення
+	[column_item_receipt_price_minus_tax]
+		comment = **Please note that for flex purposes, some of these use the legacy names above**
+		ru = Price Minus Tax
+		de = Price ohne Steuer
+		es = Precio sin impuesto
+		fr = Prix sans taxes comprises
+		iw = מחיר פחות מס
+		pt = Preço sem impostos
+		uk = Вартість без податок
+	[column_item_converted_price_exchange_rate]
+		ru = Price (Exchanged)
+		de = Preis (getauscht)
+		es = Precio (al cambio)
+		fr = Prix ​​(Échangé)
+		iw = מחיר לאחר המרה
+		pt = Preço (com câmbio)
+		uk = Вартість (після обміну)
+	[column_item_converted_tax_exchange_rate]
+		ru = Tax (Exchanged)
+		de = Steuer (getauscht)
+		es = Impuesto (al cambio)
+		fr = Taxe (Échangée)
+		iw = מס לאחר המרה
+		pt = Impostos (com câmbio)
+		uk = Податок (після обміну)
+	[column_item_converted_price_plus_tax_exchange_rate]
+		ru = Price Plus Tax (Exchanged)
+		de = Preis plus Steuer (getauscht)
+		es = Precio más impuesto (al cambio)
+		fr = Prix ​​toutes taxes comprises (Échangé)
+		iw = מחיר פלוס מס לאחר המרה
+		pt = Preço mais impostos (com câmbio)
+		uk = Вартість плюс податок (після обміну)
+	[column_item_converted_price_minus_tax_exchange_rate]
+		ru = Price Minus Tax (Exchanged)
+		de = Preis ohne Steuer (getauscht)
+		es = Precio sin impuesto (al cambio)
+		fr = Prix sans taxes comprises (Échangé)
+		iw = מחיר פחות לאחר המרה
+		pt = Preço sem impostos (com câmbio)
+		uk = Вартість без податок (після обміну)
+	[column_item_exchange_rate]
+		ru = Exchange Rate
+		de = Wechselkurs
+		es = Tasa de cambio
+		fr = Taux de change
+		iw = שער חליפין
+		pt = Taxa de câmbio
+		uk = Курс обміну
+	[column_item_pictured]
+		ru = Pictured
+		de = abgebildet
+		es = Fotografiado
+		fr = Sur la photo
+		iw = בתמונה
+		pt = Incluso na imagem
+		uk = З зображеннями
+	[column_item_reimbursable]
+		ru = Reimbursable
+		de = rückzahlbar
+		es = Reembolsable
+		fr = Remboursable
+		iw = בר-החזר
+		pt = Reembolsável
+		uk = Що відшкодовуються
+	[column_item_index]
+		ru = Receipt Index
+		de = Beleg-Index
+		es = Índice del recibo
+		fr = Indice du reçu
+		iw = אינדקס קבלה
+		pt = Índice do recibo
+		uk = Індекс чека
+	[column_item_id]
+		ru = Receipt ID
+		de = Beleg ID
+		es = Id. del recibo
+		fr = ID du reçu
+		iw = מזהה קבלה
+		pt = ID do recibo
+		uk = ID чека
+	[column_item_payment_method]
+		ru = Payment Method
+		de = Zahlungsmethode
+		es = Método de pago
+		fr = Mode de paiement
+		iw = אמצעי תשלום
+		pt = Forma de pagamento
+		uk = Спосіб оплати
+	[distance_location_field]
+		comment = ====================== Distance Report ========================
+		ru = Location
+		de = Ort
+		es = Ubicación
+		fr = Emplacement
+		iw = מרחק
+		pt = Local
+		uk = Місцезнаходження
+	[distance_price_field]
+		ru = Price
+		de = Preis
+		es = Precio
+		fr = Prix
+		iw = מחיר
+		pt = Preço
+		uk = Вартість
+	[distance_distance_field]
+		ru = Distance
+		de = Strecke
+		es = Distancia
+		fr = Distance
+		iw = מרחק
+		pt = Distância
+		uk = Відстань
+	[distance_rate_field]
+		ru = Rate
+		de = Preis
+		es = Tarifa
+		fr = Taux
+		iw = תעריף
+		pt = Taxa
+		uk = Курс
+	[dialog_currency_field]
+		ru = Currency
+		de = Währung
+		es = Moneda
+		fr = Devise
+		iw = מטבע
+		pt = Moeda
+		uk = Валюта
+	[distance_date_field]
+		ru = Date
+		de = Datum
+		es = Fecha
+		fr = Date
+		iw = תאריך
+		pt = Data
+		uk = Дата
+	[distance_comment_field]
+		ru = Comment
+		de = Kommentar
+		es = Comentario
+		fr = Commentaire
+		iw = הערה
+		pt = Observação
+		uk = Коментар
+	[category_name_field]
+		comment = ====================== Categories Summation Report ========================
+		ru = Category
+		de = Kategorie
+		es = Nombre de la categoría
+		fr = Nom de la catégorie
+		iw = קטגוקיה
+		pt = Nome da categoria
+		uk = Категорія
+	[category_code_field]
+		ru = Category Code
+		de = Kategorie-Code
+		es = Código de la categoría
+		fr = Code de la catégorie
+		iw = קוד קטגוריה
+		pt = Código da categoria
+		uk = `Код категорії `
+	[category_price_field]
+		ru = Price
+		de = Preis
+		es = Precio
+		fr = Prix
+		iw = מחיר
+		pt = Preço
+		uk = Вартість
+	[category_tax_field]
+		ru = Tax
+		de = Steuer
+		es = Impuesto
+		fr = Taxe
+		iw = מס
+		pt = Impostos
+		uk = Податок
+	[category_price_exchanged_field]
+		ru = Price (Exchanged)
+		de = Preis (getauscht)
+		es = Precio (al cambio)
+		fr = Prix (Échangé)
+		iw = מחיר לאחר המרה
+		pt = Preço (com câmbio)
+		uk = Вартість (після обміну)
+	[receipt_dialog_action_delete]
+		ru = Delete Receipt
+		de = Beleg löschen
+		es = Eliminar recibo
+		fr = Supprimer le reçu
+		iw = מחק קבלה
+		pt = Excluir recibo
+		uk = Видалити чек
+	[receipt_dialog_action_move_copy]
+		ru = Move/Copy
+		de = Verschieben / Kopieren
+		es = Mover/copiar
+		fr = Déplacer/Copier
+		iw = העבר/העתק
+		pt = Mover/copiar
+		uk = Перемістити/Копіювати
+	[receipt_dialog_action_remove_attachment]
+		ru = Remove Attachment
+		de = Anhang entfernen
+		es = Eliminar archivo adjunto
+		fr = Supprimer la pièce jointe
+		iw = מחק קובץ מצורף
+		pt = Remover anexo
+		uk = Видалити вкладення
+	[dialog_attachment_text]
+		ru = Tap on an existing receipt to add this %@ to it
+		de = Tippen Sie auf einen bestehenden Beleg um ihn hinzufügen %@
+		es = Toca un recibo existente para añadirle este %@
+		fr = Appuyez sur un reçu existant pour y ajouter cette %@
+		iw = `לחץ על קבלה קיימת כדי להוסיף אליה את %@ `
+		pt = Toque em um recibo existente para adicionar esse %@ a ele
+		uk = Натисніть на існуючий чек, щоб додати цей %@ до нього
+	[receipt_dialog_remove_attachment]
+		ru = Do you want to remove attachment?
+		de = Möchten Sie den Anhang entfernen?
+		es = ¿Quieres eliminar el archivo adjunto?
+		fr = Voulez-vous supprimer la pièce jointe?
+		iw = האם אתה רוצה למחוק את הקובץ המצורף?
+		pt = Deseja remover o anexo?
+		uk = Ви хочете видалити вкладення?
+	[dialog_custom_csv_spinner]
+		comment = ================== Preference Dialog ====================
+		ru = Column Type
+		de = Typ Spalte
+		es = Tipo de columna
+		fr = Type de colonne
+		iw = סוג עמודה
+		pt = Tipo de coluna
+		uk = Тип колонки
+	[dialog_category_add]
+		ru = Add Category
+		de = Kategorie hinzufügen
+		es = Añadir categoría
+		fr = Ajouter une catégorie
+		iw = הוסף קטגוריה
+		pt = Adicionar categoria
+		uk = Додати категорію
+	[dialog_category_edit]
+		ru = Edit Category
+		de = Kategorie bearbeiten
+		es = Editar categoría
+		fr = Modifier la catégorie
+		iw = ערוך קטגוריה
+		pt = Editar Categoria
+		uk = Редагувати категорію
+	[error_no_pdf_activity_viewer]
+		comment = ================ Error Feedback ====================
+		ru = Failed to find a PDF Viewer Application
+		de = Es wurde keine PDF-Viewer-Anwendung gefunden
+		es = No se pudo encontrar una aplicación para visualizar los PDF
+		fr = Impossible de trouver une application pour lire les PDF
+		iw = לא קיימת אפליקציה לצפייה בקבצי PDF
+		pt = Falha ao encontrar um app de visualização de PDF
+		uk = Не вдалося знайти додаток для перегляду PDF
+	[error_no_send_intent_dialog_title]
+		ru = No Send App Found
+		de = Kein App Senden gefunden
+		es = No se encontraron apps para enviar
+		fr = Aucune appli d'envoi trouvée
+		iw = לא קיימת אפליקציה לשליחה
+		pt = Não foi encontrado um app para envio
+		uk = Програма для відправки не знайдена
+	[error_no_send_intent_dialog_message]
+		ru = We could not find an email application (or equivalent) on your phone. You can find your files in the following directory: %@
+		de = Wir konnten keine E-Mail-Anwendung (oder gleichwertig) auf Ihrem Telefon finden. Sie können Ihre Dateien im folgenden Verzeichnis finden: %@
+		es = No pudimos encontrar una aplicación de correo electrónico (o equivalente) en tu teléfono. Puedes encontrar tus archivos en la siguiente carpeta: %@
+		fr = Impossible de trouver une application de messagerie (ou équivalent) sur votre téléphone. Vous pouvez trouver vos fichiers dans le répertoire suivant : %@
+		iw = לא יכולנו למצוא אפליקציה של דואר אלקטרוני (או אפליקציה דומה) על מכשיר הטלפון שלך. תוכל למצוא את הקבצים בתיקייה הבאה: %@
+		pt = Não foi possível encontrar um app de e-mail (ou equivalente) em seu celular. Você pode encontrar seus arquivos no diretório a seguir: %@
+		uk = Ми не змогли знайти додаток електронної пошти (або еквівалент) на вашому пристрої. Ви можете знайти файли в наступному каталозі: %@
+	[error_no_file_intent_dialog_title]
+		ru = Error: Unable to find an "import" installed app on your device
+		de = Fehler: Es kann keine Import installierte App auf Ihrem Gerät gefunden werden
+		es = Error: No se pudo encontrar una app para importar instalada en tu dispositivo
+		fr = Erreur : Impossible de trouver une appli d'importation sur votre appareil
+		iw = שגיאה: לא נמצאה אפליקצית גיבוי על הטלפון שלך
+		pt = Erro: Não foi possível encontrar um app para importação em seu dispositivo
+		uk = Помилка: Не вдається знайти додаток для імпорту на пристрої
+	[error_no_wifi]
+		ru = Error: Not connected to WiFi
+		de = Fehler: Nicht mit einem Wi-Fi verbunden
+		es = Error: No estás conectado a Wi-Fi
+		fr = Erreur : Pas connecté au Wi-Fi
+		iw = שגיאה: לא מחובר לווייפיי
+		pt = Erro: Sem conexão WiFi
+		uk = Помилка: Немає підключення до Wi-Fi
+	[dialog_sql_corrupt_title]
+		comment = ================== SQL Corrpution ====================
+		ru = Oh No!
+		de = Oh nein!
+		es = ¡Oh, no!
+		fr = Oh non !
+		iw = הו לא!
+		pt = Oh, não!
+		uk = О ні!
+	[dialog_sql_corrupt_message]
+		ru = Your database was corrupted. This often occurs if you have a task killer app, but it can be caused by a few different things. Don't worry, we should be able to restore most of your data.
+		de = Ihre Datenbank wurde beschädigt. Dies geschieht häufig, wenn Sie eine App zum Beenden von Tasks haben, aber es kann durch einige andere Dinge verursacht werden. Keine Sorge, wir sollten in der Lage sein, die meisten Ihrer Daten wiederherzustellen.
+		es = Tu base de datos está dañada. Esto ocurre con frecuencia si tienes una app que cierra tareas, pero puede ser ocasionado por otras cosas. No te preocupes, podremos restaurar la mayoría de tus datos.
+		fr = Votre base de données a été corrompue. Cela se produit souvent si vous avez une application d’interruption de tâches, mais cela peut être causé par un certain nombre de choses. Ne vous inquiétez pas, nous devrions être en mesure de restaurer la plupart de vos données.
+		iw = מסד הנתונים שלך פגום. מצב זה קורה לרוב אם יש לך אפליקצית ״הריגת״ מטלות ברקע, אבל הוא יכול להיגרם מכל מיני סיבות. אל תדאג, נוכל לשחזר את המידע שלך.
+		pt = Seu banco de dados foi corrompido. Isso ocorre com frequência se você utilizar um app de eliminação, mas apode ter sido causado por outros motivos. Não se preocupe, provavelmente conseguiremos restaurar a maior parte dos dados.
+		uk = Ваша база даних була пошкоджена. Це часто відбувається, коли ви користуєтеся програмами типу "task killer", однак може бути викликано різними причинами. Не хвилюйтеся - ми, швидше за все, зможемо відновити більшу частину ваших даних.
+	[dialog_sql_corrupt_positive]
+		ru = Email the Developer for Help
+		de = E-Mail an den Entwickler senden für Hilfe
+		es = Enviar un correo electrónico al desarrollador para obtener ayuda
+		fr = Envoyer un e-mail au développeur pour demander de l'aide
+		iw = שלח דואר אלקטרוני למפתח על מנת לבקש סיוע
+		pt = Enviar um e-mail para o desenvolvedor para obter ajdua
+		uk = Звернутися за допомогою до розробника
+	[dialog_sql_corrupt_intent_subject]
+		ru = Smart Receipts - Corrupted Database
+		de = Smart Receipts - Datenbank beschädigt
+		es = Smart Receipts - Base de datos dañada
+		fr = Smart Receipts - Base de données corrompue
+		iw = Smart Receipts - מסדי נתונים פגומים
+		pt = Smart Receipts - banco de dados corrompido
+		uk = Смарт Чеки - Пошкоджена база даних
+	[dialog_sql_corrupt_intent_text]
+		ru = Help - my database was corrupted. How can you help me restore things?
+		de = Hilfe - meine Datenbank wurde beschädigt Wie können Sie mir helfen, die Dinge wieder herzustellen?
+		es = Ayuda, mi base de datos está dañada. ¿Cómo pueden ayudarme a restaurar las cosas?
+		fr = Aide - ma base de données a été corrompue. Comment pouvez-vous m'aider à la restaurer ?
+		iw = עזרה - מסד הנתונים שלי פגום. כיצד תוכל לעזור לי לשחזר את המידע שלי?
+		pt = Me ajude - meu banco de dados foi corrompido. Como você pode me ajudar a recuperar minhas informações?
+		uk = Допоможіть - моя база даних була пошкоджена. Чи можете ви допомогти мені відновити її?
+	[dialog_sql_corrupt_chooser]
+		ru = Send Email…
+		de = E-Mail senden…
+		es = Enviar correo electrónico…
+		fr = Envoyer un message…
+		iw = שלח דואר אלקטרוני…
+		pt = Enviar e-mail…
+		uk = Відправити лист…
+	[filter_name_and]
+		comment = ======================= Filters ======================
+		ru = And
+		de = Und
+		es = Y
+		fr = Et
+		iw = ו
+		pt = E
+		uk = І
+	[filter_name_not]
+		ru = Not
+		de = Nicht
+		es = No
+		fr = Pas
+		iw = גם
+		pt = Não
+		uk = Не
+	[filter_name_or]
+		ru = Or
+		de = Oder
+		es = O
+		fr = Ou
+		iw = או
+		pt = Ou
+		uk = Або
+	[filter_name_receipt_category]
+		ru = Category
+		de = Kategorie
+		es = Categoría
+		fr = Catégorie
+		iw = קטגרוריה
+		pt = Categoria
+		uk = Категорія
+	[filter_name_receipt_reimbursable]
+		ru = Is Reimbursable
+		de = ist erstattungsfähig
+		es = Es reembolsable
+		fr = est remboursable
+		iw = בר החזר
+		pt = É reembolsável
+		uk = Відшкодовується
+	[filter_name_receipt_max_price]
+		ru = Max Price
+		de = Max Preis
+		es = Precio máx.
+		fr = Prix ​​max
+		iw = מחיר מקסימלי
+		pt = Preço máximo
+		uk = Макс. вартість
+	[filter_name_receipt_min_price]
+		ru = Min Price
+		de = min Preis
+		es = Precio mín.
+		fr = Prix ​​min
+		iw = מחיר מינימלי
+		pt = Preço mínimo
+		uk = Мін. вартість
+	[filter_name_receipt_on_or_after]
+		ru = On Or After
+		de = Am oder nach dem
+		es = En o después de
+		fr = À compter du
+		iw = בזמן או אחרי הזמן
+		pt = No dia ou depos
+		uk = На зазначену дату або пізніше
+	[filter_name_receipt_on_or_before]
+		ru = On Or Before
+		de = Am oder vor dem
+		es = En o antes de
+		fr = Au plus tard le
+		iw = בזמן או לפני הזמן
+		pt = No dia ou antes
+		uk = На зазначену дату або раніше
+	[filter_name_receipt_selected]
+		ru = Is Selected
+		de = Ist ausgewählt
+		es = Está seleccionado
+		fr = Est sélectionné
+		iw = מסומן
+		pt = Está selecionado
+		uk = Обрано
+	[filter_name_trip_ends_on_or_after]
+		ru = Ends On Or After
+		de = Endet am oder nach dem
+		es = Termina en o después de
+		fr = Se termine le, ou après le
+		iw = נגמר ב או אחרי
+		pt = Acaba no dia ou depois
+		uk = Завершується в зазначену дату або пізніше
+	[filter_name_trip_ends_on_or_before]
+		ru = Ends On Or Before
+		de = Endet am oder vor dem
+		es = Termina en o antes de
+		fr = Se termine le, ou avant le
+		iw = נגמר ב או לפני
+		pt = Acaba no dia ou antes
+		uk = Завершується в зазначену дату або раніше
+	[filter_name_trip_max_price]
+		ru = Max Price
+		de = Max Preis
+		es = Precio máx.
+		fr = Prix ​​max
+		iw = מחיר מקסימלי
+		pt = Preço máximo
+		uk = Макс. вартість
+	[filter_name_trip_min_price]
+		ru = Min Price
+		de = min Preis
+		es = Precio mín.
+		fr = Prix ​​min
+		iw = מחיר מינימלי
+		pt = Preço mínimo
+		uk = Мін. вартість
+	[filter_name_trip_starts_on_or_after]
+		ru = Starts On Or After
+		de = Startet am oder nach dem
+		es = Comienza en o después de
+		fr = Commence le, ou après le
+		iw = מתחיל ב או אחרי
+		pt = Começa no dia ou depos
+		uk = Починається в зазначену дату або пізніше
+	[filter_name_trip_starts_on_or_before]
+		ru = Starts On Or Before
+		de = Startet am oder vor dem
+		es = Comienza en o antes de
+		fr = Commence le, ou avant le
+		iw = מתחיל ב או לפני
+		pt = Começa no dia ou antes
+		uk = Починається в зазначену дату або раніше
+	[payment_method]
+		comment = =================== Payment Methods =====+=============
+		ru = Payment Method
+		de = Zahlungsmethode
+		es = Método de pago
+		fr = Mode de paiement
+		iw = אמצעי תשלום
+		pt = Método de pagamento
+		uk = Спосіб оплати
+	[payment_methods]
+		ru = Payment Methods
+		de = Zahlungsmethoden
+		es = Métodos de pago
+		fr = Modes de paiement
+		iw = אמצי תשלום
+		pt = Métodos de Pagamento
+		uk = Способи оплати
+	[payment_method_add]
+		ru = Add Payment Method
+		de = Zahlungsmethode hinzufügen
+		es = Añadir método de pago
+		fr = Ajouter un mode de paiement
+		iw = הוסף אמצעי תשלום
+		pt = Adicionar método de pagamento
+		uk = Додати спосіб оплати
+	[payment_method_edit]
+		ru = Edit Payment Method
+		de = Zahlungsmethode bearbeiten
+		es = Editar método de pago
+		fr = Modifier le mode de paiement
+		iw = ערוך אמצעי תשלום
+		pt = Editar método de pagamento
+		uk = Редагувати спосіб оплати
+	[payment_method_default_cash]
+		ru = Cash
+		de = Bargeld
+		es = Efectivo
+		fr = En espèces
+		iw = מזומן
+		pt = Dinheiro
+		uk = Готівка
+	[payment_method_default_check]
+		ru = Check
+		de = Scheck
+		es = Cheque
+		fr = Chèque
+		iw = צ׳ק
+		pt = Cheque
+		uk = Чек
+	[payment_method_default_personal_card]
+		ru = Personal Card
+		de = persönliche Karte
+		es = Tarjeta personal
+		fr = Carte personnelle
+		iw = כרטיס אשראי אישי
+		pt = Cartão pessoal
+		uk = Персональна карта
+	[payment_method_default_corporate_card]
+		ru = Corporate Card
+		de = Firmenkarte
+		es = Tarjeta empresarial
+		fr = Carte d'entreprise
+		iw = כרטיס אשראי חברה
+		pt = Cartão corporativo
+		uk = Корпоративна карта
+	[purchase_succeeded]
+		comment = =================== Payment Methods ===================
+		ru = Successfully completed the purchase
+		de = Kauf erfolgreich abgeschlossen
+		es = La compra se completó correctamente
+		fr = Achat réussi
+		iw = הרכישה בוצעה בהצלחה
+		pt = Compra concluída com êxito
+		uk = Покупка вдало завершена
+	[purchase_unavailable]
+		ru = Unable to retrieve purchase information
+		de = Unfähig Kaufinformationen abzurufen
+		es = No se pudo recuperar la información de la compra
+		fr = Impossible de récupérer les informations d'achat
+		iw = משיכת מידע לגבי הרכישה נכשלה
+		pt = Não foi possível recuperar as informações da compra
+		uk = Не вдалося отримати інформацію про покупку
+	[purchase_failed]
+		ru = Failed to complete the purchase
+		de = Unmöglich den Kauf abzuschließen
+		es = No se pudo completar la compra
+		fr = Impossible de terminer l'achat
+		iw = השלמת הרכישה נכשלה
+		pt = Falha ao concluir a compra
+		uk = Не вдалося завершити покупку
+	[rating_tooltip_text]
+		comment = ================== App Rating ====================
+		ru = Like Smart Receipts?
+		de = Mögen Sie Smart Receipts?
+		es = ¿Te gusta Smart Receipts?
+		fr = Vous aimez Smart Receipts ?
+		iw = אוהב את Smart Receipts?
+		pt = Gostou do Smart Receipts?
+		uk = Подобаються Смарт Чеки?
+	[leave_feedback_text]
+		ru = Would you like to leave us feedback?
+		de = Möchten Sie uns ein Feedback lassen?
+		es = ¿Deseas hacernos un comentario?
+		fr = Voulez-vous nous laisser des commentaires ?
+		iw = תרצה להשאיר לנו פידבק?
+		pt = Gostaria de deixar seu feedback?
+		uk = Бажаєте залишити відгук про програму?
+	[apprating_dialog_title]
+		ru = Like %@?
+		de = Wie %@?
+		es = ¿Te gusta %@?
+		fr = Vous aimez %@ ?
+		iw = אוהב את %@?
+		pt = Gostou do %@?
+		uk = Подобається %@?
+	[apprating_dialog_message]
+		ru = Please consider leaving a review about it. As an independent developer, your reviews are my primary source of exposure and really help to encourage me to keep adding new features. Thanks!
+		de = Würden Sie darüber einen Bericht senden? Für mich als unabhängigen Entwickler sind Ihre Bewertungen mein Schaufenster. Konstruktives Feedback ermutigt mich, neue Features hinzuzufügen. Vielen Dank!
+		es = Por favor considera hacer un comentario. Como desarrollador independiente, tus comentarios son nuestra principal fuente de exposición y realmente ayudan a motivarme para continuar añadiendo características. ¡Gracias!
+		fr = Veuillez envisager de laisser votre avis. En tant que développeur indépendant, vos commentaires sont ma principale source d’exposition et ils aident vraiment à m’encourager à continuer et à ajouter de nouvelles fonctionnalités. Merci !
+		iw = אנא שקול להשאיר ביקורת בחנות האפליקציות. בתור מפתח עצמאי, הביקורות שלך הן אמצעי החשיפה העיקרי שלי ויכולות מאוד לעזור לי לפתח פונקציונאליות נוספת. תודה!
+		pt = Deixe um comentário sobre o app. Como desenvolvedor independente, seus comentários são nosso canal principal de divulgação, além de incentivarem a adição de novos recursos. Obrigado!
+		uk = Будь ласка, залиште ваш відгук. Я - незалежний розробник, і ваші відгуки є моїм основним джерелом натхнення та стимулом продовжувати додавати нові функції. Дякую!
+	[apprating_dialog_negative]
+		ru = No Thanks
+		de = Nein Danke
+		es = No, gracias
+		fr = Non merci
+		iw = לא תודה
+		pt = Não, obrigado
+		uk = Ні дякую
+	[apprating_dialog_neutral]
+		ru = Maybe Later
+		de = Vielleicht später
+		es = Tal vez luego
+		fr = Peut-être plus tard
+		iw = אולי אחר כך
+		pt = Talvez mais tarde
+		uk = Можливо пізніше
+	[apprating_dialog_positive]
+		ru = Rate It Now!
+		de = Bewerten Sie jetzt!
+		es = ¡Calificar ahora!
+		fr = Notez l'appli maintenant !
+		iw = דרג עכשיו!
+		pt = Avaliar agora!
+		uk = Оцінити зараз!
+	[tooltip_generate_info_message]
+		comment = ================== Tooltip messages ====================
+		ru = Use the 'Generate' tab to create your reports
+		de = Verwenden Sie die ‚Erzeugen‘ Registerkarte um Berichte zu erstellen
+		es = Usa la pestaña 'Generar' para crear tus informes
+		fr = Utilisez l'onglet « Générer » pour créer vos rapports
+		iw = השתמש בטאב הייצור על מנת ליצור את הדוחות שלך
+		pt = Use a aba 'Gerar' para criar seus relatórios
+		uk = Використовуйте вкладку "Створити" для створення звітів
+	[tooltip_no_backups_info_message]
+		ru = Reminder: Periodically back up your data
+		de = Erinnerung: Sichern Sie regelmäßig Ihre Daten
+		es = Recordatorio: Copia periódica de sus datos
+		fr = Rappel: sauvegarde périodiquement vos données
+		iw = תזכורת: גבה את המידע שלך באופן קבוע
+		pt = Lembrete: faça backup periodicamente de seus dados
+		uk = Нагадування: періодично створюйте резервні копії ваших даних
+	[tooltip_backup_info_message]
+		ru = %d days since your last backup
+		de = %d Tage seit dein letztem Backup
+		es = %d días desde la última copia de seguridad
+		fr = %d jours depuis votre dernière sauvegarde
+		iw = %d ימים מאז הגיבוי האחרון שלך
+		pt = %d dias desde o último backup
+		uk = %d днів з моменту останньої резервної копії
+	[tooltip_import_info_message]
+		ru = Please, choose receipt for your attachment
+		de = Bitte wählen Sie den Beleg für Ihren Anhang
+		es = Por favor, elija el recibo de su archivo adjunto
+		fr = Veuillez choisir un reçu pour votre pièce jointe
+		iw = אנא בחר קבלה עבור הקובץ המצורף שלך
+		pt = Por favor, escolha o recibo para o seu anexo
+		uk = Будь-ласка, оберіть чек для вашого вкладення
+	[tooltip_review_privacy]
+		ru = Tap to review your privacy settings
+		de = Tippen Sie hier, um Ihre Datenschutzeinstellungen zu überprüfen
+		es = Toca para revisar tu configuración de privacidad
+		fr = Appuyez pour examiner vos paramètres de confidentialité
+		iw = לחץ לעיון של הגדרות הפרטיות שלך
+		pt = Toque para rever suas configurações de privacidade
+		uk = Торкніться, щоб переглянути налаштування конфіденційності
+	[graphs_no_data]
+		comment = ================== Graph titles ====================
+		ru = Add your first receipts to see graphs.
+		de = Fügen Sie Ihre ersten Quittungen hinzu, um Grafiken zu sehen.
+		es = Agregue sus primeros recibos para ver los gráficos.
+		fr = Ajoutez vos premiers reçus pour voir les graphiques.
+		iw = הוסף קבלות ראשונות על מנת לצפות בגרפים
+		pt = Adicione seus primeiros recibos para ver gráficos.
+		uk = Додайте свій перший чек щоб побачити графіки.
+	[graphs_expenditure_by_dates_title]
+		ru = Daily expenses
+		de = Tägliche Ausgaben
+		es = Gastos diarios
+		fr = Frais journaliers
+		iw = הוצאות יומיות
+		pt = Despesas diarias
+		uk = Щоденні витрати
+	[graphs_expenditure_by_categories_title]
+		ru = Expenditure by categories
+		de = Ausgaben nach Kategorien
+		es = Gastos por categorías
+		fr = Dépenses par catégories
+		iw = הוצאה לפי קטגוריה
+		pt = Despesas por categorias
+		uk = Витрати за категоріями
+	[graphs_expenditure_by_reimbursable_title]
+		ru = Reimbursable vs Non-reimbursable
+		de = Erstattungsfähig vs nicht rückzahlbar
+		es = Reembolsable vs No reembolsable
+		fr = Remboursable contre non remboursable
+		iw = בר-החזר לעומת לא בר-החזר
+		pt = Reembolsável contra não reembolsável
+		uk = Що відшкодовуються та не відшкодовуються
+	[graphs_expenditure_by_payment_methods_title]
+		ru = Expenditure by payment methods
+		de = Aufwendungen nach Zahlungsmethoden
+		es = Gastos por métodos de pago
+		fr = Dépenses par méthodes de paiement
+		iw = הוצאה לפי אמצעי תשלום
+		pt = Despesas por métodos de pagamento
+		uk = Витрати за методами оплати
+	[graphs_label_reimbursable]
+		ru = Reimbursable
+		de = Erstattungsfähig
+		es = Reembolsable
+		fr = Remboursable
+		iw = בר-החזר
+		pt = Reembolsável
+		uk = Відшкодовуються
+	[graphs_label_non_reimbursable]
+		ru = Non-reimbursable
+		de = Nicht erstattungsfähig
+		es = No reembolsable
+		fr = Non remboursable
+		iw = לא בר-החזר
+		pt = Não reembolsável
+		uk = Не відшкодовуються
+	[graphs_label_others]
+		ru = Others
+		de = Andere
+		es = Otros
+		fr = Autres
+		iw = אחרים
+		pt = Outras
+		uk = Інші
+	[pref_general_header]
+		comment = ============== Preference Headers =================
+		ru = General
+		de = Allgemein
+		es = General
+		fr = Général
+		iw = כללי
+		pt = Geral
+		uk = Загальні
+	[pref_receipt_header]
+		ru = Receipts
+		de = Belege
+		es = Recibos
+		fr = Reçus
+		iw = חשבוניות
+		pt = Recibos
+		uk = Чеки
+	[pref_output_header]
+		ru = Report Output
+		de = Report Ausgabe
+		es = Salida del informe
+		fr = Sortie du rapport
+		iw = דוח מיוצא
+		pt = Saída de relatório
+		uk = Результат звітів
+	[pref_email_header]
+		ru = Email
+		de = E-Mail
+		es = Correo electrónico
+		fr = E-mail
+		iw = אימייל
+		pt = E-mail
+		uk = Email
+	[pref_camera_header]
+		ru = Camera
+		de = Kamera
+		es = Cámara
+		fr = Caméra
+		iw = מלצמה
+		pt = Câmera
+		uk = Камера
+	[pref_layout_header]
+		ru = Layout Customizations
+		de = Layout-Anpassungen
+		es = Personalización de diseño
+		fr = Personnalisations de la mise en page
+		iw = התאמה אישית (עיצוב)
+		pt = Personalização de layout
+		uk = Налаштування зовнішнього вигляду
+	[pref_distance_header]
+		ru = Distance
+		de = Kilometergeld
+		es = Distancia
+		fr = Distance
+		iw = מרחק
+		pt = Distância
+		uk = Відстань
+	[pref_pro_header]
+		ru = Smart Receipts Plus
+		de = Smart-Plus-Berichte
+		es = Recibos Inteligentes Plus
+		fr = Recettes Intelligentes Plus
+		iw = Smart Receipts Plus
+		pt = Recibos Inteligentes Plus
+		uk = Смарт Чеки Плюс
+	[pref_help_header]
+		ru = Support
+		de = Unterstützung
+		es = Soporte
+		fr = Assistance
+		iw = תמיכה
+		pt = Suporte
+		uk = Підтримка
+	[pref_about_header]
+		ru = About
+		de = Über
+		es = Acerca de
+		fr = À propos
+		iw = אודות
+		pt = Sobre
+		uk = Про програму
+	[pref_privacy_header]
+		ru = Privacy
+		de = Datenschutz
+		es = Privacidad
+		fr = Confidentialité
+		iw = פרטיות
+		pt = Privacidade
+		uk = Конфіденційність
+	[pref_general_trip_duration_title]
+		comment = ============== Preference General =================
+		ru = Default Trip Length
+		de = Standarddauer
+		es = Distancia de viaje predeterminada
+		fr = Durée du voyage par défaut
+		iw = אורך נסיעה ממוצע
+		pt = Duração padrão da viagem
+		uk = Тривалість поїздки за замовчуванням
+	[pref_general_default_currency_title]
+		ru = Default Currency
+		de = Standardwährung
+		es = Moneda predeterminada
+		fr = Devise par défaut
+		iw = מטבע ברירת מחדל
+		pt = Moeda padrão
+		uk = Валюта за замовчуванням
+	[pref_general_default_date_separator_title]
+		ru = Default Date Separator
+		de = Standard Datumsseparator
+		es = Separador de fecha predeterminado
+		fr = Séparateur de date par défaut
+		iw = מפריד תאריך ברירת מחדל
+		pt = Separador de data padrão
+		uk = Роздільник дати за замовчуванням
+	[pref_general_track_cost_center_title]
+		ru = Track Cost Center
+		de = Kostenstellen einbeziehen
+		es = Monitorear centro de costos
+		fr = Suivre le centre de coûts
+		iw = חשב מרכז עלויות
+		pt = Restrear centro de custos
+		uk = Центр вартості маршрутів
+	[pref_general_track_cost_center_summaryOn]
+		ru = Include Cost Center For Reports
+		de = Kostenstellen in Berichte einbeziehen
+		es = Incluir centro de costos en los informes
+		fr = Inclure le centre de coûts pour les rapports
+		iw = הכלל מרכז עלויות בדיווחים
+		pt = Incluir centro de custos nos relatórios
+		uk = Включати Центр вартості до звітів
+	[pref_general_track_cost_center_summaryOff]
+		ru = Don't Include Cost Center For Reports
+		de = Kostenstellen nicht in Berichte einbeziehen
+		es = No incluir centro de costos en los informes
+		fr = Ne pas inclure le centre de coûts pour les rapports
+		iw = אל תכליל מרכז עלויות בדיווחים
+		pt = Não incluir centro de custos nos relatórios
+		uk = Не включати Центр вартості до звітів
+	[pref_receipt_customize_categories_title]
+		comment = ============== Preference Receipt =================
+		ru = Customize Receipt Categories
+		de = Beleg-Kategorien anpassen
+		es = Personalizar categorías de recibos
+		fr = Personnaliser les catégories de reçus
+		iw = התאמה אישית לקטגוריות
+		pt = Personalizar categorias de recibos
+		uk = Налаштування категорій чеків
+	[pref_receipt_customize_categories_summary]
+		ru = Tap here to add/edit your categories
+		de = Tippen Sie hier, um Kategorien hinzuzufügen / zu bearbeiten
+		es = Toca aquí para añadir/editar tus categorías
+		fr = Appuyez ici pour ajouter/modifier vos catégories
+		iw = לחץ כאן לשינוי/הוספת קטגוריה
+		pt = Toque aqui para adicionar/editar suas categorias
+		uk = Натисніть тут, щоб додати/редагувати категорії
+	[pref_receipt_predict_categories_title]
+		ru = Predict Receipt Categories
+		de = Beleg-Kategorien voraussagen
+		es = Predecir categorías de recibos
+		fr = Prédire les catégories de reçus
+		iw = חיזוי קטגוריות
+		pt = Previsão das categorias de recibos
+		uk = Передбачати категорії чеків
+	[pref_receipt_predict_categories_summary]
+		ru = Auto-fill category based on prior data
+		de = Kategorien gemäß früherer Daten automatisch ausfüllen
+		es = Llenar automáticamente las categorías con base en los datos anteriores
+		fr = Remplir automatiquement la catégorie en fonction des données antérieures
+		iw = מלא קטגוריה באופן אוטומטי לפי מידע קודם
+		pt = Preencher categoria automaticamente com base em dados anteriores
+		uk = Автозаповнення категорії на основі попередніх даних
+	[pref_receipt_match_name_to_category_title]
+		ru = Match Name to Category
+		de = Namen an Kategorie anpassen
+		es = Coincidir el nombre con la categoría
+		fr = Associer le nom à une catégorie
+		iw = התאם שם לקטגוריה
+		pt = Coincidir nome e categoria
+		uk = Брати ім'я з категорії
+	[pref_receipt_match_name_to_category_summary]
+		ru = Automatically set name to category
+		de = Namen für Kategorie automatisch auswählen
+		es = Definir el nombre automáticamente a la categoría
+		fr = Assigner automatiquement le nom à la catégorie
+		iw = התאם שם לקטגוריה באופן אוטומטי
+		pt = Definir automaticamente o nome = categoria
+		uk = Автоматично заповнювати ім'я категорії
+	[pref_receipt_match_comment_to_category_title]
+		ru = Match Comment to Category
+		de = Kommentar an die Kategorie anpassen
+		es = Coincidir el comentario con la categoría
+		fr = Associer le commentaire à la catégorie
+		iw = התאם הערה לקטגוריה
+		pt = Coincidir comentário e categoria
+		uk = Брати коментар із категорії
+	[pref_receipt_match_comment_to_category_summary]
+		ru = Automatically set comment to category
+		de = Kommentar für Kategorie automatisch auswählen
+		es = Definir el comentario automáticamente a la categoría
+		fr = Assigner automatiquement le commentaire à la catégorie
+		iw = התאם הערה לקטגוריה באופן אוטומטי
+		pt = Definir automaticamente comentário = categoria
+		uk = Автоматически брати коментар із категорії
+	[pref_receipt_reimbursable_only_title]
+		ru = Only Report Reimbursable
+		de = Nur erstattungsfähige berichten
+		es = Solo informar lo reembolsable
+		fr = Seulement rapporter les frais remboursables
+		iw = דווח רק על קבלות ברות-החזר
+		pt = Somente reembolsáveis no relatório
+		uk = Тільки належні до відшкодування
+	[pref_receipt_reimbursable_only_summary]
+		ru = Omit other receipts from output
+		de = Andere Belege weglassen
+		es = Omitir otros recibos en la salida
+		fr = Omettre les autres reçus du fichier de sortie
+		iw = הסר קבלות אחרות מהדוח
+		pt = Omitir outros recibos da saída
+		uk = Виключити інші чеки зі звіту
+	[pref_receipt_reimbursable_default_title]
+		ru = Receipts Default As Reimbursable
+		de = Standard-Belege als erstattungsfähig
+		es = Los recibos son reembolsables de forma predeterminada
+		fr = Reçus remboursables par défaut
+		iw = קבלות מסומנות כברות-החזר כברירת מחדל
+		pt = Definir recibos como reembolsáveis por padrão
+		uk = Належні до відшкодування чеки за замовчуванням
+	[pref_receipt_include_tax_field_title]
+		ru = Include Tax Field
+		de = Steuern ausweisen
+		es = Incluir campo de impuesto
+		fr = Inclure un champ taxe
+		iw = הוסף שדה מס
+		pt = Incluir campo de impostos
+		uk = Включити поле "Податок"
+	[pref_receipt_include_tax_field_summary]
+		ru = Adds a line item for taxes
+		de = Fügt einen Einzelposten für Steuern hinzu
+		es = Añade una línea para los impuestos
+		fr = Ajoute une ligne pour les taxes
+		iw = מוסיף שורה עבור מיסים
+		pt = Adicionar um item de linha para os impostos
+		uk = Додає строку з інформацією про податки
+	[pref_receipt_tax_percent_title]
+		ru = Default Tax Percentage
+		de = Standardsteuersatz
+		es = Porcentaje predeterminado de impuesto
+		fr = Pourcentage d'impôt par défaut
+		iw = אחוז מס ברירת-מחדל
+		pt = Percentual padrão de imposto
+		uk = Процент податку за замовчуванням
+	[pref_receipt_pre_tax_title]
+		ru = Assume Price is Pre-Tax
+		de = Bruttopreise annehmen
+		es = Asumir que el precio no incluye impuesto
+		fr = Supposer que le prix est hors taxe
+		iw = הנח שמחיר הוא לפני מס
+		pt = Pressuposição de preço com impostos
+		uk = Використовувати вартість без податків
+	[pref_receipt_pre_tax_summary_on]
+		ru = Calculates Tax From a Pre-Tax Price
+		de = Berechnet Steuern aus einem Vorsteuer-Preis
+		es = Calcular los impuestos del precio antes de impuesto
+		fr = Calcule les taxes à partir du prix hors taxe
+		iw = מחשב מס ממחיר טרום ניכוי מס
+		pt = Calcular impostos com base no preço com impostos
+		uk = Розраховує податок на базі вартості без податку
+	[pref_receipt_pre_tax_summary_off]
+		ru = Calculates Tax From a Post-Tax Price
+		de = Berechnet Steuern aus einem Nach-Steuer-Preis
+		es = Calcular los impuestos del precio después de impuesto
+		fr = Calcule les taxes à partir du prix toutes taxes comprises
+		iw = מחשב מס ממחיר לאחר ניכוי מס
+		pt = Calcular impostos com base no preço sem impostos
+		uk = Розраховує податок на базі вартості з податком
+	[pref_receipt_enable_autocomplete_title]
+		ru = Enable AutoComplete Suggestions
+		de = Vorschläge aktivieren
+		es = Habilitar sugerencias para autocompletar
+		fr = Activer les suggestions de saisie automatique
+		iw = אפשר הצעות אוטומטיות להשלמה
+		pt = Habilitar sugestões de autopreenchimento
+		uk = Включити автозаповнення
+	[pref_receipt_enable_autocomplete_summary]
+		ru = Suggest values from previous values
+		de = Werte aus früheren Einträgen vorschlagen
+		es = Sugerir valor de entradas anteriores
+		fr = Proposer des valeurs à partir des entrées précédentes
+		iw = מציע ערכים אפשריים מערכים קודמים
+		pt = Sugerir valores de lançamentos anteriores
+		uk = Пропонувати значення з попередніх записів
+	[pref_receipt_minimum_receipts_price_title]
+		ru = Minimum Receipt Price
+		de = Mindest-Beleghöhe
+		es = Precio mínimo del recibo
+		fr = Prix ​​de reçu minimum
+		iw = מחיר קבלה מינימלי
+		pt = Preço mínimo para recibos
+		uk = Мінімальна ціна чека
+	[pref_receipt_minimum_receipts_price_summary_all]
+		ru = Include all receipts in report
+		de = Keine Mindest-Beleghöhe, alle Belege berücksichtigen.
+		es = Incluir todos los recibos en el informe
+		fr = Inclure tous les reçus dans le rapport
+		iw = הכלל את כל הקבלות בדוח
+		pt = Incluir todos os recibos no relatório
+		uk = Включити до звіту всі чеки
+	[pref_receipt_minimum_receipts_price_summary_partial]
+		ru = Only report receipt prices over %@
+		de = Nur Belege ab %@ berücksichtigen.
+		es = Incluir únicamente recibos con precios de más de %@
+		fr = Seulement rapporter les prix des reçus supérieurs à %@
+		iw = %@ דווח רק על קבלות מעל
+		pt = Relatar somente recibos com valor acima de %@
+		uk = Тільки чеки вартістю більше ніж %@
+	[pref_receipt_default_to_report_start_date_title]
+		ru = Default to Report Start Date
+		de = Datum überprüfen
+		es = Restablecer a la fecha de inicial del informe
+		fr = Date de début du rapport par défaut
+		iw = קבע את תאריך תחילת הדוח כברירת מחדל
+		pt = Usar data de início do relatório padrão
+		uk = Дата початку звіту за замовчуванням
+	[pref_receipt_default_to_report_start_date_summary]
+		ru = Sets receipt date to match report date
+		de = Stimmt das Eingangsdatum mit dem Berichtszeitraum überein
+		es = Define que la fecha del recibo coincida con la del informe
+		fr = Définit la date des reçus pour correspondre à la date du rapport
+		iw = קובע את תאריך הקבלה לתאריך תחילת הדוח
+		pt = Definir data do recibo para coincidir com a data do relatório
+		uk = Встановлює дату чека відповідно до дати звіту
+	[pref_receipt_show_id_title]
+		ru = Show Receipt ID
+		de = Beleg ID anzeigen
+		es = Mostrar el Id. de recibo
+		fr = Afficher l'ID des reçus
+		iw = הראה מזהה קבלה
+		pt = Exibir ID do recibo
+		uk = Показувати ID чека
+	[pref_receipt_show_id_summary]
+		ru = Displays an auto-generated ID field
+		de = Zeigt ein automatisch generiertes ID-Feld an
+		es = Muestra el campo Id. generado automáticamente
+		fr = Affiche un champ d'ID généré automatiquement
+		iw = מראה מזהה לכל קבלה (מספר המוקצה אוטומטית)
+		pt = Exibir um campo de ID gerado automaticamente
+		uk = Відображає автоматично згенероване поле "ID"
+	[pref_receipt_full_page_title]
+		ru = Assume Full Page
+		de = Komplette Seite annehmen
+		es = Asumir página completa
+		fr = Supposer la page entière
+		iw = הנח דף מלא
+		pt = Presumir tela cheia
+		uk = На всю сторінку
+	[pref_receipt_full_page_summary]
+		ru = Marks Receipts as Full Page by Default
+		de = Markiert die Belege standardmäßig als ganzseitig
+		es = Marca los recibos como página completa de forma predeterminada
+		fr = Marque les reçus comme page entière par défaut
+		iw = מסמן קבלות כדף מלא כברירת מחדל
+		pt = Marcar recibos como tela cheia por padrão
+		uk = Позначає чеки як повносторінкові за замовчуванням
+	[pref_receipt_use_payment_methods_title]
+		ru = Enable Payment Methods
+		de = Aktivieren der Zahlungsmethoden
+		es = Habilitar métodos de pago
+		fr = Activer les modes de paiement
+		iw = אפשר אמצעי תשלום
+		pt = Habilitar formas de pagamento
+		uk = Включити способи сплати
+	[pref_receipt_use_payment_methods_summary]
+		ru = Select to track payment methods for receipts
+		de = Wählen Sie Verfolgen von Zahlungsmethoden für Belege
+		es = Selecciona para hacer seguimiento a los métodos de pago de los recibos
+		fr = Sélectionnez cette option pour suivre les méthodes de paiement des reçus
+		iw = סמן על מנת לעקוב אחרי אמצעי תשלום לקבלות
+		pt = Selecionar para rastrear as formas de pagamento dos recibos
+		uk = Витягувати методи сплати з чеків
+	[pref_receipt_payment_methods_title]
+		ru = Customize Payment Methods
+		de = Zahlungsmethoden anpassen
+		es = Personalizar métodos de pago
+		fr = Personnaliser les modes de paiement
+		iw = התאמה אישית לאמצעי תשלום
+		pt = Personalizar formas de pagamento
+		uk = Налаштування способів сплати
+	[pref_receipt_payment_methods_summary]
+		ru = Tap here to add/edit payment methods
+		de = Tippen Sie hier, um Zahlungsmethoden hinzuzufügen / zu bearbeiten
+		es = Toca aquí para añadir/editar métodos de pago
+		fr = Appuyez ici pour ajouter/modifier les modes de paiement
+		iw = לחץ כאן להוספה/שינוי אמצעי תשלום
+		pt = Toque aqui para adicionar/editar formas de pagamento
+		uk = Натисніть тут, щоб додати/редагувати способи сплати
+	[pref_output_custom_csv_title]
+		comment = ============= Preference Output =================
+		ru = Customize CSV Output
+		de = ` CSV-Ausgabe anpassen`
+		es = Personalizar salida CSV
+		fr = Personnaliser le fichier de sortie CSV
+		iw = התאמה אישית לדוח אקסל
+		pt = Personalizar saída CSV
+		uk = Налаштування таблиць для CSV
+	[pref_output_custom_pdf_title]
+		ru = Customize PDF Output
+		de = PDF-Ausgabe anpassen
+		es = Personalizar salida PDF
+		fr = Personnaliser le fichier de sortie PDF
+		iw = התאמה אישית לדוח פידיאף
+		pt = Personalizar saída PDF
+		uk = Налаштування таблиць для PDF
+	[pref_output_username_title]
+		ru = User ID
+		de = Benutzeridentifikation
+		es = Id. de usuario
+		fr = Identifiant d'utilisateur
+		iw = מזהה משתמש
+		pt = ID de usuário
+		uk = ID користувача
+	[pref_output_username_emptyValue]
+		ru = Used as a Custom Output Field
+		de = Wird als Ausgabefeld definiert
+		es = Usado como campo de salida personalizado
+		fr = Utilisé comme un champ de sortie personnalisé
+		iw = משמש כשדה ייצוא בהתאמה אישית
+		pt = Utilizado como campo de saída personalizado
+		uk = Використовується в якості довільного поля
+	[pref_output_print_receipt_id_by_photo_title]
+		ru = Print ID By Photo
+		de = Beleg-ID zumh Foto
+		es = Imprimir Id. por foto
+		fr = Imprimer l'ID par photo
+		iw = הראה מזהה לפי תמונה
+		pt = Imprimir ID por foto
+		uk = Друк ID по фото
+	[pref_output_print_receipt_id_by_photo_summary]
+		ru = Shows the Receipt ID instead of Index
+		de = Zeigt die Beleg-ID anstelle des Index
+		es = Muestra el Id. de recibo en vez del índice
+		fr = Affiche l'ID du reçu à la place de l'indice
+		iw = מראה את מזהה את קבלה במקום מספר אינדקס
+		pt = Exibir a ID do recibo em vez do índice
+		uk = Показує ID чека замість індексу
+	[pref_output_print_receipt_comment_by_photo_title]
+		ru = Print Receipt Comment By Photo
+		de = Belegkommentar zum Foto anzeigen
+		es = Imprimir comentario de recibo por foto
+		fr = Imprimer le commentaire du reçu par photo
+		iw = הראה הערה לקבלה לפי תמונה
+		pt = Imprimir comentário do recibo via foto
+		uk = Друк коментаря до чеку по фото
+	[pref_output_print_receipt_comment_by_photo_summaryOn]
+		ru = Shows the Receipt comment above PDF photos
+		de = Im PDF den Belegkommentar über den Fotos anzeigen
+		es = Muestra el comentario del recibo sobre las fotos PDF
+		fr = Affiche le commentaire du reçu au-dessus des photos PDF
+		iw = מראה הערה לקבלה מעל תמונות פידיאף
+		pt = Exibir o comentário do recibo acima das fotos em PDF
+		uk = Показувати коментар над фотографіями в PDF
+	[pref_output_print_receipt_comment_by_photo_summaryOff]
+		ru = Hide the Receipt comment above PDF photos
+		de = Im PDF den Belegkommentar über den Fotos ausblenden
+		es = Ocultar el comentario del recibo sobre las fotos PDF
+		fr = Masquer le commentaire du reçu au-dessus des photos PDF
+		iw = מחביא הערה לקבלה מתחת לתמונות פידיאף
+		pt = Ocultar o comentário do recibo acima das fotos em PDF
+		uk = Приховати коментар над фотографіями в PDF
+	[pref_output_receipts_landscape_title]
+		ru = Print receipts table in landscape mode
+		de = Belegtabelle im Querformat drucken
+		es = Imprimir la tabla de recibos en modo horizontal
+		fr = Imprimer le tableau des reçus en mode paysage
+		iw = מדפיס טבלת קבלות בדף מאוזן
+		pt = Imprimir tabela de recibos em modo paisagem
+		uk = Друк таблиці чеків в ландшафтному режимі
+	[pref_output_receipts_landscape_on]
+		ru = Receipts table is printed in landscape mode
+		de = Belegtabelle ist im Querformat gedruckt
+		es = La tabla de recibos se imprime en modo horizontal
+		fr = Le tableau des reçus est imprimé en mode paysage
+		iw = טבלת קבלות מודפסת בדף מאוזן
+		pt = A tabela de recibos é impressa em modo paisagem
+		uk = Таблиця чеків друкується в ландшафтному режимі
+	[pref_output_receipts_landscape_off]
+		ru = Receipts table is printed in portrait mode
+		de = Belegtabelle wird im Hochformat gedruckt
+		es = La tabla de recibos se imprime en modo vertical
+		fr = Le tableau des reçus est imprimé en mode portrait
+		iw = טבלת קבלות מודפסת בדף מאונך
+		pt = A tabela de recibos é impressa em modo retrato
+		uk = Таблиця чеків друкується в портретному режимі
+	[pref_output_preferred_language_title]
+		ru = Preferred Report Language
+		de = Bevorzugte Berichtssprache
+		es = Idioma de informe preferido
+		fr = Langue du rapport préféré
+		pt = Linguagem de relatório preferida
+		uk = Бажана мова звітів
+	[pref_email_default_email_to_title]
+		comment = ============== Preference Email =================
+		ru = Default Email To Recipient
+		de = Standard E-Mail zum Empfänger
+		es = Destinatario predeterminado del correo electrónico
+		fr = E-mail par défaut au destinataire
+		iw = כתובת אימייל ברירת מחדל למשלוח הדוח
+		pt = Email padrão do destinatário
+		uk = Одержувач за замовчуванням
+	[pref_email_default_email_cc_title]
+		ru = Default Email CC Recipient
+		de = Standard Email CC Empfänger
+		es = Destinatario predeterminado de la copia del correo electrónico
+		fr = Destinataire CC de l'e-mail par défaut
+		iw = כתובת אימייל ברירת מחדל למשלוח העתק של הדוח
+		pt = Email padrão do destinatário c/c
+		uk = Одержувач CC за замовчуванням
+	[pref_email_default_email_bcc_title]
+		ru = Default Email BCC Recipient
+		de = Standard E-Mail BCC Empfänger
+		es = Destinatario predeterminado de la copia oculta del correo electrónico
+		fr = Destinataire BCC de l'e-mail par défaut
+		iw = כתובת אימייל בריבת מחדל למשלוח העתק מוסתר של הדוח
+		pt = Email padrão do destinatário BCC
+		uk = Одержувач BCC за замовчуванням
+	[pref_email_default_email_emptyValue]
+		ru = Separate values with a semicolon (;)
+		de = Getrennte Einträge mit einem Semikolon (;)
+		es = Separar las entradas con punto y coma (;)
+		fr = Séparer les entrées par un point-virgule (;)
+		iw = (;) הפרד ערכים עם פסיקודה
+		pt = Separar lançamentos com ponto e vírgula (;)
+		uk = Відокремлювати записи крапкою з комою (;)
+	[pref_email_default_email_subject_title]
+		ru = Default Email Subject
+		de = Standard E-Mail Betreff
+		es = Asunto predeterminado del correo electrónico
+		fr = Objet de l'e-mail par défaut
+		iw = כותרת אימייל ברירת מחדל
+		pt = Assunto padrão do email
+		uk = Тема листа за замовчуванням
+	[pref_camera_bw_title]
+		comment = ============= Preference Camera =================
+		ru = Convert to Grayscale
+		de = In Graustufen konvertieren
+		es = Convertir a escala de grises
+		fr = Convertir en niveaux de gris
+		iw = המר לגווני אפור
+		pt = Converter para escala de cinza
+		uk = Конвертувати в відтінки сірого
+	[pref_camera_bw_summary]
+		ru = Saves image in black and white
+		de = Speichert Bild in Schwarz und Weiß
+		es = Guarda la imagen en blanco y negro
+		fr = Enregistre l'image en noir et blanc
+		iw = שומר תמונה בשחור ולבן
+		pt = Grava imagem em preto e branco
+		uk = Зберігає зображення в чорно-білому форматі
+	[pref_camera_rotate_title]
+		ru = Automatically rotate images
+		de = Bilder automatisch drehen
+		es = Rotar automáticamente las imágenes
+		fr = Rotation automatique des images
+		iw = סובב תמונות באופן אוטומטי
+		pt = Girar imagens automaticamente
+		uk = Автоматичний поворот зображень
+	[pref_camera_rotate_summaryOn]
+		ru = Try to rotate images upright
+		de = Versuchen Sie, Bilder aufrecht zu drehen
+		es = Intenta rotar las imágenes hacia arriba
+		fr = Essayez de faire pivoter les images en position verticale
+		iw = נסה לסובב את התמונה לכיוון הנכון
+		pt = Tentar girar imagens para cima
+		uk = Намагатися повертати зображення вертикально
+	[pref_camera_rotate_summaryOff]
+		ru = Do not rotate images
+		de = Die Bilder nicht drehen
+		es = No rotar las imágenes
+		fr = Ne pas faire pivoter les images
+		iw = אל תסובב תמונות
+		pt = Não girar imagens
+		uk = Не повертати зображення
+	[pref_layout_display_date_title]
+		comment = ============= Preference Layout =================
+		ru = Include Receipt Date
+		de = Eingangsdatum hinzufügen
+		es = Incluir fecha del recibo
+		fr = Inclure la date des reçus
+		iw = כלול תאריך קבלה
+		pt = Incluir a data dos recibos
+		uk = Включати дату чека
+	[pref_layout_display_date_summary]
+		ru = Shows the date of receipt list items
+		de = Zeigt das Datum des Belegs-Listenelemente
+		es = Muestra la fecha de la lista de ítems del recibo
+		fr = Affiche la date des reçus
+		iw = מראה תאריך לכל קבלה ברשימת הקבלות
+		pt = Exibir a data dos recibos entre os itens da lista
+		uk = Показувати дату чека
+	[pref_layout_display_category_title]
+		ru = Include Receipt Category
+		de = Beleg-Kategorie hinzufügen
+		es = Incluir categoría del recibo
+		fr = Inclure la catégorie des reçus
+		iw = הכלל קטגוריית קבלה
+		pt = Incluir categoria dos recibos
+		uk = Включати категорію чека
+	[pref_layout_display_category_summary]
+		ru = Shows the category of receipt list items
+		de = Zeigt die Kategorie des Belegs-Listenelemente
+		es = Muestra la categoría de la lista de ítems del recibo
+		fr = Affiche la catégorie des reçus
+		iw = מראה קטגוריה לכל קבלה ברשימת הקבלות
+		pt = Exibir a categoria dos recibos como itens da lista
+		uk = Показувати категорію чека
+	[pref_distance_include_price_in_report_title]
+		comment = ============= Preference Distance =================
+		ru = Add Distance Price to Report
+		de = Kilometergeld im Bericht
+		es = Añadir precio de la distancia al informe
+		fr = Ajouter les frais de distance au rapport
+		iw = הוסף מחיר נסיעה לדוח
+		pt = Adicionar preço por distância ao relatório
+		uk = Додати вартість відстані до звіту
+	[pref_distance_include_price_in_report_summaryOn]
+		ru = Includes distance price in report total
+		de = ` Kilometergeld einschließen`
+		es = Incluir el precio de la distancia en el total del informe
+		fr = Inclure les frais de distance au total du rapport
+		iw = מוסיף מחיר נסיעה לסכימה בדוח
+		pt = Inclui o preço por distância no total do relatório
+		uk = Включає вартість відстані до звіту
+	[pref_distance_include_price_in_report_summaryOff]
+		ru = Excludes distance price from report total
+		de = Kilometergeld weglassen
+		es = Excluir el precio de la distancia del total del informe
+		fr = Exclure les frais de distance du total du rapport
+		iw = לא מוסיף מחיר נסיעה לסכימה בדוח
+		pt = Excluir preço por distância do relatório
+		uk = Виключає вартість відстані зі звіту
+	[pref_distance_rate_title]
+		ru = Gas Rate
+		de = Benzinpreis
+		es = Tarifa del combustible
+		fr = Prix de l'essence
+		iw = מחיר לדלק
+		pt = Preço do Combustível
+		uk = Витрати палива
+	[pref_distance_rate_summaryOff]
+		ru = The rate per mi or km travelled
+		de = Rate pro zurückgelegter mi oder km
+		es = La tarifa por millas o kilómetros recorridos
+		fr = Prix par miles ou kilomètre parcouru
+		iw = מחיר לפי קילומטר או מייל של נסיעה
+		pt = O preço por km ou mi rodada
+		uk = Витрата палива на милю або км
+	[pref_distance_rate_summaryOn]
+		ru = %@ per mi or km
+		de = %@ pro mi oder km
+		es = %@ por milla o kilómetro
+		fr = %@ par mi ou km
+		iw = לכל מייל או קילומטר %@
+		pt = %@ por km ou mi
+		uk = %@ на милю або км
+	[pref_distance_print_table_title]
+		ru = Include Distance Table
+		de = Kilometergeldtabelle-Tabelle inbegriffen
+		es = Incluir tabla de distancias
+		fr = Inclure le tableau des distances
+		iw = הוסף טבלת מרחק נסיעה
+		pt = Incluir tabela de distâncias
+		uk = Включити таблицю відстаней
+	[pref_distance_print_table_summaryOn]
+		ru = PDF/CSV reports include distance table
+		de = PDF / CSV-Berichte enthalten Kilometergeldtabelle
+		es = Los informes en PDF/CSV incluyen la tabla de distancias
+		fr = Les rapports PDF/CSV comprennent un tableau des distances
+		iw = דוחות פידיאף ואקסל כוללים טבלת מרחק נסיעה
+		pt = Relatórios em PDF/CSV incluem a tabela de distâncias
+		uk = Звіти PDF/CSV включають таблицю відстаней
+	[pref_distance_print_table_summaryOff]
+		ru = PDF/CSV reports don't include distance table
+		de = PDF / CSV-Berichte enthalten keine Kilometergeldtabelle
+		es = Los informes en PDF/CSV no incluyen la tabla de distancias
+		fr = Les rapports PDF/CSV ne comprennent pas de tableau des distances
+		iw = דוחות פידיאף ואקסל לא כוללים טבלת מרחק נסיעה
+		pt = Relatórios PDF/CSV não incluem tabela de distâncias
+		uk = Звіти PDF/CSV не включають таблицю відстаней
+	[pref_distance_print_daily_title]
+		ru = Report on Daily Distance
+		de = Bericht über die tägliche zurückgelegte Entfernung
+		es = Informar la distancia diaria
+		fr = Rapport sur la distance quotidienne
+		iw = דווח על מרחק נסיעה יומי
+		pt = Relatar distância diária
+		uk = Щоденна відстань в звіті
+	[pref_distance_print_daily_summaryOn]
+		ru = Show distance as receipt line item
+		de = Entfernung als Beleg-Position anzeigen
+		es = Mostrar la distancia como un ítem del recibo
+		fr = Afficher la distance en ajoutant une ligne de reçu
+		iw = הראה מרחק נסיעה לכל קבלה
+		pt = Exibir distância como item de linha nos recibos
+		uk = Показувати поле "Відстань"
+	[pref_distance_print_daily_summaryOff]
+		ru = Don't show distance as receipt line item
+		de = Entfernung nicht als Beleg-Position anzeigen
+		es = No mostrar la distancia como un ítem del recibo
+		fr = Ne pas afficher la distance sous forme de ligne de reçu
+		iw = אל תראה מרחק נסיעה לכל קבלה
+		pt = Não exibir distância como item de linha nos recibos
+		uk = Не показувати поле "Відстань"
+	[pref_distance_as_price_title]
+		ru = Distance Price in Subtitle
+		de = Entfernungspreis im Untertitel
+		es = Mostrar el precio en el subtítulo
+		fr = Frais de distance en sous-titre
+		iw = מחיר מרחק נסיעה בכותרת משנה
+		pt = Preço por distância no subtítulo
+		uk = Ціна відстані в підзаголовку
+	[pref_distance_as_price_summaryOn]
+		ru = Show distance price total in app subtitle
+		de = Kilometergeld insgesamt in App Untertitel
+		es = Mostrar el precio total de la distancia en el subtítulo de la app
+		fr = Afficher le total des frais de distance dans le sous-titre de l'appli
+		iw = הראה סך הכול מחיר נסיעה בכותרת משנה
+		pt = Exibir preço por distância no subtítulo do app
+		uk = Показувати вартість відстані в підзаголовку додатку
+	[pref_distance_as_price_summaryOff]
+		ru = Show distance travelled in app subtitle
+		de = Zurückgelegte Entfernung in App Untertitel anzeigen
+		es = Mostrar la distancia recorrida en el subtítulo de la app
+		fr = Afficher la distance parcourue dans le sous-titre de l'appli
+		iw = הראה סך הכול מרחק נסיעה בכותרת משנה
+		pt = Exibir distância percorrida no subtítulo do app
+		uk = Показувати пройдену дистанцію в підзаголовку додатку
+	[pref_pro_pdf_footer_title]
+		comment = ================= Preference Plus ==================
+		ru = PDF Footer Text
+		de = PDF Fußzeilentext
+		es = Texto del pie de página PDF
+		fr = Pied de page du texte PDF
+		iw = טקסט בתחתית מסמך פידיאף
+		pt = Texto do rodapé do PDF
+		uk = Текст знизу PDF
+	[pref_pro_separate_by_category_title]
+		ru = Separate Payments by Category
+		de = Getrennte Zahlungen pro Kategorie
+		es = Pagos separados por categoría
+		fr = Paiements séparés par catégorie
+		iw = הפרד תשלומים לפי קטגוריה
+		pt = Divida pagamentos por Categoria
+		uk = Розділити платежі за категоріями
+	[pref_pro_separate_by_category_summaryOn]
+		ru = PDF/CSV reports include separate tables for different categories
+		de = PDF / CSV-Berichte enthalten separate Tabellen für verschiedene Kategorien
+		es = Los informes PDF/CSV incluyen tablas separadas para diferentes categorías
+		fr = PDF/CSV rapports comprennent des tables séparées pour différentes catégories
+		iw = דוחות פידיאף ואקסל מכילים טבלאות שונות לפי קטגוריה
+		pt = PDF/CSV relatórios incluem mesas separadas para diferentes categorias
+		uk = У PDF/CSV звіти будуть включені окремі таблиці для різних категорій
+	[pref_pro_separate_by_category_summaryOff]
+		ru = PDF/CSV reports don't include separate tables for different categories
+		de = PDF / CSV-Berichte enthalten keine separaten Tabellen für verschiedene Kategorien
+		es = Los informes PDF/CSV no incluyen tablas separadas para diferentes categorías
+		fr = Rapports PDF/CSV ne comprennent pas des tables séparées pour différentes catégories
+		iw = דוחות פידיאף ואקסל לא מכילים טבלאות שונות לפי קטגוריה
+		pt = PDF/CSV relata don't incluem mesas separadas para diferentes categorias
+		uk = У PDF/CSV звіти не будуть включені окремі таблиці для різних категорій
+	[pref_pro_categorical_summation_title]
+		ru = Include Categorical Summation
+		de = Zwischensummen pro Kategorie
+		es = Incluir Sumatoria Categórica
+		fr = Inclure catégorielles Summation
+		iw = כלול סכימה לפי קטגרויה
+		pt = Incluir Categorical Somatório
+		uk = Включити підсумовування за категоріями
+	[pref_pro_categorical_summation_summaryOn]
+		ru = PDF/CSV reports include table with summation by category
+		de = PDF / CSV-Berichte enthalten Tabelle mit Summierung pro Kategorie
+		es = Los informes PDF/CSV incluyen una tabla con suma por categoría
+		fr = PDF/CSV rapports comprennent table avec sommation par catégorie
+		iw = דוחות פידיאף ואקסל מכילים טבלאות של סכימה לפי קטגוריה
+		pt = PDF/CSV relatórios incluem mesa com somatório por categoria
+		uk = У PDF/CSV звіти буде включена таблиця з витратами по категоріям
+	[pref_pro_categorical_summation_summaryOff]
+		ru = PDF/CSV reports don't include table with summation by category
+		de = PDF / CSV-Berichte enthalten keine Tabelle mit Summierung pro Kategorie
+		es = Los informes PDF/CSV no incluyen la tabla con suma por categoría
+		fr = PDF/CSV rapports ne comprennent pas la table avec sommation par catégorie
+		iw = דוחות פידיאף ואקסל לא מכילים טבלאות של סכימה לפי קטגוריה
+		pt = PDF/CSV relata don't incluem mesa com somatório por categoria
+		uk = У PDF/CSV звіти не буде включена таблиця з витратами по категоріям
+	[pref_pro_omit_default_table_title]
+		ru = Omit Default PDF Table
+		de = ` Standard-PDF-Tabelle weglassen`
+		es = Omitir tabla PDF predeterminada
+		fr = Omettre Tableau PDF par défaut
+		iw = אל תכלול טבלת פידיאף ברירת מחדל
+		pt = Omitir Tabela PDF padrão
+		uk = Виключити загальну PDF таблицю
+	[pref_help_send_love_title]
+		comment = ============== Preference Support =================
+		ru = Send Love
+		de = Liebe senden
+		es = Enviar amor
+		fr = Envoyer un j'aime
+		iw = (:שלח אהבה
+		pt = Enviar saudações
+		uk = Відправити Лайк
+	[pref_help_send_feedback_title]
+		ru = Send Feedback
+		de = Feedback abschicken
+		es = Enviar comentarios
+		fr = Envoyer des commentaires
+		iw = שלח פידבק
+		pt = Enviar comentários
+		uk = Відправити відгук
+	[pref_help_support_email_title]
+		ru = Email for Support
+		de = E-Mail für den Support
+		es = Enviar correo electrónico para obtener asistencia
+		fr = Envoyer un e-mail pour obtenir de l'aide
+		iw = שלח אימייל לתמיכה טכנית
+		pt = Email do suporte
+		uk = E-mail для підтримки
+	[pref_about_version_title]
+		comment = =============== Preference About ==================
+		ru = Version
+		de = Version
+		es = Versión
+		fr = Version
+		iw = גרסא
+		pt = Versão
+		uk = Версія
+	[pref_about_about_title]
+		ru = About
+		de = Über
+		es = Acerca de
+		fr = À propos
+		iw = אודות
+		pt = Sobre
+		uk = Про програму
+	[pref_about_terms_title]
+		ru = Terms of Use
+		de = Nutzungsbedingungen
+		es = Términos de uso
+		fr = Conditions d'utilisation
+		iw = תנאי שימוש
+		pt = Termos de Uso
+		uk = Умови використання
+	[pref_about_privacy_policy_title]
+		comment = ============== Preference Privacy =================
+		ru = Privacy Policy
+		de = Datenschutz-Bestimmungen
+		es = Política de Privacidad
+		fr = Politique de confidentialité
+		iw = מדיניות פרטיות
+		pt = Política de Privacidade
+		uk = Політика конфіденційності
+	[column_item_deprecated_expensable]
+		ru = Expensable
+		iw = Expensable
+	[pref_privacy_enable_analytics_title]
+		ru = Share Analytics
+		de = Auswertungen teilen
+		es = Compartir Analytics
+		fr = Analyses de partage
+		iw = שתף מידע אנונימי אודות השימוש שלך
+		pt = Compartilhar o Analytics
+		uk = Поделиться аналитикой
+	[pref_privacy_enable_analytics_summary]
+		ru = With Google/Firebase Analytics
+		de = Mit Google / Firebase Analytics
+		es = Con Google / Firebase Analytics
+		fr = Avec Google / Firebase Analytics
+		iw = Google/Firebase Analytics באמצעות
+		pt = Com o Google / Firebase Analytics
+		uk = С Google / Firebase Analytics
+	[pref_privacy_enable_crash_tracking_title]
+		ru = Share Crash Information
+		de = Absturzinformationen teilen
+		es = Compartir información de bloqueo
+		fr = Partager l'information sur l'accident
+		iw = שתף מידע על התרסקות התוכנה
+		pt = Compartilhar informações sobre falhas
+		uk = Поделиться неудачами приложений
+	[pref_privacy_enable_crash_tracking_summary]
+		ru = With Google Crashlytics
+		de = Mit Google Crashlytics
+		es = Con Google Crashlytics
+		fr = Avec Google Crashlytics
+		iw = `Google Crashlyticsבאמצעות `
+		pt = Com Google Crashlytics
+		uk = С Google Crashlytics
+	[pref_privacy_enable_ad_personalization_title]
+		ru = Allow Ad Personalization
+		de = Erlaube Ad-Personalisierung
+		es = Permitir la personalización de anuncios
+		fr = Autoriser la personnalisation de l'annonce
+		iw = אפשר התאמה אישית של פרסומות
+		pt = Permitir personalização de anúncios
+		uk = Разрешить персонализацию объявлений
+	[pref_privacy_enable_ad_personalization_summary]
+		ru = With Google AdMob
+		de = Mit Google AdMob
+		es = Con Google AdMob
+		fr = Avec Google AdMob
+		iw = `Google AdMobעם `
+		pt = Com o Google AdMob
+		uk = С помощью Google AdMob
+	[sr_app_name_plus]
+		ru = Smart Receipts Plus
+	[pref_header_key]
+		comment = ============== Preference Headers =================
+		ru = HeaderKey
+	[pref_general_header_key]
+		ru = pref_general_category_key
+	[pref_receipt_header_key]
+		ru = pref_receipt_category_key
+	[pref_output_header_key]
+		ru = pref_output_category_key
+	[pref_email_header_key]
+		ru = pref_email_category_key
+	[pref_camera_header_key]
+		ru = pref_camera_category_key
+	[pref_layout_header_key]
+		ru = pref_layout_category_key
+	[pref_distance_header_key]
+		ru = pref_distance_category_key
+	[pref_pro_header_key]
+		ru = pref_pro_category_key
+	[pref_help_header_key]
+		ru = pref_help_category_key
+	[pref_about_header_key]
+		ru = pref_about_category_key
+	[pref_privacy_header_key]
+		ru = pref_privacy_category_key
+	[pref_general_trip_duration_key]
+		comment = ============== Preference General =================
+		ru = TripDuration
+	[pref_general_default_currency_key]
+		ru = isocurr
+	[pref_general_default_date_separator_key]
+		ru = dateseparator
+	[pref_general_track_cost_center_key]
+		ru = trackcostcenter
+	[pref_receipt_customize_categories_key]
+		comment = ============== Preference Receipt =================
+		ru = CustomCategories
+	[pref_receipt_predict_categories_key]
+		ru = PredictCats
+	[pref_receipt_match_name_to_category_key]
+		ru = MatchNameCats
+	[pref_receipt_match_comment_to_category_key]
+		ru = MatchCommentCats
+	[pref_receipt_reimbursable_only_key]
+		ru = OnlyIncludeExpensable
+	[pref_receipt_reimbursable_default_key]
+		ru = ExpensableDefault
+	[pref_receipt_include_tax_field_key]
+		ru = IncludeTaxField
+	[pref_receipt_tax_percent_key]
+		ru = TaxPercentage
+	[pref_receipt_pre_tax_key]
+		ru = PreTax
+	[pref_receipt_enable_autocomplete_key]
+		ru = EnableAutoCompleteSuggestions
+	[pref_receipt_minimum_receipts_price_key]
+		ru = MinReceiptPrice
+	[pref_receipt_default_to_report_start_date_key]
+		ru = DefaultToFirstReportDate
+	[pref_receipt_show_id_key]
+		ru = ShowReceiptID
+	[pref_receipt_full_page_key]
+		ru = UseFullPage
+	[pref_receipt_use_payment_methods_key]
+		ru = UsePaymentMethods
+	[pref_receipt_payment_methods_key]
+		ru = PaymentMethods
+	[pref_output_custom_csv_key]
+		comment = ============= Preference Output =================
+		ru = CustomizeCSVOutput
+	[pref_output_custom_pdf_key]
+		ru = CustomizePDFOutput
+	[pref_output_username_key]
+		ru = UserName
+	[pref_output_print_receipt_id_by_photo_key]
+		ru = PrintByIDPhotoKey
+	[pref_output_print_receipt_comment_by_photo_key]
+		ru = PrintCommentByPhoto
+	[pref_output_receipts_landscape_key]
+		ru = ReceiptsTableLandscape
+	[pref_output_pdf_page_size_key]
+		ru = PdfPageSize
+	[pref_output_pdf_page_size_a4_entryValue]
+		ru = A4
+	[pref_output_pdf_page_size_letter_entryValue]
+		ru = Letter
+	[pref_output_preferred_language_key]
+		ru = PreferredReportLanguage
+	[pref_email_default_email_to_key]
+		comment = ============== Preference Email =================
+		ru = EmailTo
+	[pref_email_default_email_cc_key]
+		ru = EmailCC
+	[pref_email_default_email_bcc_key]
+		ru = EmailBCC
+	[pref_email_default_email_subject_key]
+		ru = EmailSubject
+	[pref_camera_bw_key]
+		comment = ============= Preference Camera =================
+		ru = SaveBW
+	[pref_camera_rotate_key]
+		ru = Camera_Rotate
+	[pref_layout_display_date_key]
+		comment = ============= Preference Layout =================
+		ru = LayoutIncludeReceiptDate
+	[pref_layout_display_category_key]
+		ru = LayoutIncludeReceiptCategory
+	[pref_distance_include_price_in_report_key]
+		comment = ============= Preference Distance =================
+		ru = MileageTotalInReport
+	[pref_distance_rate_key]
+		ru = MileageRate
+	[pref_distance_print_table_key]
+		ru = MileagePrintTable
+	[pref_distance_print_daily_key]
+		ru = MileageAddToPDF
+	[pref_distance_as_price_key]
+		ru = DistanceAsPrice
+	[pref_pro_pdf_footer_key]
+		comment = ================= Preference Plus ==================
+		ru = PdfFooterString
+	[pref_pro_separate_by_category_key]
+		ru = SeparateByCategory
+	[pref_pro_categorical_summation_key]
+		ru = IncludeCategoricalSummation
+	[pref_pro_omit_default_table_key]
+		ru = OmitDefaultPDFTable
+	[pref_help_send_love_key]
+		comment = ============== Preference Support =================
+		ru = SendLove
+	[pref_help_send_feedback_key]
+		ru = SendFeedback
+	[pref_help_support_email_key]
+		ru = SupportEmail
+	[pref_about_version_key]
+		comment = =============== Preference About ==================
+		ru = VersionNo
+	[pref_about_about_key]
+		ru = About
+	[pref_about_about_dialogMessage]
+		ru = Smart Receipts was created and is maintained by Smart Receipts LLC. It is licensed under GNU Affero General Public License
+	[pref_about_terms_key]
+		ru = TermsOfUse
+	[pref_about_terms_dialogMessage]
+		ru = This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.\n\nYou can view a copy of the GNU Affero General Public License at http://www.gnu.org/licenses/.
+	[pref_about_privacy_policy_key]
+		comment = ============== Preference Privacy =================
+		ru = PrivacyPolicy
+	[pref_privacy_enable_analytics_key]
+		ru = EnableAnalytics
+	[pref_privacy_enable_crash_tracking_key]
+		ru = EnableCrashTracking
+	[pref_privacy_enable_ad_personalization_key]
+		ru = EnableAdPersonalization
+	[pref_no_category_auto_backup_wifi_only_key]
+		comment = =============== Preference Misc ===================
+		ru = AutoBackupWifiOnly
+	[pref_no_category_ocr_incognito_mode_key]
+		ru = OcrIncognitoMode
+	[pref_no_category_ocr_is_enabled_key]
+		ru = OcrIsEnabled
+	[pref_internal_app_version_code]
+		comment = ============== Preference Internal =================
+		ru = VersionCode

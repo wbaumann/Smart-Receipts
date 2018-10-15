@@ -138,7 +138,7 @@ printf "Start Interacting With GitHub\n"
 echo "-----------------------"
 cd SmartReceiptsIOS
 echo "Forking repository into https://github.com/twine-botty-bot/SmartReceiptsiOS"
-hub fork
+hub fork <<< "twine-botty-bot"
 echo "Adding new fork as remote"
 git remote add fork https://github.com/twine-botty-bot/SmartReceiptsiOS.git
 echo "Adding & committing new langauge files"

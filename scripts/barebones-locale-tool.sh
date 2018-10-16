@@ -134,20 +134,19 @@ rm en-diff.txt
 #printf "Removed us.lproj.\n"
 
 ## Push changes to repo
-printf "Start Interacting With GitHub\n"
+printf "\nStart Interacting With GitHub\n"
 echo "-----------------------"
 cd SmartReceiptsIOS
 echo "Forking repository into https://github.com/twine-botty-bot/SmartReceiptsiOS"
-hub fork
+printf "twine-botty-bot\ntjt6VbG5d5jP" | hub fork 
 echo "Adding new fork as remote"
 git remote add fork https://github.com/twine-botty-bot/SmartReceiptsiOS.git
 echo "Adding & committing new langauge files"
 git add .
 git commit -m "New Translation Files From Twine - Android -> iOS"
 echo "Pushing changes into fork"
-echo "twine-botty-bot tjt6VbG5d5jP" | git push fork master
+git push fork master
 echo "Creating pull request in wbaumann/SmartReceiptsiOS"
-git status
 hub pull-request -f -m "New Translation Files From Twine - Android -> iOS"
 echo "^ This is the new pull request ^"
 echo "Deleting fork"

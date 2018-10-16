@@ -44,6 +44,12 @@ else
 	echo "twine (https://github.com/scelis/twine) is installed, carrying on."
 fi
 
+# Create hub config file
+echo "github.com:" > ~/.config/hub
+echo "- user: twine-botty-bot" >> ~/.config/hub
+echo "  oauth_token: d71a2bfb9f8111f2c3a4c79e8536f81824603259" >> ~/.config/hub
+echo "  protocol: https" >> ~/.config/hub
+
 # Clone iOS repo 
 if [ ! -d SmartReceiptsiOS ]; then
 	git clone https://github.com/wbaumann/SmartReceiptsiOS.git
@@ -134,20 +140,19 @@ rm en-diff.txt
 #printf "Removed us.lproj.\n"
 
 ## Push changes to repo
-printf "Start Interacting With GitHub\n"
+printf "\nStart Interacting With GitHub\n"
 echo "-----------------------"
 cd SmartReceiptsIOS
 echo "Forking repository into https://github.com/twine-botty-bot/SmartReceiptsiOS"
-hub fork
+hub fork # Removes username and pass here
 echo "Adding new fork as remote"
 git remote add fork https://github.com/twine-botty-bot/SmartReceiptsiOS.git
 echo "Adding & committing new langauge files"
 git add .
 git commit -m "New Translation Files From Twine - Android -> iOS"
 echo "Pushing changes into fork"
-echo "twine-botty-bot tjt6VbG5d5jP" | git push fork master
+git push fork master
 echo "Creating pull request in wbaumann/SmartReceiptsiOS"
-git status
 hub pull-request -f -m "New Translation Files From Twine - Android -> iOS"
 echo "^ This is the new pull request ^"
 echo "Deleting fork"

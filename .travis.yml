@@ -37,19 +37,23 @@ android:
 
 notifications:
   email:
-    recipients:
+    recipients:gi
       - support@smartreceipts.co
     on_success: never # default: change
     on_failure: always # default: always
 
 before_install:
 - mkdir "$ANDROID_HOME/licenses" || true
+- sudo add-apt-repository -y ppa:cpick/hub
+- sudo apt-get update
+- sudo apt-get install -y hub
+- gem install twine
 - echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
 - echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
 - chmod +x gradlew
 
 script:
-- "./gradlew clean test"
+- "./gradlew clean translateToiOS"
 
 after_failure:
 - echo "Build FAILED"

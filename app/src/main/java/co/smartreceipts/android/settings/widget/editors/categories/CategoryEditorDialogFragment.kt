@@ -72,12 +72,22 @@ class CategoryEditorDialogFragment : DialogFragment(),
             positiveButton = R.string.add
         }
 
-        val builder = AlertDialog.Builder(requireContext())
+        val builder = AlertDialog.Builder(requireActivity())
         builder.setTitle(title)
         builder.setView(dialogView)
         builder.setPositiveButton(positiveButton, this)
         builder.setNegativeButton(android.R.string.cancel, this)
         return builder.create()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        presenter.subscribe()
+    }
+
+    override fun onStop() {
+        presenter.unsubscribe()
+        super.onStop()
     }
 
     override fun onClick(dialog: DialogInterface?, which: Int) {

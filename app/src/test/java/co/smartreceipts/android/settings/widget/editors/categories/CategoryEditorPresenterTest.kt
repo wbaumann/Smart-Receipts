@@ -83,7 +83,7 @@ class CategoryEditorPresenterTest {
         val newCode = "newCode"
         whenever(view.getName()).thenReturn(newName)
         whenever(view.getCode()).thenReturn(newCode)
-        val newCategory = CategoryBuilderFactory().setName(newName).setCode(newCode).build()
+        val newCategory = CategoryBuilderFactory().setName(newName).setCode(newCode).setCustomOrderId(Long.MAX_VALUE).build()
         val presenter = CategoryEditorPresenter(view, router, categoriesTableController, null, null)
         presenter.subscribe()
         saveClickStream.onNext(Any())
@@ -97,7 +97,7 @@ class CategoryEditorPresenterTest {
         val newCode = "newCode"
         whenever(view.getName()).thenReturn(newName)
         whenever(view.getCode()).thenReturn(newCode)
-        val newCategory = CategoryBuilderFactory().setName(newName).setCode(newCode).build()
+        val newCategory = CategoryBuilderFactory().setName(newName).setCode(newCode).setCustomOrderId(Long.MAX_VALUE).build()
         val presenter = CategoryEditorPresenter(view, router, categoriesTableController, null, Bundle())
         presenter.subscribe()
         saveClickStream.onNext(Any())
@@ -111,7 +111,6 @@ class CategoryEditorPresenterTest {
         val newCode = "newCode"
         whenever(view.getName()).thenReturn(newName)
         whenever(view.getCode()).thenReturn(newCode)
-        val newCategory = CategoryBuilderFactory().setName(newName).setCode(newCode).build()
         val presenter = CategoryEditorPresenter(view, router, categoriesTableController, null, null)
         presenter.subscribe()
         presenter.unsubscribe()

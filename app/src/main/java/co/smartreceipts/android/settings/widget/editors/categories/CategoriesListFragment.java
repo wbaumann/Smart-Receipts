@@ -2,18 +2,14 @@ package co.smartreceipts.android.settings.widget.editors.categories;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
-import android.view.Gravity;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import javax.inject.Inject;
 
 import co.smartreceipts.android.R;
 import co.smartreceipts.android.model.Category;
-import co.smartreceipts.android.model.factory.CategoryBuilderFactory;
 import co.smartreceipts.android.persistence.database.controllers.TableController;
 import co.smartreceipts.android.persistence.database.controllers.impl.CategoriesTableController;
 import co.smartreceipts.android.persistence.database.operations.DatabaseOperationMetadata;
@@ -79,6 +75,12 @@ public class CategoriesListFragment extends DraggableEditableListFragment<Catego
                 .setPositiveButton(getString(R.string.delete), (dialog, which) -> categoriesTableController.delete(category, new DatabaseOperationMetadata()))
                 .setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel())
                 .show();
+    }
+
+    @Override
+    public void onInsertSuccess(@NonNull Category category, @NonNull DatabaseOperationMetadata databaseOperationMetadata) {
+        super.onInsertSuccess(category, databaseOperationMetadata);
+        scrollToEnd();
     }
 
     @Override

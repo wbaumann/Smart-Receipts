@@ -26,6 +26,7 @@ class CategoryEditorPresenter(view: CategoryEditorView,
                         Observable.just(CategoryBuilderFactory()
                                 .setName(view.getName())
                                 .setCode(view.getCode())
+                                .setCustomOrderId(Long.MAX_VALUE)
                                 .build())
                     }
                     .doOnNext {

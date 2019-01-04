@@ -2,6 +2,7 @@ package co.smartreceipts.android.tooltip.backup
 
 import co.smartreceipts.android.analytics.Analytics
 import co.smartreceipts.android.analytics.events.Events
+import co.smartreceipts.android.purchases.PurchaseManager
 import co.smartreceipts.android.purchases.model.InAppPurchase
 import co.smartreceipts.android.purchases.wallet.PurchaseWallet
 import co.smartreceipts.android.tooltip.StaticTooltipView
@@ -14,6 +15,7 @@ import com.hadisatrio.optional.Optional
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import org.junit.Assert.*
@@ -43,6 +45,9 @@ class AutomaticBackupRecoveryHintUserControllerTest {
     private lateinit var purchaseWallet: PurchaseWallet
 
     @Mock
+    private lateinit var purchaseManager: PurchaseManager
+
+    @Mock
     private lateinit var analytics: Analytics
 
     private val scheduler = Schedulers.trampoline()
@@ -50,7 +55,8 @@ class AutomaticBackupRecoveryHintUserControllerTest {
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        automaticBackupRecoveryHintUserController = AutomaticBackupRecoveryHintUserController(tooltipView, router, store, purchaseWallet, analytics, scheduler)
+        whenever(purchaseManager.allOwnedPurchases).thenReturn(Observable.just(emptySet()))
+        automaticBackupRecoveryHintUserController = AutomaticBackupRecoveryHintUserController(tooltipView, router, store, purchaseWallet, purchaseManager, analytics, scheduler)
     }
 
     @Test

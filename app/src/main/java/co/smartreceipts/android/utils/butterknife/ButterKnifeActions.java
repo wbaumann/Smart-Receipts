@@ -3,17 +3,17 @@ package co.smartreceipts.android.utils.butterknife;
 import androidx.annotation.NonNull;
 import android.view.View;
 
-import butterknife.ButterKnife;
+import butterknife.Action;
 
 public class ButterKnifeActions {
 
     @NonNull
-    public static ButterKnife.Action<View> setEnabled(final boolean isEnabled) {
+    public static Action<View> setEnabled(final boolean isEnabled) {
         return (view, index) -> view.setEnabled(isEnabled);
     }
 
     @NonNull
-    public static ButterKnife.Action<View> setVisibility(int visibility) {
+    public static Action<View> setVisibility(int visibility) {
         return (view, index) -> view.setVisibility(visibility);
     }
 }

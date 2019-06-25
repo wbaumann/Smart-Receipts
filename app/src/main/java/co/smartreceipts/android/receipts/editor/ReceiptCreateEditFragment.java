@@ -46,6 +46,7 @@ import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import butterknife.ViewCollections;
 import co.smartreceipts.android.R;
 import co.smartreceipts.android.activities.NavigationHandler;
 import co.smartreceipts.android.adapters.FooterButtonArrayAdapter;
@@ -768,7 +769,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     @Override
     public Consumer<? super Boolean> toggleExchangeRateFieldVisibility() {
         return (Consumer<Boolean>) isVisible -> {
-            ButterKnife.apply(exchangeRateViewsList, ButterKnifeActions.setVisibility(isVisible ? View.VISIBLE : View.GONE));
+            ViewCollections.run(exchangeRateViewsList, ButterKnifeActions.setVisibility(isVisible ? View.VISIBLE : View.GONE));
         };
     }
 
@@ -944,9 +945,9 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     public Consumer<? super Boolean> togglePaymentMethodFieldVisibility() {
         return isVisible -> {
             if (isVisible) {
-                ButterKnife.apply(paymentMethodsViewsList, ButterKnifeActions.setVisibility(View.VISIBLE));
+                ViewCollections.run(paymentMethodsViewsList, ButterKnifeActions.setVisibility(View.VISIBLE));
             } else {
-                ButterKnife.apply(paymentMethodsViewsList, ButterKnifeActions.setVisibility(View.GONE));
+                ViewCollections.run(paymentMethodsViewsList, ButterKnifeActions.setVisibility(View.GONE));
             }
         };
     }

@@ -14,6 +14,7 @@ import java.lang.ref.WeakReference;
 
 import co.smartreceipts.android.model.Receipt;
 import co.smartreceipts.android.utils.IntentUtils;
+import co.smartreceipts.android.utils.StrictModeConfiguration;
 import co.smartreceipts.android.utils.cache.SmartReceiptsTemporaryFileCache;
 import co.smartreceipts.android.utils.log.Logger;
 
@@ -34,7 +35,9 @@ public class CameraInteractionController {
      */
     @NonNull
     public Uri takePhoto() {
-        return startPhotoIntent(new SmartReceiptsTemporaryFileCache(context).getInternalCacheFile(System.currentTimeMillis() + "x.jpg"), RequestCodes.NATIVE_NEW_RECEIPT_CAMERA_REQUEST);
+        return StrictModeConfiguration.permitDiskReads(() ->
+                startPhotoIntent(new SmartReceiptsTemporaryFileCache(context).getInternalCacheFile(System.currentTimeMillis() + "x.jpg"),
+                        RequestCodes.NATIVE_NEW_RECEIPT_CAMERA_REQUEST));
     }
 
     /**
@@ -44,7 +47,9 @@ public class CameraInteractionController {
      */
     @NonNull
     public Uri addPhoto() {
-        return startPhotoIntent(new SmartReceiptsTemporaryFileCache(context).getInternalCacheFile(System.currentTimeMillis() + "x.jpg"), RequestCodes.NATIVE_ADD_PHOTO_CAMERA_REQUEST);
+        return StrictModeConfiguration.permitDiskReads(() ->
+                startPhotoIntent(new SmartReceiptsTemporaryFileCache(context).getInternalCacheFile(System.currentTimeMillis() + "x.jpg"),
+                        RequestCodes.NATIVE_ADD_PHOTO_CAMERA_REQUEST));
     }
 
     /**

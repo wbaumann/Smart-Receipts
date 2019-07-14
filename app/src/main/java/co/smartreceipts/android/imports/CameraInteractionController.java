@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.MediaStore;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
@@ -37,7 +38,7 @@ public class CameraInteractionController {
     public Uri takePhoto() {
         return StrictModeConfiguration.permitDiskReads(() ->
                 startPhotoIntent(new SmartReceiptsTemporaryFileCache(context).getInternalCacheFile(System.currentTimeMillis() + "x.jpg"),
-                        RequestCodes.NATIVE_NEW_RECEIPT_CAMERA_REQUEST));
+                        RequestCodes.NEW_RECEIPT_CAMERA_IMAGE));
     }
 
     /**
@@ -49,7 +50,7 @@ public class CameraInteractionController {
     public Uri addPhoto() {
         return StrictModeConfiguration.permitDiskReads(() ->
                 startPhotoIntent(new SmartReceiptsTemporaryFileCache(context).getInternalCacheFile(System.currentTimeMillis() + "x.jpg"),
-                        RequestCodes.NATIVE_ADD_PHOTO_CAMERA_REQUEST));
+                        RequestCodes.ATTACH_CAMERA_IMAGE));
     }
 
     /**
@@ -61,7 +62,7 @@ public class CameraInteractionController {
     @NonNull
     public Uri retakePhoto(@NonNull Receipt receipt) {
         Preconditions.checkNotNull(receipt.getFile());
-        return startPhotoIntent(receipt.getFile(), RequestCodes.NATIVE_RETAKE_PHOTO_CAMERA_REQUEST);
+        return startPhotoIntent(receipt.getFile(), RequestCodes.RETAKE_CAMERA_IMAGE);
     }
 
     @NonNull
@@ -76,6 +77,7 @@ public class CameraInteractionController {
         fragment.startActivityForResult(intent, nativeCameraRequestCode);
         final Uri uri = intent.getParcelableExtra(MediaStore.EXTRA_OUTPUT);
         Logger.debug(this, "Returning {} as save location", uri);
+
         return uri;
     }
 }

@@ -1,16 +1,11 @@
 package co.smartreceipts.android.receipts;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +14,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+
 import com.github.clans.fab.FloatingActionMenu;
 import com.google.common.base.Preconditions;
 import com.hadisatrio.optional.Optional;
@@ -26,7 +25,9 @@ import com.jakewharton.rxbinding2.view.RxView;
 import com.squareup.picasso.Picasso;
 import com.tapadoo.alerter.Alert;
 import com.tapadoo.alerter.Alerter;
+import com.yalantis.ucrop.UCrop;
 
+import java.io.File;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -47,6 +48,7 @@ import co.smartreceipts.android.imports.AttachmentSendFileImporter;
 import co.smartreceipts.android.imports.CameraInteractionController;
 import co.smartreceipts.android.imports.RequestCodes;
 import co.smartreceipts.android.imports.importer.ActivityFileResultImporter;
+import co.smartreceipts.android.imports.importer.ActivityFileResultImporterResponse;
 import co.smartreceipts.android.imports.intents.IntentImportProcessor;
 import co.smartreceipts.android.imports.intents.model.FileType;
 import co.smartreceipts.android.imports.locator.ActivityFileResultLocator;
@@ -88,6 +90,8 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import wb.android.flex.Flex;
 
+import static android.app.Activity.RESULT_OK;
+
 public class ReceiptsListFragment extends ReceiptsFragment implements ReceiptTableEventsListener, ReceiptCreateActionView,
         OcrStatusAlerterView, ReceiptAttachmentDialogFragment.Listener {
 
@@ -96,6 +100,7 @@ public class ReceiptsListFragment extends ReceiptsFragment implements ReceiptTab
     // Outstate
     private static final String OUT_HIGHLIGHTED_RECEIPT = "out_highlighted_receipt";
     private static final String OUT_IMAGE_URI = "out_image_uri";
+    private static final String OUT_IMPORTER_RESPONSE = "out_importer_response";
 
     @Inject
     Flex flex;
@@ -193,6 +198,8 @@ public class ReceiptsListFragment extends ReceiptsFragment implements ReceiptTab
 
     private boolean importIntentMode;
 
+    private ActivityFileResultImporterResponse lastImporterResponse;
+
     @Override
     public void onAttach(Context context) {
         AndroidSupportInjection.inject(this);
@@ -207,6 +214,7 @@ public class ReceiptsListFragment extends ReceiptsFragment implements ReceiptTab
         if (savedInstanceState != null) {
             imageUri = savedInstanceState.getParcelable(OUT_IMAGE_URI);
             highlightedReceipt = savedInstanceState.getParcelable(OUT_HIGHLIGHTED_RECEIPT);
+            lastImporterResponse = savedInstanceState.getParcelable(OUT_IMPORTER_RESPONSE);
         }
     }
 
@@ -322,34 +330,41 @@ public class ReceiptsListFragment extends ReceiptsFragment implements ReceiptTab
                 .subscribe(response -> {
                     Logger.info(ReceiptsListFragment.this, "Handled the import of {}", response);
                     if (!response.getThrowable().isPresent()) {
+                        final File file = Preconditions.checkNotNull(response.getFile());
                         switch (response.getRequestCode()) {
-                            case RequestCodes.IMPORT_GALLERY_IMAGE:
-                            case RequestCodes.IMPORT_GALLERY_PDF:
-                            case RequestCodes.NATIVE_NEW_RECEIPT_CAMERA_REQUEST:
-                                navigationHandler.navigateToCreateNewReceiptFragment(trip, response.getFile(), response.getOcrResponse());
+                            case RequestCodes.NEW_RECEIPT_IMPORT_IMAGE:
+                            case RequestCodes.NEW_RECEIPT_CAMERA_IMAGE:
+                                lastImporterResponse = response;
+                                navigationHandler.navigateToCropActivity(this, Uri.fromFile(file),
+                                        response.getRequestCode() == RequestCodes.NEW_RECEIPT_IMPORT_IMAGE ?
+                                                RequestCodes.NEW_RECEIPT_IMPORT_IMAGE_CROP : RequestCodes.NEW_RECEIPT_CAMERA_IMAGE_CROP);
                                 break;
+
+                            case RequestCodes.NEW_RECEIPT_IMPORT_PDF:
+                                navigationHandler.navigateToCreateNewReceiptFragment(trip, file, response.getOcrResponse());
+                                break;
+
                             case RequestCodes.ATTACH_GALLERY_IMAGE:
-                            case RequestCodes.NATIVE_ADD_PHOTO_CAMERA_REQUEST:
-                                if (highlightedReceipt != null) {
-                                    final Receipt updatedReceipt = new ReceiptBuilderFactory(highlightedReceipt)
-                                            .setFile(response.getFile())
-                                            .build();
-                                    receiptTableController.update(highlightedReceipt, updatedReceipt, new DatabaseOperationMetadata());
-                                }
+                            case RequestCodes.ATTACH_CAMERA_IMAGE:
+                                lastImporterResponse = response;
+                                navigationHandler.navigateToCropActivity(this, Uri.fromFile(file),
+                                        response.getRequestCode() == RequestCodes.ATTACH_GALLERY_IMAGE ?
+                                                RequestCodes.ATTACH_GALLERY_IMAGE_CROP : RequestCodes.ATTACH_CAMERA_IMAGE_CROP);
                                 break;
+
                             case RequestCodes.ATTACH_GALLERY_PDF:
                                 if (highlightedReceipt != null) {
                                     final Receipt updatedReceiptWithFile = new ReceiptBuilderFactory(highlightedReceipt)
-                                            .setFile(response.getFile())
+                                            .setFile(file)
                                             .build();
                                     receiptTableController.update(highlightedReceipt, updatedReceiptWithFile, new DatabaseOperationMetadata());
                                 }
+                                highlightedReceipt = null;
                                 break;
                         }
                     } else {
                         Toast.makeText(getActivity(), getFlexString(R.string.FILE_SAVE_ERROR), Toast.LENGTH_SHORT).show();
                     }
-                    highlightedReceipt = null;
 
                     if (loadingProgress != null) {
                         loadingProgress.setVisibility(View.GONE);
@@ -426,6 +441,7 @@ public class ReceiptsListFragment extends ReceiptsFragment implements ReceiptTab
         super.onSaveInstanceState(outState);
         outState.putParcelable(OUT_IMAGE_URI, imageUri);
         outState.putParcelable(OUT_HIGHLIGHTED_RECEIPT, highlightedReceipt);
+        outState.putParcelable(OUT_IMPORTER_RESPONSE, lastImporterResponse);
     }
 
     @Override
@@ -447,9 +463,39 @@ public class ReceiptsListFragment extends ReceiptsFragment implements ReceiptTab
 
         loadingProgress.setVisibility(View.VISIBLE);
 
-        activityFileResultLocator.onActivityResult(requestCode, resultCode, data, cachedImageSaveLocation);
+        if (RequestCodes.CROP_REQUESTS.contains(requestCode)) {
+            // TODO: 13.07.2019 if resultCode == RESULT_CANCELED we still need to create new Receipt/ update? or just press ok without crop
+            if (resultCode == RESULT_OK) {
+                switch (requestCode) {
+                    case RequestCodes.NEW_RECEIPT_CAMERA_IMAGE_CROP:
+                    case RequestCodes.NEW_RECEIPT_IMPORT_IMAGE_CROP:
+                        navigationHandler.navigateToCreateNewReceiptFragment(trip, lastImporterResponse.getFile(), lastImporterResponse.getOcrResponse());
+                        break;
+                    case RequestCodes.ATTACH_GALLERY_IMAGE_CROP:
+                    case RequestCodes.ATTACH_CAMERA_IMAGE_CROP:
+                        if (highlightedReceipt != null) {
+                            final Receipt updatedReceipt = new ReceiptBuilderFactory(highlightedReceipt)
+                                    .setFile(lastImporterResponse.getFile())
+                                    .build();
+                            receiptTableController.update(highlightedReceipt, updatedReceipt, new DatabaseOperationMetadata());
+                            highlightedReceipt = null;
+                        }
+                        break;
+                }
+                lastImporterResponse = null;
 
-        if (resultCode != Activity.RESULT_OK) {
+            } else if (resultCode == UCrop.RESULT_ERROR) {
+                final Throwable cropError = UCrop.getError(data);
+                if (cropError != null) {
+                    Logger.error(this, "An error occurred while cropping the image: {}", cropError);
+                }
+            }
+        } else {
+            activityFileResultLocator.onActivityResult(requestCode, resultCode, data, cachedImageSaveLocation);
+        }
+
+
+        if (resultCode != RESULT_OK) {
             if (loadingProgress != null) {
                 loadingProgress.setVisibility(View.GONE);
             }

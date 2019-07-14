@@ -158,8 +158,7 @@
 
     <!-- ================ Img Menu Options =================== -->
     <string name="menu_receiptimage_retake">Foto noch einmal machen</string>
-    <string name="menu_receiptimage_rotate_ccw">Drehen gegen den Uhrzeigersinn</string>
-    <string name="menu_receiptimage_rotate_cw">Drehen im Uhrzeigersinn</string>
+    <string name="menu_receiptimage_edit">Foto bearbeiten</string>
 
     <!-- ===================== Email ====================== -->
     <string name="email_body_subject_5mb_warning">Der folgende Anhang ist mehr als 5 MB groß und kann nicht richtig angehängt werden: %s</string>

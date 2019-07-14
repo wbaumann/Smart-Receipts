@@ -158,8 +158,7 @@
 
     <!-- ================ Img Menu Options =================== -->
     <string name="menu_receiptimage_retake">Toma la foto de nuevo</string>
-    <string name="menu_receiptimage_rotate_ccw">Rotar CSR</string>
-    <string name="menu_receiptimage_rotate_cw">Rotar SR</string>
+    <string name="menu_receiptimage_edit">Editar foto</string>
 
     <!-- ===================== Email ====================== -->
     <string name="email_body_subject_5mb_warning">El siguiente adjunto tiene más de 5 MB y no se puede adjuntar correctamente: %s</string>

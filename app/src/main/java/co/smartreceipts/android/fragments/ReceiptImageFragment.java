@@ -2,33 +2,28 @@ package co.smartreceipts.android.fragments;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.exifinterface.media.ExifInterface;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
-
-import java.io.File;
-import java.util.Objects;
+import com.yalantis.ucrop.UCrop;
 
 import javax.inject.Inject;
 
@@ -37,6 +32,7 @@ import co.smartreceipts.android.activities.NavigationHandler;
 import co.smartreceipts.android.analytics.Analytics;
 import co.smartreceipts.android.analytics.events.Events;
 import co.smartreceipts.android.imports.CameraInteractionController;
+import co.smartreceipts.android.imports.RequestCodes;
 import co.smartreceipts.android.imports.importer.ActivityFileResultImporter;
 import co.smartreceipts.android.imports.locator.ActivityFileResultLocator;
 import co.smartreceipts.android.model.Receipt;
@@ -49,15 +45,23 @@ import co.smartreceipts.android.persistence.database.operations.DatabaseOperatio
 import co.smartreceipts.android.persistence.database.operations.OperationFamilyType;
 import co.smartreceipts.android.utils.IntentUtils;
 import co.smartreceipts.android.utils.log.Logger;
+import co.smartreceipts.android.widget.ui.PinchToZoomImageView;
 import dagger.Lazy;
 import dagger.android.support.AndroidSupportInjection;
 import io.reactivex.disposables.CompositeDisposable;
 import wb.android.flex.Flex;
-import co.smartreceipts.android.utils.ImageUtils;
-import wb.android.storage.StorageManager;
-import co.smartreceipts.android.widget.ui.PinchToZoomImageView;
+
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
 
 public class ReceiptImageFragment extends WBFragment {
+
+    // TODO: 08.07.2019 make sure that we're not leaving garbage photos
+    // TODO: 08.07.2019 recheck image quality
+    // TODO: 11.07.2019 convert ReceiptImageFragment to Kotlin
+    // TODO: 14.07.2019 if crop action is canceled - show dialog for disabling this feature
+    // TODO: 14.07.2019 check tests
+    // TODO: 14.07.2019 add setting to disable crop
 
     // Save state
     private static final String KEY_OUT_RECEIPT = "key_out_receipt";
@@ -91,14 +95,14 @@ public class ReceiptImageFragment extends WBFragment {
     Lazy<Picasso> picasso;
 
     private PinchToZoomImageView imageView;
-    private LinearLayout footer;
     private ProgressBar progress;
+    private TextView retakePhoto;
+    private TextView editPhoto;
     private Toolbar toolbar;
 
     private Receipt receipt;
     private ImageUpdatedListener imageUpdatedListener;
     private CompositeDisposable compositeDisposable;
-    private boolean isRotateOngoing;
     private Uri imageUri;
 
     public static ReceiptImageFragment newInstance() {
@@ -120,7 +124,6 @@ public class ReceiptImageFragment extends WBFragment {
             receipt = savedInstanceState.getParcelable(KEY_OUT_RECEIPT);
             imageUri = savedInstanceState.getParcelable(KEY_OUT_URI);
         }
-        isRotateOngoing = false;
         imageUpdatedListener = new ImageUpdatedListener();
         setHasOptionsMenu(true);
     }
@@ -129,25 +132,20 @@ public class ReceiptImageFragment extends WBFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.receipt_image_view, container, false);
         imageView = rootView.findViewById(R.id.receiptimagefragment_imageview);
-        footer = rootView.findViewById(R.id.footer);
         progress = rootView.findViewById(R.id.progress);
+        retakePhoto = rootView.findViewById(R.id.button_retake_photo);
+        editPhoto = rootView.findViewById(R.id.button_edit_photo);
 
-        final LinearLayout rotateCCW = rootView.findViewById(R.id.rotate_ccw);
-        final LinearLayout retakePhoto = rootView.findViewById(R.id.retake_photo);
-        final LinearLayout rotateCW = rootView.findViewById(R.id.rotate_cw);
-
-        rotateCCW.setOnClickListener(view -> {
-            analytics.record(Events.Receipts.ReceiptImageViewRotateCcw);
-            rotate(ExifInterface.ORIENTATION_ROTATE_270);
+        editPhoto.setOnClickListener(view -> {
+            analytics.record(Events.Receipts.ReceiptImageViewEditPhoto);
+            navigationHandler.navigateToCropActivity(this, Uri.fromFile(receipt.getFile()), RequestCodes.EDIT_IMAGE_CROP);
         });
+
         retakePhoto.setOnClickListener(view -> {
             analytics.record(Events.Receipts.ReceiptImageViewRetakePhoto);
             imageUri = new CameraInteractionController(ReceiptImageFragment.this).retakePhoto(receipt);
         });
-        rotateCW.setOnClickListener(view -> {
-            analytics.record(Events.Receipts.ReceiptImageViewRotateCw);
-            rotate(ExifInterface.ORIENTATION_ROTATE_90);
-        });
+
         return rootView;
     }
 
@@ -172,13 +170,27 @@ public class ReceiptImageFragment extends WBFragment {
         }
 
         // Show the progress bar
-        progress.setVisibility(View.VISIBLE);
+        if (resultCode != RESULT_CANCELED) {
+            progress.setVisibility(View.VISIBLE);
+        }
 
         // Null out the last request
         final Uri cachedImageSaveLocation = imageUri;
         imageUri = null;
 
-        activityFileResultLocator.onActivityResult(requestCode, resultCode, data, cachedImageSaveLocation);
+        if (requestCode == RequestCodes.EDIT_IMAGE_CROP) {
+            if (resultCode == RESULT_OK) {
+                picasso.get().invalidate(UCrop.getOutput(data));
+                loadImage();
+            } else if (resultCode == UCrop.RESULT_ERROR) {
+                final Throwable cropError = UCrop.getError(data);
+                if (cropError != null) {
+                    Logger.error(this, "An error occurred while cropping the image: {}", cropError);
+                }
+            }
+        } else {
+            activityFileResultLocator.onActivityResult(requestCode, resultCode, data, cachedImageSaveLocation);
+        }
     }
 
     private void subscribe() {
@@ -274,7 +286,9 @@ public class ReceiptImageFragment extends WBFragment {
                 public void onSuccess() {
                     progress.setVisibility(View.GONE);
                     imageView.setVisibility(View.VISIBLE);
-                    footer.setVisibility(View.VISIBLE);
+
+                    editPhoto.setVisibility(View.VISIBLE);
+                    retakePhoto.setVisibility(View.VISIBLE);
                 }
 
                 @Override
@@ -288,24 +302,6 @@ public class ReceiptImageFragment extends WBFragment {
         }
     }
 
-    private void rotate(int orientation) {
-        if (isRotateOngoing) {
-            return;
-        }
-        isRotateOngoing = true;
-        progress.setVisibility(View.VISIBLE);
-        (new ImageRotater(orientation, receipt.getFile())).execute();
-    }
-
-    private void onRotateComplete(boolean success) {
-        if (!success) {
-            Toast.makeText(getActivity(), "Image Rotate Failed", Toast.LENGTH_SHORT).show();
-        } else {
-            picasso.get().invalidate(Objects.requireNonNull(receipt.getFile()));
-        }
-        isRotateOngoing = false;
-        progress.setVisibility(View.GONE);
-    }
 
     private class ImageUpdatedListener extends StubTableEventsListener<Receipt> {
 
@@ -324,43 +320,6 @@ public class ReceiptImageFragment extends WBFragment {
             if (databaseOperationMetadata.getOperationFamilyType() != OperationFamilyType.Sync) {
                 progress.setVisibility(View.GONE);
                 Toast.makeText(getActivity(), getFlexString(R.string.database_error), Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    private class ImageRotater extends AsyncTask<Void, Void, Bitmap> {
-
-        private final int mOrientation;
-        private final File mImg;
-
-        public ImageRotater(int orientation, File img) {
-            mOrientation = orientation;
-            mImg = img;
-        }
-
-        @Override
-        protected Bitmap doInBackground(Void... params) {
-            try {
-                StorageManager storage = persistenceManager.getStorageManager();
-                File root = mImg.getParentFile();
-                String filename = mImg.getName();
-                Bitmap bitmap = storage.getBitmap(root, filename);
-                bitmap = ImageUtils.rotateBitmap(bitmap, mOrientation);
-                storage.writeBitmap(root, bitmap, filename, CompressFormat.JPEG, 85);
-                return bitmap;
-            } catch (Exception e) {
-                Logger.error(this, e);
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            if (result == null) {
-                onRotateComplete(false);
-            } else {
-                imageView.setImageBitmap(result);
-                onRotateComplete(true);
             }
         }
     }

@@ -159,8 +159,7 @@
 
     <!-- ================ Img Menu Options =================== -->
     <string name="menu_receiptimage_retake">Retake Photo</string>
-    <string name="menu_receiptimage_rotate_ccw">Rotate CCW</string>
-    <string name="menu_receiptimage_rotate_cw">Rotate CW</string>
+    <string name="menu_receiptimage_edit">Edit Photo</string>
 
     <!-- ===================== Email ====================== -->
     <string name="email_body_subject_5mb_warning">The following attachment is over 5MB in size and may not properly attach: %s</string>

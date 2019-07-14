@@ -158,8 +158,7 @@
 
     <!-- ================ Img Menu Options =================== -->
     <string name="menu_receiptimage_retake">Reprendre une photo</string>
-    <string name="menu_receiptimage_rotate_ccw">Pivoter à gauche</string>
-    <string name="menu_receiptimage_rotate_cw">Pivoter à droite</string>
+    <string name="menu_receiptimage_edit">Modifier photo</string>
 
     <!-- ===================== Email ====================== -->
     <string name="email_body_subject_5mb_warning">La pièce jointe ci-dessous fait plus de 5 Mo et ne peut pas être jointe correctement : %s</string>

@@ -160,8 +160,7 @@
 
     <!-- ================ Img Menu Options =================== -->
     <string name="menu_receiptimage_retake">Зробити знімок повторно</string>
-    <string name="menu_receiptimage_rotate_ccw">Повернути проти годинникової стрілки</string>
-    <string name="menu_receiptimage_rotate_cw">Поворот за годинниковою стрілкою</string>
+    <string name="menu_receiptimage_edit">Редагувати знімок</string>
 
     <!-- ===================== Email ====================== -->
     <string name="email_body_subject_5mb_warning">Файл має розмір більше 5 МБ і може бути не правильно прикріплений: %s</string>

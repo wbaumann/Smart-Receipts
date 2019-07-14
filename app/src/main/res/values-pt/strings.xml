@@ -158,8 +158,7 @@
 
     <!-- ================ Img Menu Options =================== -->
     <string name="menu_receiptimage_retake">Tirar foto novamente</string>
-    <string name="menu_receiptimage_rotate_ccw">Girar no sentido anti-horário</string>
-    <string name="menu_receiptimage_rotate_cw">Girar no sentido horário</string>
+    <string name="menu_receiptimage_edit">Editar foto</string>
 
     <!-- ===================== Email ====================== -->
     <string name="email_body_subject_5mb_warning">O anexo a seguir tem mais de 5 MB de tamanho e não pode ser anexado: %s</string>

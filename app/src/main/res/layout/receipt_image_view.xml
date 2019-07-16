@@ -10,7 +10,7 @@
         layout="@layout/toolbar" />
 
     <co.smartreceipts.android.widget.ui.PinchToZoomImageView
-        android:id="@+id/receiptimagefragment_imageview"
+        android:id="@+id/receipt_image_imageview"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:scaleType="fitCenter"
@@ -68,7 +68,7 @@
         app:constraint_referenced_ids="button_edit_photo, button_retake_photo" />
 
     <ProgressBar
-        android:id="@+id/progress"
+        android:id="@+id/receipt_image_progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"

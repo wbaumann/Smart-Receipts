@@ -47,8 +47,6 @@ class ReceiptImageFragment : WBFragment() {
         // TODO: 08.07.2019 make sure that we're not leaving garbage photos
         // TODO: 08.07.2019 recheck image quality
         // TODO: 14.07.2019 if crop action is canceled - show dialog for disabling this feature
-        // TODO: 14.07.2019 check tests
-        // TODO: 14.07.2019 add setting to disable crop
 
         // Save state
         private const val KEY_OUT_RECEIPT = "key_out_receipt"

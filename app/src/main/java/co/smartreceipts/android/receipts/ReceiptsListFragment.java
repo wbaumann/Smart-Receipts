@@ -334,10 +334,14 @@ public class ReceiptsListFragment extends ReceiptsFragment implements ReceiptTab
                         switch (response.getRequestCode()) {
                             case RequestCodes.NEW_RECEIPT_IMPORT_IMAGE:
                             case RequestCodes.NEW_RECEIPT_CAMERA_IMAGE:
-                                lastImporterResponse = response;
-                                navigationHandler.navigateToCropActivity(this, Uri.fromFile(file),
-                                        response.getRequestCode() == RequestCodes.NEW_RECEIPT_IMPORT_IMAGE ?
-                                                RequestCodes.NEW_RECEIPT_IMPORT_IMAGE_CROP : RequestCodes.NEW_RECEIPT_CAMERA_IMAGE_CROP);
+                                if (preferenceManager.get(UserPreference.General.EnableCrop)) {
+                                    lastImporterResponse = response;
+                                    int requestCode = response.getRequestCode() == RequestCodes.NEW_RECEIPT_IMPORT_IMAGE ?
+                                            RequestCodes.NEW_RECEIPT_IMPORT_IMAGE_CROP : RequestCodes.NEW_RECEIPT_CAMERA_IMAGE_CROP;
+                                    navigationHandler.navigateToCropActivity(this, Uri.fromFile(file), requestCode);
+                                } else {
+                                    navigationHandler.navigateToCreateNewReceiptFragment(trip, file, response.getOcrResponse());
+                                }
                                 break;
 
                             case RequestCodes.NEW_RECEIPT_IMPORT_PDF:
@@ -346,20 +350,18 @@ public class ReceiptsListFragment extends ReceiptsFragment implements ReceiptTab
 
                             case RequestCodes.ATTACH_GALLERY_IMAGE:
                             case RequestCodes.ATTACH_CAMERA_IMAGE:
-                                lastImporterResponse = response;
-                                navigationHandler.navigateToCropActivity(this, Uri.fromFile(file),
-                                        response.getRequestCode() == RequestCodes.ATTACH_GALLERY_IMAGE ?
-                                                RequestCodes.ATTACH_GALLERY_IMAGE_CROP : RequestCodes.ATTACH_CAMERA_IMAGE_CROP);
+                                if (preferenceManager.get(UserPreference.General.EnableCrop)) {
+                                    lastImporterResponse = response;
+                                    int requestCode = response.getRequestCode() == RequestCodes.ATTACH_GALLERY_IMAGE ?
+                                            RequestCodes.ATTACH_GALLERY_IMAGE_CROP : RequestCodes.ATTACH_CAMERA_IMAGE_CROP;
+                                    navigationHandler.navigateToCropActivity(this, Uri.fromFile(file), requestCode);
+                                } else {
+                                    attachImageToHighlightedReceipt(file);
+                                }
                                 break;
 
                             case RequestCodes.ATTACH_GALLERY_PDF:
-                                if (highlightedReceipt != null) {
-                                    final Receipt updatedReceiptWithFile = new ReceiptBuilderFactory(highlightedReceipt)
-                                            .setFile(file)
-                                            .build();
-                                    receiptTableController.update(highlightedReceipt, updatedReceiptWithFile, new DatabaseOperationMetadata());
-                                }
-                                highlightedReceipt = null;
+                                attachImageToHighlightedReceipt(file);
                                 break;
                         }
                     } else {
@@ -412,6 +414,16 @@ public class ReceiptsListFragment extends ReceiptsFragment implements ReceiptTab
                 .map(intentImportResultOptional -> intentImportResultOptional.isPresent() &&
                         (intentImportResultOptional.get().getFileType() == FileType.Image || intentImportResultOptional.get().getFileType() == FileType.Pdf))
                 .subscribe(importIntentPresent -> importIntentMode = importIntentPresent));
+    }
+
+    private void attachImageToHighlightedReceipt(File file) {
+        if (highlightedReceipt != null) {
+            final Receipt updatedReceipt = new ReceiptBuilderFactory(highlightedReceipt)
+                    .setFile(file)
+                    .build();
+            receiptTableController.update(highlightedReceipt, updatedReceipt, new DatabaseOperationMetadata());
+        }
+        highlightedReceipt = null;
     }
 
     @Override

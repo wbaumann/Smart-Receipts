@@ -299,7 +299,7 @@ public class ReceiptsListFragment extends ReceiptsFragment implements ReceiptTab
                         Logger.debug(this, "need to check permission");
                         return permissionsDelegate.checkPermissionAndMaybeAsk(READ_PERMISSION)
                                 .toSingleDefault(response)
-                                .onErrorReturn(ActivityFileResultLocatorResponse::LocatorError);
+                                .onErrorReturn(ActivityFileResultLocatorResponse::locatorError);
                     }
                 })
                 .subscribe(locatorResponse -> {

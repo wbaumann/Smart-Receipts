@@ -43,11 +43,6 @@ import javax.inject.Inject
 class ReceiptImageFragment : WBFragment() {
 
     companion object {
-
-        // TODO: 08.07.2019 make sure that we're not leaving garbage photos
-        // TODO: 08.07.2019 recheck image quality
-        // TODO: 14.07.2019 if crop action is canceled - show dialog for disabling this feature
-
         // Save state
         private const val KEY_OUT_RECEIPT = "key_out_receipt"
         private const val KEY_OUT_URI = "key_out_uri"
@@ -181,7 +176,7 @@ class ReceiptImageFragment : WBFragment() {
                         receipt_image_progress.visibility = View.VISIBLE
                         activityFileResultImporter.importFile(
                             locatorResponse.requestCode,
-                            locatorResponse.resultCode, locatorResponse.uri, receipt.trip
+                            locatorResponse.resultCode, locatorResponse.uri!!, receipt.trip
                         )
                     }
                 }

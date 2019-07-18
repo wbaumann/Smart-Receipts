@@ -90,6 +90,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import wb.android.flex.Flex;
 
+import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
 public class ReceiptsListFragment extends ReceiptsFragment implements ReceiptTableEventsListener, ReceiptCreateActionView,
@@ -475,9 +476,13 @@ public class ReceiptsListFragment extends ReceiptsFragment implements ReceiptTab
 
         loadingProgress.setVisibility(View.VISIBLE);
 
-        if (RequestCodes.CROP_REQUESTS.contains(requestCode)) {
-            // TODO: 13.07.2019 if resultCode == RESULT_CANCELED we still need to create new Receipt/ update? or just press ok without crop
-            if (resultCode == RESULT_OK) {
+        if (RequestCodes.CROP_REQUESTS.contains(requestCode)) { // result from Crop Activity
+            if (resultCode != UCrop.RESULT_ERROR) {
+
+                if (resultCode == RESULT_CANCELED) {
+                    Toast.makeText(requireContext(), R.string.toast_disable_crop_option, Toast.LENGTH_LONG).show();
+                }
+
                 switch (requestCode) {
                     case RequestCodes.NEW_RECEIPT_CAMERA_IMAGE_CROP:
                     case RequestCodes.NEW_RECEIPT_IMPORT_IMAGE_CROP:
@@ -496,13 +501,13 @@ public class ReceiptsListFragment extends ReceiptsFragment implements ReceiptTab
                 }
                 lastImporterResponse = null;
 
-            } else if (resultCode == UCrop.RESULT_ERROR) {
+            } else {
                 final Throwable cropError = UCrop.getError(data);
                 if (cropError != null) {
                     Logger.error(this, "An error occurred while cropping the image: {}", cropError);
                 }
             }
-        } else {
+        } else { // result from Camera
             activityFileResultLocator.onActivityResult(requestCode, resultCode, data, cachedImageSaveLocation);
         }
 

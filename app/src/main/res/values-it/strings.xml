@@ -88,24 +88,24 @@
     <string name="report_pdf_error_go_to_settings">Vai alle Impostazioni</string>
 
     <!-- ===================== ocr ======================== -->
-    <string name="ocr_informational_tooltip_configure_text">[Optional] Configure Automatic Scans? Tap here.</string>
+    <string name="ocr_informational_tooltip_configure_text">[Opzionale] Configurare la scansione automatica? Toccare qui.</string>
     <plurals name="ocr_informational_tooltip_limited_scans_text">
-        <item quantity="one">%d Scan Remaining. Tap for more.</item>
-        <item quantity="other">%d Scans Remaining. Tap for more.</item>
+        <item quantity="uno">%d Scansione rimanente. Toccare per altre.</item>
+        <item quantity="altro">%d Scansioni rimanenti. Toccare per altre.</item>
     </plurals>
-    <string name="ocr_status_title">Performing Scan (OCR):</string>
-    <string name="ocr_status_message_uploading_image">Uploading Receipt&#8230;</string>
-    <string name="ocr_status_message_performing_scan">Scanning for Receipt Metadata&#8230;</string>
-    <string name="ocr_status_message_fetching_results">Fetching Results&#8230;</string>
-    <string name="ocr_configuration_scans_remaining">OCR Scans Remaining: %d</string>
+    <string name="ocr_status_title">Esegui Scansione (OCR):</string>
+    <string name="ocr_status_message_uploading_image">Invio ricevuta&#8230;</string>
+    <string name="ocr_status_message_performing_scan">Analisi dei metadati della  Ricevuta&#8230;</string>
+    <string name="ocr_status_message_fetching_results">Raccolta risultati&#8230;</string>
+    <string name="ocr_configuration_scans_remaining">Scansioni OCR rimanenti: %d</string>
     <string name="ocr_configuration_my_account">%s</string>
-    <string name="ocr_configuration_welcome">Automatic Scans (OCR):</string>
-    <string name="ocr_configuration_information">Smart Receipts has integrated with Taggun to provide automatic scanning (ie OCR) services, which can extract receipt metadata like the price, tax, date, and merchant name from your photos.</string>
-    <string name="ocr_configuration_information_line2">We use a combination of Google Vision and Machine Learning to quickly (often in 5 seconds or less) deliver results, which will become increasingly accurate over time. Since these services have a per-usage charge, we will charge for each receipt scan below.</string>
-    <string name="ocr_is_enabled">Enable Automatic Scans (OCR)?</string>
-    <string name="ocr_save_scans_to_improve_results">Allow us to save images to improve accuracy?</string>
-    <string name="ocr_configuration_available_purchases">Available Purchases - Tap to Buy:</string>
-    <string name="ocr_configuration_information_line3">To try OCR, all new users get 2 free scans! Please remember that OCR is an optional feature and can be disabled at any time.</string>
+    <string name="ocr_configuration_welcome">Scansioni automatiche (OCR):</string>
+    <string name="ocr_configuration_information">Smart Receipts è integrato con Taggun per fornire servizi di scansione automatica (es. OCR), tramite i quali è possibile estrarre i metadati dalle ricevute come prezzi, imposte,date e denominazione del venditore dalle vostre immagini.</string>
+    <string name="ocr_configuration_information_line2">Utiliziamo una combinazione di Google Vision e Machine Learning per fornire velocemente un risultato (spesso in 5 secondi o meno), che diverrà maggiormente accurato con il tempo. A causa del fatto che questi servizi sono a consumo, applicheremo un costo per ciascuna scansione di ricevuta.</string>
+    <string name="ocr_is_enabled">Attiva scansione automatica (OCR)?</string>
+    <string name="ocr_save_scans_to_improve_results">Autorizzi il salvataggio delle immagini per aumentare l'accuratezza?</string>
+    <string name="ocr_configuration_available_purchases">Acquisti disponibili - Tocca per acquistare:</string>
+    <string name="ocr_configuration_information_line3">Per provare la funzione OCR, tutti i nuovi utenti hanno un bonus di 2 scansioni gratuit! Ti preghiamo di ricordare che la funzione OCR è opzionale e può essere disabilitata in qualsiasi momento.</string>
 
     <!-- ================ Categories ================== -->
     <string name="category_null">&lt;Category&gt;</string>

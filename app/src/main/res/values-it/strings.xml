@@ -16,76 +16,76 @@
     <string name="menu_main_my_account">Il mio acccount</string>
 
     <!-- ================ General Strings ================== -->
-    <string name="add">Add</string>
-    <string name="reorder">Reorder</string>
-    <string name="column_item">Column %s</string>
-    <string name="copy">Copy</string>
-    <string name="daily_total">Daily Total: %s</string>
-    <string name="day">%s Day</string>
-    <string name="days">%s Days</string>
-    <string name="delete">Delete</string>
-    <string name="delete_item">Delete %s?</string>
-    <string name="delete_sync_information">Any remotely synchronized data for this item will also be deleted.</string>
-    <string name="distance">Distance</string>
-    <string name="distance_total_item">Dist. Total: %s</string>
-    <string name="edit">Edit</string>
-    <string name="export">Export</string>
+    <string name="add">Aggiungi</string>
+    <string name="reorder">Riordina</string>
+    <string name="column_item">Colonna %s</string>
+    <string name="copy">Copia</string>
+    <string name="daily_total">Totale giornaliero: %s</string>
+    <string name="day">%s Giorno</string>
+    <string name="days">%s Giorni</string>
+    <string name="delete">Elimina</string>
+    <string name="delete_item">Elimina %s?</string>
+    <string name="delete_sync_information">Anche tutti i dati remoti sincronizzati per questo oggetto saranno cancellati.</string>
+    <string name="distance">Distanza</string>
+    <string name="distance_total_item">Dist. Totale: %s</string>
+    <string name="edit">Modifica</string>
+    <string name="export">Esporta</string>
     <string name="feedback">%s - Feedback</string>
-    <string name="image">Image</string>
-    <string name="import_string">Import</string>
-    <string name="import_string_item">Import %s</string>
-    <string name="item_code">Code</string>
-    <string name="item_name">Name</string>
-    <string name="move">Move</string>
-    <string name="move_copy_item">Move/Copy %s?</string>
-    <string name="next_id">Next ID: %d</string>
+    <string name="image">Immagine</string>
+    <string name="import_string">Importa</string>
+    <string name="import_string_item">Importa %s</string>
+    <string name="item_code">Codice</string>
+    <string name="item_name">Nome</string>
+    <string name="move">Sposta</string>
+    <string name="move_copy_item">Sposta/Copia %s?</string>
+    <string name="next_id">Prossimo ID: %d</string>
     <string name="no">No</string>
     <string name="pdf">PDF</string>
     <string name="report">Report</string>
-    <string name="report_attached">1 report attached</string>
-    <string name="reports_attached">%s reports attached</string>
-    <string name="save">Save</string>
-    <string name="send_email">Send File&#8230;</string>
-    <string name="support">%s - Support</string>
-    <string name="total">Total</string>
-    <string name="undefined">Undefined</string>
-    <string name="update">Update</string>
-    <string name="yes">Yes</string>
-    <string name="yes_as_pdf">Yes - As PDF</string>
-    <string name="share">Share</string>
+    <string name="report_attached">1 report allegato</string>
+    <string name="reports_attached">%s reports allegati</string>
+    <string name="save">Salva</string>
+    <string name="send_email">Invia File&#8230;</string>
+    <string name="support">%s - Supporto</string>
+    <string name="total">Totale</string>
+    <string name="undefined">Indefinito</string>
+    <string name="update">Aggiorna</string>
+    <string name="yes">Si</string>
+    <string name="yes_as_pdf">Si - Come PDF</string>
+    <string name="share">Condividi</string>
 
     <!-- =============== Subscriptions ================ -->
     <string name="pro_subscription">Smart Receipts Plus</string>
 
     <!-- ============= Subscription Info ============== -->
-    <string name="subscriptions_label">Your Subscriptions:</string>
-    <string name="subscription_expiration">Expiration date: %s</string>
+    <string name="subscriptions_label">La tua Subscriptions:</string>
+    <string name="subscription_expiration">Data di termine: %s</string>
 
     <!-- ================ No More Ads ================= -->
-    <string name="missing_ad_suggest_removal_upsell">Tired of ads? Tap to start an ad-free trial</string>
+    <string name="missing_ad_suggest_removal_upsell">Stanco delle pubblicità? Tocca per avviare un periodo di prova privo di annunci</string>
 
     <!-- ============= Report Navigation ============== -->
-    <string name="report_info_graphs">Graphs</string>
-    <string name="report_info_receipts">Receipts</string>
-    <string name="report_info_distance">Distance</string>
-    <string name="report_info_generate">Generate</string>
+    <string name="report_info_graphs">Grafici</string>
+    <string name="report_info_receipts">Ricevute</string>
+    <string name="report_info_distance">Distanza</string>
+    <string name="report_info_generate">Genera</string>
 
     <!-- ============= Report Generation ============== -->
-    <string name="report_header_duration">From: %1$s To: %2$s</string>
-    <string name="report_header_receipts_total">Receipts Total: %s</string>
-    <string name="report_header_receipts_total_tax">Tax Total: %s</string>
-    <string name="report_header_receipts_total_no_tax">Receipts Total (Without Tax): %s</string>
-    <string name="report_header_receipts_total_with_tax">Receipts Total (With Tax): %s</string>
-    <string name="report_header_distance_total">Distance Total: %s</string>
-    <string name="report_header_receipts_total_reimbursable">Grand Total (Reimbursable): %s</string>
-    <string name="report_header_grand_total">Grand Total: %s</string>
-    <string name="report_header_cost_center">Cost Center: %s</string>
-    <string name="report_header_comment">Report Comment: %s</string>
-    <string name="report_pdf_generation_error">There was an error generating the report</string>
-    <string name="report_pdf_error_too_many_columns_title">Too many columns</string>
-    <string name="report_pdf_error_too_many_columns_message">There is not enough space to fit all the columns in the report. Please try limiting the number of columns in Settings.</string>
-    <string name="report_pdf_error_too_many_columns_message_landscape">There is not enough space to fit all the columns in the report. Please try limiting the number of columns in Settings or use landscape mode.</string>
-    <string name="report_pdf_error_go_to_settings">Go to settings</string>
+    <string name="report_header_duration">Da: %1$s A: %2$s</string>
+    <string name="report_header_receipts_total">Ricevute totali: %s</string>
+    <string name="report_header_receipts_total_tax">Totale Imposte: %s</string>
+    <string name="report_header_receipts_total_no_tax">Totale ricevute (Senza Imposte): %s</string>
+    <string name="report_header_receipts_total_with_tax">Totale ricevute (Con Imposte): %s</string>
+    <string name="report_header_distance_total">Totale distanza: %s</string>
+    <string name="report_header_receipts_total_reimbursable">Totale generale (Rimborsabile): %s</string>
+    <string name="report_header_grand_total">Totale generale: %s</string>
+    <string name="report_header_cost_center">Centro di costo: %s</string>
+    <string name="report_header_comment">Commenta Report: %s</string>
+    <string name="report_pdf_generation_error">Si è verificato un errore durante la genenrazioen del report</string>
+    <string name="report_pdf_error_too_many_columns_title">Troppe colonne</string>
+    <string name="report_pdf_error_too_many_columns_message">Spazio insufficiente per le colonne nel report. Si prega di limitare il numero di colonne nelle impostazioni.</string>
+    <string name="report_pdf_error_too_many_columns_message_landscape">Spazio insufficiente per le colonne nel report. Si prega di limitare il numero di colonne nelle impostazioni o utilizzare il formato orizzontale.</string>
+    <string name="report_pdf_error_go_to_settings">Vai alle Impostazioni</string>
 
     <!-- ===================== ocr ======================== -->
     <string name="ocr_informational_tooltip_configure_text">[Optional] Configure Automatic Scans? Tap here.</string>

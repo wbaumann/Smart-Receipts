@@ -54,7 +54,7 @@
     <bool name="pref_distance_as_price_defaultValue">true</bool>
 
     <!-- ================= Preference Pro ================== -->
-    <string name="pref_pro_pdf_footer_defaultValue">Report Generated using Smart Receipts for Android</string>
+    <string name="pref_pro_pdf_footer_defaultValue">Report generato usando Smart Receipts per Android</string>
     <bool name="pref_pro_separate_by_category_defaultValue">false</bool>
     <bool name="pref_pro_categorical_summation_defaultValue">false</bool>
     <bool name="pref_pro_omit_default_table_defaultValue">false</bool>

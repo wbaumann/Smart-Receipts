@@ -169,40 +169,40 @@
     <string name="progress_building_reports">Elaborazione dei Report…</string>
 
     <!-- ============== Start Error Messages ================= -->
-    <string name="SD_WARNING">Warning: Your SD Card is not available or is mounted to your computer. Some images may be inaccessible. Switching to internal storage&#8230;</string>
-    <string name="database_error">Error: Failed to save your receipt</string>
-    <string name="database_get_error">Error: Failed to fetch your data. Try re-launching the app.</string>
-    <string name="IMG_OPEN_ERROR">Error: The image is currently inaccessible or corrupted. Your SD Card may be unavailable or mounted to your computer. If not, click the menu button to retake the photo.</string>
-    <string name="IMG_SAVE_ERROR">Error: The Image Failed to Save Properly</string>
-    <string name="FILE_SAVE_ERROR">Error: The File Failed to Save Properly</string>
-    <string name="ILLEGAL_CHAR_ERROR">Error: The name contains an illegal character</string>
-    <string name="SPACE_ERROR">Error: The name cannot begin with a space</string>
-    <string name="CALENDAR_TAB_ERROR">Error: Please Touch the Date TextBox to set the Date</string>
-    <string name="DURATION_ERROR">Error: The Start Date Must Occur Prior To The End Date</string>
-    <string name="EXPORT_ERROR">Error: Failed to properly export your data.</string>
-    <string name="IMPORT_ERROR">Error: Failed to recognize the file as importable</string>
-    <string name="MOVE_ERROR">Error: Failed to move the receipt</string>
-    <string name="COPY_ERROR">Error: Failed to copy the receipt</string>
-    <string name="toast_warning_reset_exchange_rate">Warning: Changing the currency will reset ALL exchange rates</string>
-    <string name="toast_error_trip_exists">Error: An expense report with that name already exists</string>
+    <string name="SD_WARNING">Attenzione: La SD card non è disponibile o è in uso nel tuo computer.Alcune immagini potrebbero essere inacessibili. Viene selezionato lo storage interno&#8230;</string>
+    <string name="database_error">Errore: Il salvataggio della ricevuta è fallito</string>
+    <string name="database_get_error">Errore: Il recupero dei dati è fallito.Provare a rilanciare la app.</string>
+    <string name="IMG_OPEN_ERROR">Errore: L'immagine non è al momento disponibile o è corrotta. La SD card non è accessibile o è in uso da parte del computer. Se non è così, cliccare il pulsante per eseguire nuovamente la foto.</string>
+    <string name="IMG_SAVE_ERROR">Errore: Il salvataggio della foto non è andato a buon fine corrrettamente</string>
+    <string name="FILE_SAVE_ERROR">errore: Il file non è stato salvato correttamente</string>
+    <string name="ILLEGAL_CHAR_ERROR">Errore: Il Nome contiene caratteri non permessi</string>
+    <string name="SPACE_ERROR">Errore: Il nome non può iniziare con uno spazio</string>
+    <string name="CALENDAR_TAB_ERROR">Errore: Prego utilizzare il box data per inserire la data</string>
+    <string name="DURATION_ERROR">Errore: La data iniziale deve essere precedente alla data finale</string>
+    <string name="EXPORT_ERROR">Errore: L'esportazione dei dati è fallita.</string>
+    <string name="IMPORT_ERROR">Errore: Il file non è stato riconosciuto come importabile</string>
+    <string name="MOVE_ERROR">Errore: Lo spostamento della ricevuta è fallito</string>
+    <string name="COPY_ERROR">Errore: La copia della ricevuta è fallita</string>
+    <string name="toast_warning_reset_exchange_rate">Attenzione: Cambiando la valuta si reinizializzeranno tutti i valori di cambio</string>
+    <string name="toast_error_trip_exists">Errore: Un Reposrt di spese con questo nome esiste già</string>
 
     <!-- ============== Toast Messages ================= -->
-    <string name="toast_receipt_copy">Successfully copied the receipt</string>
-    <string name="toast_receipt_move">Successfully moved the receipt</string>
-    <string name="toast_receipt_image_added">Successfully added a new image to %s</string>
-    <string name="toast_receipt_image_replaced">Successfully replaced a new image for %s</string>
-    <string name="toast_receipt_pdf_added">Successfully added a new PDF to %s</string>
-    <string name="toast_receipt_pdf_replaced">Successfully replaced a new PDF for %s</string>
-    <string name="toast_no_storage_permissions">Cannot import file without storage permissions</string>
-    <string name="toast_import_complete">Successfully imported all files. Please re-launch the app.</string>
-    <string name="toast_reorder_hint"><![CDATA[Long press item to initiate dragging]]></string>
-    <string name="toast_csv_report_distances">To create CSV report please check option %s</string>
-    <string name="toast_attachment_error">Unable to attach this file.</string>
-    <string name="toast_disable_crop_option">You can disable crop image option in the app settings</string>
+    <string name="toast_receipt_copy">La ricevuta è stata copiata con successo</string>
+    <string name="toast_receipt_move">La ricevuta è stata spostata con successo</string>
+    <string name="toast_receipt_image_added">Una nuova immagine è stata aggiunta a  %s con successo</string>
+    <string name="toast_receipt_image_replaced">L'immagine  %s è stata sostituita con successo</string>
+    <string name="toast_receipt_pdf_added">Un nuovo pdf è stato aggiunto con successo a %s</string>
+    <string name="toast_receipt_pdf_replaced">Un nuovo PDF è stato sostituito con sucesso a %s</string>
+    <string name="toast_no_storage_permissions">Non è possibile importare file senza i permessi di uso dello storage</string>
+    <string name="toast_import_complete">Tutti i files sono stati importati con successo. Prego riavviare la app.</string>
+    <string name="toast_reorder_hint"><![CDATA[Mantenere premuto a lungo l'oggetto per iniziarne il trascinamento]]></string>
+    <string name="toast_csv_report_distances">Prego selezionare l'opzione  %s per creare il reoprt CSV</string>
+    <string name="toast_attachment_error">Impossibile allegare questo file.</string>
+    <string name="toast_disable_crop_option">Potete disabilitare il crop dell'immagine nelle preferenze della app</string>
 
     <!-- ================== Trip Adapter ===================== -->
-    <string name="trip_adapter_list_item_to">%1$s to %2$s</string>
-    <string name="trip_no_data">You don\'t seem to have any reports defined at the moment. Try clicking the "+" (plus) button to get started.</string>
+    <string name="trip_adapter_list_item_to">%1$s a %2$s</string>
+    <string name="trip_no_data">Non appare alcun report definito al momento. Cliccare il "+" (più) per iniziare.</string>
 
     <!-- ================= Receipt Adapter =================== -->
     <string name="receipt_no_data">You don\'t seem to have any receipts yet. Try tapping the "+" (plus) button to get started&#8230;</string>

@@ -46,63 +46,63 @@
         <item>@string/pref_general_date_format_yyyy_MM_dd_entryValue</item>
     </string-array>
     <string name="pref_general_track_cost_center_key" translatable="false">trackcostcenter</string>
-    <string name="pref_general_track_cost_center_title">Track Cost Center</string>
-    <string name="pref_general_track_cost_center_summaryOn">Include Cost Center For Reports</string>
-    <string name="pref_general_track_cost_center_summaryOff">Don\'t Include Cost Center For Reports</string>
+    <string name="pref_general_track_cost_center_title">Tracciare i centri di costo</string>
+    <string name="pref_general_track_cost_center_summaryOn">Includere i centri di costo per i Report</string>
+    <string name="pref_general_track_cost_center_summaryOff">Non includere i centri di costo per i Report</string>
     <string name="pref_general_enable_crop_key" translatable="false">enablecrop</string>
-    <string name="pref_general_enable_crop_title">Enable Crop Image Screen</string>
-    <string name="pref_general_enable_crop_summaryOn">You will see the Crop Screen after taking a photo</string>
-    <string name="pref_general_enable_crop_summaryOff">You won\'t see the Crop Screen after taking a photo</string>
+    <string name="pref_general_enable_crop_title">Abilita schermo per il crop dell'immagine</string>
+    <string name="pref_general_enable_crop_summaryOn">Lo schermo di crop sarà visualizzato dopo aver scattato una foto</string>
+    <string name="pref_general_enable_crop_summaryOff">Lo schermo di crop non sarà visualizzato dopo aver scattato una foto</string>
 
     <!-- ============== Preference Receipt ================= -->
     <string name="pref_receipt_customize_categories_key" translatable="false">CustomCategories</string>
-    <string name="pref_receipt_customize_categories_title">Customize Receipt Categories</string>
-    <string name="pref_receipt_customize_categories_summary">Tap here to add/edit your categories</string>
+    <string name="pref_receipt_customize_categories_title">Personalizza le categorie delle ricevute</string>
+    <string name="pref_receipt_customize_categories_summary">Toccare per aggiungere/modificare le categorie</string>
     <string name="pref_receipt_predict_categories_key" translatable="false">PredictCats</string>
-    <string name="pref_receipt_predict_categories_title">Predict Receipt Categories</string>
-    <string name="pref_receipt_predict_categories_summary">Auto-fill category based on prior data</string>
+    <string name="pref_receipt_predict_categories_title">Predire le categorie delle ricevute</string>
+    <string name="pref_receipt_predict_categories_summary">Compilare la categorie automaticamente secondo i dati precedenti</string>
     <string name="pref_receipt_match_name_to_category_key" translatable="false">MatchNameCats</string>
-    <string name="pref_receipt_match_name_to_category_title">Match Name to Category</string>
-    <string name="pref_receipt_match_name_to_category_summary">Automatically set name to category</string>
+    <string name="pref_receipt_match_name_to_category_title">Proponi il nome della categoria</string>
+    <string name="pref_receipt_match_name_to_category_summary">Imposta automaticamente il nome della categoria</string>
     <string name="pref_receipt_match_comment_to_category_key" translatable="false">MatchCommentCats</string>
-    <string name="pref_receipt_match_comment_to_category_title">Match Comment to Category</string>
-    <string name="pref_receipt_match_comment_to_category_summary">Automatically set comment to category</string>
+    <string name="pref_receipt_match_comment_to_category_title">Proponi il commento alla categoria</string>
+    <string name="pref_receipt_match_comment_to_category_summary">Imposta automaticamente il commento alla categoria</string>
     <string name="pref_receipt_reimbursable_only_key" translatable="false">OnlyIncludeExpensable</string>
-    <string name="pref_receipt_reimbursable_only_title">Only Report Reimbursable</string>
-    <string name="pref_receipt_reimbursable_only_summary">Omit other receipts from output</string>
+    <string name="pref_receipt_reimbursable_only_title">Solo report rimborsabili</string>
+    <string name="pref_receipt_reimbursable_only_summary">Omette le altre ricevute da output</string>
     <string name="pref_receipt_reimbursable_default_key" translatable="false">ExpensableDefault</string>
-    <string name="pref_receipt_reimbursable_default_title">Receipts Default As Reimbursable</string>
+    <string name="pref_receipt_reimbursable_default_title">Ricevute predefinitite come rimborsabili</string>
     <string name="pref_receipt_include_tax_field_key" translatable="false">IncludeTaxField</string>
-    <string name="pref_receipt_include_tax_field_title">Include Tax Field</string>
-    <string name="pref_receipt_include_tax_field_summary">Adds a line item for taxes</string>
+    <string name="pref_receipt_include_tax_field_title">Includere il campo Imposta</string>
+    <string name="pref_receipt_include_tax_field_summary">Inserisce automaticamente una linea per le imposte</string>
     <string name="pref_receipt_tax_percent_key" translatable="false">TaxPercentage</string>
-    <string name="pref_receipt_tax_percent_title">Default Tax Percentage</string>
+    <string name="pref_receipt_tax_percent_title">Valore percentuale di imposta perdefinito</string>
     <string name="pref_receipt_pre_tax_key" translatable="false">PreTax</string>
-    <string name="pref_receipt_pre_tax_title">Assume Price is Pre-Tax</string>
-    <string name="pref_receipt_pre_tax_summary_on">Calculates Tax From a Pre-Tax Price</string>
-    <string name="pref_receipt_pre_tax_summary_off">Calculates Tax From a Post-Tax Price</string>
+    <string name="pref_receipt_pre_tax_title">Il prezzo è predefinito esente da imposta</string>
+    <string name="pref_receipt_pre_tax_summary_on">Calcola imposte dal prezzo imponibile</string>
+    <string name="pref_receipt_pre_tax_summary_off">Calcola imposte dal prezzo imponibile</string>
     <string name="pref_receipt_enable_autocomplete_key" translatable="false">EnableAutoCompleteSuggestions</string>
-    <string name="pref_receipt_enable_autocomplete_title">Enable AutoComplete Suggestions</string>
-    <string name="pref_receipt_enable_autocomplete_summary">Suggest values from previous values</string>
+    <string name="pref_receipt_enable_autocomplete_title">Attiva suggerimenti con autocompletamento</string>
+    <string name="pref_receipt_enable_autocomplete_summary">Suggerisce i valori dai precedenti</string>
     <string name="pref_receipt_minimum_receipts_price_key" translatable="false">MinReceiptPrice</string>
-    <string name="pref_receipt_minimum_receipts_price_title">Minimum Receipt Price</string>
-    <string name="pref_receipt_minimum_receipts_price_summary_all">Include all receipts in report</string>
-    <string name="pref_receipt_minimum_receipts_price_summary_partial">Only report receipt prices over %s</string>
+    <string name="pref_receipt_minimum_receipts_price_title">Valore minimo della ricevuta</string>
+    <string name="pref_receipt_minimum_receipts_price_summary_all">Include tutte le ricevute nel report</string>
+    <string name="pref_receipt_minimum_receipts_price_summary_partial">Include solo le ricevute con valori superiori a %s</string>
     <string name="pref_receipt_default_to_report_start_date_key" translatable="false">DefaultToFirstReportDate</string>
-    <string name="pref_receipt_default_to_report_start_date_title">Default to Report Start Date</string>
-    <string name="pref_receipt_default_to_report_start_date_summary">Sets receipt date to match report date</string>
+    <string name="pref_receipt_default_to_report_start_date_title">Valore predefinito alla data di inizio del Report</string>
+    <string name="pref_receipt_default_to_report_start_date_summary">Imposta la data della ricevuta a quella del report date</string>
     <string name="pref_receipt_show_id_key" translatable="false">ShowReceiptID</string>
-    <string name="pref_receipt_show_id_title">Show Receipt ID</string>
-    <string name="pref_receipt_show_id_summary">Displays an auto-generated ID field</string>
+    <string name="pref_receipt_show_id_title">Mostra ID ricevuta</string>
+    <string name="pref_receipt_show_id_summary">Visualizza un campo ID auto generato</string>
     <string name="pref_receipt_full_page_key" translatable="false">UseFullPage</string>
-    <string name="pref_receipt_full_page_title">Assume Full Page</string>
-    <string name="pref_receipt_full_page_summary">Marks Receipts as Full Page by Default</string>
+    <string name="pref_receipt_full_page_title">Preferenza pagina completa</string>
+    <string name="pref_receipt_full_page_summary">Definisce la ricevuta come a piena pagina in forma predefinita</string>
     <string name="pref_receipt_use_payment_methods_key" translatable="false">UsePaymentMethods</string>
-    <string name="pref_receipt_use_payment_methods_title">Enable Payment Methods</string>
-    <string name="pref_receipt_use_payment_methods_summary">Select to track payment methods for receipts</string>
+    <string name="pref_receipt_use_payment_methods_title">Attiva modalità di pagamento</string>
+    <string name="pref_receipt_use_payment_methods_summary">Selezionare per tracciare il metodo di pagamento della ricevuta</string>
     <string name="pref_receipt_payment_methods_key" translatable="false">PaymentMethods</string>
-    <string name="pref_receipt_payment_methods_title">Customize Payment Methods</string>
-    <string name="pref_receipt_payment_methods_summary">Tap here to add/edit payment methods</string>
+    <string name="pref_receipt_payment_methods_title">Personalizza metodo di pagamento</string>
+    <string name="pref_receipt_payment_methods_summary">Toccare per aggiungere/modificare i metodi di pagamento</string>
 
     <!-- ============= Preference Output ================= -->
     <string name="pref_output_custom_csv_key" translatable="false">CustomizeCSVOutput</string>

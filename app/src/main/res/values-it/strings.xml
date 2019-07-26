@@ -108,65 +108,65 @@
     <string name="ocr_configuration_information_line3">Per provare la funzione OCR, tutti i nuovi utenti hanno un bonus di 2 scansioni gratuit! Ti preghiamo di ricordare che la funzione OCR è opzionale e può essere disabilitata in qualsiasi momento.</string>
 
     <!-- ================ Categories ================== -->
-    <string name="category_null">&lt;Category&gt;</string>
+    <string name="category_null">&lt;Categoria&gt;</string>
     <string name="category_null_code">NUL</string>
-    <string name="category_airfare">Airfare</string>
+    <string name="category_airfare">Biglietto aereo</string>
     <string name="category_airfare_code">AIRP</string>
-    <string name="category_breakfast">Breakfast</string>
+    <string name="category_breakfast">Colazione</string>
     <string name="category_breakfast_code">BRFT</string>
-    <string name="category_dinner">Dinner</string>
+    <string name="category_dinner">Cena</string>
     <string name="category_dinner_code">DINN</string>
-    <string name="category_entertainment">Entertainment</string>
+    <string name="category_entertainment">Intrattenimento</string>
     <string name="category_entertainment_code">ENT</string>
-    <string name="category_gasoline">Gasoline</string>
+    <string name="category_gasoline">Carburante</string>
     <string name="category_gasoline_code">GAS</string>
-    <string name="category_gift">Gift</string>
+    <string name="category_gift">Omaggio</string>
     <string name="category_gift_code">GIFT</string>
     <string name="category_hotel">Hotel</string>
     <string name="category_hotel_code">HTL</string>
-    <string name="category_laundry">Laundry</string>
+    <string name="category_laundry">Lavanderia</string>
     <string name="category_laundry_code">LAUN</string>
-    <string name="category_lunch">Lunch</string>
+    <string name="category_lunch">Pranzo</string>
     <string name="category_lunch_code">LNCH</string>
-    <string name="category_other">Other</string>
+    <string name="category_other">Altro</string>
     <string name="category_other_code">MISC</string>
-    <string name="category_parking_tolls">Parking/Tolls</string>
+    <string name="category_parking_tolls">Parcheggio</string>
     <string name="category_parking_tolls_code">PARK</string>
-    <string name="category_postage_shipping">Postage/Shipping</string>
+    <string name="category_postage_shipping">Spedizione postale</string>
     <string name="category_postage_shipping_code">POST</string>
-    <string name="category_car_rental">Car Rental</string>
+    <string name="category_car_rental">Autonoleggio</string>
     <string name="category_car_rental_code">RCAR</string>
     <string name="category_taxi_bus">Taxi/Bus</string>
     <string name="category_taxi_bus_code">TAXI</string>
-    <string name="category_telephone_fax">Telephone/Fax</string>
+    <string name="category_telephone_fax">Telefono/Fax</string>
     <string name="category_telephone_fax_code">TELE</string>
-    <string name="category_tip">Tip</string>
+    <string name="category_tip">Mancia</string>
     <string name="category_tip_code">TIP</string>
-    <string name="category_train">Train</string>
+    <string name="category_train">Treno</string>
     <string name="category_train_code">TRN</string>
-    <string name="category_books_periodicals">Books/Periodicals</string>
+    <string name="category_books_periodicals">Libri/Periodici</string>
     <string name="category_books_periodicals_code">ZBKP</string>
-    <string name="category_cell_phone">Cell Phone</string>
+    <string name="category_cell_phone">Cellulare</string>
     <string name="category_cell_phone_code">ZCEL</string>
-    <string name="category_dues_subscriptions">Dues/Subscriptions</string>
+    <string name="category_dues_subscriptions">Quota/Abbonamenti</string>
     <string name="category_dues_subscriptions_code">ZDUE</string>
-    <string name="category_meals_justified">Meals (Justified)</string>
+    <string name="category_meals_justified">Pasti (Giustificati)</string>
     <string name="category_meals_justified_code">ZMEO</string>
-    <string name="category_stationery_stations">Stations</string>
+    <string name="category_stationery_stations">Stazioni</string>
     <string name="category_stationery_stations_code">ZSTS</string>
-    <string name="category_training_fees">Training Fees</string>
+    <string name="category_training_fees">Formazione</string>
     <string name="category_training_fees_code">ZTRN</string>
 
     <!-- ================ Img Menu Options =================== -->
-    <string name="menu_receiptimage_retake">Retake Photo</string>
-    <string name="menu_receiptimage_edit">Edit Photo</string>
+    <string name="menu_receiptimage_retake">Ripeti foto</string>
+    <string name="menu_receiptimage_edit">Modifica foto</string>
 
     <!-- ===================== Email ====================== -->
-    <string name="email_body_subject_5mb_warning">The following attachment is over 5MB in size and may not properly attach: %s</string>
+    <string name="email_body_subject_5mb_warning">L'allegato è superiore ai 5MB e potrebbe non essere trasmesso correttamente: %s</string>
 
     <!-- ============== Progress Messages ================= -->
-    <string name="progress_import">Importing your files&#8230;</string>
-    <string name="progress_building_reports">Building Reports…</string>
+    <string name="progress_import">Importazione dei files&#8230;</string>
+    <string name="progress_building_reports">Elaborazione dei Report…</string>
 
     <!-- ============== Start Error Messages ================= -->
     <string name="SD_WARNING">Warning: Your SD Card is not available or is mounted to your computer. Some images may be inaccessible. Switching to internal storage&#8230;</string>

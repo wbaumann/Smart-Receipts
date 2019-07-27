@@ -205,37 +205,37 @@
     <string name="trip_no_data">Non appare alcun report definito al momento. Cliccare il "+" (più) per iniziare.</string>
 
     <!-- ================= Receipt Adapter =================== -->
-    <string name="receipt_no_data">You don\'t seem to have any receipts yet. Try tapping the "+" (plus) button to get started&#8230;</string>
+    <string name="receipt_no_data">Non c'è alcuna ricevuta definita al momento. Toccare il pulsante "+" per iniziare&#8230;</string>
 
     <!-- ================= Distance Adapter ================== -->
-    <string name="distance_no_data">You don\'t seem to have any distance tracked yet. Try clicking the "+" (plus) button to get started.</string>
-    <string name="distance_insert_failed">Error: Failed to create this distance item. Please make sure your phone is not mounted to your computer.</string>
-    <string name="distance_update_failed">Error: Failed to update this distance item. Please make sure your phone is not mounted to your computer.</string>
-    <string name="distance_delete_failed">Error: Failed to delete this distance item. Please make sure your phone is not mounted to your computer.</string>
+    <string name="distance_no_data">Non c'è ancora alcuna distanza definita. Toccare il pulsante "+" per iniziare.</string>
+    <string name="distance_insert_failed">Errore: Non è stato possibile creare la distanza.Prego accertarsi che il vostro telefono non sia connesso al PC.</string>
+    <string name="distance_update_failed">Errore Non è stato possibile modificare la distanza.Prego accertarsi che il vostro telefono non sia connesso al PC.</string>
+    <string name="distance_delete_failed">Errore Non è stato possibile eliminare la distanza.Prego accertarsi che il vostro telefono non sia connesso al PC.</string>
 
     <!-- ================= Trip Actions =================== -->
 
     <!-- ================= Receipt Actions =================== -->
-    <string name="receipt_action_camera">Picture</string>
-    <string name="receipt_action_text">Text-Only</string>
-    <string name="receipt_action_import">Import</string>
+    <string name="receipt_action_camera">Immagine</string>
+    <string name="receipt_action_text">Solo testo</string>
+    <string name="receipt_action_import">Importazione</string>
 
     <!-- ==================== Cards ========================= -->
 
     <!-- ================ DIALOG (GENERAL) =================== -->
-    <string name="DIALOG_CANCEL">Cancel</string>
+    <string name="DIALOG_CANCEL">Annulla</string>
 
     <!-- ================= DIALOG_WELCOME ==================== -->
 
     <!-- ================== DIALOG_EMAIL ===================== -->
-    <string name="DIALOG_EMAIL_CHECKBOX_PDF_FULL">Full PDF Report</string>
-    <string name="DIALOG_EMAIL_CHECKBOX_PDF_IMAGES">PDF Report - No Table</string>
-    <string name="DIALOG_EMAIL_CHECKBOX_CSV">CSV File</string>
-    <string name="DIALOG_EMAIL_CHECKBOX_ZIP_WITH_METADATA">ZIP - Receipt Files with Metadata</string>
-    <string name="DIALOG_EMAIL_CHECKBOX_ZIP">ZIP - Receipts Files</string>
-    <string name="DIALOG_EMAIL_TOAST_NO_SELECTION">Please Check At Least One Report</string>
-    <string name="DIALOG_EMAIL_TOAST_NO_RECEIPTS">There are No Receipts in this Report</string>
-    <string name="generate_report_tooltip">Tap to configure the report layouts</string>
+    <string name="DIALOG_EMAIL_CHECKBOX_PDF_FULL">Report completo PDF</string>
+    <string name="DIALOG_EMAIL_CHECKBOX_PDF_IMAGES">Report PDF - senza tabella</string>
+    <string name="DIALOG_EMAIL_CHECKBOX_CSV">File CSV</string>
+    <string name="DIALOG_EMAIL_CHECKBOX_ZIP_WITH_METADATA">ZIP - Files delle Ricevute con metadati</string>
+    <string name="DIALOG_EMAIL_CHECKBOX_ZIP">ZIP - Files delle Ricevute</string>
+    <string name="DIALOG_EMAIL_TOAST_NO_SELECTION">Prego selezionare almeno un Report</string>
+    <string name="DIALOG_EMAIL_TOAST_NO_RECEIPTS">NOn ci sono Ricevute in questo Report</string>
+    <string name="generate_report_tooltip">Toccare per configurare i layout dei Report</string>
 
 
     <!-- ================= DIALOG_SETTINGS =================== -->

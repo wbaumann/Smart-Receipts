@@ -103,7 +103,7 @@
     <string name="ocr_configuration_information">Smart Receipts è integrato con Taggun per fornire servizi di scansione automatica (es. OCR), tramite i quali è possibile estrarre i metadati dalle ricevute come prezzi, imposte,date e denominazione del venditore dalle vostre immagini.</string>
     <string name="ocr_configuration_information_line2">Utiliziamo una combinazione di Google Vision e Machine Learning per fornire velocemente un risultato (spesso in 5 secondi o meno), che diverrà maggiormente accurato con il tempo. A causa del fatto che questi servizi sono a consumo, applicheremo un costo per ciascuna scansione di ricevuta.</string>
     <string name="ocr_is_enabled">Attiva scansione automatica (OCR)?</string>
-    <string name="ocr_save_scans_to_improve_results">Autorizzi il salvataggio delle immagini per aumentare l'accuratezza?</string>
+    <string name="ocr_save_scans_to_improve_results">Autorizzi il salvataggio delle immagini per aumentare l\'accuratezza?</string>
     <string name="ocr_configuration_available_purchases">Acquisti disponibili - Tocca per acquistare:</string>
     <string name="ocr_configuration_information_line3">Per provare la funzione OCR, tutti i nuovi utenti hanno un bonus di 2 scansioni gratuit! Ti preghiamo di ricordare che la funzione OCR è opzionale e può essere disabilitata in qualsiasi momento.</string>
 
@@ -162,7 +162,7 @@
     <string name="menu_receiptimage_edit">Modifica foto</string>
 
     <!-- ===================== Email ====================== -->
-    <string name="email_body_subject_5mb_warning">L'allegato è superiore ai 5MB e potrebbe non essere trasmesso correttamente: %s</string>
+    <string name="email_body_subject_5mb_warning">L\'allegato è superiore ai 5MB e potrebbe non essere trasmesso correttamente: %s</string>
 
     <!-- ============== Progress Messages ================= -->
     <string name="progress_import">Importazione dei files&#8230;</string>
@@ -172,14 +172,14 @@
     <string name="SD_WARNING">Attenzione: La SD card non è disponibile o è in uso nel tuo computer.Alcune immagini potrebbero essere inacessibili. Viene selezionato lo storage interno&#8230;</string>
     <string name="database_error">Errore: Il salvataggio della ricevuta è fallito</string>
     <string name="database_get_error">Errore: Il recupero dei dati è fallito.Provare a rilanciare la app.</string>
-    <string name="IMG_OPEN_ERROR">Errore: L'immagine non è al momento disponibile o è corrotta. La SD card non è accessibile o è in uso da parte del computer. Se non è così, cliccare il pulsante per eseguire nuovamente la foto.</string>
+    <string name="IMG_OPEN_ERROR">Errore: L\'immagine non è al momento disponibile o è corrotta. La SD card non è accessibile o è in uso da parte del computer. Se non è così, cliccare il pulsante per eseguire nuovamente la foto.</string>
     <string name="IMG_SAVE_ERROR">Errore: Il salvataggio della foto non è andato a buon fine corrrettamente</string>
     <string name="FILE_SAVE_ERROR">errore: Il file non è stato salvato correttamente</string>
     <string name="ILLEGAL_CHAR_ERROR">Errore: Il Nome contiene caratteri non permessi</string>
     <string name="SPACE_ERROR">Errore: Il nome non può iniziare con uno spazio</string>
     <string name="CALENDAR_TAB_ERROR">Errore: Prego utilizzare il box data per inserire la data</string>
     <string name="DURATION_ERROR">Errore: La data iniziale deve essere precedente alla data finale</string>
-    <string name="EXPORT_ERROR">Errore: L'esportazione dei dati è fallita.</string>
+    <string name="EXPORT_ERROR">Errore: L\'esportazione dei dati è fallita.</string>
     <string name="IMPORT_ERROR">Errore: Il file non è stato riconosciuto come importabile</string>
     <string name="MOVE_ERROR">Errore: Lo spostamento della ricevuta è fallito</string>
     <string name="COPY_ERROR">Errore: La copia della ricevuta è fallita</string>
@@ -190,25 +190,25 @@
     <string name="toast_receipt_copy">La ricevuta è stata copiata con successo</string>
     <string name="toast_receipt_move">La ricevuta è stata spostata con successo</string>
     <string name="toast_receipt_image_added">Una nuova immagine è stata aggiunta a  %s con successo</string>
-    <string name="toast_receipt_image_replaced">L'immagine  %s è stata sostituita con successo</string>
+    <string name="toast_receipt_image_replaced">L\'immagine  %s è stata sostituita con successo</string>
     <string name="toast_receipt_pdf_added">Un nuovo pdf è stato aggiunto con successo a %s</string>
     <string name="toast_receipt_pdf_replaced">Un nuovo PDF è stato sostituito con sucesso a %s</string>
     <string name="toast_no_storage_permissions">Non è possibile importare file senza i permessi di uso dello storage</string>
     <string name="toast_import_complete">Tutti i files sono stati importati con successo. Prego riavviare la app.</string>
-    <string name="toast_reorder_hint"><![CDATA[Mantenere premuto a lungo l'oggetto per iniziarne il trascinamento]]></string>
-    <string name="toast_csv_report_distances">Prego selezionare l'opzione  %s per creare il reoprt CSV</string>
+    <string name="toast_reorder_hint"><![CDATA[Mantenere premuto a lungo l\'oggetto per iniziarne il trascinamento]]></string>
+    <string name="toast_csv_report_distances">Prego selezionare l\'opzione  %s per creare il reoprt CSV</string>
     <string name="toast_attachment_error">Impossibile allegare questo file.</string>
-    <string name="toast_disable_crop_option">Potete disabilitare il crop dell'immagine nelle preferenze della app</string>
+    <string name="toast_disable_crop_option">Potete disabilitare il crop dell\'immagine nelle preferenze della app</string>
 
     <!-- ================== Trip Adapter ===================== -->
     <string name="trip_adapter_list_item_to">%1$s a %2$s</string>
     <string name="trip_no_data">Non appare alcun report definito al momento. Cliccare il "+" (più) per iniziare.</string>
 
     <!-- ================= Receipt Adapter =================== -->
-    <string name="receipt_no_data">Non c'è alcuna ricevuta definita al momento. Toccare il pulsante "+" per iniziare&#8230;</string>
+    <string name="receipt_no_data">Non c\'è alcuna ricevuta definita al momento. Toccare il pulsante "+" per iniziare&#8230;</string>
 
     <!-- ================= Distance Adapter ================== -->
-    <string name="distance_no_data">Non c'è ancora alcuna distanza definita. Toccare il pulsante "+" per iniziare.</string>
+    <string name="distance_no_data">Non c\'è ancora alcuna distanza definita. Toccare il pulsante "+" per iniziare.</string>
     <string name="distance_insert_failed">Errore: Non è stato possibile creare la distanza.Prego accertarsi che il vostro telefono non sia connesso al PC.</string>
     <string name="distance_update_failed">Errore Non è stato possibile modificare la distanza.Prego accertarsi che il vostro telefono non sia connesso al PC.</string>
     <string name="distance_delete_failed">Errore Non è stato possibile eliminare la distanza.Prego accertarsi che il vostro telefono non sia connesso al PC.</string>
@@ -270,7 +270,7 @@
     <string name="DIALOG_RECEIPTMENU_TITLE_NEW_ID">Nuova Ricevuta - %d</string>
     <string name="DIALOG_RECEIPTMENU_TITLE_EDIT">Modifica Ricevuta</string>
     <string name="DIALOG_RECEIPTMENU_TITLE_EDIT_ID">Modifica Ricevuta - %d</string>
-    <string name="DIALOG_RECEIPTMENU_TOAST_BAD_DATE">Attenzione: La data di questa ricevuta cade fuori dall'intervallo specificato</string>
+    <string name="DIALOG_RECEIPTMENU_TOAST_BAD_DATE">Attenzione: La data di questa ricevuta cade fuori dall\'intervallo specificato</string>
     <string name="manage_categories">Gestisci Categorie</string>
     <string name="manage_payment_methods">Gestisci metodi di pagamento</string>
 
@@ -329,7 +329,7 @@
 
     <!-- ==============-========== Login ========================== -->
     <string name="login_toolbar_title">Log In / Iscrizione</string>
-    <string name="login_title">Log In con l'account Smart Receipts per iniziare ad utilizzare le scansioni automatiche (OCR)</string>
+    <string name="login_title">Log In con l\'account Smart Receipts per iniziare ad utilizzare le scansioni automatiche (OCR)</string>
     <string name="login_field_email_hint">Indirizzo Email</string>
     <string name="login_field_password_hint">Password</string>
     <string name="sign_up_button_text">Iscrizione</string>
@@ -428,7 +428,7 @@
     <string name="receipt_dialog_action_remove_attachment">Elimina allegato</string>
 
     <string name="dialog_attachment_text">Toccare su una ricevuta per aggiungere questo %s ad essa</string>
-    <string name="receipt_dialog_remove_attachment">Rimuovere l'allegato?</string>
+    <string name="receipt_dialog_remove_attachment">Rimuovere l\'allegato?</string>
 
     <!-- ================== Preference Dialog ==================== -->
     <string name="dialog_custom_csv_spinner">Tipo Colonna</string>
@@ -439,7 +439,7 @@
     <string name="error_no_pdf_activity_viewer">Visualizzatore di PDF non trovato</string>
     <string name="error_no_send_intent_dialog_title">Applicazione di invio non trovata</string>
     <string name="error_no_send_intent_dialog_message">Non trovata alcuna applicazione di email (o equivalente) nel vostro telefono. I files sono stati salvati nella seguente directory: %s</string>
-    <string name="error_no_file_intent_dialog_title">Errore: non è presente alcuna applicazione per l'import nel vosrto dispositivo</string>
+    <string name="error_no_file_intent_dialog_title">Errore: non è presente alcuna applicazione per l\'import nel vosrto dispositivo</string>
     <string name="error_no_wifi">Errore: Non connessi a WiFi</string>
 
     <!-- ================== ActionBar ===================== -->
@@ -500,7 +500,7 @@
 
     <!-- ================== Tooltip messages ==================== -->
     <string name="tooltip_generate_info_message">Usa la tab \'Generate\' per creare i tuoi Report</string>
-    <string name="tooltip_backup_info_message">%d giorni dall'ultimo backup</string>
+    <string name="tooltip_backup_info_message">%d giorni dall\'ultimo backup</string>
     <string name="tooltip_no_backups_info_message">Reminder: Periodicamente eseguite il backup dei vostri dati</string>
     <string name="tooltip_import_info_message">Prego selezionare la ricevuta da allegare</string>
     <string name="tooltip_review_privacy">Toccare per visualizzare le impostazioni della privacy</string>
@@ -525,7 +525,7 @@
     <string name="logged_in_as">Logged in come:</string>
     <string name="organization_label">Organizzazione:</string>
     <string name="organization_update_success">Organizzazione aggiornata con successo</string>
-    <string name="organization_update_error">Qualcosa non ha funzionato nell'aggiornamento della organizzazione</string>
-    <string name="organization_update">Aggiorna impostazioni dell'organizzazione</string>
+    <string name="organization_update_error">Qualcosa non ha funzionato nell\'aggiornamento della organizzazione</string>
+    <string name="organization_update">Aggiorna impostazioni dell\'organizzazione</string>
 
 </resources>

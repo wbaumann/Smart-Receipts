@@ -90,8 +90,8 @@
     <!-- ===================== ocr ======================== -->
     <string name="ocr_informational_tooltip_configure_text">[Opzionale] Configurare la scansione automatica? Toccare qui.</string>
     <plurals name="ocr_informational_tooltip_limited_scans_text">
-        <item quantity="uno">%d Scansione rimanente. Toccare per altre.</item>
-        <item quantity="altro">%d Scansioni rimanenti. Toccare per altre.</item>
+        <item quantity="one">%d Scansione rimanente. Toccare per altre.</item>
+        <item quantity="other">%d Scansioni rimanenti. Toccare per altre.</item>
     </plurals>
     <string name="ocr_status_title">Esegui Scansione (OCR):</string>
     <string name="ocr_status_message_uploading_image">Invio ricevuta&#8230;</string>

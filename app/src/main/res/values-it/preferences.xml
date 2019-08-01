@@ -3,7 +3,7 @@
 
     <!-- ============== Preference Headers ================= -->
     <string name="pref_header_key" translatable="false">HeaderKey</string>
-    <string name="pref_general_header">General</string>
+    <string name="pref_general_header">Generali</string>
     <string name="pref_general_header_key" translatable="false">pref_general_category_key</string>
     <string name="pref_receipt_header">Receipts</string>
     <string name="pref_receipt_header_key" translatable="false">pref_receipt_category_key</string>
@@ -13,7 +13,7 @@
     <string name="pref_email_header_key" translatable="false">pref_email_category_key</string>
     <string name="pref_camera_header">Camera</string>
     <string name="pref_camera_header_key" translatable="false">pref_camera_category_key</string>
-    <string name="pref_layout_header">Layout Customizations</string>
+    <string name="pref_layout_header">Personalizzazione Layout</string>
     <string name="pref_layout_header_key">pref_layout_category_key</string>
     <string name="pref_distance_header">Distanza</string>
     <string name="pref_distance_header_key" translatable="false">pref_distance_category_key</string>
@@ -113,7 +113,7 @@
 
     <string name="pref_output_print_receipt_id_by_photo_key" translatable="false">PrintByIDPhotoKey</string>
     <string name="pref_output_print_receipt_id_by_photo_title">Stampa ID da foto</string>
-    <string name="pref_output_print_receipt_id_by_photo_summary">MOstra l\'ID della ricevuta invece dell\'indice</string>
+    <string name="pref_output_print_receipt_id_by_photo_summary">Mostra l\'ID della ricevuta invece dell\'indice</string>
 
     <string name="pref_output_print_receipt_comment_by_photo_key" translatable="false">PrintCommentByPhoto</string>
     <string name="pref_output_print_receipt_comment_by_photo_title">Stampa commento ricevuta per foto</string>
@@ -121,7 +121,7 @@
     <string name="pref_output_print_receipt_comment_by_photo_summaryOff">Nascondi il commento sulla ricevuta sopra le foto nel PDF</string>
 
     <string name="pref_output_receipts_landscape_key" translatable="false">ReceiptsTableLandscape</string>
-    <string name="pref_output_receipts_landscape_title">Print receipts table in landscape mode</string>
+    <string name="pref_output_receipts_landscape_title">Stampa Tabella Ricevute in orizzontale</string>
     <string name="pref_output_receipts_landscape_on">Stampa la tabella delle ricevute in modalità orizzontale</string>
     <string name="pref_output_receipts_landscape_off">La tabella delle ricevute viene stampata in modalità orizzontale</string>
 
@@ -154,9 +154,9 @@
     <string name="pref_email_default_email_to_key" translatable="false">EmailTo</string>
     <string name="pref_email_default_email_to_title">Indirizzo destinatario predefinito</string>
     <string name="pref_email_default_email_cc_key" translatable="false">EmailCC</string>
-    <string name="pref_email_default_email_cc_title">Default Email CC Recipient</string>
+    <string name="pref_email_default_email_cc_title">Destinatario predefinito in CC</string>
     <string name="pref_email_default_email_bcc_key" translatable="false">EmailBCC</string>
-    <string name="pref_email_default_email_bcc_title">Default Email BCC Recipient</string>
+    <string name="pref_email_default_email_bcc_title">Destinatario predefinito in BCC</string>
     <string name="pref_email_default_email_emptyValue">Separare i valori con punto e virgola (;)</string>
     <string name="pref_email_default_email_subject_key" translatable="false">EmailSubject</string>
     <string name="pref_email_default_email_subject_title">Oggetto email predefinito</string>
@@ -173,16 +173,16 @@
     <!-- ============= Preference Layout ================= -->
     <string name="pref_layout_display_date_key" translatable="false">LayoutIncludeReceiptDate</string>
     <string name="pref_layout_display_date_title">Includere la data della Ricevuta</string>
-    <string name="pref_layout_display_date_summary">Mostrare la data della Ricevuta nella lista</string>
+    <string name="pref_layout_display_date_summary">Mostra la data della Ricevuta nella lista</string>
     <string name="pref_layout_display_category_key" translatable="false">LayoutIncludeReceiptCategory</string>
     <string name="pref_layout_display_category_title">Includere la categoria della Ricevuta</string>
-    <string name="pref_layout_display_category_summary">Mostrare la categoria delal ricevuta nella lista</string>
+    <string name="pref_layout_display_category_summary">Mostra la categoria della ricevuta nella lista</string>
 
     <!-- ============= Preference Distance ================= -->
     <string name="pref_distance_include_price_in_report_key" translatable="false">MileageTotalInReport</string>
-    <string name="pref_distance_include_price_in_report_title">Aggiungere prezzo della distanza al report</string>
-    <string name="pref_distance_include_price_in_report_summaryOn">Includere il prezzo della distanza al totale del Report</string>
-    <string name="pref_distance_include_price_in_report_summaryOff">Escludere il prezzo della distanza al totale del Report</string>
+    <string name="pref_distance_include_price_in_report_title">Aggiungere prezzo della distanza</string>
+    <string name="pref_distance_include_price_in_report_summaryOn">Includere il prezzo della distanza nel totale del Report</string>
+    <string name="pref_distance_include_price_in_report_summaryOff">Non includere il prezzo della distanza nel totale del Report</string>
     <string name="pref_distance_rate_key" translatable="false">MileageRate</string>
     <string name="pref_distance_rate_title">Spesa chilometrica</string>
     <string name="pref_distance_rate_summaryOff">Valore di spesa per miglio o chilometro percorso</string>
@@ -227,10 +227,10 @@
     <string name="pref_about_version_title">Versione</string>
     <string name="pref_about_about_key" translatable="false">About</string>
     <string name="pref_about_about_title">Crediti</string>
-    <string name="pref_about_about_dialogMessage" translatable="false">Smart Receipts was created and is maintained by Smart Receipts LLC. It is licensed under GNU Affero General Public License</string>
+    <string name="pref_about_about_dialogMessage" translatable="false">Smart Receipts è stato creato ed è manutenuto da Smart Receipts LLC. Software Licenziato sotto la GNU Affero General Public License</string>
     <string name="pref_about_terms_key" translatable="false">TermsOfUse</string>
     <string name="pref_about_terms_title">Termini di uso</string>
-    <string name="pref_about_terms_dialogMessage" translatable="false">Questo programma è software libero: È consentito redistribuirlo e/o modificarlo nei termini della licenza GNU Affero General Public License come pubblicata dalla Free Software Foundation, sia nella versione 3 o (a vostra discrezione), qualsiasi altra successiva versione.\n\nQuesto programma è distribuito nella speranza che possa essere utile, ma SENZA ALCUNA GARANZIA; Senza anche della implicita garanzia di COMMERCIABILITÀ o IDONEITÀ PER UNO SCOPO SPECIFICO.  Consultare la GNU Affero General Public License per maggiori dettagli.\n\nVisualizzare una copia della GNU Affero General Public License su http://www.gnu.org/licenses/.</string>
+    <string name="pref_about_terms_dialogMessage" translatable="false">Questo programma è software libero: È consentito redistribuirlo e/o modificarlo nei termini della licenza GNU Affero General Public License come pubblicata dalla Free Software Foundation, sia nella versione 3 o (a vostra discrezione), qualsiasi altra successiva versione.\n\nQuesto programma è distribuito nella speranza che possa essere utile, ma SENZA ALCUNA GARANZIA; Software anche privo della implicita garanzia di COMMERCIABILITÀ o IDONEITÀ PER UNO SCOPO SPECIFICO.  Consultare la GNU Affero General Public License per maggiori dettagli.\n\nVisualizzare una copia della GNU Affero General Public License su http://www.gnu.org/licenses/.</string>
 
     <!-- ============== Preference Privacy ================= -->
     <string name="pref_about_privacy_policy_key" translatable="false">PrivacyPolicy</string>

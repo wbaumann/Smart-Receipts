@@ -1,7 +1,7 @@
 package co.smartreceipts.android.sync.drive.managers;
 
+import android.annotation.SuppressLint;
 import androidx.annotation.NonNull;
-import androidx.annotation.SuppressLint;
 import androidx.annotation.VisibleForTesting;
 
 import com.google.common.base.Preconditions;

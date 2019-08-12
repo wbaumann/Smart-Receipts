@@ -1,6 +1,6 @@
 package co.smartreceipts.android.sync.drive.rx;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.google.android.gms.drive.Metadata;
 import com.google.android.gms.drive.MetadataBuffer;

@@ -4,26 +4,37 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentSender;
-import android.os.Bundle;
+import android.os.AsyncTask;
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
+import com.google.android.gms.auth.GoogleAuthException;
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.drive.Drive;
-import com.google.android.gms.drive.DriveClient;
-import com.google.android.gms.drive.DriveResourceClient;
+import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.tasks.Task;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.http.HttpRequestInitializer;
+import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.services.drive.Drive;
+import com.google.api.services.drive.DriveScopes;
 import com.google.common.base.Preconditions;
 import com.hadisatrio.optional.Optional;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -43,7 +54,6 @@ import co.smartreceipts.android.sync.drive.managers.DriveRestoreDataManager;
 import co.smartreceipts.android.sync.drive.managers.GoogleDriveTableManager;
 import co.smartreceipts.android.sync.drive.rx.DriveClientInitializer;
 import co.smartreceipts.android.sync.drive.rx.DriveStreamsManager;
-import co.smartreceipts.android.sync.drive.services.DriveUploadCompleteManager;
 import co.smartreceipts.android.sync.errors.CriticalSyncError;
 import co.smartreceipts.android.sync.errors.SyncErrorType;
 import co.smartreceipts.android.sync.model.RemoteBackupMetadata;
@@ -58,14 +68,15 @@ import io.reactivex.subjects.BehaviorSubject;
 public class GoogleDriveBackupManager implements BackupProvider {
 
     private static final int REQUEST_CODE_GOOGLE_SERVICE_AUTH = 712;
+    private static final int REQUEST_CODE_GOOGLE_SERVICE_REAUTH = 713;
 
+    private Activity activity;
     private final Context context;
     private final DatabaseHelper databaseHelper;
     private final GoogleDriveTableManager googleDriveTableManager;
     private final NetworkManager networkManager;
     private final Analytics analytics;
     private final ReceiptTableController receiptTableController;
-    private final DriveUploadCompleteManager driveUploadCompleteManager;
     private final DatabaseRestorer databaseRestorer;
     private final UserPreferenceManager userPreferenceManager;
     private final NoOpBackupProvider noOpBackupProvider;
@@ -88,7 +99,6 @@ public class GoogleDriveBackupManager implements BackupProvider {
                                     @NonNull NetworkManager networkManager,
                                     @NonNull Analytics analytics,
                                     @NonNull ReceiptTableController receiptTableController,
-                                    @NonNull DriveUploadCompleteManager driveUploadCompleteManager,
                                     @NonNull DatabaseRestorer databaseRestorer,
                                     @NonNull UserPreferenceManager userPreferenceManager,
                                     @NonNull NoOpBackupProvider noOpBackupProvider) {
@@ -98,7 +108,6 @@ public class GoogleDriveBackupManager implements BackupProvider {
         this.networkManager = networkManager;
         this.analytics = analytics;
         this.receiptTableController = receiptTableController;
-        this.driveUploadCompleteManager = driveUploadCompleteManager;
         this.databaseRestorer = databaseRestorer;
         this.googleDriveTableManager = googleDriveTableManager;
         this.userPreferenceManager = userPreferenceManager;
@@ -108,6 +117,8 @@ public class GoogleDriveBackupManager implements BackupProvider {
 
     @Override
     public void initialize(@NonNull FragmentActivity activity) {
+        this.activity = activity;
+
         //noinspection ResultOfMethodCallIgnored
         Preconditions.checkNotNull(activity, "Google Drive requires a valid activity to be provided");
 
@@ -127,7 +138,8 @@ public class GoogleDriveBackupManager implements BackupProvider {
             final GoogleSignInAccount signInAccount = GoogleSignIn.getLastSignedInAccount(activity);
             if (signInAccount == null) {
                 final GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestScopes(Drive.SCOPE_FILE, Drive.SCOPE_APPFOLDER)
+                        .requestEmail()
+                        .requestScopes(new Scope(DriveScopes.DRIVE_FILE), new Scope(DriveScopes.DRIVE_APPDATA))
                         .build();
                 final GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(context, signInOptions);
                 activity.startActivityForResult(googleSignInClient.getSignInIntent(), REQUEST_CODE_GOOGLE_SERVICE_AUTH);
@@ -154,7 +166,8 @@ public class GoogleDriveBackupManager implements BackupProvider {
     @Override
     public boolean onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         Logger.debug(this, "Handling drive request. request = {}, result = {}", requestCode, resultCode);
-        if (requestCode == REQUEST_CODE_GOOGLE_SERVICE_AUTH && resultCode == Activity.RESULT_OK) {
+        if ((requestCode == REQUEST_CODE_GOOGLE_SERVICE_AUTH || requestCode == REQUEST_CODE_GOOGLE_SERVICE_REAUTH)
+                && resultCode == Activity.RESULT_OK) {
             final Task<GoogleSignInAccount> signInAccountTask = GoogleSignIn.getSignedInAccountFromIntent(data);
             if (signInAccountTask.isSuccessful()) {
                 Logger.info(this, "Successfully authorized our Google Drive account");
@@ -319,25 +332,78 @@ public class GoogleDriveBackupManager implements BackupProvider {
         // First, confirm that we're still initializing
         synchronized (initializationLock) {
             if (isInitializing.get()) {
-                // Now that we have a valid GoogleSignInAccount, use this to create the desired drive objects
-                final DriveClient driveClient = Drive.getDriveClient(context, signInAccount);
-                final DriveResourceClient driveResourceClient = Drive.getDriveResourceClient(context, signInAccount);
+                AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
+                    @Override
+                    protected String doInBackground(Void... params) {
+                        String token = null;
+                        try {
+                            final String scopes = "oauth2:" + DriveScopes.DRIVE_APPDATA + " " + DriveScopes.DRIVE_FILE;
+                            token = GoogleAuthUtil.getToken(context, signInAccount.getAccount(), scopes);
+                        } catch (UserRecoverableAuthException e) {
+                            activity.startActivityForResult(e.getIntent(), REQUEST_CODE_GOOGLE_SERVICE_REAUTH);
+                        } catch (IOException e) {
+                            //todo
+                        } catch (GoogleAuthException e) {
+                            //todo
+                        }
 
-                // Next, build each of the appropriate member objects
-                final DriveStreamsManager driveStreamsManager = new DriveStreamsManager(context, driveClient, driveResourceClient, googleDriveSyncMetadata, syncErrorStream, driveUploadCompleteManager);
-                final DriveDatabaseManager driveDatabaseManager = new DriveDatabaseManager(context, driveStreamsManager, googleDriveSyncMetadata, analytics);
-                final DriveReceiptsManager driveReceiptsManager = new DriveReceiptsManager(receiptTableController, databaseHelper.getTripsTable(), databaseHelper.getReceiptsTable(),
-                        driveStreamsManager, driveDatabaseManager, this.networkManager, analytics);
-                final DriveRestoreDataManager driveRestoreDataManager = new DriveRestoreDataManager(context, driveStreamsManager, databaseHelper, driveDatabaseManager, databaseRestorer);
+                        return token;
+                    }
 
-                this.driveClientInitializer = new DriveClientInitializer(driveClient, driveStreamsManager, driveReceiptsManager, driveDatabaseManager,
-                        driveRestoreDataManager, userPreferenceManager, googleDriveTableManager, networkManager);
+                    @Override
+                    protected void onPostExecute(String result) {
+                        if (!TextUtils.isEmpty(result)) {
+                            GoogleSignInAccountFinalization(signInAccount);
+                        }
+                    }
+                };
 
-                driveClientInitializer.initialize();
-
-                isInitializing.set(false);
+                task.execute();
             }
         }
+    }
+
+    private void GoogleSignInAccountFinalization(@NonNull GoogleSignInAccount signInAccount) {
+        Collection<String> scopes = new ArrayList<>();
+        scopes.add(DriveScopes.DRIVE_FILE);
+        scopes.add(DriveScopes.DRIVE_APPDATA);
+        // Use the authenticated account to sign in to the Drive service.
+        GoogleAccountCredential credential =
+                GoogleAccountCredential.usingOAuth2(context, scopes);
+        credential.setSelectedAccount(signInAccount.getAccount());
+
+        Drive googleDriveService = new Drive.Builder(
+                AndroidHttp.newCompatibleTransport(),
+                new GsonFactory(),
+                setHttpTimeout(credential))
+                .setApplicationName("Smart Receipts")
+                .build();
+
+        // The DriveServiceHelper encapsulates all REST API and SAF functionality.
+        // Its instantiation is required before handling any onClick actions.
+        DriveServiceHelper driveServiceHelper = new DriveServiceHelper(context, googleDriveService);
+
+        // Next, build each of the appropriate member objects
+        final DriveStreamsManager driveStreamsManager = new DriveStreamsManager(context, driveServiceHelper, googleDriveSyncMetadata, syncErrorStream);
+        final DriveDatabaseManager driveDatabaseManager = new DriveDatabaseManager(context, driveStreamsManager, googleDriveSyncMetadata, analytics);
+        final DriveReceiptsManager driveReceiptsManager = new DriveReceiptsManager(receiptTableController, databaseHelper.getTripsTable(), databaseHelper.getReceiptsTable(),
+                driveStreamsManager, driveDatabaseManager, this.networkManager, analytics);
+        final DriveRestoreDataManager driveRestoreDataManager = new DriveRestoreDataManager(context, driveStreamsManager, driveDatabaseManager, databaseRestorer);
+
+        this.driveClientInitializer = new DriveClientInitializer(driveStreamsManager, driveReceiptsManager, driveDatabaseManager,
+                driveRestoreDataManager, userPreferenceManager, googleDriveTableManager, networkManager);
+
+        driveClientInitializer.initialize();
+
+        isInitializing.set(false);
+    }
+
+    private HttpRequestInitializer setHttpTimeout(final HttpRequestInitializer requestInitializer) {
+        return httpRequest -> {
+            requestInitializer.initialize(httpRequest);
+            httpRequest.setConnectTimeout(3 * 60000);  // 3 minutes connect timeout
+            httpRequest.setReadTimeout(3 * 60000);  // 3 minutes read timeout
+        };
     }
 
 }

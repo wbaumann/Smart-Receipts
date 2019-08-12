@@ -2,20 +2,12 @@ package co.smartreceipts.android.sync.drive.rx;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.drive.Metadata;
-import com.google.android.gms.drive.MetadataBuffer;
 import com.google.android.gms.tasks.Task;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import co.smartreceipts.android.sync.utils.SyncSchedulers;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.ObservableTransformer;
 import io.reactivex.Single;
-import io.reactivex.SingleTransformer;
 
 /**
  * Provides us with some Rx extensions around the {@link Task} object that is used for Google Drive
@@ -112,49 +104,5 @@ public class RxDriveTask {
                 }
             });
         }).subscribeOn(SyncSchedulers.io());
-    }
-
-    /**
-     * @return an {@link ObservableTransformer}, which will convert a {@link MetadataBuffer} to a
-     * {@link List} of {@link Metadata}, allowing us to more easily interface with the underlying
-     * data
-     */
-    @NonNull
-    public static ObservableTransformer<MetadataBuffer, List<Metadata>> transformObservableMetadataBufferToList() {
-        return upstream -> upstream.map(metadataBuffer -> {
-            try {
-                final List<Metadata> metadataList = new ArrayList<>();
-                for (final Metadata metadata : metadataBuffer) {
-                    if (!metadata.isTrashed()) {
-                        metadataList.add(metadata);
-                    }
-                }
-                return metadataList;
-            } finally {
-                metadataBuffer.release();
-            }
-        });
-    }
-
-    /**
-     * @return an {@link SingleTransformer}, which will convert a {@link MetadataBuffer} to a
-     * {@link List} of {@link Metadata}, allowing us to more easily interface with the underlying
-     * data
-     */
-    @NonNull
-    public static SingleTransformer<MetadataBuffer, List<Metadata>> transformSingleMetadataBufferToList() {
-        return upstream -> upstream.map(metadataBuffer -> {
-            try {
-                final List<Metadata> metadataList = new ArrayList<>();
-                for (final Metadata metadata : metadataBuffer) {
-                    if (!metadata.isTrashed()) {
-                        metadataList.add(metadata);
-                    }
-                }
-                return metadataList;
-            } finally {
-                metadataBuffer.release();
-            }
-        });
     }
 }

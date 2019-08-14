@@ -28,7 +28,7 @@
 
     <!-- ============== Preference General ================= -->
     <string name="pref_general_trip_duration_key" translatable="false">TripDuration</string>
-    <string name="pref_general_trip_duration_title">Distanza predefinita</string>
+    <string name="pref_general_trip_duration_title">Durata predefinita trasferta</string>
     <string name="pref_general_default_currency_key" translatable="false">isocurr</string>
     <string name="pref_general_default_currency_title">Valuta predefinita</string>
     <string name="pref_general_default_date_separator_key" translatable="false">dateseparator</string>
@@ -86,7 +86,7 @@
     <string name="pref_receipt_minimum_receipts_price_summary_partial">Include solo le ricevute con valori superiori a %s</string>
     <string name="pref_receipt_default_to_report_start_date_key" translatable="false">DefaultToFirstReportDate</string>
     <string name="pref_receipt_default_to_report_start_date_title">Valore predefinito alla data di inizio del Report</string>
-    <string name="pref_receipt_default_to_report_start_date_summary">Imposta la data della ricevuta a quella del report date</string>
+    <string name="pref_receipt_default_to_report_start_date_summary">Imposta la data della ricevuta a quella del report delle date</string>
     <string name="pref_receipt_show_id_key" translatable="false">ShowReceiptID</string>
     <string name="pref_receipt_show_id_title">Mostra ID ricevuta</string>
     <string name="pref_receipt_show_id_summary">Visualizza un campo ID auto generato</string>
@@ -164,7 +164,7 @@
     <!-- ============= Preference Camera ================= -->
     <string name="pref_camera_bw_key" translatable="false">SaveBW</string>
     <string name="pref_camera_bw_title">Convertire in toni di grigio</string>
-    <string name="pref_camera_bw_summary">Salvare immagine in bianco e nero</string>
+    <string name="pref_camera_bw_summary">Salvare immagine in toni di grigio</string>
     <string name="pref_camera_rotate_key" translatable="false">Camera_Rotate</string>
     <string name="pref_camera_rotate_title">Ruotare automaticamente le immagini</string>
     <string name="pref_camera_rotate_summaryOn">Ruotare immagine in senso orario</string>

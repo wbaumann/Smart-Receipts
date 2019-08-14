@@ -291,7 +291,7 @@
     <!-- ===================== backup menu ======================== -->
     <string name="backups">Backups</string>
     <string name="manual_backup_title">Backups manuale:</string>
-    <string name="manual_backup_description">Eseguire il backup dei dati per tenere al sicuro le ricevute! Potete riristinare i dati importando il file SmartReceipts.SMR, che viene generato dal pulsante "Backup" sottostante.</string>
+    <string name="manual_backup_description">Eseguire il backup dei dati per tenere al sicuro le ricevute! Potete ripristinare i dati importando il file SmartReceipts.SMR, che viene generato dal pulsante "Backup" sottostante.</string>
     <string name="manual_backup_export">Backup</string>
     <string name="manual_backup_import">Importa</string>
     <string name="auto_backup_title">Backups automatico [BETA]:</string>
@@ -410,7 +410,7 @@
     <string name="distance_location_field">Luogo</string>
     <string name="distance_price_field">Prezzo</string>
     <string name="distance_distance_field">Distanza</string>
-    <string name="distance_rate_field">Tasso</string>
+    <string name="distance_rate_field">Costo chilometrico</string>
     <string name="dialog_currency_field">Valuta</string>
     <string name="distance_date_field">Data</string>
     <string name="distance_comment_field">Commento</string>
@@ -499,7 +499,7 @@
     <string name="apprating_dialog_positive">Esprimi il gradimento adesso!</string>
 
     <!-- ================== Tooltip messages ==================== -->
-    <string name="tooltip_generate_info_message">Usa la tab \'Generate\' per creare i tuoi Report</string>
+    <string name="tooltip_generate_info_message">Usare la tab \'Genera\' per creare i Report</string>
     <string name="tooltip_backup_info_message">%d giorni dall\'ultimo backup</string>
     <string name="tooltip_no_backups_info_message">Reminder: Periodicamente eseguite il backup dei vostri dati</string>
     <string name="tooltip_import_info_message">Prego selezionare la ricevuta da allegare</string>
@@ -508,13 +508,13 @@
     <string name="tooltip_first_report_hint">Benvenuto! Creiamo il tuo primo folder per Report. Denominalo come preferito. Clicca il segno di spunta per salvarlo ed inizire ad inserire le prima ricevute!</string>
 
     <!-- ================== Graph titles ==================== -->
-    <string name="graphs_no_data">Aggiungere le prima ricevute per visualizzare i grafici.</string>
+    <string name="graphs_no_data">Aggiungere le prime ricevute per visualizzare i grafici.</string>
     <string name="graphs_expenditure_by_dates_title">Spese giornaliere</string>
     <string name="graphs_expenditure_by_categories_title">Spese per categoria</string>
     <string name="graphs_expenditure_by_reimbursable_title">Rimborsabili versus Non rimborsabili</string>
     <string name="graphs_expenditure_by_payment_methods_title">Spese per metodo di pagamento</string>
     <string name="graphs_label_reimbursable">Rimborsabili</string>
-    <string name="graphs_label_non_reimbursable">Non-rimborsabili</string>
+    <string name="graphs_label_non_reimbursable">Non rimborsabili</string>
     <string name="graphs_label_others">Altro</string>
 
     <!-- ================== Account Fragment ==================== -->

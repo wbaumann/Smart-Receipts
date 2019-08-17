@@ -126,9 +126,9 @@
         </activity>
 
         <activity
-            android:name="com.yalantis.ucrop.UCropActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+            android:name=".images.CropImageActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
+
 
         <!-- DriveEventService (and subclasses) must be exported -->
         <service android:name=".sync.drive.services.DriveCompletionEventService" android:exported="true"

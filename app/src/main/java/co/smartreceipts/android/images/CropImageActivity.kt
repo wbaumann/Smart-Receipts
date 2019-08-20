@@ -34,7 +34,7 @@ class CropImageActivity : AppCompatActivity(), CropView {
     override val rotateLeftClicks: Observable<Any>
         get() = RxView.clicks(button_rotate_left)
 
-    override val cropClicks: Observable<Any>
+    override val cropToggleClicks: Observable<Any>
         get() = RxView.clicks(button_crop)
 
     private val applyCropClicksSubject = PublishSubject.create<Bitmap>()

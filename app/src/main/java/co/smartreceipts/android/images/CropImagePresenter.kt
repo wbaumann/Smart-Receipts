@@ -7,9 +7,8 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.Single
 import javax.inject.Inject
 
-class CropImagePresenter @Inject constructor(view: CropImageActivity, interactor: CropImageInteracror) :
+class CropImagePresenter @Inject constructor(view: CropView, interactor: CropImageInteracror) :
     BaseViperPresenter<CropView, CropImageInteracror>(view, interactor) {
-
 
     override fun subscribe() {
 
@@ -41,7 +40,7 @@ class CropImagePresenter @Inject constructor(view: CropImageActivity, interactor
         )
 
         compositeDisposable.add(
-            view.cropClicks
+            view.cropToggleClicks
                 .subscribe {view.toggleCropMode()}
         )
 

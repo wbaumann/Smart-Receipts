@@ -13,7 +13,7 @@ interface CropView {
 
     val rotateLeftClicks: Observable<Any>
 
-    val cropClicks: Observable<Any>
+    val cropToggleClicks: Observable<Any>
 
 
     fun present(indicator: UiIndicator<Bitmap>)

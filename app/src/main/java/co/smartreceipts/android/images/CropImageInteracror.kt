@@ -69,7 +69,6 @@ class CropImageInteracror(
                 }
 
         }
-            .doOnSuccess {  updateImage(file, it)}
             .subscribeOn(subscribeOnScheduler)
             .observeOn(observeOnScheduler)
     }

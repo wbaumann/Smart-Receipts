@@ -7,7 +7,7 @@ import android.os.Build
 import androidx.test.core.app.ApplicationProvider
 import co.smartreceipts.android.settings.UserPreferenceManager
 import co.smartreceipts.android.settings.catalog.UserPreference
-import com.nhaarman.mockito_kotlin.*
+import com.nhaarman.mockitokotlin2.*
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import org.junit.Before

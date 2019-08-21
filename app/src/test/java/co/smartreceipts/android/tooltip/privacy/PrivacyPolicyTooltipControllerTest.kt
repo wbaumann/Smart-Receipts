@@ -18,7 +18,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import com.nhaarman.mockito_kotlin.*
+import com.nhaarman.mockitokotlin2.*
 import io.reactivex.schedulers.Schedulers
 import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner

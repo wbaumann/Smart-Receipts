@@ -2,7 +2,8 @@ package co.smartreceipts.android.receipts.ordering
 
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-import com.nhaarman.mockito_kotlin.whenever
+import androidx.test.core.app.ApplicationProvider
+import com.nhaarman.mockitokotlin2.whenever
 import dagger.Lazy
 import org.junit.After
 import org.junit.Before

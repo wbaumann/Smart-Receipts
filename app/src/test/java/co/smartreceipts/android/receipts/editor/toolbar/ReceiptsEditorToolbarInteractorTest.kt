@@ -7,7 +7,7 @@ import co.smartreceipts.android.model.Receipt
 import co.smartreceipts.android.persistence.DatabaseHelper
 import co.smartreceipts.android.settings.UserPreferenceManager
 import co.smartreceipts.android.settings.catalog.UserPreference
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import org.junit.Before

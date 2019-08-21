@@ -7,7 +7,7 @@ import android.util.TypedValue
 import androidx.test.core.app.ApplicationProvider
 import co.smartreceipts.android.settings.catalog.UserPreference
 import co.smartreceipts.android.utils.TestUtils
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockitokotlin2.whenever
 import dagger.Lazy
 import io.reactivex.schedulers.Schedulers
 import org.junit.After

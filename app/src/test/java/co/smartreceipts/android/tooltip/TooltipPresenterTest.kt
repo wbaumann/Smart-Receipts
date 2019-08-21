@@ -8,7 +8,7 @@ import co.smartreceipts.android.tooltip.model.TooltipType
 import co.smartreceipts.android.tooltip.model.TooltipInteraction
 import co.smartreceipts.android.tooltip.model.TooltipMetadata
 import com.hadisatrio.optional.Optional
-import com.nhaarman.mockito_kotlin.*
+import com.nhaarman.mockitokotlin2.*
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.functions.Consumer

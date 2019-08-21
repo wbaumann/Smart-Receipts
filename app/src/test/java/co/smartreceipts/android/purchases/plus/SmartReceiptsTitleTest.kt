@@ -5,7 +5,7 @@ import androidx.test.core.app.ApplicationProvider
 import co.smartreceipts.android.R
 import co.smartreceipts.android.purchases.model.InAppPurchase
 import co.smartreceipts.android.purchases.wallet.PurchaseWallet
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Assert.*
 
 import org.junit.Before

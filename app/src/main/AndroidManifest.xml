@@ -145,12 +145,6 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
-        <service android:name=".push.services.FirebaseTokenRefreshService" android:exported="true"
-                 tools:ignore="ExportedService" >
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
-            </intent-filter>
-        </service>
 
         <!-- Disable Firebase from collecting the Ad ID -->
         <meta-data android:name="google_analytics_adid_collection_enabled" android:value="false" />

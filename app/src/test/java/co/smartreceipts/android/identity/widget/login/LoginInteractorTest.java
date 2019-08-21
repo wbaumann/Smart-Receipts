@@ -2,13 +2,14 @@ package co.smartreceipts.android.identity.widget.login;
 
 import android.content.Context;
 
+import androidx.test.core.app.ApplicationProvider;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 
 import co.smartreceipts.android.R;
 import co.smartreceipts.android.identity.IdentityManager;
@@ -33,7 +34,7 @@ public class LoginInteractorTest {
     // Class under test
     LoginInteractor interactor;
 
-    Context context = RuntimeEnvironment.application;
+    Context context = ApplicationProvider.getApplicationContext();
 
     @Mock
     IdentityManager identityManager;

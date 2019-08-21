@@ -1,5 +1,7 @@
 package co.smartreceipts.android.tooltip.image
 
+import android.content.Context
+import androidx.test.core.app.ApplicationProvider
 import co.smartreceipts.android.R
 import co.smartreceipts.android.settings.UserPreferenceManager
 import co.smartreceipts.android.settings.catalog.UserPreference
@@ -19,7 +21,6 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.RuntimeEnvironment
 
 @RunWith(RobolectricTestRunner::class)
 class ImageCroppingTooltipControllerTest {
@@ -39,7 +40,7 @@ class ImageCroppingTooltipControllerTest {
     fun setUp() {
         MockitoAnnotations.initMocks(this)
 
-        controller = ImageCroppingTooltipController(RuntimeEnvironment.application, tooltipView, prefStorage, prefManager)
+        controller = ImageCroppingTooltipController(ApplicationProvider.getApplicationContext(), tooltipView, prefStorage, prefManager)
     }
 
     @Test
@@ -72,7 +73,7 @@ class ImageCroppingTooltipControllerTest {
         controller.shouldDisplayTooltip().test()
             .assertComplete()
             .assertNoErrors()
-            .assertResult(Optional.of(TooltipMetadata(TooltipType.ImageCropping,  RuntimeEnvironment.application.getString(R.string.pref_general_enable_crop_title))))
+            .assertResult(Optional.of(TooltipMetadata(TooltipType.ImageCropping, ApplicationProvider.getApplicationContext<Context>().getString(R.string.pref_general_enable_crop_title))))
     }
 
     @Test

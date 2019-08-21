@@ -1,5 +1,7 @@
 package co.smartreceipts.android.tooltip.receipt.taxes
 
+import android.content.Context
+import androidx.test.core.app.ApplicationProvider
 import co.smartreceipts.android.R
 import co.smartreceipts.android.analytics.Analytics
 import co.smartreceipts.android.analytics.events.Events
@@ -27,14 +29,13 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.RuntimeEnvironment
 
 
 @RunWith(RobolectricTestRunner::class)
 class FirstReceiptUseTaxesQuestionTooltipControllerTest {
     
     companion object {
-        private val TOOLTIP_METADATA = TooltipMetadata(TooltipType.FirstReceiptUseTaxesQuestion, RuntimeEnvironment.application.getString(R.string.pref_receipt_include_tax_field_title))
+        private val TOOLTIP_METADATA = TooltipMetadata(TooltipType.FirstReceiptUseTaxesQuestion, ApplicationProvider.getApplicationContext<Context>().getString(R.string.pref_receipt_include_tax_field_title))
     }
 
     private lateinit var firstReceiptUseTaxesQuestionTooltipController: FirstReceiptUseTaxesQuestionTooltipController
@@ -64,7 +65,7 @@ class FirstReceiptUseTaxesQuestionTooltipControllerTest {
         MockitoAnnotations.initMocks(this)
         whenever(pdfColumnsOrderer.insertColumnAfter(any(), any())).thenReturn(Completable.complete())
         whenever(csvColumnsOrderer.insertColumnAfter(any(), any())).thenReturn(Completable.complete())
-        firstReceiptUseTaxesQuestionTooltipController = FirstReceiptUseTaxesQuestionTooltipController(RuntimeEnvironment.application, tooltipView, store, userPreferenceManager, pdfColumnsOrderer, csvColumnsOrderer, analytics, scheduler)
+        firstReceiptUseTaxesQuestionTooltipController = FirstReceiptUseTaxesQuestionTooltipController(ApplicationProvider.getApplicationContext(), tooltipView, store, userPreferenceManager, pdfColumnsOrderer, csvColumnsOrderer, analytics, scheduler)
     }
 
     @Test

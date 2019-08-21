@@ -12,7 +12,6 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.RuntimeEnvironment
 
 @RunWith(RobolectricTestRunner::class)
 class ReceiptsOrderingMigrationStoreTest {
@@ -27,7 +26,7 @@ class ReceiptsOrderingMigrationStoreTest {
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        preferences = PreferenceManager.getDefaultSharedPreferences(RuntimeEnvironment.application)
+        preferences = PreferenceManager.getDefaultSharedPreferences(ApplicationProvider.getApplicationContext())
 
         whenever(lazy.get()).thenReturn(preferences)
         migrationStore = ReceiptsOrderingMigrationStore(lazy)

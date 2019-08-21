@@ -193,7 +193,8 @@ android {
         testImplementation "org.robolectric:robolectric:$ROBOLECTRIC_VERSION"
         testImplementation "junit:junit:$JUNIT_VERSION"
         testImplementation "org.mockito:mockito-core:$MOCKITO_VERSION"
-        testImplementation "com.nhaarman:mockito-kotlin:$MOCKITO_KOTLIN_VERSION"
+        testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$MOCKITO_KOTLIN_VERSION"
+        testImplementation "androidx.test:core:$ANDROID_TEST_RUNNER_VERSION"
 
         // Espresso Tests
         androidTestImplementation "com.android.support.test.espresso:espresso-core:$ESPRESSO_VERSION"

@@ -1,5 +1,7 @@
 package co.smartreceipts.android.tooltip.receipt.paymentmethods
 
+import android.content.Context
+import androidx.test.core.app.ApplicationProvider
 import co.smartreceipts.android.R
 import co.smartreceipts.android.analytics.Analytics
 import co.smartreceipts.android.analytics.events.Events
@@ -28,14 +30,13 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.RuntimeEnvironment
 
 
 @RunWith(RobolectricTestRunner::class)
 class FirstReceiptUsePaymentMethodsQuestionTooltipControllerTest {
 
     companion object {
-        private val TOOLTIP_METADATA = TooltipMetadata(TooltipType.FirstReceiptUsePaymentMethodsQuestion, RuntimeEnvironment.application.getString(R.string.pref_receipt_use_payment_methods_title))
+        private val TOOLTIP_METADATA = TooltipMetadata(TooltipType.FirstReceiptUsePaymentMethodsQuestion, ApplicationProvider.getApplicationContext<Context>().getString(R.string.pref_receipt_use_payment_methods_title))
     }
 
     private lateinit var firstReceiptUsePaymentMethodsQuestionTooltipController: FirstReceiptUsePaymentMethodsQuestionTooltipController
@@ -65,7 +66,7 @@ class FirstReceiptUsePaymentMethodsQuestionTooltipControllerTest {
         MockitoAnnotations.initMocks(this)
         whenever(pdfColumnsOrderer.insertColumnAfter(any(), any())).thenReturn(Completable.complete())
         whenever(csvColumnsOrderer.insertColumnAfter(any(), any())).thenReturn(Completable.complete())
-        firstReceiptUsePaymentMethodsQuestionTooltipController = FirstReceiptUsePaymentMethodsQuestionTooltipController(RuntimeEnvironment.application, tooltipView, store, userPreferenceManager, pdfColumnsOrderer, csvColumnsOrderer, analytics, scheduler)
+        firstReceiptUsePaymentMethodsQuestionTooltipController = FirstReceiptUsePaymentMethodsQuestionTooltipController(ApplicationProvider.getApplicationContext(), tooltipView, store, userPreferenceManager, pdfColumnsOrderer, csvColumnsOrderer, analytics, scheduler)
     }
 
     @Test

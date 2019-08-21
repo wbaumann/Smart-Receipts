@@ -197,10 +197,10 @@ android {
         testImplementation "androidx.test:core:$ANDROID_TEST_RUNNER_VERSION"
 
         // Espresso Tests
-        androidTestImplementation "com.android.support.test.espresso:espresso-core:$ESPRESSO_VERSION"
-        androidTestImplementation "com.android.support.test:runner:$ANDROID_TEST_RUNNER_VERSION"
-        androidTestImplementation "com.android.support.test:rules:$ANDROID_TEST_RUNNER_VERSION"
-        androidTestUtil "com.android.support.test:orchestrator:$ANDROID_TEST_RUNNER_VERSION"
+        androidTestImplementation "androidx.test.espresso:espresso-core:$ESPRESSO_VERSION"
+        androidTestImplementation "androidx.test:runner:$ANDROID_TEST_RUNNER_VERSION"
+        androidTestImplementation "androidx.test:rules:$ANDROID_TEST_RUNNER_VERSION"
+        androidTestUtil "androidx.test:orchestrator:$ANDROID_TEST_RUNNER_VERSION"
 
         // Leak Canary
         debugImplementation "com.squareup.leakcanary:leakcanary-android:$LEAK_CANARY_VERSION"

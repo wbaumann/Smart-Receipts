@@ -204,9 +204,7 @@ public class SmartReceiptsApplication extends Application implements HasAndroidI
         PDFBoxResourceLoader.init(getApplicationContext());
 
         // Clear our cache
-        Completable.fromAction(() -> {
-                    new SmartReceiptsTemporaryFileCache(this).resetCache();
-                })
+        Completable.fromAction(() -> new SmartReceiptsTemporaryFileCache(this).resetCache())
                 .subscribeOn(Schedulers.io())
                 .subscribe();
 

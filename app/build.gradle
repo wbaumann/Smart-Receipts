@@ -133,7 +133,7 @@ android {
 
         implementation "com.google.android.gms:play-services-drive:$DRIVE_API_VERSION"
         implementation "com.google.firebase:firebase-core:$FIREBASE_CORE_VERSION"
-        implementation "com.google.firebase:firebase-crash:$FIREBASE_CORE_VERSION"
+        implementation "com.google.firebase:firebase-crash:$FIREBASE_CRASH_VERSION"
         implementation "com.google.firebase:firebase-messaging:$FIREBASE_MESSAGING_VERSION"
 
         implementation "com.squareup.picasso:picasso:$PICASSO_VERSION"
@@ -208,7 +208,7 @@ android {
         releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$LEAK_CANARY_VERSION"
 
         // Special dependencies for free flavor
-        freeImplementation "com.google.android.gms:play-services-analytics:$FIREBASE_CORE_VERSION"
+        freeImplementation "com.google.android.gms:play-services-analytics:$GOOGLE_ANALYTICS_VERSION"
 
         // Free ads
         freeImplementation "com.google.android.gms:play-services-ads:$ADMOB_VERSION"

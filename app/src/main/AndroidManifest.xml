@@ -138,11 +138,11 @@
 
         <activity
             android:name="co.smartreceipts.android.settings.widget.SettingsActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"></activity>
+            android:configChanges="orientation|keyboardHidden|screenSize" />
 
         <activity
             android:name="co.smartreceipts.android.settings.widget.SettingsViewerActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"></activity>
+            android:configChanges="orientation|keyboardHidden|screenSize" />
 
         <activity
             android:name=".images.CropImageActivity"

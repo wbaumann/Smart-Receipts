@@ -90,7 +90,7 @@ public class DriveRestoreDataManager {
         Preconditions.checkNotNull(remoteBackupMetadata);
         Preconditions.checkNotNull(downloadLocation);
 
-        return Single.fromObservable(mDriveStreamsManager.getFilesInFolder(remoteBackupMetadata.getId().getId()))
+        return mDriveStreamsManager.getFilesInFolder(remoteBackupMetadata.getId().getId())
                 .flatMap(fileList -> {
                     List<java.io.File> javaFileList = new ArrayList<>();
                     for (File file : fileList.getFiles()) {
@@ -110,7 +110,7 @@ public class DriveRestoreDataManager {
         final Calendar calendar = Calendar.getInstance();
         calendar.set(2018, 03, 01);
         final Date date = calendar.getTime();
-        return Single.fromObservable(mDriveStreamsManager.getAllFiles())
+        return mDriveStreamsManager.getAllFiles()
                 .flatMap(fileList -> {
                     List<java.io.File> javaFileList = new ArrayList<>();
                     for (File f : fileList.getFiles()) {
@@ -124,7 +124,6 @@ public class DriveRestoreDataManager {
                 });
     }
 
-
     @NonNull
     private Single<List<java.io.File>> downloadBackupMetadataImages(@NonNull final RemoteBackupMetadata remoteBackupMetadata, final boolean overwriteExistingData,
                                                                     @NonNull final java.io.File downloadLocation) {
@@ -135,7 +134,7 @@ public class DriveRestoreDataManager {
                 .<Optional<FileList>>flatMap(success -> {
                     if (success) {
                         Logger.debug(DriveRestoreDataManager.this, "Fetching receipts database in drive for this folder");
-                        return Single.fromObservable(mDriveStreamsManager.getFilesInFolder(remoteBackupMetadata.getId().getId(), DatabaseHelper.DATABASE_NAME)).map(Optional::of);
+                        return mDriveStreamsManager.getFilesInFolder(remoteBackupMetadata.getId().getId(), DatabaseHelper.DATABASE_NAME).map(Optional::of);
                     } else {
                         return Single.just(Optional.absent());
                     }

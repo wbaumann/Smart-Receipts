@@ -100,7 +100,7 @@ public class DriveStreamsManagerTest {
 
     @Test
     public void getFilesInFolder() throws Exception {
-        when(driveDataStreams.getFilesInFolder(anyString())).thenReturn(Observable.just(fileList));
+        when(driveDataStreams.getFilesInFolder(anyString())).thenReturn(Single.just(fileList));
 
         final TestObserver<FileList> testObserver = driveStreamsManager.getFilesInFolder(anyString()).test();
         testObserver.assertValue(fileList);
@@ -111,7 +111,7 @@ public class DriveStreamsManagerTest {
     @Test
     public void getFilesInFolderErrorIsForwarded() throws Exception {
         final Exception exception = new Exception("test");
-        when(driveDataStreams.getFilesInFolder(anyString())).thenReturn(Observable.error(exception));
+        when(driveDataStreams.getFilesInFolder(anyString())).thenReturn(Single.error(exception));
 
         final TestObserver<FileList> testObserver = driveStreamsManager.getFilesInFolder(anyString()).test();
         testObserver.assertNoValues();
@@ -125,7 +125,7 @@ public class DriveStreamsManagerTest {
         final String filename = "filename";
         final String folderId = "folderId";
 
-        when(driveDataStreams.getFilesInFolder(folderId, filename)).thenReturn(Observable.just(fileList));
+        when(driveDataStreams.getFilesInFolder(folderId, filename)).thenReturn(Single.just(fileList));
 
         final TestObserver<FileList> testObserver = driveStreamsManager.getFilesInFolder(folderId, filename).test();
         testObserver.assertValue(fileList);
@@ -138,7 +138,7 @@ public class DriveStreamsManagerTest {
         final String filename = "filename";
         final String folderId = "folderId";
         final Exception exception = new Exception("test");
-        when(driveDataStreams.getFilesInFolder(folderId, filename)).thenReturn(Observable.error(exception));
+        when(driveDataStreams.getFilesInFolder(folderId, filename)).thenReturn(Single.error(exception));
 
         final TestObserver<FileList> testObserver = driveStreamsManager.getFilesInFolder(folderId, filename).test();
         testObserver.assertNoValues();

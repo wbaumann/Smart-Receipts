@@ -58,7 +58,7 @@ class DriveDataStreams {
 
     @NonNull
     public synchronized Single<List<RemoteBackupMetadata>> getSmartReceiptsFolders() {
-        return RxDriveTask.toSingle(driveServiceHelper.query("name = 'Smart Receipts'"))
+        return driveServiceHelper.querySingle(FOLDER_NAME_QUERY)
                 .flatMap(fileList -> {
                     final List<File> folderFileList = new ArrayList<>();
                     for (final File file : fileList.getFiles()) {
@@ -74,8 +74,8 @@ class DriveDataStreams {
                 .flatMap(files -> Observable.fromIterable(files)
                         .flatMap(file -> {
                             String fileId = file.getId();
-                            String queryStr = "'".concat(fileId).concat("' in parents and name = 'receipts.db'");
-                            return RxDriveTask.toObservable(driveServiceHelper.query(queryStr))
+                            String queryStr = "'".concat(fileId).concat(FOLDER_PARENTS_QUERY);
+                            return driveServiceHelper.queryObservable(queryStr)
                                     .map(databaseFileList -> {
                                         // Get the folder resource id
                                         final String validResourceId = file.getId();
@@ -122,9 +122,8 @@ class DriveDataStreams {
         if (smartReceiptsFolderSubject == null) {
             Logger.info(this, "Creating new replay subject for the Smart Receipts folder");
             smartReceiptsFolderSubject = ReplaySubject.create();
-            RxDriveTask.toSingle(driveServiceHelper.query(
-                    "appProperties has { key='".concat(SMART_RECEIPTS_FOLDER_KEY).concat("' and value='")
-                            .concat(googleDriveSyncMetadata.getDeviceIdentifier().getId()).concat("' }")))
+            driveServiceHelper.querySingle(APP_PROPERTIES_QUERY
+                    .concat(googleDriveSyncMetadata.getDeviceIdentifier().getId()).concat("' }"))
                     .map(fileList -> {
                         File fileId = null;
                         for (final File file : fileList.getFiles()) {
@@ -145,7 +144,7 @@ class DriveDataStreams {
                             Logger.info(DriveDataStreams.this, "Failed to find an existing Smart Receipts folder for this device. Creating a new one...");
                             Map<String, String> properties = new HashMap<>();
                             properties.put(SMART_RECEIPTS_FOLDER_KEY, googleDriveSyncMetadata.getDeviceIdentifier().getId());
-                            return RxDriveTask.toSingle(driveServiceHelper.createFile(SMART_RECEIPTS_FOLDER, "application/vnd.google-apps.folder", deviceMetadata.getDeviceName(), properties, "appDataFolder", null))
+                            return driveServiceHelper.createFile(SMART_RECEIPTS_FOLDER, FOLDER_MIME_TYPE, deviceMetadata.getDeviceName(), properties, APP_DATA_FOLDER_NAME, null)
                                     .doOnError(throwable -> Logger.error(DriveDataStreams.this, "Failed to create a home folder with error: {}", throwable.getMessage()));
                         }
                     })
@@ -156,28 +155,28 @@ class DriveDataStreams {
     }
 
     @NonNull
-    public synchronized Observable<FileList> getAllFiles() {
-        return RxDriveTask.toObservable(driveServiceHelper.getAllFilesSortedByTime())
+    public synchronized Single<FileList> getAllFiles() {
+        return driveServiceHelper.getAllFilesSortedByTime()
                 .doOnError(throwable -> Logger.error(DriveFilesAndFoldersPrinter.class, "Failed to query with status: {}" , throwable.getMessage()));
     }
 
     @NonNull
-    public synchronized Observable<FileList> getFilesInFolder(@NonNull final String folderId) {
+    public synchronized Single<FileList> getFilesInFolder(@NonNull final String folderId) {
         //noinspection ResultOfMethodCallIgnored
         Preconditions.checkNotNull(folderId);
 
-        return RxDriveTask.toObservable(driveServiceHelper.getFilesInFolder(folderId))
+        return driveServiceHelper.getFilesInFolder(folderId)
                 .doOnError(throwable -> Logger.error(DriveDataStreams.this, "Failed to query files in folder with status: {}", throwable.getMessage()));
     }
 
     @NonNull
-    public synchronized Observable<FileList> getFilesInFolder(@NonNull final String folderId, @NonNull final String fileName) {
+    public synchronized Single<FileList> getFilesInFolder(@NonNull final String folderId, @NonNull final String fileName) {
         //noinspection ResultOfMethodCallIgnored
         Preconditions.checkNotNull(folderId);
         //noinspection ResultOfMethodCallIgnored
         Preconditions.checkNotNull(fileName);
 
-        return RxDriveTask.toObservable(driveServiceHelper.getFilesByNameInFolder(folderId, fileName))
+        return driveServiceHelper.getFilesByNameInFolder(folderId, fileName)
                 .doOnError(throwable -> Logger.error(DriveDataStreams.this, "Failed to query files in folder by name with status: {}", throwable.getMessage()));
     }
 
@@ -186,7 +185,7 @@ class DriveDataStreams {
         //noinspection ResultOfMethodCallIgnored
         Preconditions.checkNotNull(fileId);
 
-        return RxDriveTask.toSingle(driveServiceHelper.getFile(fileId))
+        return driveServiceHelper.getFile(fileId)
                 .doOnError(throwable -> Logger.error(DriveDataStreams.this, "Failed to get metadata for file with status: {}", throwable.getMessage()));
     }
 
@@ -197,7 +196,7 @@ class DriveDataStreams {
         //noinspection ResultOfMethodCallIgnored
         Preconditions.checkNotNull(file);
 
-        return RxDriveTask.toSingle(driveServiceHelper.createFile(file.getName(), null, null, null, folder.getId(), file));
+        return driveServiceHelper.createFile(file.getName(), null, null, null, folder.getId(), file);
     }
 
     @NonNull
@@ -228,7 +227,7 @@ class DriveDataStreams {
         }
 
         // Note: (https://developers.google.com/drive/android/trash) If the target of the trash/untrash operation is a folder, all descendants of that folder are similarly trashed or untrashed
-        return RxDriveTask.toCompletable(driveServiceHelper.deleteFile(driveIdentifier.getId()))
+        return driveServiceHelper.deleteFile(driveIdentifier.getId())
                 .andThen(Single.just(true))
                 .doOnSuccess(ignore -> Logger.info(DriveDataStreams.this, "Successfully deleted resource with status"))
                 .doOnError(throwable -> Logger.error(DriveDataStreams.this, "Failed to delete file with id: {}", driveIdentifier));

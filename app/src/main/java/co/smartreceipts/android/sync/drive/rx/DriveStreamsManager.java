@@ -76,14 +76,14 @@ public class DriveStreamsManager implements GoogleApiClient.ConnectionCallbacks 
     }
 
     @NonNull
-    public synchronized Observable<FileList> getAllFiles() {
+    public synchronized Single<FileList> getAllFiles() {
         return newBlockUntilConnectedCompletable()
                 .andThen(driveDataStreams.getAllFiles())
                 .doOnError(throwable -> driveErrorStream.onNext(Optional.of(syncErrorTranslator.get(throwable))));
     }
 
     @NonNull
-    public synchronized Observable<FileList> getFilesInFolder(@NonNull final String folderId) {
+    public synchronized Single<FileList> getFilesInFolder(@NonNull final String folderId) {
         Preconditions.checkNotNull(folderId);
 
         return newBlockUntilConnectedCompletable()
@@ -92,7 +92,7 @@ public class DriveStreamsManager implements GoogleApiClient.ConnectionCallbacks 
     }
 
     @NonNull
-    public synchronized Observable<FileList> getFilesInFolder(@NonNull final String driveFolderId, @NonNull final String fileName) {
+    public synchronized Single<FileList> getFilesInFolder(@NonNull final String driveFolderId, @NonNull final String fileName) {
         Preconditions.checkNotNull(driveFolderId);
         Preconditions.checkNotNull(fileName);
 

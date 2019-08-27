@@ -4,14 +4,11 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
-import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -22,6 +19,7 @@ import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.tasks.Task;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.drive.Drive;
@@ -30,7 +28,6 @@ import com.google.common.base.Preconditions;
 import com.hadisatrio.optional.Optional;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.sql.Date;
 import java.util.ArrayList;
@@ -63,6 +60,7 @@ import co.smartreceipts.android.sync.noop.NoOpBackupProvider;
 import co.smartreceipts.android.utils.log.Logger;
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.BehaviorSubject;
 
 public class GoogleDriveBackupManager implements BackupProvider {
@@ -332,33 +330,21 @@ public class GoogleDriveBackupManager implements BackupProvider {
         // First, confirm that we're still initializing
         synchronized (initializationLock) {
             if (isInitializing.get()) {
-                AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
-                    @Override
-                    protected String doInBackground(Void... params) {
-                        String token = null;
-                        try {
-                            final String scopes = "oauth2:" + DriveScopes.DRIVE_APPDATA + " " + DriveScopes.DRIVE_FILE;
-                            token = GoogleAuthUtil.getToken(context, signInAccount.getAccount(), scopes);
-                        } catch (UserRecoverableAuthException e) {
-                            activity.startActivityForResult(e.getIntent(), REQUEST_CODE_GOOGLE_SERVICE_REAUTH);
-                        } catch (IOException e) {
-                            //todo
-                        } catch (GoogleAuthException e) {
-                            //todo
-                        }
-
-                        return token;
-                    }
-
-                    @Override
-                    protected void onPostExecute(String result) {
-                        if (!TextUtils.isEmpty(result)) {
-                            GoogleSignInAccountFinalization(signInAccount);
-                        }
-                    }
-                };
-
-                task.execute();
+                Single.fromCallable(() -> {
+                    final String scopes = "oauth2:" + DriveScopes.DRIVE_APPDATA + " " + DriveScopes.DRIVE_FILE;
+                    return GoogleAuthUtil.getToken(context, signInAccount.getAccount(), scopes);
+                }).onErrorReturn(throwable -> {
+                    Exception ex = new Exception(throwable);
+                    return ex.getMessage();
+                }).subscribeOn(Schedulers.io())
+                        .subscribe(onSuccess -> GoogleSignInAccountFinalization(signInAccount),
+                                onError -> {
+                            if (onError instanceof UserRecoverableAuthException) {
+                                activity.startActivityForResult(((UserRecoverableAuthException) onError).getIntent(), REQUEST_CODE_GOOGLE_SERVICE_REAUTH);
+                            } else if (onError instanceof UserRecoverableAuthIOException) {
+                                activity.startActivityForResult(((UserRecoverableAuthIOException) onError).getIntent(), REQUEST_CODE_GOOGLE_SERVICE_REAUTH);
+                            }
+                        });
             }
         }
     }

@@ -135,11 +135,11 @@ android {
 
         implementation "com.android.support.constraint:constraint-layout:$CONSTRAINT_LAYOUT_VERSION"
 
-        implementation 'com.google.http-client:google-http-client-gson:1.26.0'
-        implementation('com.google.api-client:google-api-client-android:1.26.0') {
+        implementation "com.google.http-client:google-http-client-gson:$GOOGLE_HTTP_CLIENT_VERSION"
+        implementation("com.google.api-client:google-api-client-android:$GOOGLE_API_CLIENT_VERSION") {
             exclude group: 'org.apache.httpcomponents'
         }
-        implementation('com.google.apis:google-api-services-drive:v3-rev173-1.25.0') {
+        implementation("com.google.apis:google-api-services-drive:$GOOGLE_API_SERVICES_VERSION") {
             exclude group: 'org.apache.httpcomponents'
         }
         implementation "com.google.android.gms:play-services-auth:$DRIVE_API_VERSION"

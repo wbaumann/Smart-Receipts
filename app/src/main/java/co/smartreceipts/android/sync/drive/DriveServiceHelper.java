@@ -27,6 +27,8 @@ import com.google.api.client.http.FileContent;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
+import com.google.common.base.Preconditions;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collections;
@@ -53,9 +55,9 @@ public class DriveServiceHelper {
   private final Context context;
   private final Drive mDriveService;
 
-  DriveServiceHelper(Context context, Drive driveService) {
-    this.context = context;
-    mDriveService = driveService;
+  DriveServiceHelper(@NonNull Context context, @NonNull Drive driveService) {
+    this.context = Preconditions.checkNotNull(context);
+    mDriveService = Preconditions.checkNotNull(driveService);
   }
 
   /**

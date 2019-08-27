@@ -38,7 +38,7 @@ public class DriveStreamsManager implements GoogleApiClient.ConnectionCallbacks 
     private final AtomicReference<CountDownLatch> latchReference;
 
     public DriveStreamsManager(@NonNull Context context,
-                                @NonNull DriveServiceHelper driveServiceHelper,
+                               @NonNull DriveServiceHelper driveServiceHelper,
                                @NonNull GoogleDriveSyncMetadata googleDriveSyncMetadata,
                                @NonNull Subject<Optional<Throwable>> driveErrorStream) {
         this(new DriveDataStreams(context, driveServiceHelper, googleDriveSyncMetadata), new DriveStreamMappings(), driveErrorStream, new DriveThrowableToSyncErrorTranslator());

@@ -118,7 +118,7 @@ class DriveDataStreams {
                         .toList()
                         .flatMap(defaultRemoteBackupMetadataList -> {
                             // Note: We create this new list to cast to the interface variant of the list
-                            return Single.just(new ArrayList<RemoteBackupMetadata>(defaultRemoteBackupMetadataList));
+                            return Single.just(new ArrayList<>(defaultRemoteBackupMetadataList));
                         }));
     }
 

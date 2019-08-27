@@ -21,8 +21,8 @@ import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
 
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
+import androidx.annotation.NonNull;
+
 import com.google.api.client.http.FileContent;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
@@ -46,6 +46,9 @@ import wb.android.storage.StorageManager;
 public class DriveServiceHelper {
 
   private static final int BYTE_BUFFER_SIZE = 8192;
+
+  //TODO: update this when we are moving to public folder
+  private static final String DRIVE_SEARCH_AREA = "appDataFolder";
 
   private final Context context;
   private final Drive mDriveService;

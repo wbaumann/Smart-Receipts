@@ -35,6 +35,11 @@ class DriveDataStreams {
      * if this is a "new" install (even on the same device) or is an existing sync for this device.
      */
     private static final String SMART_RECEIPTS_FOLDER_KEY = "smart_receipts_id";
+    private static final String FOLDER_NAME_QUERY = "name = 'Smart Receipts'";
+    private static final String FOLDER_PARENTS_QUERY = "' in parents and name = 'receipts.db'";
+    private static final String APP_DATA_FOLDER_NAME = "appDataFolder";
+    private static final String FOLDER_MIME_TYPE = "application/vnd.google-apps.folder";
+    private static final String APP_PROPERTIES_QUERY = "appProperties has { key='smart_receipts_id' and value='";
 
     private final DriveServiceHelper driveServiceHelper;
     private final GoogleDriveSyncMetadata googleDriveSyncMetadata;
@@ -249,6 +254,6 @@ class DriveDataStreams {
     }
 
     private boolean isValidSmartReceiptsFolder(@NonNull File file) {
-        return file.getMimeType().equals("application/vnd.google-apps.folder") && !file.getTrashed() && file.getId() != null;
+        return file.getMimeType().equals(FOLDER_MIME_TYPE) && !file.getTrashed() && file.getId() != null;
     }
 }

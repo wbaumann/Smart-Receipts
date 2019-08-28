@@ -20,5 +20,5 @@ class ReportNameColumn(id: Int, syncState: SyncState, customOrderId: Long, uuid:
     override fun getValue(rowItem: Receipt): String = rowItem.trip.name
 
     override fun getFooter(rows: List<Receipt>): String =
-        if (!rows.isEmpty()) getValue(rows[0]) else ""
+        if (rows.isNotEmpty()) getValue(rows[0]) else ""
 }

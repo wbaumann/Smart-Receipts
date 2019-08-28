@@ -22,7 +22,7 @@ class ReceiptTaxColumn(id: Int, syncState: SyncState, customOrderId: Long, uuid:
     override fun getValue(rowItem: Receipt): String = rowItem.tax.decimalFormattedPrice
 
     override fun getFooter(rows: List<Receipt>): String {
-        return if (!rows.isEmpty()) {
+        return if (rows.isNotEmpty()) {
             val tripCurrency = rows[0].trip.tripCurrency
             val prices = ArrayList<Price>()
             for (receipt in rows) {

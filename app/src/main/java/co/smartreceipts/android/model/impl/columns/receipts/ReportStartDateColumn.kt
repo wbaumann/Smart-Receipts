@@ -30,6 +30,6 @@ class ReportStartDateColumn(
 
 
     override fun getFooter(rows: List<Receipt>): String =
-        if (!rows.isEmpty()) getValue(rows[0]) else ""
+        if (rows.isNotEmpty()) getValue(rows[0]) else ""
 
 }

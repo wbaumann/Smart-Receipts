@@ -129,7 +129,7 @@ class ReceiptColumnDefinitions @Inject constructor(
         for (definition in actualDefinitions) {
 
             // don't add column if column name is empty (useful for flex cases)
-            if (!reportResourcesManager.getFlexString(definition.columnHeaderId).isEmpty()) {
+            if (reportResourcesManager.getFlexString(definition.columnHeaderId).isNotEmpty()) {
 
                 val column = getColumnFromDefinition(definition)
                 columns.add(column)

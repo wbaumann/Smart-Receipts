@@ -20,6 +20,6 @@ class ReportCostCenterColumn(id: Int, syncState: SyncState, customOrderId: Long,
     override fun getValue(rowItem: Receipt): String = rowItem.trip.costCenter
 
     override fun getFooter(rows: List<Receipt>): String =
-        if (!rows.isEmpty()) getValue(rows[0])
+        if (rows.isNotEmpty()) getValue(rows[0])
         else ""
 }

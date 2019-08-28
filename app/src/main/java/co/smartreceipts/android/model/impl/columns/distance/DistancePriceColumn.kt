@@ -16,7 +16,7 @@ class DistancePriceColumn(
         else rowItem.price.currencyCodeFormattedPrice
 
     override fun getFooter(rows: List<Distance>): String {
-        val tripCurrency = if (!rows.isEmpty()) rows[0].trip.tripCurrency else null
+        val tripCurrency = if (rows.isNotEmpty()) rows[0].trip.tripCurrency else null
         return if (allowSpecialCharacters) {
             PriceBuilderFactory().setPriceables(rows, tripCurrency!!).build().currencyFormattedPrice
         } else {

@@ -65,6 +65,7 @@ class ReceiptColumnDefinitions @Inject constructor(
         ID(26, R.string.column_item_id, R.string.original_column_item_id_en_us_name),
         PAYMENT_METHOD(27, R.string.column_item_payment_method, R.string.original_column_item_payment_method_en_us_name),
         PRICE_WITH_CURRENCY(28, R.string.RECEIPTMENU_FIELD_PRICE_WITH_CURRENCY),
+        REPORT_TOTAL(29, R.string.column_item_report_total, R.string.original_column_item_report_total_en_us_name),
 
         EXTRA_EDITTEXT_1(100, R.string.RECEIPTMENU_FIELD_EXTRA_EDITTEXT_1),
         EXTRA_EDITTEXT_2(101, R.string.RECEIPTMENU_FIELD_EXTRA_EDITTEXT_2),
@@ -177,6 +178,7 @@ class ReceiptColumnDefinitions @Inject constructor(
             REPORT_END_DATE -> ReportEndDateColumn(id, syncState, dateFormatter, customOrderId, uuid)
             REPORT_COMMENT -> ReportCommentColumn(id, syncState, customOrderId, uuid)
             REPORT_COST_CENTER -> ReportCostCenterColumn(id, syncState, customOrderId, uuid)
+            REPORT_TOTAL -> ReportTotalColumn(id, syncState, customOrderId, uuid)
             IMAGE_FILE_NAME -> ReceiptFileNameColumn(id, syncState, customOrderId, uuid)
             IMAGE_PATH -> ReceiptFilePathColumn(id, syncState, customOrderId, uuid)
             COMMENT -> ReceiptCommentColumn(id, syncState, customOrderId, uuid)

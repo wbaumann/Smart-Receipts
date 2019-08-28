@@ -377,6 +377,7 @@
     <string name="column_item_report_end_date">Bericht Enddatum</string>
     <string name="column_item_report_comment">Kommentar melden</string>
     <string name="column_item_report_cost_center">Kostenstellenbericht</string>
+    <string name="column_item_report_total">Summe plus Steuern melden</string>
     <string name="column_item_image_file_name">Bildname</string>
     <string name="column_item_image_path">Bildpfad</string>
     <!-- **Please note that for flex purposes, some of these use the legacy names above** -->

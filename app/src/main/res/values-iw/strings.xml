@@ -409,6 +409,7 @@
     <string name="column_item_report_end_date">תאריך סוף דוח</string>
     <string name="column_item_report_comment">הערת דוח</string>
     <string name="column_item_report_cost_center">מרכז עלות דוח</string>
+    <string name="column_item_report_total">דווח על סך פלוס מס</string>
     <string name="column_item_image_file_name">שם תמונה</string>
     <string name="column_item_image_path">נתיב לתמונה</string>
     <!-- **Please note that for flex purposes, some of these use the legacy names above** -->

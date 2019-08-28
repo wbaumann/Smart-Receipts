@@ -379,6 +379,7 @@
     <string name="column_item_report_end_date">Дата окончания отчета</string>
     <string name="column_item_report_comment">Комментарий к отчету</string>
     <string name="column_item_report_cost_center">Центр расходов в отчете</string>
+    <string name="column_item_report_total">Отчет Всего плюс налог</string>
     <string name="column_item_image_file_name">Имя изображения</string>
     <string name="column_item_image_path">Путь к изображению</string>
     <!-- **Please note that for flex purposes, some of these use the legacy names above** -->

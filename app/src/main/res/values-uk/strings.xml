@@ -379,6 +379,7 @@
     <string name="column_item_report_end_date">Дата закінчення звіту</string>
     <string name="column_item_report_comment">Коментар до звіту</string>
     <string name="column_item_report_cost_center">Центр витрат у звіті</string>
+    <string name="column_item_report_total">Звіт про загальний плюс податку</string>
     <string name="column_item_image_file_name">Ім\'я зображення</string>
     <string name="column_item_image_path">Шлях до зображення</string>
     <!-- **Please note that for flex purposes, some of these use the legacy names above** -->

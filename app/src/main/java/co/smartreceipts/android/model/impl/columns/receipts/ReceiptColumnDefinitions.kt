@@ -178,7 +178,7 @@ class ReceiptColumnDefinitions @Inject constructor(
             REPORT_END_DATE -> ReportEndDateColumn(id, syncState, dateFormatter, customOrderId, uuid)
             REPORT_COMMENT -> ReportCommentColumn(id, syncState, customOrderId, uuid)
             REPORT_COST_CENTER -> ReportCostCenterColumn(id, syncState, customOrderId, uuid)
-            REPORT_TOTAL -> ReportTotalColumn(id, syncState, customOrderId, uuid)
+            REPORT_TOTAL -> ReportTotalColumn(id, syncState, preferences, customOrderId, uuid)
             IMAGE_FILE_NAME -> ReceiptFileNameColumn(id, syncState, customOrderId, uuid)
             IMAGE_PATH -> ReceiptFilePathColumn(id, syncState, customOrderId, uuid)
             COMMENT -> ReceiptCommentColumn(id, syncState, customOrderId, uuid)

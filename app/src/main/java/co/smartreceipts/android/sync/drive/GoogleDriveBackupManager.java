@@ -333,9 +333,8 @@ public class GoogleDriveBackupManager implements BackupProvider {
                 Single.fromCallable(() -> {
                     final String scopes = "oauth2:" + DriveScopes.DRIVE_APPDATA + " " + DriveScopes.DRIVE_FILE;
                     return GoogleAuthUtil.getToken(context, signInAccount.getAccount(), scopes);
-                }).onErrorReturn(throwable -> {
-                    Exception ex = new Exception(throwable);
-                    return ex.getMessage();
+                }).doOnError(throwable ->  {
+                    Logger.error(GoogleDriveBackupManager.this, "Failed to authenticate user with status: {}", throwable.getMessage());
                 }).subscribeOn(Schedulers.io())
                         .subscribe(onSuccess -> GoogleSignInAccountFinalization(signInAccount),
                                 onError -> {

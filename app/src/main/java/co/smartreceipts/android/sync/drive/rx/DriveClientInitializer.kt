@@ -1,7 +1,5 @@
 package co.smartreceipts.android.sync.drive.rx
 
-import co.smartreceipts.android.settings.UserPreferenceManager
-import co.smartreceipts.android.settings.catalog.UserPreference
 import co.smartreceipts.android.sync.drive.managers.DriveDatabaseManager
 import co.smartreceipts.android.sync.drive.managers.DriveReceiptsManager
 import co.smartreceipts.android.sync.drive.managers.DriveRestoreDataManager
@@ -10,7 +8,6 @@ import co.smartreceipts.android.sync.network.NetworkManager
 import co.smartreceipts.android.sync.network.NetworkStateChangeListener
 import co.smartreceipts.android.utils.log.Logger
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 
 /**
  * This class is responsible for maintaining the actual work required to perform initialization to
@@ -21,39 +18,12 @@ class DriveClientInitializer(val driveStreamsManager: DriveStreamsManager,
                              val driveReceiptsManager: DriveReceiptsManager,
                              val driveDatabaseManager: DriveDatabaseManager,
                              val driveRestoreDataManager: DriveRestoreDataManager,
-                             private val userPreferenceManager: UserPreferenceManager,
                              private val googleDriveTableManager: GoogleDriveTableManager,
                              private val networkManager: NetworkManager) : NetworkStateChangeListener {
 
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     fun initialize() {
-        //TODO: Determine if there is an API update for upload preferences
-        // https://developers.google.com/drive/api/v3/manage-uploads#resumable
-
-        // Monitor for future changes to our wifi settings preference
-//        compositeDisposable.add(userPreferenceManager.userPreferenceChangeStream
-//                .subscribeOn(Schedulers.io())
-//                .filter{ UserPreference.Misc.AutoBackupOnWifiOnly == it }
-//                .subscribe {
-//                    val builder = TransferPreferencesBuilder()
-//                    if (userPreferenceManager[UserPreference.Misc.AutoBackupOnWifiOnly]) {
-//                        builder.setNetworkPreference(TransferPreferences.NETWORK_TYPE_WIFI_ONLY)
-//                    } else {
-//                        builder.setNetworkPreference(TransferPreferences.NETWORK_TYPE_ANY)
-//                    }
-//                    driveClient.setUploadPreferences(builder.build())
-//                })
-
-        // Configure out baseline wifi settings preference
-//        val transferPreferencesBuilder = TransferPreferencesBuilder()
-//        if (userPreferenceManager[UserPreference.Misc.AutoBackupOnWifiOnly]) {
-//            transferPreferencesBuilder.setNetworkPreference(TransferPreferences.NETWORK_TYPE_WIFI_ONLY)
-//        } else {
-//            transferPreferencesBuilder.setNetworkPreference(TransferPreferences.NETWORK_TYPE_ANY)
-//        }
-//        driveClient.setUploadPreferences(transferPreferencesBuilder.build())
-
         this.networkManager.registerListener(this)
         this.googleDriveTableManager.initializeListeners(driveDatabaseManager, driveReceiptsManager)
         this.driveReceiptsManager.syncReceipts()

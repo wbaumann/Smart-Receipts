@@ -42,7 +42,6 @@ import co.smartreceipts.android.analytics.Analytics;
 import co.smartreceipts.android.persistence.DatabaseHelper;
 import co.smartreceipts.android.persistence.database.controllers.impl.ReceiptTableController;
 import co.smartreceipts.android.persistence.database.restore.DatabaseRestorer;
-import co.smartreceipts.android.settings.UserPreferenceManager;
 import co.smartreceipts.android.sync.BackupProvider;
 import co.smartreceipts.android.sync.drive.device.GoogleDriveSyncMetadata;
 import co.smartreceipts.android.sync.drive.managers.DriveDatabaseManager;
@@ -76,7 +75,6 @@ public class GoogleDriveBackupManager implements BackupProvider {
     private final Analytics analytics;
     private final ReceiptTableController receiptTableController;
     private final DatabaseRestorer databaseRestorer;
-    private final UserPreferenceManager userPreferenceManager;
     private final NoOpBackupProvider noOpBackupProvider;
     private final GoogleDriveSyncMetadata googleDriveSyncMetadata;
 
@@ -98,7 +96,6 @@ public class GoogleDriveBackupManager implements BackupProvider {
                                     @NonNull Analytics analytics,
                                     @NonNull ReceiptTableController receiptTableController,
                                     @NonNull DatabaseRestorer databaseRestorer,
-                                    @NonNull UserPreferenceManager userPreferenceManager,
                                     @NonNull NoOpBackupProvider noOpBackupProvider) {
 
         this.context = context;
@@ -108,7 +105,6 @@ public class GoogleDriveBackupManager implements BackupProvider {
         this.receiptTableController = receiptTableController;
         this.databaseRestorer = databaseRestorer;
         this.googleDriveTableManager = googleDriveTableManager;
-        this.userPreferenceManager = userPreferenceManager;
         this.noOpBackupProvider = noOpBackupProvider;
         this.googleDriveSyncMetadata = new GoogleDriveSyncMetadata(context);
     }
@@ -376,7 +372,7 @@ public class GoogleDriveBackupManager implements BackupProvider {
         final DriveRestoreDataManager driveRestoreDataManager = new DriveRestoreDataManager(context, driveStreamsManager, driveDatabaseManager, databaseRestorer);
 
         this.driveClientInitializer = new DriveClientInitializer(driveStreamsManager, driveReceiptsManager, driveDatabaseManager,
-                driveRestoreDataManager, userPreferenceManager, googleDriveTableManager, networkManager);
+                driveRestoreDataManager, googleDriveTableManager, networkManager);
 
         driveClientInitializer.initialize();
 

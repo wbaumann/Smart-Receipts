@@ -16,7 +16,7 @@ import io.reactivex.disposables.CompositeDisposable
  */
 class DriveClientInitializer(val driveStreamsManager: DriveStreamsManager,
                              val driveReceiptsManager: DriveReceiptsManager,
-                             val driveDatabaseManager: DriveDatabaseManager,
+                             private val driveDatabaseManager: DriveDatabaseManager,
                              val driveRestoreDataManager: DriveRestoreDataManager,
                              private val googleDriveTableManager: GoogleDriveTableManager,
                              private val networkManager: NetworkManager) : NetworkStateChangeListener {

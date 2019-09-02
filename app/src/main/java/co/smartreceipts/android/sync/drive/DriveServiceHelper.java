@@ -22,6 +22,7 @@ import android.net.Uri;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.api.client.http.FileContent;
 import com.google.api.services.drive.Drive;
@@ -65,21 +66,31 @@ public class DriveServiceHelper {
    */
   //TODO: Determine if we need the entire file returned, if not, we can call setFields()
   //      on the execution to tell the api what data of the created file to return
-  public Single<File> createFile(String name, String mimeType, String description,
-                                 Map<String, String> properties, String folderDestination,
-                                 java.io.File javaFile) {
+  public Single<File> createFile(@Nullable String name, @Nullable String mimeType, @Nullable String description,
+                                 @Nullable Map<String, String> properties, @Nullable String folderDestination,
+                                 @Nullable java.io.File javaFile) {
     return Single.fromCallable(() -> {
       File metadata = new File();
-      if (!TextUtils.isEmpty(folderDestination))
+
+      if (!TextUtils.isEmpty(folderDestination)) {
         metadata.setParents(Collections.singletonList(folderDestination));
-      if (!TextUtils.isEmpty(mimeType))
+      }
+
+      if (!TextUtils.isEmpty(mimeType)) {
         metadata.setMimeType(mimeType);
-      if (!TextUtils.isEmpty(name))
+      }
+
+      if (!TextUtils.isEmpty(name)) {
         metadata.setName(name);
-      if (!TextUtils.isEmpty(description))
+      }
+
+      if (!TextUtils.isEmpty(description)) {
         metadata.setDescription(description);
-      if (properties != null)
+      }
+
+      if (properties != null) {
         metadata.setAppProperties(properties);
+      }
 
       File googleFile;
       if (javaFile != null) {

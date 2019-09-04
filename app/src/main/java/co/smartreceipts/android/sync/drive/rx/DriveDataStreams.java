@@ -39,7 +39,7 @@ class DriveDataStreams {
     private static final String FOLDER_PARENTS_QUERY = "' in parents and name = 'receipts.db'";
     private static final String APP_DATA_FOLDER_NAME = "appDataFolder";
     private static final String FOLDER_MIME_TYPE = "application/vnd.google-apps.folder";
-    private static final String APP_PROPERTIES_QUERY = "appProperties has { key='smart_receipts_id' and value='";
+    private static final String PROPERTIES_QUERY = "properties has { key='smart_receipts_id' and value='";
 
     private final DriveServiceHelper driveServiceHelper;
     private final GoogleDriveSyncMetadata googleDriveSyncMetadata;
@@ -85,7 +85,7 @@ class DriveDataStreams {
                                         // Get the folder resource id
                                         final String validResourceId = file.getId();
                                         final Identifier driveFolderId = new Identifier(validResourceId);
-                                        final Map<String, String> customPropertyMap = file.getAppProperties();
+                                        final Map<String, String> customPropertyMap = file.getProperties();
                                         Logger.debug(DriveDataStreams.this, "Found existing Smart Receipts folder with id: {}", driveFolderId);
 
                                         // Get the device id for the device that created this backup
@@ -127,7 +127,7 @@ class DriveDataStreams {
         if (smartReceiptsFolderSubject == null) {
             Logger.info(this, "Creating new replay subject for the Smart Receipts folder");
             smartReceiptsFolderSubject = ReplaySubject.create();
-            driveServiceHelper.querySingle(APP_PROPERTIES_QUERY
+            driveServiceHelper.querySingle(PROPERTIES_QUERY
                     .concat(googleDriveSyncMetadata.getDeviceIdentifier().getId()).concat("' }"))
                     .map(fileList -> {
                         File fileId = null;

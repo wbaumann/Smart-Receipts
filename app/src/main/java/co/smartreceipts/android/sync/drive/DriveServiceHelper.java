@@ -89,7 +89,7 @@ public class DriveServiceHelper {
       }
 
       if (properties != null) {
-        metadata.setAppProperties(properties);
+        metadata.setProperties(properties);
       }
 
       File googleFile;

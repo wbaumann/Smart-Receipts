@@ -12,7 +12,6 @@ import com.google.api.services.drive.model.FileList;
 import com.google.common.base.Preconditions;
 import com.hadisatrio.optional.Optional;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;

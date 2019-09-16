@@ -21,6 +21,11 @@ interface ReceiptsListView {
     val actionBarUpdatesListener: StubTableEventsListener<Trip>
 
 
+    fun getHighlightedReceipt(): Receipt?
+
+    fun resetHighlightedReceipt()
+
+
     fun navigateToCreateReceipt(file: File?, ocrResponse: OcrResponse?)
 
     fun navigateToEditReceipt(receipt: Receipt)

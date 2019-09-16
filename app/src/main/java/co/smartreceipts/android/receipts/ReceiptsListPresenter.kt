@@ -12,7 +12,6 @@ import co.smartreceipts.android.di.scopes.FragmentScope
 import co.smartreceipts.android.images.CropImageActivity
 import co.smartreceipts.android.imports.RequestCodes
 import co.smartreceipts.android.imports.importer.ActivityFileResultImporter
-import co.smartreceipts.android.imports.importer.ActivityFileResultImporterResponse
 import co.smartreceipts.android.imports.intents.model.FileType
 import co.smartreceipts.android.imports.locator.ActivityFileResultLocator
 import co.smartreceipts.android.imports.locator.ActivityFileResultLocatorResponse
@@ -22,7 +21,6 @@ import co.smartreceipts.android.permissions.PermissionsDelegate
 import co.smartreceipts.android.permissions.exceptions.PermissionsNotGrantedException
 import co.smartreceipts.android.persistence.database.controllers.impl.TripTableController
 import co.smartreceipts.android.receipts.creator.ReceiptCreateActionPresenter
-import co.smartreceipts.android.tooltip.image.data.ImageCroppingPreferenceStorage
 import co.smartreceipts.android.utils.log.Logger
 import co.smartreceipts.android.widget.model.UiIndicator
 import co.smartreceipts.android.widget.viper.BaseViperPresenter
@@ -39,7 +37,6 @@ class ReceiptsListPresenter @Inject constructor(
     private val activityFileResultLocator: ActivityFileResultLocator,
     private val activityFileResultImporter: ActivityFileResultImporter,
     private val permissionsDelegate: PermissionsDelegate,
-    private val imageCroppingPreferenceStorage: ImageCroppingPreferenceStorage,
     private val tripTableController: TripTableController,
     private val analytics: Analytics
 ) :
@@ -48,10 +45,6 @@ class ReceiptsListPresenter @Inject constructor(
     companion object {
         const val READ_PERMISSION = Manifest.permission.READ_EXTERNAL_STORAGE
     }
-
-    var highlightedReceipt: Receipt? = null
-    var lastImporterResponse: ActivityFileResultImporterResponse? = null
-
 
     private var importIntentMode: Boolean = false
 
@@ -78,7 +71,6 @@ class ReceiptsListPresenter @Inject constructor(
         compositeDisposable.add(view.itemMenuClicks
             .subscribe { receipt ->
                 if (!importIntentMode) {
-                    highlightedReceipt = receipt
                     view.showReceiptMenu(receipt)
                 }
             }
@@ -97,7 +89,6 @@ class ReceiptsListPresenter @Inject constructor(
                             view.navigateToReceiptPdf(receipt)
                         }
                         else -> {
-                            highlightedReceipt = receipt
                             view.showAttachmentDialog(receipt)
                         }
                     }
@@ -146,8 +137,8 @@ class ReceiptsListPresenter @Inject constructor(
                     } else {
                         view.present(UiIndicator.error(R.string.FILE_SAVE_ERROR))
                     }
-                    highlightedReceipt = null
 
+                    view.resetHighlightedReceipt()
                     view.present(UiIndicator.success())
 
                     Logger.debug(this, "marking that locator result were consumed")
@@ -168,7 +159,6 @@ class ReceiptsListPresenter @Inject constructor(
                         RequestCodes.NEW_RECEIPT_IMPORT_IMAGE,
                         RequestCodes.NEW_RECEIPT_CAMERA_IMAGE -> {
                             if (interactor.isCropScreenEnabled()) {
-                                lastImporterResponse = response
                                 val requestCode = when {
                                     response.requestCode == RequestCodes.NEW_RECEIPT_IMPORT_IMAGE -> RequestCodes.NEW_RECEIPT_IMPORT_IMAGE_CROP
                                     else -> RequestCodes.NEW_RECEIPT_CAMERA_IMAGE_CROP
@@ -186,7 +176,6 @@ class ReceiptsListPresenter @Inject constructor(
                         RequestCodes.ATTACH_GALLERY_IMAGE,
                         RequestCodes.ATTACH_CAMERA_IMAGE -> {
                             if (interactor.isCropScreenEnabled()) {
-                                lastImporterResponse = response
                                 val cropRequestCode = when {
                                     response.requestCode == RequestCodes.ATTACH_GALLERY_IMAGE -> RequestCodes.ATTACH_GALLERY_IMAGE_CROP
                                     else -> RequestCodes.ATTACH_CAMERA_IMAGE_CROP
@@ -241,27 +230,29 @@ class ReceiptsListPresenter @Inject constructor(
 
             if (resultCode != CropImageActivity.RESULT_CROP_ERROR) {
 
-                imageCroppingPreferenceStorage.setCroppingScreenWasShown(true)
+                interactor.setCroppingScreenWasShown()
+
+                val imagePath = data?.getStringExtra(CropImageActivity.EXTRA_IMAGE_PATH)
 
                 when (requestCode) {
                     RequestCodes.NEW_RECEIPT_CAMERA_IMAGE_CROP,
                     RequestCodes.NEW_RECEIPT_IMPORT_IMAGE_CROP -> {
-                        lastImporterResponse?.file?.let { performOcrScan(it) }
+                        imagePath?.let { performOcrScan(File(it)) }
                     }
 
                     RequestCodes.ATTACH_GALLERY_IMAGE_CROP,
                     RequestCodes.ATTACH_CAMERA_IMAGE_CROP -> {
-                        lastImporterResponse?.file?.let { updateHighlightedReceiptFile(it) }
+                        imagePath?.let { updateHighlightedReceiptFile(File(it)) }
                     }
 
                 }
-
-                lastImporterResponse = null
 
             } else {
                 Logger.error(this, "An error occurred while cropping the image")
             }
 
+            activityFileResultLocator.markThatResultsWereConsumed()
+            activityFileResultImporter.markThatResultsWereConsumed()
         }
 
         if (resultCode != RESULT_OK) {
@@ -285,9 +276,13 @@ class ReceiptsListPresenter @Inject constructor(
     }
 
     private fun updateHighlightedReceiptFile(file: File) {
-        highlightedReceipt?.let { interactor.updateReceiptFile(it, file) }
+        view.getHighlightedReceipt()!!.let {
+            compositeDisposable.add(interactor.updateReceiptFile(it, file)
+                .subscribe({}, { view.present(UiIndicator.error(R.string.FILE_SAVE_ERROR)) })
+            )
+        }
 
-        highlightedReceipt = null
+        view.resetHighlightedReceipt()
     }
 
     private fun performOcrScan(file: File) {

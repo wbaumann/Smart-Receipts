@@ -1,17 +1,10 @@
 package co.smartreceipts.android.imports.importer
 
 import org.junit.Assert.*
-import org.junit.Before
 import org.junit.Test
-import org.mockito.MockitoAnnotations
 import java.io.File
 
 class FileResultImporterResponseTest {
-
-    @Before
-    fun setUp() {
-        MockitoAnnotations.initMocks(this)
-    }
 
     @Test
     fun errorTest() {

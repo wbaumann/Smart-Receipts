@@ -14,7 +14,9 @@ import co.smartreceipts.android.persistence.database.controllers.impl.ReceiptTab
 import co.smartreceipts.android.persistence.database.operations.DatabaseOperationMetadata
 import co.smartreceipts.android.settings.UserPreferenceManager
 import co.smartreceipts.android.settings.catalog.UserPreference
+import co.smartreceipts.android.tooltip.image.data.ImageCroppingPreferenceStorage
 import com.hadisatrio.optional.Optional
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -30,6 +32,7 @@ class ReceiptsListInteracror constructor(
     private val receiptTableController: ReceiptTableController,
     private val preferenceManager: UserPreferenceManager,
     private val ocrManager: OcrManager,
+    private val imageCroppingPreferenceStorage: ImageCroppingPreferenceStorage,
     private val subscribeOnScheduler: Scheduler = Schedulers.io(),
     private val observeOnScheduler: Scheduler = AndroidSchedulers.mainThread()
 ) {
@@ -45,11 +48,12 @@ class ReceiptsListInteracror constructor(
     @Inject
     constructor(
         intentImportProcessor: IntentImportProcessor, attachmentSendFileImporter: AttachmentSendFileImporter,
-        receiptTableController: ReceiptTableController, preferenceManager: UserPreferenceManager, ocrManager: OcrManager
+        receiptTableController: ReceiptTableController, preferenceManager: UserPreferenceManager, ocrManager: OcrManager,
+        imageCroppingPreferenceStorage: ImageCroppingPreferenceStorage
     )
             : this(
         intentImportProcessor, attachmentSendFileImporter, receiptTableController, preferenceManager,
-        ocrManager, Schedulers.io(), AndroidSchedulers.mainThread()
+        ocrManager, imageCroppingPreferenceStorage, Schedulers.io(), AndroidSchedulers.mainThread()
     )
 
     fun getLastImportIntentResult(): Observable<Optional<IntentImportResult>> {
@@ -67,30 +71,33 @@ class ReceiptsListInteracror constructor(
             .observeOn(observeOnScheduler)
     }
 
-    fun updateReceiptFile(receipt: Receipt, file: File): Observable<Optional<Receipt>> {
+    fun updateReceiptFile(receipt: Receipt, file: File): Completable {
         val updatedReceipt = ReceiptBuilderFactory(receipt)
             .setFile(file)
             .build()
 
         return receiptTableController.update(receipt, updatedReceipt, DatabaseOperationMetadata())
+            .flatMapCompletable { optional ->
+                if (optional.isPresent) {
+                    Completable.complete()
+                } else {
+                    Completable.error(Exception("Failed to update receipt file"))
+                }
+            }
     }
 
     fun scanReceiptImage(file: File) {
         ocrManager.scan(file)
             .subscribeOn(subscribeOnScheduler)
             .observeOn(observeOnScheduler)
-            .subscribe ({ lastOcrResponseSubject.onNext(Optional.of(Pair(file, it))) }, {lastOcrResponseSubject.onNext(Optional.absent())})
+            .subscribe({ lastOcrResponseSubject.onNext(Optional.of(Pair(file, it))) }, { lastOcrResponseSubject.onNext(Optional.absent()) })
     }
 
-    fun isCropScreenEnabled(): Boolean {
-        return preferenceManager.get(UserPreference.General.EnableCrop)
-    }
+    fun isCropScreenEnabled(): Boolean = preferenceManager.get(UserPreference.General.EnableCrop)
 
-    fun markIntentAsSuccessfullyProcessed(intent: Intent) {
-        intentImportProcessor.markIntentAsSuccessfullyProcessed(intent)
-    }
+    fun markIntentAsSuccessfullyProcessed(intent: Intent) = intentImportProcessor.markIntentAsSuccessfullyProcessed(intent)
 
-    fun markLastOcrResponseAsProcessed() {
-        lastOcrResponseSubject.onNext(Optional.absent())
-    }
+    fun markLastOcrResponseAsProcessed() = lastOcrResponseSubject.onNext(Optional.absent())
+
+    fun setCroppingScreenWasShown() = imageCroppingPreferenceStorage.setCroppingScreenWasShown(true)
 }

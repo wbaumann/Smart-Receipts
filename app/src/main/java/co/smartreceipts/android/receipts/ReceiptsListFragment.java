@@ -76,7 +76,6 @@ public class ReceiptsListFragment extends ReceiptsFragment implements ReceiptsLi
     // Outstate
     private static final String OUT_HIGHLIGHTED_RECEIPT = "out_highlighted_receipt";
     private static final String OUT_IMAGE_URI = "out_image_uri";
-    private static final String OUT_IMPORTER_RESPONSE = "out_importer_response";
 
     @Inject
     ReceiptsListPresenter presenter;
@@ -149,9 +148,8 @@ public class ReceiptsListFragment extends ReceiptsFragment implements ReceiptsLi
     private boolean showDateHeaders;
     private ReceiptsHeaderItemDecoration headerItemDecoration;
 
+    private Receipt highlightedReceipt = null;
 
-    // TODO: 11.09.2019 need to fix a lot of tests after refactoring
-    // TODO: 11.09.2019 need to add new tests for ReceiptsListPresenter and ReceiptsLIstInteractor
 
     @Override
     public void onAttach(Context context) {
@@ -166,8 +164,7 @@ public class ReceiptsListFragment extends ReceiptsFragment implements ReceiptsLi
         adapter = new ReceiptsAdapter(getContext(), preferenceManager, dateFormatter, backupProvidersManager, navigationHandler, receiptsOrderer, picasso);
         if (savedInstanceState != null) {
             imageUri = savedInstanceState.getParcelable(OUT_IMAGE_URI);
-            presenter.setHighlightedReceipt(savedInstanceState.getParcelable(OUT_HIGHLIGHTED_RECEIPT));
-            presenter.setLastImporterResponse(savedInstanceState.getParcelable(OUT_IMPORTER_RESPONSE));
+            highlightedReceipt = savedInstanceState.getParcelable(OUT_HIGHLIGHTED_RECEIPT);
         }
     }
 
@@ -248,13 +245,15 @@ public class ReceiptsListFragment extends ReceiptsFragment implements ReceiptsLi
     @NotNull
     @Override
     public Observable<Receipt> getItemMenuClicks() {
-        return adapter.getMenuClicks();
+        return adapter.getMenuClicks()
+                .doOnNext(receipt -> highlightedReceipt = receipt);
     }
 
     @NotNull
     @Override
     public Observable<Receipt> getItemImageClicks() {
-        return adapter.getImageClicks();
+        return adapter.getImageClicks()
+                .doOnNext(receipt -> highlightedReceipt = receipt);
     }
 
     @NotNull
@@ -339,8 +338,7 @@ public class ReceiptsListFragment extends ReceiptsFragment implements ReceiptsLi
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(OUT_IMAGE_URI, imageUri);
-        outState.putParcelable(OUT_HIGHLIGHTED_RECEIPT, presenter.getHighlightedReceipt());
-        outState.putParcelable(OUT_IMPORTER_RESPONSE, presenter.getLastImporterResponse());
+        outState.putParcelable(OUT_HIGHLIGHTED_RECEIPT, highlightedReceipt);
     }
 
     @Override
@@ -636,6 +634,16 @@ public class ReceiptsListFragment extends ReceiptsFragment implements ReceiptsLi
     @Override
     public void setImageUri(@NonNull Uri uri) {
         imageUri = uri;
+    }
+
+    @Override
+    public Receipt getHighlightedReceipt() {
+        return highlightedReceipt;
+    }
+
+    @Override
+    public void resetHighlightedReceipt() {
+        highlightedReceipt = null;
     }
 
     private class ActionBarSubtitleUpdatesListener extends StubTableEventsListener<Trip> {

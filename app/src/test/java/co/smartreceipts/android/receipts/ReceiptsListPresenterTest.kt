@@ -18,7 +18,7 @@ import co.smartreceipts.android.permissions.PermissionsDelegate
 import co.smartreceipts.android.persistence.database.controllers.impl.TripTableController
 import co.smartreceipts.android.receipts.creator.ReceiptCreateActionPresenter
 import co.smartreceipts.android.widget.model.UiIndicator
-import com.nhaarman.mockito_kotlin.*
+import com.nhaarman.mockitokotlin2.*
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject

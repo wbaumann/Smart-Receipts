@@ -73,7 +73,7 @@ import wb.android.flex.Flex;
 public class ReceiptsListFragment extends ReceiptsFragment implements ReceiptsListView, ReceiptTableEventsListener, ReceiptCreateActionView,
         OcrStatusAlerterView, ReceiptAttachmentDialogFragment.Listener {
 
-    // Outstate
+    // Out state
     private static final String OUT_HIGHLIGHTED_RECEIPT = "out_highlighted_receipt";
     private static final String OUT_IMAGE_URI = "out_image_uri";
 
@@ -624,7 +624,7 @@ public class ReceiptsListFragment extends ReceiptsFragment implements ReceiptsLi
                 alert.setText(ocrStatusIndicator.getData().get());
             }
         } else if (alert != null) {
-            alert.hide();
+            Alerter.hide();
             alert = null;
 
             present(UiIndicator.idle());

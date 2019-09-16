@@ -261,11 +261,12 @@ class ReceiptsListPresenter @Inject constructor(
     }
 
     fun markIntentAsProcessed(intent: Intent) {
-        interactor.getLastImportIntentResult()
+        compositeDisposable.add(interactor.getLastImportIntentResult()
             .filter { optionalResult -> optionalResult.isPresent }
             .map { it.get() }
             .filter { result -> result.fileType == FileType.Image || result.fileType == FileType.Pdf }
             .subscribe { interactor.markIntentAsSuccessfullyProcessed(intent) }
+        )
     }
 
     private fun attachImportIntent(receipt: Receipt) {
@@ -277,8 +278,9 @@ class ReceiptsListPresenter @Inject constructor(
 
     private fun updateHighlightedReceiptFile(file: File) {
         view.getHighlightedReceipt()!!.let {
-            compositeDisposable.add(interactor.updateReceiptFile(it, file)
-                .subscribe({}, { view.present(UiIndicator.error(R.string.FILE_SAVE_ERROR)) })
+            compositeDisposable.add(
+                interactor.updateReceiptFile(it, file)
+                    .subscribe({}, { view.present(UiIndicator.error(R.string.FILE_SAVE_ERROR)) })
             )
         }
 

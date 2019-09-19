@@ -168,10 +168,6 @@
             android:name="google_analytics_adid_collection_enabled"
             android:value="false" />
 
-        <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="@string/admob_ad_id"/>
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

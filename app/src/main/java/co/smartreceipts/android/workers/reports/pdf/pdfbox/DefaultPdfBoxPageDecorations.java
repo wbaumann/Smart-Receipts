@@ -34,7 +34,7 @@ public class DefaultPdfBoxPageDecorations implements PdfBoxPageDecorations {
         this.pdfBoxContext = Preconditions.checkNotNull(pdfBoxContext);
 
         final SmartReceiptsFormattableString formattableString = new SmartReceiptsFormattableString(pdfBoxContext.getPreferences().get(UserPreference.PlusSubscription.PdfFooterString),
-                trip, pdfBoxContext.getPreferences(), pdfBoxContext.getDateFormatter());
+                trip, pdfBoxContext.getPreferences(), pdfBoxContext.getDateFormatter(), Preconditions.checkNotNull(receipts), Preconditions.checkNotNull(distances));
         footerText = HeavyHandedReplaceIllegalCharacters.getSafeString(formattableString.toString());
     }
 

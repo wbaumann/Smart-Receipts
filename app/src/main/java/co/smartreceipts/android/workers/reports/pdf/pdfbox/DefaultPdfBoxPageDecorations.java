@@ -7,7 +7,10 @@ import com.tom_roush.pdfbox.pdmodel.PDPageContentStream;
 import com.tom_roush.pdfbox.pdmodel.common.PDRectangle;
 
 import java.io.IOException;
+import java.util.List;
 
+import co.smartreceipts.android.model.Distance;
+import co.smartreceipts.android.model.Receipt;
 import co.smartreceipts.android.model.Trip;
 import co.smartreceipts.android.settings.catalog.UserPreference;
 import co.smartreceipts.android.workers.reports.formatting.SmartReceiptsFormattableString;
@@ -29,7 +32,8 @@ public class DefaultPdfBoxPageDecorations implements PdfBoxPageDecorations {
     private final PdfBoxContext pdfBoxContext;
     private final String footerText;
 
-    DefaultPdfBoxPageDecorations(@NonNull PdfBoxContext pdfBoxContext, @NonNull Trip trip) {
+    DefaultPdfBoxPageDecorations(@NonNull PdfBoxContext pdfBoxContext, @NonNull Trip trip,
+                                 @NonNull List<Receipt> receipts, @NonNull List<Distance> distances) {
         Preconditions.checkNotNull(trip);
         this.pdfBoxContext = Preconditions.checkNotNull(pdfBoxContext);
 

@@ -26,7 +26,7 @@ public interface BackupProvider {
      *
      * @param activity the current {@link FragmentActivity} if one is required for connection error resolutions
      */
-    void initialize(@Nullable FragmentActivity activity);
+    void initialize(@NonNull FragmentActivity activity);
 
     /**
      * De-initialize the backup provider to stop it from being used
@@ -39,7 +39,7 @@ public interface BackupProvider {
      * @param requestCode the request code
      * @param resultCode the result code
      * @param data any intent data
-     * @return {@code true} if we handle the request, {@code false} otherwse
+     * @return {@code true} if we handle the request, {@code false} otherwise
      */
     boolean onActivityResult(int requestCode, int resultCode, @Nullable Intent data);
 

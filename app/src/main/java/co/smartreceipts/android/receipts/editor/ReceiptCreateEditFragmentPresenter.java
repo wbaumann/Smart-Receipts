@@ -122,7 +122,7 @@ public class ReceiptCreateEditFragmentPresenter {
 
     void saveReceipt(Date date, TimeZone timeZone, String price, String tax,
                      String exchangeRate, String comment, PaymentMethod paymentMethod,
-                     boolean isReimursable, boolean isFullpage,
+                     boolean isReimbursable, boolean isFullPage,
                      String name, Category category, String currency,
                      String extraText1, String extraText2, String extraText3) {
 
@@ -143,8 +143,8 @@ public class ReceiptCreateEditFragmentPresenter {
                 .setCurrency(currency)
                 .setComment(comment)
                 .setPaymentMethod(paymentMethod)
-                .setIsReimbursable(isReimursable)
-                .setIsFullPage(isFullpage)
+                .setIsReimbursable(isReimbursable)
+                .setIsFullPage(isFullPage)
                 .setExtraEditText1(extraText1)
                 .setExtraEditText2(extraText2)
                 .setExtraEditText3(extraText3);
@@ -157,11 +157,13 @@ public class ReceiptCreateEditFragmentPresenter {
         }
     }
 
-    void deleteReceiptFileIfUnused() {
+    boolean deleteReceiptFileIfUnused() {
         if (fragment.getEditableItem() == null && fragment.getFile() != null) {
             if (fragment.getFile().delete()) {
                 Logger.info(this, "Deleting receipt file as we're not saving it");
+                return true;
             }
         }
+        return false;
     }
 }

@@ -7,8 +7,8 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.Single
 import javax.inject.Inject
 
-class CropImagePresenter @Inject constructor(view: CropView, interactor: CropImageInteracror) :
-    BaseViperPresenter<CropView, CropImageInteracror>(view, interactor) {
+class CropImagePresenter @Inject constructor(view: CropView, interactor: CropImageInteractor) :
+    BaseViperPresenter<CropView, CropImageInteractor>(view, interactor) {
 
     override fun subscribe() {
 
@@ -21,9 +21,9 @@ class CropImagePresenter @Inject constructor(view: CropView, interactor: CropIma
             .doOnNext { view.present(UiIndicator.loading()) }
             .firstElement()
             .flatMapCompletable { bitmap -> interactor.updateImage(view.imageFile, bitmap) }
-            .subscribe({ view.finishCropView() }, {
+            .subscribe({ view.finishCropView(true) }, {
                 view.present(UiIndicator.error())
-                view.finishCropView()
+                view.finishCropView(false)
             })
         )
 
@@ -41,7 +41,7 @@ class CropImagePresenter @Inject constructor(view: CropView, interactor: CropIma
 
         compositeDisposable.add(
             view.cropToggleClicks
-                .subscribe {view.toggleCropMode()}
+                .subscribe { view.toggleCropMode() }
         )
 
 

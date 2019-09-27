@@ -1,6 +1,5 @@
 package co.smartreceipts.android.ocr;
 
-import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 
@@ -21,7 +20,7 @@ import co.smartreceipts.android.di.scopes.ApplicationScope;
 import co.smartreceipts.android.identity.IdentityManager;
 import co.smartreceipts.android.ocr.apis.OcrService;
 import co.smartreceipts.android.ocr.apis.model.OcrResponse;
-import co.smartreceipts.android.ocr.apis.model.RecongitionRequest;
+import co.smartreceipts.android.ocr.apis.model.RecognitionRequest;
 import co.smartreceipts.android.ocr.purchases.OcrPurchaseTracker;
 import co.smartreceipts.android.ocr.push.OcrPushMessageReceiver;
 import co.smartreceipts.android.ocr.push.OcrPushMessageReceiverFactory;
@@ -41,7 +40,6 @@ public class OcrManager {
 
     private static final String OCR_FOLDER = "ocr/";
 
-    private final Context context;
     private final S3Manager s3Manager;
     private final IdentityManager identityManager;
     private final WebServiceManager ocrWebServiceManager;
@@ -55,8 +53,7 @@ public class OcrManager {
     private final BehaviorSubject<OcrProcessingStatus> ocrProcessingStatusSubject = BehaviorSubject.createDefault(OcrProcessingStatus.Idle);
 
     @Inject
-    public OcrManager(@NonNull Context context,
-                      @NonNull S3Manager s3Manager,
+    public OcrManager(@NonNull S3Manager s3Manager,
                       @NonNull IdentityManager identityManager,
                       @NonNull WebServiceManager webServiceManager,
                       @NonNull PushManager pushManager,
@@ -65,12 +62,12 @@ public class OcrManager {
                       @NonNull UserPreferenceManager userPreferenceManager,
                       @NonNull Analytics analytics,
                       @NonNull ConfigurationManager configurationManager) {
-        this(context, s3Manager, identityManager, webServiceManager, pushManager, ocrPurchaseTracker, ocrInformationalTooltipInteractor, userPreferenceManager, analytics, new OcrPushMessageReceiverFactory(), configurationManager);
+        this(s3Manager, identityManager, webServiceManager, pushManager, ocrPurchaseTracker, ocrInformationalTooltipInteractor,
+                userPreferenceManager, analytics, new OcrPushMessageReceiverFactory(), configurationManager);
     }
 
     @VisibleForTesting
-    OcrManager(@NonNull Context context,
-               @NonNull S3Manager s3Manager,
+    OcrManager(@NonNull S3Manager s3Manager,
                @NonNull IdentityManager identityManager,
                @NonNull WebServiceManager webServiceManager,
                @NonNull PushManager pushManager,
@@ -80,7 +77,6 @@ public class OcrManager {
                @NonNull Analytics analytics,
                @NonNull OcrPushMessageReceiverFactory pushMessageReceiverFactory,
                @NonNull ConfigurationManager configurationManager) {
-        this.context = Preconditions.checkNotNull(context.getApplicationContext());
         this.s3Manager = Preconditions.checkNotNull(s3Manager);
         this.identityManager = Preconditions.checkNotNull(identityManager);
         this.ocrWebServiceManager = Preconditions.checkNotNull(webServiceManager);
@@ -126,7 +122,7 @@ public class OcrManager {
                         Logger.debug(OcrManager.this, "Uploading OCR request for processing");
                         ocrProcessingStatusSubject.onNext(OcrProcessingStatus.PerformingScan);
                         final boolean incognito = userPreferenceManager.get(UserPreference.Misc.OcrIncognitoMode);
-                        return ocrWebServiceManager.getService(OcrService.class).scanReceipt(new RecongitionRequest(s3Url, incognito));
+                        return ocrWebServiceManager.getService(OcrService.class).scanReceipt(new RecognitionRequest(s3Url, incognito));
                     })
                     .flatMap(recognitionResponse -> {
                         if (recognitionResponse != null && recognitionResponse.getRecognition() != null && recognitionResponse.getRecognition().getId() != null) {

@@ -1,9 +1,10 @@
 plugins {
     id("com.android.application")
-    id("com.github.triplet.play") version "2.1.0"
+    id("com.github.triplet.play") version "2.4.1"
 }
 
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.android.gms.oss-licenses-plugin'
 apply plugin: 'kotlin-android'
 apply plugin: 'org.jetbrains.kotlin.android.extensions'
 apply plugin: 'io.fabric'
@@ -20,8 +21,8 @@ android {
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 900
-        versionName "4.21.0.900"
+        versionCode 1100
+        versionName "4.22.0.1100"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
 
@@ -80,6 +81,10 @@ android {
 
     flavorDimensions "versionType"
 
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+    }
+
     productFlavors {
         free {
             applicationId "wb.receipts"
@@ -131,9 +136,16 @@ android {
 
         implementation "com.android.support.constraint:constraint-layout:$CONSTRAINT_LAYOUT_VERSION"
 
-        implementation "com.google.android.gms:play-services-drive:$DRIVE_API_VERSION"
+        implementation "com.google.http-client:google-http-client-gson:$GOOGLE_HTTP_CLIENT_VERSION"
+        implementation("com.google.api-client:google-api-client-android:$GOOGLE_API_CLIENT_VERSION") {
+            exclude group: 'org.apache.httpcomponents'
+        }
+        implementation("com.google.apis:google-api-services-drive:$GOOGLE_API_SERVICES_VERSION") {
+            exclude group: 'org.apache.httpcomponents'
+        }
+        implementation "com.google.android.gms:play-services-auth:$DRIVE_API_VERSION"
         implementation "com.google.firebase:firebase-core:$FIREBASE_CORE_VERSION"
-        implementation "com.google.firebase:firebase-crash:$FIREBASE_CORE_VERSION"
+        implementation "com.google.firebase:firebase-crash:$FIREBASE_CRASH_VERSION"
         implementation "com.google.firebase:firebase-messaging:$FIREBASE_MESSAGING_VERSION"
 
         implementation "com.squareup.picasso:picasso:$PICASSO_VERSION"
@@ -186,20 +198,23 @@ android {
         kapt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
         kapt "com.google.dagger:dagger-android-processor:$DAGGER_VERSION"
 
-        // Crashalytics
+        // Crashlytics
         implementation "com.crashlytics.sdk.android:crashlytics:$CRASHLYTICS_VERSION"
+
+        implementation "com.google.android.gms:play-services-oss-licenses:$GOOGLE_OSS_VERSION"
 
         // Unit Tests
         testImplementation "org.robolectric:robolectric:$ROBOLECTRIC_VERSION"
         testImplementation "junit:junit:$JUNIT_VERSION"
         testImplementation "org.mockito:mockito-core:$MOCKITO_VERSION"
-        testImplementation "com.nhaarman:mockito-kotlin:$MOCKITO_KOTLIN_VERSION"
+        testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$MOCKITO_KOTLIN_VERSION"
+        testImplementation "androidx.test:core:$ANDROID_TEST_RUNNER_VERSION"
 
         // Espresso Tests
-        androidTestImplementation "com.android.support.test.espresso:espresso-core:$ESPRESSO_VERSION"
-        androidTestImplementation "com.android.support.test:runner:$ANDROID_TEST_RUNNER_VERSION"
-        androidTestImplementation "com.android.support.test:rules:$ANDROID_TEST_RUNNER_VERSION"
-        androidTestUtil "com.android.support.test:orchestrator:$ANDROID_TEST_RUNNER_VERSION"
+        androidTestImplementation "androidx.test.espresso:espresso-core:$ESPRESSO_VERSION"
+        androidTestImplementation "androidx.test:runner:$ANDROID_TEST_RUNNER_VERSION"
+        androidTestImplementation "androidx.test:rules:$ANDROID_TEST_RUNNER_VERSION"
+        androidTestUtil "androidx.test:orchestrator:$ANDROID_TEST_RUNNER_VERSION"
 
         // Leak Canary
         debugImplementation "com.squareup.leakcanary:leakcanary-android:$LEAK_CANARY_VERSION"
@@ -207,7 +222,7 @@ android {
         releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$LEAK_CANARY_VERSION"
 
         // Special dependencies for free flavor
-        freeImplementation "com.google.android.gms:play-services-analytics:$FIREBASE_CORE_VERSION"
+        freeImplementation "com.google.android.gms:play-services-analytics:$GOOGLE_ANALYTICS_VERSION"
 
         // Free ads
         freeImplementation "com.google.android.gms:play-services-ads:$ADMOB_VERSION"

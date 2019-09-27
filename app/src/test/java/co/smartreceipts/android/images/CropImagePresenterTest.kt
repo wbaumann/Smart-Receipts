@@ -2,7 +2,7 @@ package co.smartreceipts.android.images
 
 import android.graphics.Bitmap
 import co.smartreceipts.android.widget.model.UiIndicator
-import com.nhaarman.mockito_kotlin.*
+import com.nhaarman.mockitokotlin2.*
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -19,7 +19,7 @@ class CropImagePresenterTest {
     private lateinit var presenter: CropImagePresenter
 
     private val view = mock<CropView>()
-    private val interactor = mock<CropImageInteracror>()
+    private val interactor = mock<CropImageInteractor>()
 
     private val imageFile = mock<File>()
     private val bitmap = mock<Bitmap>()
@@ -120,7 +120,7 @@ class CropImagePresenterTest {
         verify(interactor).updateImage(imageFile, bitmapUpdated)
         verify(view, times(2)).present(UiIndicator.loading())
         verify(view).present(UiIndicator.success(bitmap))
-        verify(view).finishCropView()
+        verify(view).finishCropView(true)
     }
 
     @Test
@@ -134,6 +134,6 @@ class CropImagePresenterTest {
         verify(view, times(2)).present(UiIndicator.loading())
         verify(view).present(UiIndicator.success(bitmap))
         verify(view).present(UiIndicator.error())
-        verify(view).finishCropView()
+        verify(view).finishCropView(false)
     }
 }

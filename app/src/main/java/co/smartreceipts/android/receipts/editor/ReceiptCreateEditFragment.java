@@ -2,11 +2,6 @@ package co.smartreceipts.android.receipts.editor;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.UiThread;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
 import android.text.format.Time;
 import android.view.LayoutInflater;
@@ -24,6 +19,12 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
 
 import com.hadisatrio.optional.Optional;
 import com.jakewharton.rxbinding2.view.RxView;
@@ -98,6 +99,7 @@ import co.smartreceipts.android.receipts.editor.toolbar.ReceiptsEditorToolbarPre
 import co.smartreceipts.android.receipts.editor.toolbar.ReceiptsEditorToolbarView;
 import co.smartreceipts.android.settings.UserPreferenceManager;
 import co.smartreceipts.android.utils.SoftKeyboardManager;
+import co.smartreceipts.android.utils.StrictModeConfiguration;
 import co.smartreceipts.android.utils.butterknife.ButterKnifeActions;
 import co.smartreceipts.android.utils.log.Logger;
 import co.smartreceipts.android.utils.rx.RxSchedulers;
@@ -220,7 +222,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     CheckBox reimbursableCheckbox;
 
     @BindView(R.id.DIALOG_RECEIPTMENU_FULLPAGE)
-    CheckBox fullpageCheckbox;
+    CheckBox fullPageCheckbox;
 
     @BindView(R.id.decimalSeparatorButton)
     Button decimalSeparatorButton;
@@ -337,7 +339,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
         flex.applyCustomSettings(categoriesSpinner);
         flex.applyCustomSettings(commentBox);
         flex.applyCustomSettings(reimbursableCheckbox);
-        flex.applyCustomSettings(fullpageCheckbox);
+        flex.applyCustomSettings(fullPageCheckbox);
 
         // Apply white-label settings via our 'Flex' mechanism to add custom fields
         final LinearLayout extras = (LinearLayout) flex.getSubView(getActivity(), view, R.id.DIALOG_RECEIPTMENU_EXTRAS);
@@ -416,7 +418,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
                     }
                 }
 
-                fullpageCheckbox.setChecked(presenter.isDefaultToFullPage());
+                fullPageCheckbox.setChecked(presenter.isDefaultToFullPage());
 
                 if (ocrResponse != null) {
                     final OcrResponseParser ocrResponseParser = new OcrResponseParser(ocrResponse);
@@ -453,7 +455,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
                 commentBox.setText(receipt.getComment());
 
                 reimbursableCheckbox.setChecked(receipt.isReimbursable());
-                fullpageCheckbox.setChecked(receipt.isFullPage());
+                fullPageCheckbox.setChecked(receipt.isFullPage());
 
                 if (extraEditText1 != null && receipt.hasExtraEditText1()) {
                     extraEditText1.setText(receipt.getExtraEditText1());
@@ -598,8 +600,8 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
+            StrictModeConfiguration.permitDiskWrites(() -> presenter.deleteReceiptFileIfUnused());
             navigationHandler.navigateBack();
-            presenter.deleteReceiptFileIfUnused();
             return true;
         }
         if (item.getItemId() == R.id.action_save) {
@@ -698,7 +700,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
             receiptInputCache.setCachedCurrency(currency);
 
             presenter.saveReceipt(receiptDate, timeZone, price, tax, exchangeRate, comment,
-                    paymentMethod, reimbursableCheckbox.isChecked(), fullpageCheckbox.isChecked(), name, category, currency,
+                    paymentMethod, reimbursableCheckbox.isChecked(), fullPageCheckbox.isChecked(), name, category, currency,
                     extraText1, extraText2, extraText3);
 
             analytics.record(isNewReceipt() ? Events.Receipts.PersistNewReceipt : Events.Receipts.PersistUpdateReceipt);

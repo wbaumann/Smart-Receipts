@@ -138,26 +138,20 @@
 
         <activity
             android:name="co.smartreceipts.android.settings.widget.SettingsActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"></activity>
+            android:configChanges="orientation|keyboardHidden|screenSize" />
 
         <activity
             android:name="co.smartreceipts.android.settings.widget.SettingsViewerActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"></activity>
+            android:configChanges="orientation|keyboardHidden|screenSize" />
 
         <activity
             android:name=".images.CropImageActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
 
-
-        <!-- DriveEventService (and subclasses) must be exported -->
-        <service
-            android:name=".sync.drive.services.DriveCompletionEventService"
-            android:exported="true"
-            tools:ignore="ExportedService">
-            <intent-filter>
-                <action android:name="com.google.android.gms.drive.events.HANDLE_EVENT" />
-            </intent-filter>
-        </service>
+        <activity android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
+            android:theme="@style/Theme.SmartReceipts.OSS"/>
+        <activity android:name="com.google.android.gms.oss.licenses.OssLicensesActivity"
+            android:theme="@style/Theme.SmartReceipts.OSS"/>
 
         <!-- FirebaseMessagingService performs security checks at runtime, no need for explicit permissions despite exported="true" -->
         <service
@@ -166,14 +160,6 @@
             tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
-        <service
-            android:name=".push.services.FirebaseTokenRefreshService"
-            android:exported="true"
-            tools:ignore="ExportedService">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 

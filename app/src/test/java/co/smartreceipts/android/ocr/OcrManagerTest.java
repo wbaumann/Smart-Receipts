@@ -2,13 +2,14 @@ package co.smartreceipts.android.ocr;
 
 import android.content.Context;
 
+import androidx.test.core.app.ApplicationProvider;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 
 import java.io.File;
 
@@ -20,7 +21,7 @@ import co.smartreceipts.android.identity.IdentityManager;
 import co.smartreceipts.android.ocr.apis.OcrService;
 import co.smartreceipts.android.ocr.apis.model.OcrResponse;
 import co.smartreceipts.android.ocr.apis.model.RecognitionResponse;
-import co.smartreceipts.android.ocr.apis.model.RecongitionRequest;
+import co.smartreceipts.android.ocr.apis.model.RecognitionRequest;
 import co.smartreceipts.android.ocr.purchases.OcrPurchaseTracker;
 import co.smartreceipts.android.ocr.push.OcrPushMessageReceiver;
 import co.smartreceipts.android.ocr.push.OcrPushMessageReceiverFactory;
@@ -48,7 +49,7 @@ public class OcrManagerTest {
     // Class under test
     OcrManager ocrManager;
 
-    Context context = RuntimeEnvironment.application;
+    Context context = ApplicationProvider.getApplicationContext();
 
     @Mock
     S3Manager s3Manager;
@@ -118,14 +119,15 @@ public class OcrManagerTest {
         when(recognition.getId()).thenReturn(ID);
         when(recognition.getData()).thenReturn(recognitionData);
         when(recognitionData.getRecognitionData()).thenReturn(ocrResponse);
-        when(ocrService.scanReceipt(new RecongitionRequest("ocr/" + IMG_NAME, false))).thenReturn(Observable.just(recognitionResponse));
-        when(ocrService.scanReceipt(new RecongitionRequest("ocr/" + IMG_NAME, true))).thenReturn(Observable.just(recognitionResponse));
+        when(ocrService.scanReceipt(new RecognitionRequest("ocr/" + IMG_NAME, false))).thenReturn(Observable.just(recognitionResponse));
+        when(ocrService.scanReceipt(new RecognitionRequest("ocr/" + IMG_NAME, true))).thenReturn(Observable.just(recognitionResponse));
         when(pushMessageReceiver.getOcrPushResponse()).thenReturn(Observable.just(new Object()));
         when(ocrService.getRecognitionResult(ID)).thenReturn(Observable.just(recognitionResponse));
         when(userPreferenceManager.get(UserPreference.Misc.OcrIsEnabled)).thenReturn(true);
         when(userPreferenceManager.get(UserPreference.Misc.OcrIncognitoMode)).thenReturn(false);
 
-        ocrManager = new OcrManager(context, s3Manager, identityManager, ocrWebServiceManager, pushManager, ocrPurchaseTracker, ocrInformationalTooltipInteractor, userPreferenceManager, analytics, ocrPushMessageReceiverFactory, configurationManager);
+        ocrManager = new OcrManager(s3Manager, identityManager, ocrWebServiceManager, pushManager, ocrPurchaseTracker,
+                ocrInformationalTooltipInteractor, userPreferenceManager, analytics, ocrPushMessageReceiverFactory, configurationManager);
     }
 
     @Test
@@ -199,7 +201,7 @@ public class OcrManagerTest {
         verify(s3Manager).upload(file, "ocr/");
         verify(pushManager).registerReceiver(pushMessageReceiver);
         verify(pushManager).unregisterReceiver(pushMessageReceiver);
-        verify(ocrService, never()).scanReceipt(any(RecongitionRequest.class));
+        verify(ocrService, never()).scanReceipt(any(RecognitionRequest.class));
         verify(ocrService, never()).getRecognitionResult(anyString());
         verify(ocrPurchaseTracker, never()).decrementRemainingScans();
         verify(pushMessageReceiver, never()).getOcrPushResponse();
@@ -218,7 +220,7 @@ public class OcrManagerTest {
         verify(s3Manager).upload(file, "ocr/");
         verify(pushManager).registerReceiver(pushMessageReceiver);
         verify(pushManager).unregisterReceiver(pushMessageReceiver);
-        verify(ocrService, never()).scanReceipt(any(RecongitionRequest.class));
+        verify(ocrService, never()).scanReceipt(any(RecognitionRequest.class));
         verify(ocrService, never()).getRecognitionResult(anyString());
         verify(ocrPurchaseTracker, never()).decrementRemainingScans();
         verify(pushMessageReceiver, never()).getOcrPushResponse();
@@ -227,7 +229,7 @@ public class OcrManagerTest {
 
     @Test
     public void scanButRecognitionRequestFails() {
-        when(ocrService.scanReceipt(new RecongitionRequest("ocr/" + IMG_NAME, false))).thenReturn(Observable.error(new Exception("test")));
+        when(ocrService.scanReceipt(new RecognitionRequest("ocr/" + IMG_NAME, false))).thenReturn(Observable.error(new Exception("test")));
         ocrManager.scan(file).subscribe(testObserver);
 
         testObserver.awaitTerminalEvent();
@@ -235,7 +237,7 @@ public class OcrManagerTest {
         testObserver.onComplete();
         testObserver.assertNoErrors();
         verify(s3Manager).upload(file, "ocr/");
-        verify(ocrService).scanReceipt(new RecongitionRequest("ocr/" + IMG_NAME, false));
+        verify(ocrService).scanReceipt(new RecognitionRequest("ocr/" + IMG_NAME, false));
         verify(pushManager).registerReceiver(pushMessageReceiver);
         verify(pushManager).unregisterReceiver(pushMessageReceiver);
         verify(ocrService, never()).getRecognitionResult(anyString());
@@ -253,7 +255,7 @@ public class OcrManagerTest {
         testObserver.onComplete();
         testObserver.assertNoErrors();
         verify(s3Manager).upload(file, "ocr/");
-        verify(ocrService).scanReceipt(new RecongitionRequest("ocr/" + IMG_NAME, false));
+        verify(ocrService).scanReceipt(new RecognitionRequest("ocr/" + IMG_NAME, false));
         verify(pushManager).registerReceiver(pushMessageReceiver);
         verify(pushManager).unregisterReceiver(pushMessageReceiver);
         verify(ocrService, never()).getRecognitionResult(anyString());
@@ -263,7 +265,7 @@ public class OcrManagerTest {
     }
 
     @Test
-    public void scanButGetRecognitionResultails() {
+    public void scanButGetRecognitionResultDetails() {
         when(ocrService.getRecognitionResult(ID)).thenReturn(Observable.error(new Exception("test")));
         ocrManager.scan(file).subscribe(testObserver);
 
@@ -272,7 +274,7 @@ public class OcrManagerTest {
         testObserver.onComplete();
         testObserver.assertNoErrors();
         verify(s3Manager).upload(file, "ocr/");
-        verify(ocrService).scanReceipt(new RecongitionRequest("ocr/" + IMG_NAME, false));
+        verify(ocrService).scanReceipt(new RecognitionRequest("ocr/" + IMG_NAME, false));
         verify(ocrPurchaseTracker, never()).decrementRemainingScans();
         verify(pushManager).registerReceiver(pushMessageReceiver);
         verify(pushManager).unregisterReceiver(pushMessageReceiver);
@@ -287,7 +289,7 @@ public class OcrManagerTest {
         testObserver.onComplete();
         testObserver.assertNoErrors();
         verify(s3Manager).upload(file, "ocr/");
-        verify(ocrService).scanReceipt(new RecongitionRequest("ocr/" + IMG_NAME, false));
+        verify(ocrService).scanReceipt(new RecognitionRequest("ocr/" + IMG_NAME, false));
         verify(ocrPurchaseTracker).decrementRemainingScans();
         verify(pushManager).registerReceiver(pushMessageReceiver);
         verify(pushManager).unregisterReceiver(pushMessageReceiver);
@@ -303,7 +305,7 @@ public class OcrManagerTest {
         testObserver.onComplete();
         testObserver.assertNoErrors();
         verify(s3Manager).upload(file, "ocr/");
-        verify(ocrService).scanReceipt(new RecongitionRequest("ocr/" + IMG_NAME, true));
+        verify(ocrService).scanReceipt(new RecognitionRequest("ocr/" + IMG_NAME, true));
         verify(ocrPurchaseTracker).decrementRemainingScans();
         verify(pushManager).registerReceiver(pushMessageReceiver);
         verify(pushManager).unregisterReceiver(pushMessageReceiver);
@@ -319,7 +321,7 @@ public class OcrManagerTest {
         testObserver.onComplete();
         testObserver.assertNoErrors();
         verify(s3Manager).upload(file, "ocr/");
-        verify(ocrService).scanReceipt(new RecongitionRequest("ocr/" + IMG_NAME, false));
+        verify(ocrService).scanReceipt(new RecognitionRequest("ocr/" + IMG_NAME, false));
         verify(ocrPurchaseTracker).decrementRemainingScans();
         verify(pushManager).registerReceiver(pushMessageReceiver);
         verify(pushManager).unregisterReceiver(pushMessageReceiver);

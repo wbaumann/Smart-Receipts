@@ -43,21 +43,11 @@ public class SmartReceiptsFormattableString {
 
     @Override
     public String toString() {
-        if (!preferences.get(UserPreference.Receipts.OnlyIncludeReimbursable) &&
-                !totals.getGrandTotalPrice().equals(totals.getReimbursableGrandTotalPrice())) {
-            return string
-                    .replace(REPORT_NAME, trip.getName())
-                    .replace(USER_ID, preferences.get(UserPreference.ReportOutput.UserId))
-                    .replace(REPORT_START, dateFormatter.getFormattedDate(trip.getStartDisplayableDate()))
-                    .replace(REPORT_END, dateFormatter.getFormattedDate(trip.getEndDisplayableDate()))
-                    .replace(REPORT_GROSS_TOTAL, totals.getReimbursableGrandTotalPrice().getCurrencyFormattedPrice());
-        } else {
-            return string
-                    .replace(REPORT_NAME, trip.getName())
-                    .replace(USER_ID, preferences.get(UserPreference.ReportOutput.UserId))
-                    .replace(REPORT_START, dateFormatter.getFormattedDate(trip.getStartDisplayableDate()))
-                    .replace(REPORT_END, dateFormatter.getFormattedDate(trip.getEndDisplayableDate()))
-                    .replace(REPORT_GROSS_TOTAL, totals.getGrandTotalPrice().getCurrencyFormattedPrice());
-        }
+        return string
+                .replace(REPORT_NAME, trip.getName())
+                .replace(USER_ID, preferences.get(UserPreference.ReportOutput.UserId))
+                .replace(REPORT_START, dateFormatter.getFormattedDate(trip.getStartDisplayableDate()))
+                .replace(REPORT_END, dateFormatter.getFormattedDate(trip.getEndDisplayableDate()))
+                .replace(REPORT_GROSS_TOTAL, totals.getGrandTotalPrice().getCurrencyFormattedPrice());
     }
 }

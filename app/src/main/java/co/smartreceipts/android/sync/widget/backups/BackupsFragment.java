@@ -1,16 +1,24 @@
 package co.smartreceipts.android.sync.widget.backups;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -46,6 +54,7 @@ import io.reactivex.disposables.CompositeDisposable;
 public class BackupsFragment extends WBFragment implements BackupProviderChangeListener {
 
     private static final int IMPORT_SMR_REQUEST_CODE = 50;
+    private static final int READ_PERMISSION_REQUEST = 1;
 
     @Inject
     PersistenceManager persistenceManager;
@@ -109,13 +118,17 @@ public class BackupsFragment extends WBFragment implements BackupProviderChangeL
 
         exportButton.setOnClickListener(view -> navigationHandler.showDialog(new ExportBackupDialogFragment()));
         importButton.setOnClickListener(view -> {
-            final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-            intent.addCategory(Intent.CATEGORY_OPENABLE);
-            intent.setType("*/*");
-            try {
-                startActivityForResult(Intent.createChooser(intent, getString(R.string.import_string)), IMPORT_SMR_REQUEST_CODE);
-            } catch (android.content.ActivityNotFoundException ex) {
-                Toast.makeText(getContext(), getString(R.string.error_no_file_intent_dialog_title), Toast.LENGTH_SHORT).show();
+
+            // ask permission first
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                int permissionReadStorage = ContextCompat.checkSelfPermission(getActivity(),
+                        Manifest.permission.READ_EXTERNAL_STORAGE);
+
+                if (permissionReadStorage == PackageManager.PERMISSION_GRANTED) {
+                    importButtonLogic();
+                } else {
+                    requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_PERMISSION_REQUEST);
+                }
             }
         });
         backupConfigButton.setOnClickListener(view -> {
@@ -206,6 +219,66 @@ public class BackupsFragment extends WBFragment implements BackupProviderChangeL
         remoteBackupsDataCache.clearGetBackupsResults();
 
         updateViewsForProvider(newProvider);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == READ_PERMISSION_REQUEST) {
+
+            // If request is cancelled, the result arrays are empty.
+            if (grantResults.length > 0) {
+                if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                    if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                        alertAboutPermissions(); //user pressed deny and allowed continuous asking
+                    } else {
+                        alertChangePermissions(getContext()); //user pressed deny and marked never ask again
+                    }
+                } else {
+                    importButtonLogic();
+                }
+            }
+        }
+    }
+
+    private void alertAboutPermissions() {
+        final AlertDialog.Builder dlgAlert = new AlertDialog.Builder(getActivity());
+        dlgAlert.setCancelable(false)
+                .setIcon(R.mipmap.ic_launcher)
+                .setTitle("Storage Permission Required")
+                .setMessage("Storage permission must be granted to import a backup file from your device.")
+                .setNeutralButton("OK", null).show();
+    }
+
+    private void alertChangePermissions(final Context context) {
+        final AlertDialog.Builder dlgAlert = new AlertDialog.Builder(context);
+        dlgAlert.setCancelable(false)
+                .setIcon(R.drawable.ic_error_outline_24dp)
+                .setTitle("Storage Permission Required")
+                .setMessage("Importing a backup file cannot be done because the storage permission" +
+                        " has been denied. Would you like to approve it in the app settings?")
+                .setNegativeButton("NOT NOW", null)
+                .setPositiveButton("YES", (dialogInterface, i) -> {
+                    final Intent intent = new Intent();
+                    intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    intent.addCategory(Intent.CATEGORY_DEFAULT);
+                    intent.setData(Uri.parse("package:" + context.getPackageName()));
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+                    context.startActivity(intent);
+                }).show();
+    }
+
+    private void importButtonLogic() {
+        final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("*/*");
+        try {
+            startActivityForResult(Intent.createChooser(intent, getString(R.string.import_string)), IMPORT_SMR_REQUEST_CODE);
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(getContext(), getString(R.string.error_no_file_intent_dialog_title), Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void updateViewsForProvider(@NonNull SyncProvider syncProvider) {

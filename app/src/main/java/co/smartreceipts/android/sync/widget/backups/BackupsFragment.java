@@ -83,6 +83,7 @@ public class BackupsFragment extends WBFragment implements BackupProviderChangeL
     private CheckBox wifiOnlyCheckbox;
     private View existingBackupsSection;
     private RecyclerView recyclerView;
+    private Uri uri;
 
     @Override
     public void onAttach(Context context) {
@@ -118,17 +119,13 @@ public class BackupsFragment extends WBFragment implements BackupProviderChangeL
 
         exportButton.setOnClickListener(view -> navigationHandler.showDialog(new ExportBackupDialogFragment()));
         importButton.setOnClickListener(view -> {
-
-            // ask permission first
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                int permissionReadStorage = ContextCompat.checkSelfPermission(getActivity(),
-                        Manifest.permission.READ_EXTERNAL_STORAGE);
-
-                if (permissionReadStorage == PackageManager.PERMISSION_GRANTED) {
-                    importButtonLogic();
-                } else {
-                    requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_PERMISSION_REQUEST);
-                }
+            final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.setType("*/*");
+            try {
+                startActivityForResult(Intent.createChooser(intent, getString(R.string.import_string)), IMPORT_SMR_REQUEST_CODE);
+            } catch (android.content.ActivityNotFoundException ex) {
+                Toast.makeText(getContext(), getString(R.string.error_no_file_intent_dialog_title), Toast.LENGTH_SHORT).show();
             }
         });
         backupConfigButton.setOnClickListener(view -> {
@@ -188,7 +185,20 @@ public class BackupsFragment extends WBFragment implements BackupProviderChangeL
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == IMPORT_SMR_REQUEST_CODE) {
                 if (data != null) {
-                    navigationHandler.showDialog(ImportLocalBackupDialogFragment.newInstance(data.getData()));
+                    uri = data.getData();
+                    if (uri.getScheme().equals("file")) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            int permissionReadStorage = ContextCompat.checkSelfPermission(getActivity(),
+                                    Manifest.permission.READ_EXTERNAL_STORAGE);
+                            if (permissionReadStorage == PackageManager.PERMISSION_GRANTED) {
+                                navigationHandler.showDialog(ImportLocalBackupDialogFragment.newInstance(uri));
+                            } else {
+                                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_PERMISSION_REQUEST);
+                            }
+                        }
+                    } else {
+                        navigationHandler.showDialog(ImportLocalBackupDialogFragment.newInstance(uri));
+                    }
                 }
             }
         }
@@ -235,7 +245,7 @@ public class BackupsFragment extends WBFragment implements BackupProviderChangeL
                         alertChangePermissions(getContext()); //user pressed deny and marked never ask again
                     }
                 } else {
-                    importButtonLogic();
+                    navigationHandler.showDialog(ImportLocalBackupDialogFragment.newInstance(uri));
                 }
             }
         }
@@ -245,20 +255,19 @@ public class BackupsFragment extends WBFragment implements BackupProviderChangeL
         final AlertDialog.Builder dlgAlert = new AlertDialog.Builder(getActivity());
         dlgAlert.setCancelable(false)
                 .setIcon(R.mipmap.ic_launcher)
-                .setTitle("Storage Permission Required")
-                .setMessage("Storage permission must be granted to import a backup file from your device.")
-                .setNeutralButton("OK", null).show();
+                .setTitle(getString(R.string.storage_permission_required))
+                .setMessage(getString(R.string.permission_must_be_granted))
+                .setNeutralButton(getString(R.string.ok), null).show();
     }
 
     private void alertChangePermissions(final Context context) {
         final AlertDialog.Builder dlgAlert = new AlertDialog.Builder(context);
         dlgAlert.setCancelable(false)
                 .setIcon(R.drawable.ic_error_outline_24dp)
-                .setTitle("Storage Permission Required")
-                .setMessage("Importing a backup file cannot be done because the storage permission" +
-                        " has been denied. Would you like to approve it in the app settings?")
-                .setNegativeButton("NOT NOW", null)
-                .setPositiveButton("YES", (dialogInterface, i) -> {
+                .setTitle(getString(R.string.storage_permission_required))
+                .setMessage(getString(R.string.approve_permission))
+                .setNegativeButton(getString(R.string.no), null)
+                .setPositiveButton(getString(R.string.yes), (dialogInterface, i) -> {
                     final Intent intent = new Intent();
                     intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                     intent.addCategory(Intent.CATEGORY_DEFAULT);
@@ -268,17 +277,6 @@ public class BackupsFragment extends WBFragment implements BackupProviderChangeL
                     intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
                     context.startActivity(intent);
                 }).show();
-    }
-
-    private void importButtonLogic() {
-        final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("*/*");
-        try {
-            startActivityForResult(Intent.createChooser(intent, getString(R.string.import_string)), IMPORT_SMR_REQUEST_CODE);
-        } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(getContext(), getString(R.string.error_no_file_intent_dialog_title), Toast.LENGTH_SHORT).show();
-        }
     }
 
     public void updateViewsForProvider(@NonNull SyncProvider syncProvider) {

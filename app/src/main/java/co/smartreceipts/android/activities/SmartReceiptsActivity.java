@@ -134,8 +134,8 @@ public class SmartReceiptsActivity extends AppCompatActivity implements HasAndro
         compositeDisposable.add(purchaseManager.getAllAvailablePurchaseSkus()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(inAppPurchases -> {
-                    Logger.info(this, "The following purchases are available: {}", availablePurchases);
                     availablePurchases = inAppPurchases;
+                    Logger.info(this, "The following purchases are available: {}", availablePurchases);
                     invalidateOptionsMenu(); // To show the subscription option
                 }, throwable -> Logger.warn(SmartReceiptsActivity.this, "Failed to retrieve purchases for this session.")));
     }

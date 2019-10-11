@@ -54,11 +54,13 @@ public class DriveServiceHelper {
   private static final String DRIVE_SEARCH_AREA = "appDataFolder";
 
   private final Context context;
-  private final Drive mDriveService;
+  private final Drive driveService;
+  private final String token;
 
-  DriveServiceHelper(@NonNull Context context, @NonNull Drive driveService) {
+  DriveServiceHelper(@NonNull Context context, @NonNull String token, @NonNull Drive driveService) {
     this.context = Preconditions.checkNotNull(context);
-    mDriveService = Preconditions.checkNotNull(driveService);
+    this.token = Preconditions.checkNotNull(token);
+    this.driveService = Preconditions.checkNotNull(driveService);
   }
 
   /**
@@ -96,16 +98,19 @@ public class DriveServiceHelper {
       if (javaFile != null) {
         if (!TextUtils.isEmpty(mimeType)) {
           FileContent mediaContent = new FileContent(mimeType, javaFile);
-          googleFile = mDriveService.files().create(metadata, mediaContent).execute();
+          googleFile = driveService.files().create(metadata, mediaContent)
+                  .setOauthToken(token).execute();
         } else {
           final Uri uri = Uri.fromFile(javaFile);
           final String mime = UriUtils.getMimeType(uri, context.getContentResolver());
           metadata.setMimeType(mime);
           FileContent mediaContent = new FileContent(mime, javaFile);
-          googleFile = mDriveService.files().create(metadata, mediaContent).execute();
+          googleFile = driveService.files().create(metadata, mediaContent)
+                  .setOauthToken(token).execute();
         }
       } else {
-        googleFile = mDriveService.files().create(metadata).execute();
+        googleFile = driveService.files().create(metadata)
+                .setOauthToken(token).execute();
       }
 
       if (googleFile == null) {
@@ -127,25 +132,30 @@ public class DriveServiceHelper {
    */
   public Single<FileList> querySingle(String query) {
     return Single.fromCallable(() ->
-            mDriveService.files().list().setQ(query).setSpaces(DRIVE_SEARCH_AREA).setFields("*").execute());
+            driveService.files().list().setQ(query).setSpaces(DRIVE_SEARCH_AREA).setFields("*")
+                    .setOauthToken(token).execute());
   }
 
   public Observable<FileList> queryObservable(String query) {
     return Observable.fromCallable(() ->
-            mDriveService.files().list().setQ(query).setSpaces(DRIVE_SEARCH_AREA).setFields("*").execute());
+            driveService.files().list().setQ(query).setSpaces(DRIVE_SEARCH_AREA).setFields("*")
+                    .setOauthToken(token).execute());
   }
 
   public Completable deleteFile(String fileId) {
-    return Completable.fromCallable(() -> mDriveService.files().delete(fileId).execute());
+    return Completable.fromCallable(() -> driveService.files().delete(fileId)
+            .setOauthToken(token).execute());
   }
 
   public Single<FileList> getAllFilesSortedByTime() {
     return Single.fromCallable(() ->
-            mDriveService.files().list().setSpaces(DRIVE_SEARCH_AREA).setOrderBy("modifiedTime").setFields("*").execute());
+            driveService.files().list().setSpaces(DRIVE_SEARCH_AREA).setOrderBy("modifiedTime").setFields("*")
+                    .setOauthToken(token).execute());
   }
 
   public Single<java.io.File> getDriveFileAsJavaFile(String fileId, java.io.File downloadLocationFile) {
-    return Single.fromCallable(() -> mDriveService.files().get(fileId).setFields("*").executeMediaAsInputStream())
+    return Single.fromCallable(() -> driveService.files().get(fileId).setFields("*")
+            .setOauthToken(token).executeMediaAsInputStream())
             .flatMap(inputStream -> {
               FileOutputStream fileOutputStream = null;
               try {
@@ -168,19 +178,22 @@ public class DriveServiceHelper {
   }
 
   public Single<File> getFile(String fileId) {
-    return Single.fromCallable(() -> mDriveService.files().get(fileId).setFields("*").execute());
+    return Single.fromCallable(() -> driveService.files().get(fileId).setFields("*")
+            .setOauthToken(token).execute());
   }
 
   public Single<FileList> getFilesInFolder(String folderId) {
     String query = "'".concat(folderId).concat("' in parents");
     return Single.fromCallable(() ->
-            mDriveService.files().list().setQ(query).setSpaces(DRIVE_SEARCH_AREA).setFields("*").execute());
+            driveService.files().list().setQ(query).setSpaces(DRIVE_SEARCH_AREA).setFields("*")
+                    .setOauthToken(token).execute());
   }
 
   public Single<FileList> getFilesByNameInFolder(String folderId, String fileName) {
     String query = "'".concat(folderId).concat("' in parents and name = '".concat(fileName).concat("'"));
     return Single.fromCallable(() ->
-            mDriveService.files().list().setQ(query).setSpaces(DRIVE_SEARCH_AREA).setFields("*").execute());
+            driveService.files().list().setQ(query).setSpaces(DRIVE_SEARCH_AREA).setFields("*")
+                    .setOauthToken(token).execute());
   }
 
   public Single<File> updateFile(String fileId, java.io.File file) {
@@ -200,7 +213,8 @@ public class DriveServiceHelper {
                   driveFile.setMimeType(mimeType);
                   driveFile.setName(file.getName());
                   return Single.fromCallable(() ->
-                          mDriveService.files().update(fileId, driveFile, mediaContent).execute());
+                          driveService.files().update(fileId, driveFile, mediaContent)
+                                  .setOauthToken(token).execute());
               }
             });
   }

@@ -288,8 +288,16 @@ public class SmartReceiptsActivity extends AppCompatActivity implements HasAndro
 
     @Override
     public void presentIntentImportFatalError() {
-        Toast.makeText(this, R.string.toast_attachment_error, Toast.LENGTH_SHORT).show();
-        finish();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                alertAboutPermissions(); //user pressed deny and allowed continuous asking
+            } else {
+                alertChangePermissions(this); //user pressed deny and marked never ask again
+            }
+        } else {
+            Toast.makeText(this, R.string.toast_attachment_error, Toast.LENGTH_SHORT).show();
+            finish();
+        }
     }
 
     private void alertAboutPermissions() {

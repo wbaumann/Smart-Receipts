@@ -28,6 +28,7 @@ import co.smartreceipts.android.R;
 import co.smartreceipts.android.activities.NavigationHandler;
 import co.smartreceipts.android.fragments.SelectAutomaticBackupProviderDialogFragment;
 import co.smartreceipts.android.fragments.WBFragment;
+import co.smartreceipts.android.imports.intents.widget.info.IntentImportInformationPresenter;
 import co.smartreceipts.android.persistence.PersistenceManager;
 import co.smartreceipts.android.purchases.PurchaseManager;
 import co.smartreceipts.android.purchases.model.InAppPurchase;
@@ -46,7 +47,6 @@ import io.reactivex.disposables.CompositeDisposable;
 public class BackupsFragment extends WBFragment implements BackupProviderChangeListener {
 
     private static final int IMPORT_SMR_REQUEST_CODE = 50;
-    private static final int READ_PERMISSION_REQUEST = 1;
 
     @Inject
     PersistenceManager persistenceManager;
@@ -60,6 +60,8 @@ public class BackupsFragment extends WBFragment implements BackupProviderChangeL
     PurchaseManager purchaseManager;
     @Inject
     NavigationHandler navigationHandler;
+    @Inject
+    IntentImportInformationPresenter intentImportInformationPresenter;
 
     private RemoteBackupsDataCache remoteBackupsDataCache;
     private CompositeDisposable compositeDisposable;
@@ -75,7 +77,6 @@ public class BackupsFragment extends WBFragment implements BackupProviderChangeL
     private CheckBox wifiOnlyCheckbox;
     private View existingBackupsSection;
     private RecyclerView recyclerView;
-    private Uri uri;
 
     @Override
     public void onAttach(Context context) {
@@ -174,26 +175,18 @@ public class BackupsFragment extends WBFragment implements BackupProviderChangeL
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == IMPORT_SMR_REQUEST_CODE) {
-                if (data != null) {
-                    uri = data.getData();
-                    if (uri.getScheme().equals("file")) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            int permissionReadStorage = ContextCompat.checkSelfPermission(getActivity(),
-                                    Manifest.permission.READ_EXTERNAL_STORAGE);
-                            if (permissionReadStorage == PackageManager.PERMISSION_GRANTED) {
-                                navigationHandler.showDialog(ImportLocalBackupDialogFragment.newInstance(uri));
-                            } else {
-                                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_PERMISSION_REQUEST);
-                            }
-                        }
-                    } else {
-                        navigationHandler.showDialog(ImportLocalBackupDialogFragment.newInstance(uri));
-                    }
-                }
-            }
+        if (data != null) {
+            data.setAction(Intent.ACTION_VIEW);
+            getActivity().setIntent(data);
+            intentImportInformationPresenter.subscribe();
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        Logger.info(this, "onDestroy");
+        intentImportInformationPresenter.unsubscribe();
+        super.onDestroy();
     }
 
     @Override

@@ -1,24 +1,16 @@
 package co.smartreceipts.android.sync.widget.backups;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 
-import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -229,54 +221,6 @@ public class BackupsFragment extends WBFragment implements BackupProviderChangeL
         remoteBackupsDataCache.clearGetBackupsResults();
 
         updateViewsForProvider(newProvider);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == READ_PERMISSION_REQUEST) {
-
-            // If request is cancelled, the result arrays are empty.
-            if (grantResults.length > 0) {
-                if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                    if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                        alertAboutPermissions(); //user pressed deny and allowed continuous asking
-                    } else {
-                        alertChangePermissions(getContext()); //user pressed deny and marked never ask again
-                    }
-                } else {
-                    navigationHandler.showDialog(ImportLocalBackupDialogFragment.newInstance(uri));
-                }
-            }
-        }
-    }
-
-    private void alertAboutPermissions() {
-        final AlertDialog.Builder dlgAlert = new AlertDialog.Builder(getActivity());
-        dlgAlert.setCancelable(false)
-                .setIcon(R.mipmap.ic_launcher)
-                .setTitle(getString(R.string.storage_permission_required))
-                .setMessage(getString(R.string.permission_must_be_granted))
-                .setNeutralButton(getString(R.string.ok), null).show();
-    }
-
-    private void alertChangePermissions(final Context context) {
-        final AlertDialog.Builder dlgAlert = new AlertDialog.Builder(context);
-        dlgAlert.setCancelable(false)
-                .setIcon(R.drawable.ic_error_outline_24dp)
-                .setTitle(getString(R.string.storage_permission_required))
-                .setMessage(getString(R.string.approve_permission))
-                .setNegativeButton(getString(R.string.no), null)
-                .setPositiveButton(getString(R.string.yes), (dialogInterface, i) -> {
-                    final Intent intent = new Intent();
-                    intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                    intent.addCategory(Intent.CATEGORY_DEFAULT);
-                    intent.setData(Uri.parse("package:" + context.getPackageName()));
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-                    context.startActivity(intent);
-                }).show();
     }
 
     public void updateViewsForProvider(@NonNull SyncProvider syncProvider) {

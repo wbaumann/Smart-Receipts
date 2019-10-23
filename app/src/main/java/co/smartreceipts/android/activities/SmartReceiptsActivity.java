@@ -26,6 +26,7 @@ import co.smartreceipts.android.analytics.events.DataPoint;
 import co.smartreceipts.android.analytics.events.DefaultDataPointEvent;
 import co.smartreceipts.android.analytics.events.Events;
 import co.smartreceipts.android.config.ConfigurationManager;
+import co.smartreceipts.android.fragments.PermissionAlertDialogFragment;
 import co.smartreceipts.android.imports.intents.model.FileType;
 import co.smartreceipts.android.imports.intents.widget.IntentImportProvider;
 import co.smartreceipts.android.imports.intents.widget.info.IntentImportInformationPresenter;
@@ -289,42 +290,15 @@ public class SmartReceiptsActivity extends AppCompatActivity implements HasAndro
     @Override
     public void presentIntentImportFatalError() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                alertAboutPermissions(); //user pressed deny and allowed continuous asking
-            } else {
-                alertChangePermissions(this); //user pressed deny and marked never ask again
-            }
+            Bundle args = new Bundle();
+            args.putBoolean("shouldShowRationale", shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE));
+            PermissionAlertDialogFragment permissionDialogFragment = PermissionAlertDialogFragment.newInstance();
+            permissionDialogFragment.setArguments(args);
+            navigationHandler.showDialog(permissionDialogFragment);
         } else {
             Toast.makeText(this, R.string.toast_attachment_error, Toast.LENGTH_SHORT).show();
             finish();
         }
     }
 
-    private void alertAboutPermissions() {
-        final AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
-        dlgAlert.setCancelable(false)
-                .setIcon(R.mipmap.ic_launcher)
-                .setTitle(getString(R.string.storage_permission_required))
-                .setMessage(getString(R.string.permission_must_be_granted))
-                .setNeutralButton(getString(R.string.ok), null).show();
-    }
-
-    private void alertChangePermissions(final Context context) {
-        final AlertDialog.Builder dlgAlert = new AlertDialog.Builder(context);
-        dlgAlert.setCancelable(false)
-                .setIcon(R.drawable.ic_error_outline_24dp)
-                .setTitle(getString(R.string.storage_permission_required))
-                .setMessage(getString(R.string.approve_permission))
-                .setNegativeButton(getString(R.string.no), null)
-                .setPositiveButton(getString(R.string.yes), (dialogInterface, i) -> {
-                    final Intent intent = new Intent();
-                    intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                    intent.addCategory(Intent.CATEGORY_DEFAULT);
-                    intent.setData(Uri.parse("package:" + context.getPackageName()));
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-                    context.startActivity(intent);
-                }).show();
-    }
 }

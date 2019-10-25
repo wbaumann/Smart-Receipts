@@ -18,7 +18,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.github.clans.fab.FloatingActionMenu;
 import com.google.common.base.Preconditions;
-import com.jakewharton.rxbinding2.view.RxView;
+import com.jakewharton.rxbinding3.view.RxView;
 import com.squareup.picasso.Picasso;
 import com.tapadoo.alerter.Alert;
 import com.tapadoo.alerter.Alerter;
@@ -68,6 +68,7 @@ import co.smartreceipts.android.widget.model.UiIndicator;
 import co.smartreceipts.android.widget.rxbinding2.RxFloatingActionMenu;
 import dagger.android.support.AndroidSupportInjection;
 import io.reactivex.Observable;
+import kotlin.Unit;
 import wb.android.flex.Flex;
 
 public class ReceiptsListFragment extends ReceiptsFragment implements ReceiptsListView, ReceiptTableEventsListener, ReceiptCreateActionView,
@@ -594,19 +595,19 @@ public class ReceiptsListFragment extends ReceiptsFragment implements ReceiptsLi
 
     @NonNull
     @Override
-    public Observable<Object> getCreateNewReceiptFromCameraButtonClicks() {
+    public Observable<Unit> getCreateNewReceiptFromCameraButtonClicks() {
         return RxView.clicks(receiptActionCameraButton);
     }
 
     @NonNull
     @Override
-    public Observable<Object> getCreateNewReceiptFromImportedFileButtonClicks() {
+    public Observable<Unit> getCreateNewReceiptFromImportedFileButtonClicks() {
         return RxView.clicks(receiptActionImportButton);
     }
 
     @NonNull
     @Override
-    public Observable<Object> getCreateNewReceiptFromPlainTextButtonClicks() {
+    public Observable<Unit> getCreateNewReceiptFromPlainTextButtonClicks() {
         return RxView.clicks(receiptActionTextButton);
     }
 

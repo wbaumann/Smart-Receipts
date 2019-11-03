@@ -1,18 +1,14 @@
 package co.smartreceipts.android.activities;
 
-import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Set;
@@ -290,11 +286,7 @@ public class SmartReceiptsActivity extends AppCompatActivity implements HasAndro
     @Override
     public void presentIntentImportFatalError() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Bundle args = new Bundle();
-            args.putBoolean("shouldShowRationale", shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE));
-            PermissionAlertDialogFragment permissionDialogFragment = PermissionAlertDialogFragment.newInstance();
-            permissionDialogFragment.setArguments(args);
-            navigationHandler.showDialog(permissionDialogFragment);
+            navigationHandler.showDialog(PermissionAlertDialogFragment.newInstance(this));
         } else {
             Toast.makeText(this, R.string.toast_attachment_error, Toast.LENGTH_SHORT).show();
             finish();

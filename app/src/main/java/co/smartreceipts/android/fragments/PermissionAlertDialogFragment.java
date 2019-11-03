@@ -1,5 +1,7 @@
 package co.smartreceipts.android.fragments;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
@@ -8,6 +10,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
 import co.smartreceipts.android.R;
@@ -17,9 +20,14 @@ import co.smartreceipts.android.R;
  */
 public class PermissionAlertDialogFragment extends DialogFragment {
 
+    @SuppressLint("NewApi")
     @NonNull
-    public static PermissionAlertDialogFragment newInstance() {
-        return new PermissionAlertDialogFragment();
+    public static PermissionAlertDialogFragment newInstance(@NonNull AppCompatActivity activity) {
+        final PermissionAlertDialogFragment permissionDialogFragment = new PermissionAlertDialogFragment();
+        final Bundle args = new Bundle();
+        args.putBoolean("shouldShowRationale", activity.shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE));
+        permissionDialogFragment.setArguments(args);
+        return permissionDialogFragment;
     }
 
     @NonNull
@@ -32,7 +40,7 @@ public class PermissionAlertDialogFragment extends DialogFragment {
         if (getArguments().getBoolean("shouldShowRationale")) {
             builder.setIcon(R.mipmap.ic_launcher)
                     .setMessage(getString(R.string.permission_must_be_granted))
-                    .setNeutralButton(getString(R.string.ok), null);
+                    .setPositiveButton(getString(R.string.ok), null);
         } else {
             builder.setIcon(R.drawable.ic_error_outline_24dp)
                     .setMessage(getString(R.string.approve_permission))

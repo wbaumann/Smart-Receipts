@@ -60,6 +60,7 @@ public class ReceiptsTable extends TripForeignKeyAbstractSqlTable<Receipt> {
     public static final String COLUMN_PAYMENT_METHOD_ID = "paymentMethodKey";
     public static final String COLUMN_NOTFULLPAGEIMAGE = "fullpageimage";
     public static final String COLUMN_PROCESSING_STATUS = "receipt_processing_status";
+    public static final String COLUMN_IMG_HASH = "img_hash";
     public static final String COLUMN_EXTRA_EDITTEXT_1 = "extra_edittext_1";
     public static final String COLUMN_EXTRA_EDITTEXT_2 = "extra_edittext_2";
     public static final String COLUMN_EXTRA_EDITTEXT_3 = "extra_edittext_3";
@@ -103,6 +104,7 @@ public class ReceiptsTable extends TripForeignKeyAbstractSqlTable<Receipt> {
                 + ReceiptsTable.COLUMN_REIMBURSABLE + " BOOLEAN DEFAULT 1, "
                 + ReceiptsTable.COLUMN_NOTFULLPAGEIMAGE + " BOOLEAN DEFAULT 1, "
                 + ReceiptsTable.COLUMN_PROCESSING_STATUS + " TEXT, "
+                + ReceiptsTable.COLUMN_IMG_HASH + " TEXT, "
                 + ReceiptsTable.COLUMN_EXTRA_EDITTEXT_1 + " TEXT, "
                 + ReceiptsTable.COLUMN_EXTRA_EDITTEXT_2 + " TEXT, "
                 + ReceiptsTable.COLUMN_EXTRA_EDITTEXT_3 + " TEXT, "
@@ -198,7 +200,6 @@ public class ReceiptsTable extends TripForeignKeyAbstractSqlTable<Receipt> {
 
             db.execSQL(alterReceipts);
         }
-
         if (oldVersion <= 11) { // Added trips filters, payment methods, and mileage table
             final String alterReceipts = "ALTER TABLE " + ReceiptsTable.TABLE_NAME + " ADD " + ReceiptsTable.COLUMN_PAYMENT_METHOD_ID + " INTEGER REFERENCES " + PaymentMethodsTable.TABLE_NAME + " ON DELETE NO ACTION";
 
@@ -256,6 +257,7 @@ public class ReceiptsTable extends TripForeignKeyAbstractSqlTable<Receipt> {
                     + ReceiptsTable.COLUMN_REIMBURSABLE + " BOOLEAN DEFAULT 1, "
                     + ReceiptsTable.COLUMN_NOTFULLPAGEIMAGE + " BOOLEAN DEFAULT 1, "
                     + ReceiptsTable.COLUMN_PROCESSING_STATUS + " TEXT, "
+                    + ReceiptsTable.COLUMN_IMG_HASH + " TEXT, "
                     + ReceiptsTable.COLUMN_EXTRA_EDITTEXT_1 + " TEXT, "
                     + ReceiptsTable.COLUMN_EXTRA_EDITTEXT_2 + " TEXT, "
                     + ReceiptsTable.COLUMN_EXTRA_EDITTEXT_3 + " TEXT, "
@@ -275,15 +277,14 @@ public class ReceiptsTable extends TripForeignKeyAbstractSqlTable<Receipt> {
                     ReceiptsTable.COLUMN_PRICE, ReceiptsTable.COLUMN_TAX, ReceiptsTable.COLUMN_EXCHANGE_RATE,
                     ReceiptsTable.COLUMN_PAYMENT_METHOD_ID, ReceiptsTable.COLUMN_REIMBURSABLE,
                     ReceiptsTable.COLUMN_NOTFULLPAGEIMAGE, ReceiptsTable.COLUMN_PROCESSING_STATUS,
-                    ReceiptsTable.COLUMN_EXTRA_EDITTEXT_1, ReceiptsTable.COLUMN_EXTRA_EDITTEXT_2,
-                    ReceiptsTable.COLUMN_EXTRA_EDITTEXT_3, AbstractSqlTable.COLUMN_DRIVE_SYNC_ID,
-                    AbstractSqlTable.COLUMN_DRIVE_IS_SYNCED, AbstractSqlTable.COLUMN_DRIVE_MARKED_FOR_DELETION,
-                    AbstractSqlTable.COLUMN_LAST_LOCAL_MODIFICATION_TIME});
+                    ReceiptsTable.COLUMN_IMG_HASH, ReceiptsTable.COLUMN_EXTRA_EDITTEXT_1,
+                    ReceiptsTable.COLUMN_EXTRA_EDITTEXT_2, ReceiptsTable.COLUMN_EXTRA_EDITTEXT_3,
+                    AbstractSqlTable.COLUMN_DRIVE_SYNC_ID, AbstractSqlTable.COLUMN_DRIVE_IS_SYNCED,
+                    AbstractSqlTable.COLUMN_DRIVE_MARKED_FOR_DELETION, AbstractSqlTable.COLUMN_LAST_LOCAL_MODIFICATION_TIME});
 
             moveDataToCopyTableAndRename(db, finalColumns);
 
         }
-
         if (oldVersion <= 18) { // v18 => 19 Changed Trip foreign key from Name to Id, added UUID column
 
             // adding parent trip id as a foreign key
@@ -305,7 +306,7 @@ public class ReceiptsTable extends TripForeignKeyAbstractSqlTable<Receipt> {
                     COLUMN_ID, COLUMN_PATH, COLUMN_PARENT_TRIP_ID, COLUMN_NAME, COLUMN_CATEGORY_ID, COLUMN_DATE,
                     COLUMN_TIMEZONE, COLUMN_COMMENT, COLUMN_ISO4217, COLUMN_PRICE, COLUMN_TAX, COLUMN_EXCHANGE_RATE,
                     COLUMN_PAYMENT_METHOD_ID, COLUMN_REIMBURSABLE, COLUMN_NOTFULLPAGEIMAGE, COLUMN_PROCESSING_STATUS,
-                    COLUMN_EXTRA_EDITTEXT_1, COLUMN_EXTRA_EDITTEXT_2, COLUMN_EXTRA_EDITTEXT_3,
+                    COLUMN_IMG_HASH, COLUMN_EXTRA_EDITTEXT_1, COLUMN_EXTRA_EDITTEXT_2, COLUMN_EXTRA_EDITTEXT_3,
                     AbstractSqlTable.COLUMN_DRIVE_SYNC_ID, AbstractSqlTable.COLUMN_DRIVE_IS_SYNCED,
                     AbstractSqlTable.COLUMN_DRIVE_MARKED_FOR_DELETION, AbstractSqlTable.COLUMN_LAST_LOCAL_MODIFICATION_TIME});
 
@@ -326,6 +327,7 @@ public class ReceiptsTable extends TripForeignKeyAbstractSqlTable<Receipt> {
                     + ReceiptsTable.COLUMN_REIMBURSABLE + " BOOLEAN DEFAULT 1, "
                     + ReceiptsTable.COLUMN_NOTFULLPAGEIMAGE + " BOOLEAN DEFAULT 1, "
                     + ReceiptsTable.COLUMN_PROCESSING_STATUS + " TEXT, "
+                    + ReceiptsTable.COLUMN_IMG_HASH + " TEXT, "
                     + ReceiptsTable.COLUMN_EXTRA_EDITTEXT_1 + " TEXT, "
                     + ReceiptsTable.COLUMN_EXTRA_EDITTEXT_2 + " TEXT, "
                     + ReceiptsTable.COLUMN_EXTRA_EDITTEXT_3 + " TEXT, "
@@ -342,6 +344,13 @@ public class ReceiptsTable extends TripForeignKeyAbstractSqlTable<Receipt> {
 
             // adding new UUID column
             onUpgradeToAddUUID(db, oldVersion);
+        }
+        if (oldVersion <= 20) {
+            final String alterReceipts = "ALTER TABLE " + ReceiptsTable.TABLE_NAME + " ADD " + ReceiptsTable.COLUMN_IMG_HASH + " TEXT";
+
+            Logger.debug(this, alterReceipts);
+
+            db.execSQL(alterReceipts);
         }
     }
 

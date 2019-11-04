@@ -84,6 +84,7 @@ public final class ReceiptDatabaseAdapter implements SelectionBackedDatabaseAdap
         final int extra_editText_2_Index = cursor.getColumnIndex(ReceiptsTable.COLUMN_EXTRA_EDITTEXT_2);
         final int extra_editText_3_Index = cursor.getColumnIndex(ReceiptsTable.COLUMN_EXTRA_EDITTEXT_3);
         final int orderIdIndex = cursor.getColumnIndex(ReceiptsTable.COLUMN_CUSTOM_ORDER_ID);
+        final int imgHashIndex = cursor.getColumnIndex(ReceiptsTable.COLUMN_IMG_HASH);
 
         final int id = cursor.getInt(idIndex);
         final UUID uuid = UUID.fromString(cursor.getString(uuidIndex));
@@ -105,6 +106,7 @@ public final class ReceiptDatabaseAdapter implements SelectionBackedDatabaseAdap
         final String currency = cursor.getString(currencyIndex);
         final boolean fullPage = !(cursor.getInt(fullPageIndex) > 0);
         final int paymentMethodId = cursor.getInt(paymentMethodIdIndex);
+        final String imgHash = (imgHashIndex > 0) ? cursor.getString(imgHashIndex) : "";
         final String extra_editText_1 = cursor.getString(extra_editText_1_Index);
         final String extra_editText_2 = cursor.getString(extra_editText_2_Index);
         final String extra_editText_3 = cursor.getString(extra_editText_3_Index);
@@ -145,6 +147,7 @@ public final class ReceiptDatabaseAdapter implements SelectionBackedDatabaseAdap
                 .setCurrency(currency)
                 .setIsFullPage(fullPage)
                 .setIndex(index)
+                .setImgHash(imgHash)
                 .setExtraEditText1(extra_editText_1)
                 .setExtraEditText2(extra_editText_2)
                 .setExtraEditText3(extra_editText_3)
@@ -211,6 +214,7 @@ public final class ReceiptDatabaseAdapter implements SelectionBackedDatabaseAdap
         final File file = receipt.getFile();
         if (file != null) {
             values.put(ReceiptsTable.COLUMN_PATH, file.getName());
+            values.put(ReceiptsTable.COLUMN_IMG_HASH, receipt.getImgHash());
         } else {
             values.put(ReceiptsTable.COLUMN_PATH, (String) null);
         }

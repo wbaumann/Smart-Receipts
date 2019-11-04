@@ -81,6 +81,7 @@ class Receipt constructor(
      * An extra [String], which certain white-label builds might have
      */
     val extraEditText3: String?,
+    val imgHash: String?,
     override val syncState: SyncState,
     override val customOrderId: Long
 ) : Keyed, Parcelable, Priceable, Draggable<Receipt>, Syncable {

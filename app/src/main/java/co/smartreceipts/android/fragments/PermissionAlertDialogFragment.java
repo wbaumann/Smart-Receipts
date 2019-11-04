@@ -6,10 +6,12 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
@@ -20,7 +22,7 @@ import co.smartreceipts.android.R;
  */
 public class PermissionAlertDialogFragment extends DialogFragment {
 
-    @SuppressLint("NewApi")
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @NonNull
     public static PermissionAlertDialogFragment newInstance(@NonNull AppCompatActivity activity) {
         final PermissionAlertDialogFragment permissionDialogFragment = new PermissionAlertDialogFragment();

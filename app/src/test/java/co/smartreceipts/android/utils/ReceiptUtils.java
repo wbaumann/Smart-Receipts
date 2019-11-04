@@ -45,6 +45,7 @@ public class ReceiptUtils {
         public static final double TAX = 0.37d;
         public static final String DECIMAL_FORMATTED_TAX = "0.37";
         public static final String CURRENCY_FORMATTED_TAX = "$0.37";
+        public static final String IMAGE_HASH = "";
         public static final TimeZone TIMEZONE = TimeZone.getDefault();
         public static final String TIMEZONE_CODE = TIMEZONE.getID();
     }
@@ -65,6 +66,7 @@ public class ReceiptUtils {
         factory.setIsFullPage(Constants.IS_FULLPAGE);
         factory.setFile(img);
         factory.setIndex(Constants.INDEX);
+        factory.setImgHash(Constants.IMAGE_HASH);
         factory.setExtraEditText1(Constants.EXTRA1);
         factory.setExtraEditText2(Constants.EXTRA2);
         factory.setExtraEditText3(Constants.EXTRA3);
@@ -124,6 +126,7 @@ public class ReceiptUtils {
         Assert.assertEquals(receipt1.getTax(), receipt2.getTax());
         Assert.assertEquals(receipt1.getTimeZone(), receipt2.getTimeZone());
         Assert.assertEquals(receipt1.getPaymentMethod(), receipt2.getPaymentMethod());
+        Assert.assertEquals(receipt1.getImgHash(), receipt2.getImgHash());
     }
 
     /**

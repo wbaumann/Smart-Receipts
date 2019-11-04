@@ -1,5 +1,9 @@
 package co.smartreceipts.android.receipts.editor;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.security.MessageDigest;
 import java.sql.Date;
 import java.util.TimeZone;
 
@@ -149,6 +153,10 @@ public class ReceiptCreateEditFragmentPresenter {
                 .setExtraEditText2(extraText2)
                 .setExtraEditText3(extraText3);
                 // Note: We don't set the custom_order_id. This happens in the ReceiptTableActionAlterations
+        
+        if (fragment.shouldGenerateHash()) {
+            builderFactory.setImgHash(hashImgFile(fragment.getFile()));
+        }
 
         if (receipt == null) {
             receiptTableController.insert(builderFactory.setFile(fragment.getFile()).build(), new DatabaseOperationMetadata());
@@ -165,5 +173,30 @@ public class ReceiptCreateEditFragmentPresenter {
             }
         }
         return false;
+    }
+
+    private String hashImgFile(File file) {
+        try (InputStream inputStream = new FileInputStream(file)) {
+            byte[] buffer = new byte[1024];
+            MessageDigest digest = MessageDigest.getInstance("MD5");
+            int numRead = 0;
+            while (numRead != -1) {
+                numRead = inputStream.read(buffer);
+                if (numRead > 0)
+                    digest.update(buffer, 0, numRead);
+            }
+            byte[] md5Bytes = digest.digest();
+            return convertHashToString(md5Bytes);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private String convertHashToString(byte[] md5Bytes) {
+        StringBuilder returnVal = new StringBuilder();
+        for (byte md5Byte : md5Bytes) {
+            returnVal.append(Integer.toString((md5Byte & 0xff) + 0x100, 16).substring(1));
+        }
+        return returnVal.toString().toUpperCase();
     }
 }

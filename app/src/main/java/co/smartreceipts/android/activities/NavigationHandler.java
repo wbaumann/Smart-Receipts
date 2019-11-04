@@ -83,11 +83,11 @@ public class NavigationHandler<T extends FragmentActivity> {
         }
     }
 
-    public void navigateToCreateNewReceiptFragment(@NonNull Trip trip, @Nullable File file, @Nullable OcrResponse ocrResponse) {
+    public void navigateToCreateNewReceiptFragment(@NonNull Trip trip, @Nullable File file, @Nullable OcrResponse ocrResponse, Boolean shouldGenerateHash) {
         if (isDualPane) {
-            replaceFragmentWithAnimation(fragmentProvider.newCreateReceiptFragment(trip, file, ocrResponse), R.id.content_details, R.anim.enter_from_bottom, DO_NOT_ANIM);
+            replaceFragmentWithAnimation(fragmentProvider.newCreateReceiptFragment(trip, file, ocrResponse, shouldGenerateHash), R.id.content_details, R.anim.enter_from_bottom, DO_NOT_ANIM);
         } else {
-            replaceFragmentWithAnimation(fragmentProvider.newCreateReceiptFragment(trip, file, ocrResponse), R.id.content_list, R.anim.enter_from_bottom, DO_NOT_ANIM);
+            replaceFragmentWithAnimation(fragmentProvider.newCreateReceiptFragment(trip, file, ocrResponse, shouldGenerateHash), R.id.content_list, R.anim.enter_from_bottom, DO_NOT_ANIM);
         }
     }
 

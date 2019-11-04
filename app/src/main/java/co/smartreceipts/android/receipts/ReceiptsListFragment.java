@@ -310,8 +310,8 @@ public class ReceiptsListFragment extends ReceiptsFragment implements ReceiptsLi
     }
 
     @Override
-    public void navigateToCreateReceipt(@Nullable File file, @Nullable OcrResponse ocrResponse) {
-        navigationHandler.navigateToCreateNewReceiptFragment(trip, file, ocrResponse);
+    public void navigateToCreateReceipt(@Nullable File file, @Nullable OcrResponse ocrResponse, @Nullable Boolean shouldGenerateHash) {
+        navigationHandler.navigateToCreateNewReceiptFragment(trip, file, ocrResponse, shouldGenerateHash);
     }
 
     @Override
@@ -577,7 +577,7 @@ public class ReceiptsListFragment extends ReceiptsFragment implements ReceiptsLi
     @Override
     public void createNewReceiptViaPlainText() {
         scrollToStart();
-        navigationHandler.navigateToCreateNewReceiptFragment(trip, null, null);
+        navigationHandler.navigateToCreateNewReceiptFragment(trip, null, null, false);
     }
 
     @Override

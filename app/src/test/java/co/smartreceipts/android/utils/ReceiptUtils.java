@@ -45,7 +45,7 @@ public class ReceiptUtils {
         public static final double TAX = 0.37d;
         public static final String DECIMAL_FORMATTED_TAX = "0.37";
         public static final String CURRENCY_FORMATTED_TAX = "$0.37";
-        public static final String IMAGE_HASH = "";
+        public static final String IMAGE_HASH = "SHA256";
         public static final TimeZone TIMEZONE = TimeZone.getDefault();
         public static final String TIMEZONE_CODE = TIMEZONE.getID();
     }

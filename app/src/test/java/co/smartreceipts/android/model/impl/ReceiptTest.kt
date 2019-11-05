@@ -42,7 +42,7 @@ class ReceiptTest {
         private const val EXTRA1 = "extra1"
         private const val EXTRA2 = "extra2"
         private const val EXTRA3 = "extra3"
-        private const val IMG_HASH = ""
+        private const val IMG_HASH = "SHA256"
         private const val CUSTOM_ORDER: Long = 2
     }
 

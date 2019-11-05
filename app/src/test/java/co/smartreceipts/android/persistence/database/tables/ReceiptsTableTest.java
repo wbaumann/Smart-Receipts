@@ -174,7 +174,7 @@ public class ReceiptsTableTest {
         mBuilder = new ReceiptBuilderFactory();
         mBuilder.setCategory(mCategory)
                 .setFile(null)
-                .setImgHash("")
+                .setImgHash(null)
                 .setDate(System.currentTimeMillis())
                 .setTimeZone(TimeZone.getDefault())
                 .setComment("")

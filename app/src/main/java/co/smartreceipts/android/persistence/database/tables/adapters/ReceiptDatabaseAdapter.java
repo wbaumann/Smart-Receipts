@@ -106,7 +106,7 @@ public final class ReceiptDatabaseAdapter implements SelectionBackedDatabaseAdap
         final String currency = cursor.getString(currencyIndex);
         final boolean fullPage = !(cursor.getInt(fullPageIndex) > 0);
         final int paymentMethodId = cursor.getInt(paymentMethodIdIndex);
-        final String imgHash = (imgHashIndex > 0) ? cursor.getString(imgHashIndex) : "";
+        final String imgHash = (imgHashIndex > 0) ? cursor.getString(imgHashIndex) : null;
         final String extra_editText_1 = cursor.getString(extra_editText_1_Index);
         final String extra_editText_2 = cursor.getString(extra_editText_2_Index);
         final String extra_editText_3 = cursor.getString(extra_editText_3_Index);

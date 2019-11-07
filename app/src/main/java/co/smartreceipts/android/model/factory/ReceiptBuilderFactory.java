@@ -130,7 +130,7 @@ public class ReceiptBuilderFactory implements BuilderFactory<Receipt> {
         return this;
     }
 
-    public ReceiptBuilderFactory setImgHash(@NonNull String imgHash) {
+    public ReceiptBuilderFactory setImgHash(String imgHash) {
         this.imgHash = imgHash;
         return this;
     }

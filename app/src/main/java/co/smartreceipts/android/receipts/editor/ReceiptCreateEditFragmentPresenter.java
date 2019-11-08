@@ -1,9 +1,5 @@
 package co.smartreceipts.android.receipts.editor;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.security.MessageDigest;
 import java.sql.Date;
 import java.util.TimeZone;
 
@@ -171,28 +167,4 @@ public class ReceiptCreateEditFragmentPresenter {
         return false;
     }
 
-    private String hashImgFile(File file) {
-        try (InputStream inputStream = new FileInputStream(file)) {
-            byte[] buffer = new byte[1024];
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            int numRead = 0;
-            while (numRead != -1) {
-                numRead = inputStream.read(buffer);
-                if (numRead > 0)
-                    digest.update(buffer, 0, numRead);
-            }
-            byte[] hashedBytes = digest.digest();
-            return convertHashToString(hashedBytes);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    private String convertHashToString(byte[] hashedBytes) {
-        StringBuilder returnVal = new StringBuilder();
-        for (byte hashedByte : hashedBytes) {
-            returnVal.append(Integer.toString((hashedByte & 0xff) + 0x100, 16).substring(1));
-        }
-        return returnVal.toString().toUpperCase();
-    }
 }

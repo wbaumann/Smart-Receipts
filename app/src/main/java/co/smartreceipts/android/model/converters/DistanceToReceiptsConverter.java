@@ -99,7 +99,6 @@ public class DistanceToReceiptsConverter implements ModelConverter<Distance, Rec
         factory.setTrip(distance0.getTrip());
         factory.setDate(distance0.getDate());
         factory.setFile(null);
-        factory.setImgHash(null);
         factory.setIsReimbursable(true);
         factory.setTimeZone(distance0.getTimeZone());
         factory.setCategory(new CategoryBuilderFactory().setName(context.getString(R.string.distance)).build());

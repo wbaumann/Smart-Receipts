@@ -48,7 +48,6 @@ public class ReceiptBuilderFactory implements BuilderFactory<Receipt> {
     private boolean isReimbursable, isFullPage, isSelected;
     private SyncState syncState;
     private long orderId;
-    private String imgHash;
     private UUID uuid;
 
     public ReceiptBuilderFactory() {
@@ -59,7 +58,6 @@ public class ReceiptBuilderFactory implements BuilderFactory<Receipt> {
         this.id = id;
         name = "";
         comment = "";
-        imgHash = "";
         priceBuilderFactory = new PriceBuilderFactory();
         taxBuilderFactory = new PriceBuilderFactory();
         date = new Date(System.currentTimeMillis());
@@ -92,7 +90,6 @@ public class ReceiptBuilderFactory implements BuilderFactory<Receipt> {
         syncState = receipt.getSyncState();
         orderId = receipt.getCustomOrderId();
         uuid = receipt.getUuid();
-        imgHash = receipt.getImgHash();
     }
 
     public ReceiptBuilderFactory(int id, @NonNull Receipt receipt) {
@@ -127,11 +124,6 @@ public class ReceiptBuilderFactory implements BuilderFactory<Receipt> {
 
     public ReceiptBuilderFactory setComment(@NonNull String comment) {
         this.comment = comment;
-        return this;
-    }
-
-    public ReceiptBuilderFactory setImgHash(String imgHash) {
-        this.imgHash = imgHash;
         return this;
     }
 
@@ -293,7 +285,7 @@ public class ReceiptBuilderFactory implements BuilderFactory<Receipt> {
                 category == null ? new CategoryBuilderFactory().build() : category, comment,
                 priceBuilderFactory.build(), taxBuilderFactory.build(), displayableDate,
                 isReimbursable, isFullPage, isSelected, extraEditText1,
-                extraEditText2, extraEditText3, imgHash, syncState, orderId);
+                extraEditText2, extraEditText3, syncState, orderId);
     }
 
 }

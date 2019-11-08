@@ -48,8 +48,6 @@ class ReceiptsListPresenter @Inject constructor(
 
     private var importIntentMode: Boolean = false
 
-    private var shouldGenerateHash: Boolean = false
-
     override fun subscribe() {
 
         ocrStatusAlerterPresenter.subscribe()
@@ -159,13 +157,11 @@ class ReceiptsListPresenter @Inject constructor(
                     when (response.requestCode) {
                         RequestCodes.NEW_RECEIPT_IMPORT_IMAGE,
                         RequestCodes.NEW_RECEIPT_CAMERA_IMAGE -> {
-                            shouldGenerateHash = response.requestCode == RequestCodes.NEW_RECEIPT_CAMERA_IMAGE
                             if (interactor.isCropScreenEnabled()) {
                                 val requestCode = when {
                                     response.requestCode == RequestCodes.NEW_RECEIPT_IMPORT_IMAGE -> RequestCodes.NEW_RECEIPT_IMPORT_IMAGE_CROP
                                     else -> RequestCodes.NEW_RECEIPT_CAMERA_IMAGE_CROP
                                 }
-                                shouldGenerateHash = requestCode == RequestCodes.NEW_RECEIPT_CAMERA_IMAGE_CROP
                                 view.navigateToCropActivity(file, requestCode)
                             } else {
                                 performOcrScan(file)
@@ -207,7 +203,7 @@ class ReceiptsListPresenter @Inject constructor(
             interactor.lastOcrResponseStream
                 .subscribe({
                     view.present(UiIndicator.idle())
-                    view.navigateToCreateReceipt(it.first, it.second, shouldGenerateHash)
+                    view.navigateToCreateReceipt(it.first, it.second)
 
                     interactor.markLastOcrResponseAsProcessed()
                 },

@@ -26,7 +26,7 @@ interface ReceiptsListView {
     fun resetHighlightedReceipt()
 
 
-    fun navigateToCreateReceipt(file: File?, ocrResponse: OcrResponse?, shouldGenerateHash: Boolean?)
+    fun navigateToCreateReceipt(file: File?, ocrResponse: OcrResponse?)
 
     fun navigateToEditReceipt(receipt: Receipt)
 

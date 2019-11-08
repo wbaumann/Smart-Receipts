@@ -153,10 +153,6 @@ public class ReceiptCreateEditFragmentPresenter {
                 .setExtraEditText2(extraText2)
                 .setExtraEditText3(extraText3);
                 // Note: We don't set the custom_order_id. This happens in the ReceiptTableActionAlterations
-        
-        if (fragment.shouldGenerateHash()) {
-            builderFactory.setImgHash(hashImgFile(fragment.getFile()));
-        }
 
         if (receipt == null) {
             receiptTableController.insert(builderFactory.setFile(fragment.getFile()).build(), new DatabaseOperationMetadata());

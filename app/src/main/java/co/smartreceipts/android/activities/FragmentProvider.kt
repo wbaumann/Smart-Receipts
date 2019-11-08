@@ -53,13 +53,12 @@ class FragmentProvider @Inject constructor() {
      * @param file the file associated with this receipt or null if we do not have one
      * @return the new instance of this fragment
      */
-    fun newCreateReceiptFragment(trip: Trip, file: File?, ocrResponse: OcrResponse?, shouldGenerateHash: Boolean): ReceiptCreateEditFragment {
+    fun newCreateReceiptFragment(trip: Trip, file: File?, ocrResponse: OcrResponse?): ReceiptCreateEditFragment {
         val args = Bundle()
         args.putParcelable(Trip.PARCEL_KEY, trip)
         args.putParcelable(Receipt.PARCEL_KEY, null)
         args.putSerializable(ARG_FILE, file)
         args.putSerializable(ARG_OCR, ocrResponse)
-        args.putBoolean(ARG_IMG_HASH, shouldGenerateHash)
 
         return attachArguments(ReceiptCreateEditFragment.newInstance(), args)
     }

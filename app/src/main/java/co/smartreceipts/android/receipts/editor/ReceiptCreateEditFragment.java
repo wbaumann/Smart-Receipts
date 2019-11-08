@@ -127,7 +127,6 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
 
     public static final String ARG_FILE = "arg_file";
     public static final String ARG_OCR = "arg_ocr";
-    public static final String ARG_IMG_HASH = "arg_img_hash";
 
     @Inject
     Flex flex;
@@ -311,10 +310,6 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
 
     File getFile() {
         return (File) getArguments().getSerializable(ARG_FILE);
-    }
-
-    Boolean shouldGenerateHash() {
-        return getArguments().getBoolean(ARG_IMG_HASH);
     }
 
     @Nullable

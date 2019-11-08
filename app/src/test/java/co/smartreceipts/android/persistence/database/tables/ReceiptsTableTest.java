@@ -174,7 +174,6 @@ public class ReceiptsTableTest {
         mBuilder = new ReceiptBuilderFactory();
         mBuilder.setCategory(mCategory)
                 .setFile(null)
-                .setImgHash(null)
                 .setDate(System.currentTimeMillis())
                 .setTimeZone(TimeZone.getDefault())
                 .setComment("")
@@ -232,7 +231,6 @@ public class ReceiptsTableTest {
         assertTrue(creatingTable.contains("last_local_modification_time DATE"));
         assertTrue(creatingTable.contains("custom_order_id INTEGER DEFAULT 0"));
         assertTrue(creatingTable.contains("uuid TEXT"));
-        assertTrue(creatingTable.contains("img_hash TEXT"));
     }
 
     @Test
@@ -253,7 +251,6 @@ public class ReceiptsTableTest {
         verifyV14Upgrade(times(1));
         verifyV15Upgrade(times(1));
         verifyV18Upgrade(times(1));
-        verifyV20Upgrade(times(1));
     }
 
     @Test
@@ -274,7 +271,6 @@ public class ReceiptsTableTest {
         verifyV14Upgrade(times(1));
         verifyV15Upgrade(times(1));
         verifyV18Upgrade(times(1));
-        verifyV20Upgrade(times(1));
     }
 
     @Test
@@ -295,7 +291,6 @@ public class ReceiptsTableTest {
         verifyV14Upgrade(times(1));
         verifyV15Upgrade(times(1));
         verifyV18Upgrade(times(1));
-        verifyV20Upgrade(times(1));
     }
 
     @Test
@@ -316,7 +311,6 @@ public class ReceiptsTableTest {
         verifyV14Upgrade(times(1));
         verifyV15Upgrade(times(1));
         verifyV18Upgrade(times(1));
-        verifyV20Upgrade(times(1));
     }
 
     @Test
@@ -337,7 +331,6 @@ public class ReceiptsTableTest {
         verifyV14Upgrade(times(1));
         verifyV15Upgrade(times(1));
         verifyV18Upgrade(times(1));
-        verifyV20Upgrade(times(1));
     }
 
     @Test
@@ -358,7 +351,6 @@ public class ReceiptsTableTest {
         verifyV14Upgrade(times(1));
         verifyV15Upgrade(times(1));
         verifyV18Upgrade(times(1));
-        verifyV20Upgrade(times(1));
     }
 
     @Test
@@ -379,7 +371,6 @@ public class ReceiptsTableTest {
         verifyV14Upgrade(times(1));
         verifyV15Upgrade(times(1));
         verifyV18Upgrade(times(1));
-        verifyV20Upgrade(times(1));
     }
 
     @Test
@@ -400,7 +391,6 @@ public class ReceiptsTableTest {
         verifyV14Upgrade(times(1));
         verifyV15Upgrade(times(1));
         verifyV18Upgrade(times(1));
-        verifyV20Upgrade(times(1));
     }
 
     @Test
@@ -421,7 +411,6 @@ public class ReceiptsTableTest {
         verifyV14Upgrade(never());
         verifyV15Upgrade(times(1));
         verifyV18Upgrade(times(1));
-        verifyV20Upgrade(times(1));
     }
 
     @Test
@@ -442,28 +431,6 @@ public class ReceiptsTableTest {
         verifyV14Upgrade(never());
         verifyV15Upgrade(never());
         verifyV18Upgrade(times(1));
-        verifyV20Upgrade(times(1));
-    }
-
-    @Test
-    public void onUpgradeFromV20() {
-        final int oldVersion = 20;
-        final int newVersion = DatabaseHelper.DATABASE_VERSION;
-
-        final TableDefaultsCustomizer customizer = mock(TableDefaultsCustomizer.class);
-        mReceiptsTable.onUpgrade(mSQLiteDatabase, oldVersion, newVersion, customizer);
-        verifyZeroInteractions(customizer);
-        verifyV1Upgrade(never());
-        verifyV3Upgrade(never());
-        verifyV4Upgrade(never());
-        verifyV7Upgrade(never());
-        verifyV11Upgrade(never());
-        verifyV12Upgrade(never());
-        verifyV13Upgrade(never());
-        verifyV14Upgrade(never());
-        verifyV15Upgrade(never());
-        verifyV18Upgrade(never());
-        verifyV20Upgrade(times(1));
     }
 
     @Test
@@ -546,7 +513,6 @@ public class ReceiptsTableTest {
                 + ReceiptsTable.COLUMN_REIMBURSABLE + " BOOLEAN DEFAULT 1, "
                 + ReceiptsTable.COLUMN_NOTFULLPAGEIMAGE + " BOOLEAN DEFAULT 1, "
                 + ReceiptsTable.COLUMN_PROCESSING_STATUS + " TEXT, "
-                + ReceiptsTable.COLUMN_IMG_HASH + " TEXT, "
                 + ReceiptsTable.COLUMN_EXTRA_EDITTEXT_1 + " TEXT, "
                 + ReceiptsTable.COLUMN_EXTRA_EDITTEXT_2 + " TEXT, "
                 + ReceiptsTable.COLUMN_EXTRA_EDITTEXT_3 + " TEXT, "
@@ -564,10 +530,10 @@ public class ReceiptsTableTest {
                 ReceiptsTable.COLUMN_PRICE, ReceiptsTable.COLUMN_TAX, ReceiptsTable.COLUMN_EXCHANGE_RATE,
                 ReceiptsTable.COLUMN_PAYMENT_METHOD_ID, ReceiptsTable.COLUMN_REIMBURSABLE,
                 ReceiptsTable.COLUMN_NOTFULLPAGEIMAGE, ReceiptsTable.COLUMN_PROCESSING_STATUS,
-                ReceiptsTable.COLUMN_IMG_HASH, ReceiptsTable.COLUMN_EXTRA_EDITTEXT_1,
-                ReceiptsTable.COLUMN_EXTRA_EDITTEXT_2, ReceiptsTable.COLUMN_EXTRA_EDITTEXT_3,
-                AbstractSqlTable.COLUMN_DRIVE_SYNC_ID, AbstractSqlTable.COLUMN_DRIVE_IS_SYNCED,
-                AbstractSqlTable.COLUMN_DRIVE_MARKED_FOR_DELETION, AbstractSqlTable.COLUMN_LAST_LOCAL_MODIFICATION_TIME});
+                ReceiptsTable.COLUMN_EXTRA_EDITTEXT_1, ReceiptsTable.COLUMN_EXTRA_EDITTEXT_2,
+                ReceiptsTable.COLUMN_EXTRA_EDITTEXT_3, AbstractSqlTable.COLUMN_DRIVE_SYNC_ID,
+                AbstractSqlTable.COLUMN_DRIVE_IS_SYNCED, AbstractSqlTable.COLUMN_DRIVE_MARKED_FOR_DELETION,
+                AbstractSqlTable.COLUMN_LAST_LOCAL_MODIFICATION_TIME});
 
         verify(mSQLiteDatabase, atLeast(0)).execSQL("INSERT INTO " + ReceiptsTable.TABLE_NAME + "_copy" + " ( " + finalColumns + " ) "
                 + "SELECT " + finalColumns
@@ -603,7 +569,6 @@ public class ReceiptsTableTest {
                 + ReceiptsTable.COLUMN_REIMBURSABLE + " BOOLEAN DEFAULT 1, "
                 + ReceiptsTable.COLUMN_NOTFULLPAGEIMAGE + " BOOLEAN DEFAULT 1, "
                 + ReceiptsTable.COLUMN_PROCESSING_STATUS + " TEXT, "
-                + ReceiptsTable.COLUMN_IMG_HASH + " TEXT, "
                 + ReceiptsTable.COLUMN_EXTRA_EDITTEXT_1 + " TEXT, "
                 + ReceiptsTable.COLUMN_EXTRA_EDITTEXT_2 + " TEXT, "
                 + ReceiptsTable.COLUMN_EXTRA_EDITTEXT_3 + " TEXT, "
@@ -619,22 +584,18 @@ public class ReceiptsTableTest {
                 ReceiptsTable.COLUMN_CATEGORY_ID, ReceiptsTable.COLUMN_DATE, ReceiptsTable.COLUMN_TIMEZONE, ReceiptsTable.COLUMN_COMMENT,
                 ReceiptsTable.COLUMN_ISO4217, ReceiptsTable.COLUMN_PRICE, ReceiptsTable.COLUMN_TAX, ReceiptsTable.COLUMN_EXCHANGE_RATE,
                 ReceiptsTable.COLUMN_PAYMENT_METHOD_ID, ReceiptsTable.COLUMN_REIMBURSABLE, ReceiptsTable.COLUMN_NOTFULLPAGEIMAGE,
-                ReceiptsTable.COLUMN_PROCESSING_STATUS, ReceiptsTable.COLUMN_IMG_HASH, ReceiptsTable.COLUMN_EXTRA_EDITTEXT_1,
-                ReceiptsTable.COLUMN_EXTRA_EDITTEXT_2, ReceiptsTable.COLUMN_EXTRA_EDITTEXT_3, AbstractSqlTable.COLUMN_DRIVE_SYNC_ID,
-                AbstractSqlTable.COLUMN_DRIVE_IS_SYNCED, AbstractSqlTable.COLUMN_DRIVE_MARKED_FOR_DELETION, AbstractSqlTable.COLUMN_LAST_LOCAL_MODIFICATION_TIME});
+                ReceiptsTable.COLUMN_PROCESSING_STATUS, ReceiptsTable.COLUMN_EXTRA_EDITTEXT_1, ReceiptsTable.COLUMN_EXTRA_EDITTEXT_2,
+                ReceiptsTable.COLUMN_EXTRA_EDITTEXT_3, AbstractSqlTable.COLUMN_DRIVE_SYNC_ID, AbstractSqlTable.COLUMN_DRIVE_IS_SYNCED,
+                AbstractSqlTable.COLUMN_DRIVE_MARKED_FOR_DELETION, AbstractSqlTable.COLUMN_LAST_LOCAL_MODIFICATION_TIME});
 
 
-        verify(mSQLiteDatabase, atLeast(0)).execSQL("INSERT INTO " + ReceiptsTable.TABLE_NAME + "_copy" + " ( " + finalColumns + " ) "
+        verify(mSQLiteDatabase, atLeastOnce()).execSQL("INSERT INTO " + ReceiptsTable.TABLE_NAME + "_copy" + " ( " + finalColumns + " ) "
                 + "SELECT " + finalColumns
                 + " FROM " + ReceiptsTable.TABLE_NAME + " ;");
 
-        verify(mSQLiteDatabase, atLeast(0)).execSQL("DROP TABLE " + ReceiptsTable.TABLE_NAME + ";");
+        verify(mSQLiteDatabase, atLeastOnce()).execSQL("DROP TABLE " + ReceiptsTable.TABLE_NAME + ";");
 
-        verify(mSQLiteDatabase, atLeast(0)).execSQL("ALTER TABLE " + ReceiptsTable.TABLE_NAME + "_copy" + " RENAME TO " + ReceiptsTable.TABLE_NAME + ";");
-    }
-
-    private void verifyV20Upgrade(@NonNull VerificationMode verificationMode) {
-        verify(mSQLiteDatabase, verificationMode).execSQL("ALTER TABLE receipts ADD img_hash TEXT");
+        verify(mSQLiteDatabase, atLeastOnce()).execSQL("ALTER TABLE " + ReceiptsTable.TABLE_NAME + "_copy" + " RENAME TO " + ReceiptsTable.TABLE_NAME + ";");
     }
 
     @Test

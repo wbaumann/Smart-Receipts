@@ -25,8 +25,6 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers
-import org.mockito.Mockito.anyBoolean
 import org.mockito.Mockito.inOrder
 import org.robolectric.RobolectricTestRunner
 import java.io.File
@@ -133,7 +131,7 @@ class ReceiptsListPresenterTest {
 
         inOrder.verify(interactor).scanReceiptImage(file)
 
-        inOrder.verify(view).navigateToCreateReceipt(file, ocrResponse, true)
+        inOrder.verify(view).navigateToCreateReceipt(file, ocrResponse)
 
         inOrder.verify(interactor).markLastOcrResponseAsProcessed()
         inOrder.verify(locator).markThatResultsWereConsumed()
@@ -173,7 +171,7 @@ class ReceiptsListPresenterTest {
         inOrder.verify(interactor).setCroppingScreenWasShown()
 
         inOrder.verify(interactor).scanReceiptImage(any())
-        inOrder.verify(view).navigateToCreateReceipt(any(), eq(ocrResponse), ArgumentMatchers.anyBoolean())
+        inOrder.verify(view).navigateToCreateReceipt(any(), eq(ocrResponse))
 
         inOrder.verify(interactor).markLastOcrResponseAsProcessed()
         inOrder.verify(locator).markThatResultsWereConsumed()

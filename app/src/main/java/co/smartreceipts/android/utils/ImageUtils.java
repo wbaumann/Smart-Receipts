@@ -250,9 +250,8 @@ public class ImageUtils {
 
     public static boolean writeImageToFile(@NonNull Bitmap bitmap, @NonNull File file) {
         try {
-
             FileOutputStream fOut = new FileOutputStream(file);
-            bitmap.compress(bitmap.hasAlpha() ? Bitmap.CompressFormat.PNG : Bitmap.CompressFormat.JPEG, 100, fOut);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
             fOut.flush();
             fOut.close();
             return true;

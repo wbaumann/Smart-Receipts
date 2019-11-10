@@ -3,15 +3,16 @@ package co.smartreceipts.android.receipts;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import androidx.annotation.DrawableRes;
-import androidx.annotation.NonNull;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.core.graphics.drawable.DrawableCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.google.common.base.Preconditions;
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractDraggableItemViewHolder;
@@ -162,6 +163,8 @@ public class ReceiptsAdapter extends DraggableCardsAdapter<Receipt> implements R
     }
 
     private void setIcon(ImageView view, @DrawableRes int drawableRes) {
+        picasso.cancelRequest(view);
+
         final Drawable drawable = ResourcesCompat.getDrawable(context.getResources(), drawableRes, context.getTheme());
         if (drawable != null) {
             drawable.mutate(); // hack to prevent fab icon tinting (fab has drawable with the same src)

@@ -7,6 +7,7 @@ import okhttp3.internal.and
 import java.io.File
 import java.io.FileInputStream
 import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 import java.util.*
 
 /**
@@ -43,7 +44,7 @@ class ReceiptFileHashColumn(id: Int, syncState: SyncState, customOrderId: Long, 
                 val hashedBytes = digest.digest()
                 return convertHashToString(hashedBytes)
             }
-        } catch (e: Exception) {
+        } catch (e: NoSuchAlgorithmException) {
             return ""
         }
 
@@ -54,6 +55,6 @@ class ReceiptFileHashColumn(id: Int, syncState: SyncState, customOrderId: Long, 
         for (hashedByte in hashedBytes) {
             returnVal.append(((hashedByte and 0xff) + 0x100).toString(16).substring(1))
         }
-        return returnVal.toString().toUpperCase(Locale.getDefault())
+        return returnVal.toString().substring(returnVal.lastIndex-16, returnVal.lastIndex).toUpperCase(Locale.getDefault())
     }
 }

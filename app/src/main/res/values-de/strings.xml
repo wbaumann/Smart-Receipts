@@ -54,6 +54,7 @@
     <string name="share">Senden</string>
     <string name="reports_title">Berichte</string>
     <string name="search_empty">Keine Ergebnisse gefunden</string>
+    <string name="search_hint">Sie können nach Berichten oder Belegen nach Name, Kommentar, Preis oder Kategorie suchen</string>
 
     <!-- =============== Subscriptions ================ -->
     <string name="pro_subscription">Smart-Plus-Receipts</string>

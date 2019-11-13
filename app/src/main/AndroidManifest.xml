@@ -154,7 +154,8 @@
             android:theme="@style/Theme.SmartReceipts.OSS"/>
 
         <activity android:name=".search.SearchActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:windowSoftInputMode="adjustNothing"/>
 
         <!-- FirebaseMessagingService performs security checks at runtime, no need for explicit permissions despite exported="true" -->
         <service

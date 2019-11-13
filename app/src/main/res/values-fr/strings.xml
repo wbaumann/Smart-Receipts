@@ -54,6 +54,7 @@
     <string name="share">Envoyer</string>
     <string name="reports_title">Rapports</string>
     <string name="search_empty">Aucun résultat trouvé</string>
+    <string name="search_hint">Vous pouvez rechercher des rapports ou des reçus par nom, commentaire, prix ou catégorie</string>
 
     <!-- =============== Subscriptions ================ -->
     <string name="pro_subscription">Smart Receipts Plus</string>

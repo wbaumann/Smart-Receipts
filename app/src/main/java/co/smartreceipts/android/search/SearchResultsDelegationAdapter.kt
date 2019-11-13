@@ -28,4 +28,3 @@ class SearchResultsDelegationAdapter(
 
 // TODO: 10.11.2019 highlight?
 // TODO: 10.11.2019 search  by date?
-// TODO: 10.11.2019 we can add initial hint to user (in an empty view) that will describe search options. Possible using hint image

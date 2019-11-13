@@ -97,11 +97,13 @@ class SearchActivity : AppCompatActivity(), SearchView {
         if (searchResults.isEmpty()) {
             results_list.visibility = View.GONE
 
-            empty_text.visibility = if (search_view.query.isNotEmpty()) View.VISIBLE else View.GONE
+            search_hint.visibility = if (search_view.query.isEmpty()) View.VISIBLE else View.GONE
+            no_results_text.visibility = if (search_view.query.isNotEmpty()) View.VISIBLE else View.GONE
 
         } else {
             results_list.visibility = View.VISIBLE
-            empty_text.visibility = View.GONE
+            search_hint.visibility = View.GONE
+            no_results_text.visibility = View.GONE
         }
 
         val results : MutableList<Any> = arrayListOf()

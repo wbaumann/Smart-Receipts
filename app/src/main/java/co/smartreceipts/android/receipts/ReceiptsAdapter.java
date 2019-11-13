@@ -239,6 +239,20 @@ public class ReceiptsAdapter extends DraggableCardsAdapter<Receipt> implements R
         return getItemViewType(itemPosition) == ReceiptsListItem.TYPE_HEADER;
     }
 
+    public int getIndexOfReceipt(Receipt receipt) {
+        for (int i = 0; i < listItems.size(); i++) {
+            final ReceiptsListItem listItem = listItems.get(i);
+
+            // Note: we can't use just equals for receipts because of index field.
+            // The index value depends on the request (if it was made for a trip or for all receipts), so index from search may be different than index here
+            if (listItem instanceof ReceiptContentItem && ((ReceiptContentItem) listItem).getReceipt().getId() == receipt.getId()) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
     private abstract class ReceiptsListViewHolder extends AbstractDraggableItemViewHolder {
 
         ReceiptsListViewHolder(View itemView) {
@@ -262,7 +276,7 @@ public class ReceiptsAdapter extends DraggableCardsAdapter<Receipt> implements R
             super(itemView);
 
             price = itemView.findViewById(R.id.price);
-            name = itemView.findViewById(android.R.id.title);
+            name = itemView.findViewById(R.id.title);
             category = itemView.findViewById(R.id.card_category);
             syncState = itemView.findViewById(R.id.card_sync_state);
             menuButton = itemView.findViewById(R.id.card_menu);
@@ -327,7 +341,7 @@ public class ReceiptsAdapter extends DraggableCardsAdapter<Receipt> implements R
         ReceiptHeaderReceiptsListViewHolder(View itemView) {
             super(itemView);
 
-            date = itemView.findViewById(R.id.card_date);
+            date = itemView.findViewById(R.id.card_header);
         }
 
         @Override

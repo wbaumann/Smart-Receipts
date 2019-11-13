@@ -52,6 +52,8 @@
     <string name="yes_as_pdf">Так - у вигляді PDF</string>
     <string name="reorder">Змінити порядок</string>
     <string name="share">Поділитися</string>
+    <string name="reports_title">Звіти</string>
+    <string name="search_empty">Нічого не знайдено</string>
 
     <!-- =============== Subscriptions ================ -->
     <string name="pro_subscription">Смарт Чеки Плюс</string>

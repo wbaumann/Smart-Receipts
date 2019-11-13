@@ -53,6 +53,8 @@
     <string name="yes">Yes</string>
     <string name="yes_as_pdf">Yes - As PDF</string>
     <string name="share">Share</string>
+    <string name="reports_title">Reports</string>
+    <string name="search_empty">No Results Found</string>
 
     <!-- =============== Subscriptions ================ -->
     <string name="pro_subscription">Smart Receipts Plus</string>

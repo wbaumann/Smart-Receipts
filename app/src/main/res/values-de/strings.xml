@@ -52,6 +52,8 @@
     <string name="yes_as_pdf">Ja - als PDF</string>
     <string name="reorder">Umsortieren</string>
     <string name="share">Senden</string>
+    <string name="reports_title">Berichte</string>
+    <string name="search_empty">Keine Ergebnisse gefunden</string>
 
     <!-- =============== Subscriptions ================ -->
     <string name="pro_subscription">Smart-Plus-Receipts</string>

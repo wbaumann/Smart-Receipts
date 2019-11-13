@@ -59,6 +59,8 @@ import co.smartreceipts.android.receipts.attacher.ReceiptRemoveAttachmentDialogF
 import co.smartreceipts.android.receipts.creator.ReceiptCreateActionView;
 import co.smartreceipts.android.receipts.delete.DeleteReceiptDialogFragment;
 import co.smartreceipts.android.receipts.ordering.ReceiptsOrderer;
+import co.smartreceipts.android.search.SearchResultKeeper;
+import co.smartreceipts.android.search.Searchable;
 import co.smartreceipts.android.settings.UserPreferenceManager;
 import co.smartreceipts.android.settings.catalog.UserPreference;
 import co.smartreceipts.android.sync.BackupProvidersManager;
@@ -438,6 +440,20 @@ public class ReceiptsListFragment extends ReceiptsFragment implements ReceiptsLi
                 noDataAlert.setVisibility(View.INVISIBLE);
             }
             updateActionBarTitle(getUserVisibleHint());
+
+            if (getActivity() instanceof SearchResultKeeper) {
+                final SearchResultKeeper searchResultKeeper = (SearchResultKeeper) getActivity();
+
+                final Searchable searchResult = searchResultKeeper.getSearchResult();
+                if (searchResult instanceof Receipt) {
+                    final int index = adapter.getIndexOfReceipt((Receipt) searchResult);
+                    if (index >= 0) {
+                        recyclerView.smoothScrollToPosition(index);
+                    }
+
+                    searchResultKeeper.markSearchResultAsProcessed();
+                }
+            }
 
         }
     }

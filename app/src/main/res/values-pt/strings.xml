@@ -52,6 +52,8 @@
     <string name="yes_as_pdf">Sim - Como PDF</string>
     <string name="reorder">Reordenar</string>
     <string name="share">Enviar</string>
+    <string name="reports_title">Relatórios</string>
+    <string name="search_empty">Nenhum resultado encontrado</string>
 
     <!-- =============== Subscriptions ================ -->
     <string name="pro_subscription">Smart Receipts Plus</string>

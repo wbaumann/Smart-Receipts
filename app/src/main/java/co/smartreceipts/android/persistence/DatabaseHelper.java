@@ -3,6 +3,7 @@ package co.smartreceipts.android.persistence;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -13,6 +14,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+
+import javax.annotation.Nonnull;
 
 import co.smartreceipts.android.database.DatabaseContext;
 import co.smartreceipts.android.date.DateUtils;
@@ -303,6 +306,50 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return mFullCurrencyList;
     }
 
+    public List<String> search(@NonNull String input, @Nonnull String tableName, @Nonnull String resultColumn,
+                               @Nullable String orderByColumn, @Nonnull String... searchColumns) {
+        final List<String> results = new ArrayList<>();
+
+        synchronized (mDatabaseLock) {
+            Cursor cursor = null;
+
+            try {
+                final SQLiteDatabase db = getReadableDatabase();
+                final String baseQuery = String.format("SELECT DISTINCT %s FROM %s WHERE ", resultColumn, tableName);
+                StringBuilder builder = new StringBuilder(baseQuery);
+
+                for (int i = 0; i < searchColumns.length; i++) {
+                    if (i != 0) {
+                        builder.append(" OR ");
+                    }
+
+                    builder.append(searchColumns[i])
+                            .append(" like '")
+                            .append(input)
+                            .append("%' ");
+                }
+
+                if (orderByColumn != null) {
+                    builder.append(" ORDER BY ")
+                            .append(orderByColumn);
+                }
+
+                cursor = db.rawQuery(builder.toString(), null);
+                if (cursor != null && cursor.moveToFirst()) {
+                    do {
+                        results.add(cursor.getString(0));
+                    } while (cursor.moveToNext());
+                }
+
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
+        }
+        return results;
+    }
+    
     private List<CharSequence> getMostRecentlyUsedCurrencies() {
         if (mMostRecentlyUsedCurrencyList != null) {
             return mMostRecentlyUsedCurrencyList;

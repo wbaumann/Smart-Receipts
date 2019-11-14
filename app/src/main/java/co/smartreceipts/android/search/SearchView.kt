@@ -1,10 +1,10 @@
 package co.smartreceipts.android.search
 
-import com.jakewharton.rxbinding3.InitialValueObservable
+import io.reactivex.Observable
 
 interface SearchView {
 
-    val inputChanges: InitialValueObservable<CharSequence>
+    val inputChanges: Observable<CharSequence>
 
     fun presentSearchResults(searchResults: SearchInteractor.SearchResults)
 }

@@ -30,7 +30,7 @@ class SearchActivity : AppCompatActivity(), SearchView {
     }
 
     override val inputChanges
-        get() = search_view.queryTextChanges()
+        get() = search_view.queryTextChanges().skipInitialValue()
 
     @Inject
     lateinit var presenter: SearchPresenter

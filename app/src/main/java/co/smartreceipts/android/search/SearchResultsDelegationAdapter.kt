@@ -23,8 +23,5 @@ class SearchResultsDelegationAdapter(
 
 // TODO: 10.11.2019 reuse adapter delegates
 // leave it for now, need to refactor trips and distance fragments to use recycler view instead of listView
-// TODO: 10.11.2019 update simple_card layout to constraint
 
-
-// TODO: 10.11.2019 highlight?
-// TODO: 10.11.2019 search  by date?
+// TODO: 10.11.2019 search results highlighting?

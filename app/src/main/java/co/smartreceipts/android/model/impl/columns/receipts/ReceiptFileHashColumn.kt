@@ -55,6 +55,6 @@ class ReceiptFileHashColumn(id: Int, syncState: SyncState, customOrderId: Long, 
         for (hashedByte in hashedBytes) {
             returnVal.append(((hashedByte and 0xff) + 0x100).toString(16).substring(1))
         }
-        return returnVal.toString().substring(returnVal.lastIndex-16, returnVal.lastIndex).toUpperCase(Locale.getDefault())
+        return returnVal.toString().takeLast(16).toUpperCase(Locale.ENGLISH)
     }
 }

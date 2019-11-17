@@ -42,6 +42,7 @@ import co.smartreceipts.android.settings.catalog.UserPreference;
 import co.smartreceipts.android.utils.log.Logger;
 import co.smartreceipts.android.utils.sorting.AlphabeticalCaseInsensitiveCharSequenceComparator;
 import io.reactivex.Single;
+import io.reactivex.schedulers.Schedulers;
 import wb.android.storage.StorageManager;
 
 @ApplicationScope
@@ -306,50 +307,54 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return mFullCurrencyList;
     }
 
-    public List<String> search(@NonNull String input, @Nonnull String tableName, @Nonnull String resultColumn,
-                               @Nullable String orderByColumn, @Nonnull String... searchColumns) {
-        final List<String> results = new ArrayList<>();
+    public Single<List<String>> search(@NonNull String input, @Nonnull String tableName, @Nonnull String resultColumn,
+                                       @Nullable String orderByColumn, @Nonnull String... searchColumns) {
+        return Single.fromCallable(() -> {
+                    final List<String> results = new ArrayList<>();
 
-        synchronized (mDatabaseLock) {
-            Cursor cursor = null;
+                    synchronized (mDatabaseLock) {
+                        Cursor cursor = null;
 
-            try {
-                final SQLiteDatabase db = getReadableDatabase();
-                final String baseQuery = String.format("SELECT DISTINCT %s FROM %s WHERE ", resultColumn, tableName);
-                StringBuilder builder = new StringBuilder(baseQuery);
+                        try {
+                            final SQLiteDatabase db = getReadableDatabase();
+                            final String baseQuery = String.format("SELECT DISTINCT %s FROM %s WHERE ", resultColumn, tableName);
+                            StringBuilder builder = new StringBuilder(baseQuery);
 
-                for (int i = 0; i < searchColumns.length; i++) {
-                    if (i != 0) {
-                        builder.append(" OR ");
+                            for (int i = 0; i < searchColumns.length; i++) {
+                                if (i != 0) {
+                                    builder.append(" OR ");
+                                }
+
+                                builder.append(searchColumns[i])
+                                        .append(" like '")
+                                        .append(input)
+                                        .append("%' ");
+                            }
+
+                            if (orderByColumn != null) {
+                                builder.append(" ORDER BY ")
+                                        .append(orderByColumn);
+                            }
+
+                            cursor = db.rawQuery(builder.toString(), null);
+                            if (cursor != null && cursor.moveToFirst()) {
+                                do {
+                                    results.add(cursor.getString(0));
+                                } while (cursor.moveToNext());
+                            }
+
+                        } finally {
+                            if (cursor != null) {
+                                cursor.close();
+                            }
+                        }
                     }
-
-                    builder.append(searchColumns[i])
-                            .append(" like '")
-                            .append(input)
-                            .append("%' ");
+                    return results;
                 }
-
-                if (orderByColumn != null) {
-                    builder.append(" ORDER BY ")
-                            .append(orderByColumn);
-                }
-
-                cursor = db.rawQuery(builder.toString(), null);
-                if (cursor != null && cursor.moveToFirst()) {
-                    do {
-                        results.add(cursor.getString(0));
-                    } while (cursor.moveToNext());
-                }
-
-            } finally {
-                if (cursor != null) {
-                    cursor.close();
-                }
-            }
-        }
-        return results;
+        )
+                .subscribeOn(Schedulers.io());
     }
-    
+
     private List<CharSequence> getMostRecentlyUsedCurrencies() {
         if (mMostRecentlyUsedCurrencyList != null) {
             return mMostRecentlyUsedCurrencyList;

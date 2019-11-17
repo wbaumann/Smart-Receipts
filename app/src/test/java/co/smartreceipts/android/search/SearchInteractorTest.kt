@@ -57,19 +57,19 @@ class SearchInteractorTest {
 
         // trips
         whenever(databaseHelper.search(input, TripsTable.TABLE_NAME, TripsTable.COLUMN_ID, TripsTable.COLUMN_FROM,
-            TripsTable.COLUMN_NAME, TripsTable.COLUMN_COMMENT)).thenReturn(listOf(tripId1.toString()))
+            TripsTable.COLUMN_NAME, TripsTable.COLUMN_COMMENT)).thenReturn(Single.just(listOf(tripId1.toString())))
 
         // receipts
         whenever(databaseHelper.search(input, ReceiptsTable.TABLE_NAME, ReceiptsTable.COLUMN_ID, ReceiptsTable.COLUMN_DATE,
-            ReceiptsTable.COLUMN_NAME, ReceiptsTable.COLUMN_COMMENT, ReceiptsTable.COLUMN_PRICE)).thenReturn(listOf(receiptId1.toString(), receiptId2.toString()))
+            ReceiptsTable.COLUMN_NAME, ReceiptsTable.COLUMN_COMMENT, ReceiptsTable.COLUMN_PRICE)).thenReturn(Single.just(listOf(receiptId1.toString(), receiptId2.toString())))
 
         // categories
         whenever(databaseHelper.search(input, CategoriesTable.TABLE_NAME, CategoriesTable.COLUMN_ID, null,
-            CategoriesTable.COLUMN_NAME, CategoriesTable.COLUMN_CODE)).thenReturn(emptyList())
+            CategoriesTable.COLUMN_NAME, CategoriesTable.COLUMN_CODE)).thenReturn(Single.just(emptyList()))
 
         // payment methods
         whenever(databaseHelper.search(input, PaymentMethodsTable.TABLE_NAME, PaymentMethodsTable.COLUMN_ID, null,
-            PaymentMethodsTable.COLUMN_METHOD)).thenReturn(emptyList())
+            PaymentMethodsTable.COLUMN_METHOD)).thenReturn(Single.just(emptyList()))
 
 
         interactor = SearchInteractor(databaseHelper, Schedulers.trampoline(), Schedulers.trampoline())

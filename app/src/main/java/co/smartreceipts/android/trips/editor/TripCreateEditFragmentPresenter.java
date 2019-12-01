@@ -15,6 +15,7 @@ import co.smartreceipts.android.analytics.Analytics;
 import co.smartreceipts.android.analytics.events.Events;
 import co.smartreceipts.android.di.scopes.FragmentScope;
 import co.smartreceipts.android.model.Trip;
+import co.smartreceipts.android.model.factory.ReceiptBuilderFactory;
 import co.smartreceipts.android.model.factory.TripBuilderFactory;
 import co.smartreceipts.android.persistence.DatabaseHelper;
 import co.smartreceipts.android.persistence.PersistenceManager;
@@ -22,6 +23,7 @@ import co.smartreceipts.android.persistence.database.controllers.impl.TripTableC
 import co.smartreceipts.android.persistence.database.operations.DatabaseOperationMetadata;
 import co.smartreceipts.android.settings.catalog.UserPreference;
 import co.smartreceipts.android.utils.FileUtils;
+import io.reactivex.Completable;
 
 @FragmentScope
 public class TripCreateEditFragmentPresenter {
@@ -138,5 +140,50 @@ public class TripCreateEditFragmentPresenter {
 
     public String getDateSeparator() {
         return persistenceManager.getPreferenceManager().get(UserPreference.General.DateSeparator);
+    }
+
+    Completable updateTripNameAutoCompleteVisibility(Trip trip, boolean isHidden) {
+        Trip updatedReceipt = new TripBuilderFactory(trip)
+                .setNameHiddenFromAutoComplete(isHidden)
+                .build();
+
+        return tripTableController.update(trip, updatedReceipt, new DatabaseOperationMetadata())
+                .flatMapCompletable(optional -> {
+                    if (optional.isPresent()) {
+                        return Completable.complete();
+                    } else {
+                        return Completable.error(new Exception("Failed to update trip auto complete visibility"));
+                    }
+                });
+    }
+
+    Completable updateTripCommentAutoCompleteVisibility(Trip trip, boolean isHidden) {
+        Trip updatedReceipt = new TripBuilderFactory(trip)
+                .setCommentHiddenFromAutoComplete(isHidden)
+                .build();
+
+        return tripTableController.update(trip, updatedReceipt, new DatabaseOperationMetadata())
+                .flatMapCompletable(optional -> {
+                    if (optional.isPresent()) {
+                        return Completable.complete();
+                    } else {
+                        return Completable.error(new Exception("Failed to update trip auto complete visibility"));
+                    }
+                });
+    }
+
+    Completable updateTripCostCenterAutoCompleteVisibility(Trip trip, boolean isHidden) {
+        Trip updatedReceipt = new TripBuilderFactory(trip)
+                .setCostCenterHiddenFromAutoComplete(isHidden)
+                .build();
+
+        return tripTableController.update(trip, updatedReceipt, new DatabaseOperationMetadata())
+                .flatMapCompletable(optional -> {
+                    if (optional.isPresent()) {
+                        return Completable.complete();
+                    } else {
+                        return Completable.error(new Exception("Failed to update trip auto complete visibility"));
+                    }
+                });
     }
 }

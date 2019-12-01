@@ -22,6 +22,7 @@ import co.smartreceipts.android.purchases.wallet.PurchaseWallet;
 import co.smartreceipts.android.settings.UserPreferenceManager;
 import co.smartreceipts.android.settings.catalog.UserPreference;
 import co.smartreceipts.android.utils.log.Logger;
+import io.reactivex.Completable;
 
 @FragmentScope
 public class ReceiptCreateEditFragmentPresenter {
@@ -165,6 +166,36 @@ public class ReceiptCreateEditFragmentPresenter {
             }
         }
         return false;
+    }
+
+    Completable updateReceiptNameAutoCompleteVisibility(Receipt receipt, boolean isHidden) {
+        Receipt updatedReceipt = new ReceiptBuilderFactory(receipt)
+                .setNameHiddenFromAutoComplete(isHidden)
+                .build();
+
+        return receiptTableController.update(receipt, updatedReceipt, new DatabaseOperationMetadata())
+                .flatMapCompletable(optional -> {
+                    if (optional.isPresent()) {
+                        return Completable.complete();
+                    } else {
+                        return Completable.error(new Exception("Failed to update receipt auto complete visibility"));
+                    }
+                });
+    }
+
+    Completable updateReceiptCommentAutoCompleteVisibility(Receipt receipt, boolean isHidden) {
+        Receipt updatedReceipt = new ReceiptBuilderFactory(receipt)
+                .setCommentHiddenFromAutoComplete(isHidden)
+                .build();
+
+        return receiptTableController.update(receipt, updatedReceipt, new DatabaseOperationMetadata())
+                .flatMapCompletable(optional -> {
+                    if (optional.isPresent()) {
+                        return Completable.complete();
+                    } else {
+                        return Completable.error(new Exception("Failed to update receipt auto complete visibility"));
+                    }
+                });
     }
 
 }

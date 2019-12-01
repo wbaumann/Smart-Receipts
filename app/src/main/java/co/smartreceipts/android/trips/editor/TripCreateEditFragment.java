@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.jakewharton.rxbinding2.widget.RxDateEditText;
 import com.jakewharton.rxbinding3.widget.RxTextView;
 
@@ -76,7 +77,8 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
         TooltipView,
         CurrencyListEditorView,
         TripDateView,
-        AutoCompleteView<Trip> {
+        AutoCompleteView<Trip>,
+        AutoCompleteArrayAdapter.ClickListener {
 
     public static final String ARG_EXISTING_TRIPS = "arg_existing_trips";
 
@@ -143,6 +145,8 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
     // Misc Views
     private View focusedView;
 
+    private AutoCompleteArrayAdapter<Trip> resultsAdapter;
+    private boolean shouldHideResults;
 
     public static TripCreateEditFragment newInstance() {
         return new TripCreateEditFragment();
@@ -338,15 +342,12 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
         costCenterBox.setOnFocusChangeListener(this);
 
         // Set click listeners
-        View.OnTouchListener hideSoftKeyboardOnTouchListener = new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                    SoftKeyboardManager.hideKeyboard(view);
-                }
-                view.performClick();
-                return false;
+        View.OnTouchListener hideSoftKeyboardOnTouchListener = (view, motionEvent) -> {
+            if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                SoftKeyboardManager.hideKeyboard(view);
             }
+            view.performClick();
+            return false;
         };
         startDateBox.setOnTouchListener(hideSoftKeyboardOnTouchListener);
         endDateBox.setOnTouchListener(hideSoftKeyboardOnTouchListener);
@@ -462,19 +463,23 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
     }
 
     @Override
-    public void displayAutoCompleteResults(@NotNull AutoCompleteField field, @NotNull List<AutoCompleteResult<Trip>> autoCompleteResults) {
-        final AutoCompleteArrayAdapter<Trip> resultsAdapter = new AutoCompleteArrayAdapter<>(requireContext(), autoCompleteResults);
-        if (field == TripAutoCompleteField.Name) {
-            nameBox.setAdapter(resultsAdapter);
-            nameBox.showDropDown();
-        } else if (field == TripAutoCompleteField.Comment) {
-            commentBox.setAdapter(resultsAdapter);
-            commentBox.showDropDown();
-        } else if (field == TripAutoCompleteField.CostCenter) {
-            costCenterBox.setAdapter(resultsAdapter);
-            costCenterBox.showDropDown();
+    public void displayAutoCompleteResults(@NotNull AutoCompleteField field, @NotNull ArrayList<AutoCompleteResult<Trip>> autoCompleteResults) {
+        if (!shouldHideResults) {
+            resultsAdapter = new AutoCompleteArrayAdapter<>(requireContext(), autoCompleteResults, this);
+            if (field == TripAutoCompleteField.Name) {
+                nameBox.setAdapter(resultsAdapter);
+                nameBox.showDropDown();
+            } else if (field == TripAutoCompleteField.Comment) {
+                commentBox.setAdapter(resultsAdapter);
+                commentBox.showDropDown();
+            } else if (field == TripAutoCompleteField.CostCenter) {
+                costCenterBox.setAdapter(resultsAdapter);
+                costCenterBox.showDropDown();
+            } else {
+                throw new IllegalArgumentException("Unsupported field type: " + field);
+            }
         } else {
-            throw new IllegalArgumentException("Unsupported field type: " + field);
+            shouldHideResults = false;
         }
     }
 
@@ -533,5 +538,99 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
     @Override
     public Observable<Object> getCloseIconClickStream() {
         return tooltipView.getCloseIconClickStream();
+    }
+
+    @Override
+    public void callback(boolean removeAutoCompleteResult, int position) {
+        final AutoCompleteResult<Trip> selectedItem = resultsAdapter.getItem(position);
+        if (selectedItem != null) {
+            if (!removeAutoCompleteResult) {
+                shouldHideResults = true;
+                if (nameBox.isPopupShowing()) {
+                    nameBox.setText(selectedItem.getDisplayName());
+                    nameBox.setSelection(nameBox.getText().length());
+                    nameBox.dismissDropDown();
+                } else if (commentBox.isPopupShowing()) {
+                    commentBox.setText(selectedItem.getDisplayName());
+                    commentBox.setSelection(commentBox.getText().length());
+                    commentBox.dismissDropDown();
+                } else {
+                    costCenterBox.setText(selectedItem.getDisplayName());
+                    costCenterBox.setSelection(costCenterBox.getText().length());
+                    costCenterBox.dismissDropDown();
+                }
+                SoftKeyboardManager.hideKeyboard(focusedView);
+            } else {
+                SoftKeyboardManager.hideKeyboard(focusedView);
+                final Trip firstReceipt = selectedItem.getFirstItem();
+                final Consumer<Throwable> throwableConsumer = throwable ->
+                        getActivity().runOnUiThread(() ->
+                                Toast.makeText(getActivity(), R.string.delete_failed, Toast.LENGTH_LONG).show());
+                if (nameBox.isPopupShowing()) {
+                    presenter.updateTripNameAutoCompleteVisibility(firstReceipt, true)
+                            .subscribe(() ->
+                                    getActivity().runOnUiThread(() -> {
+                                        resultsAdapter.remove(selectedItem);
+                                        resultsAdapter.notifyDataSetChanged();
+                                        showUndoSnackbar(selectedItem, position, 0);
+                                    }), throwableConsumer);
+                } else if (commentBox.isPopupShowing()) {
+                    presenter.updateTripCommentAutoCompleteVisibility(firstReceipt, true)
+                            .subscribe(() ->
+                                    getActivity().runOnUiThread(() -> {
+                                        resultsAdapter.remove(selectedItem);
+                                        resultsAdapter.notifyDataSetChanged();
+                                        showUndoSnackbar(selectedItem, position, 1);
+                                    }), throwableConsumer);
+                } else {
+                    presenter.updateTripCostCenterAutoCompleteVisibility(firstReceipt, true)
+                            .subscribe(() ->
+                                    getActivity().runOnUiThread(() -> {
+                                        resultsAdapter.remove(selectedItem);
+                                        resultsAdapter.notifyDataSetChanged();
+                                        showUndoSnackbar(selectedItem, position, 2);
+                                    }), throwableConsumer);
+                }
+            }
+        }
+    }
+
+    private void showUndoSnackbar(AutoCompleteResult<Trip> result, int position, int fieldToUse) {
+        View view = getActivity().findViewById(R.id.update_trip_layout);
+        Snackbar snackbar = Snackbar.make(view, getString(
+                R.string.item_removed_from_auto_complete, result.getDisplayName()), Snackbar.LENGTH_LONG);
+        snackbar.setAction(R.string.undo, v -> undoDelete(result, position, fieldToUse));
+        snackbar.show();
+    }
+
+    private void undoDelete(AutoCompleteResult<Trip> result, int position, int fieldToUse) {
+        final Consumer<Throwable> throwableConsumer = throwable ->
+                getActivity().runOnUiThread(() ->
+                        Toast.makeText(getContext(), R.string.result_restore_failed, Toast.LENGTH_LONG).show());
+        if (fieldToUse == 0) {
+            presenter.updateTripNameAutoCompleteVisibility(result.getFirstItem(), false)
+                    .subscribe(() ->
+                            getActivity().runOnUiThread(() -> {
+                                resultsAdapter.insert(result, position);
+                                resultsAdapter.notifyDataSetChanged();
+                                Toast.makeText(getContext(), R.string.result_restored, Toast.LENGTH_LONG).show();
+                            }), throwableConsumer);
+        } else if (fieldToUse == 1) {
+            presenter.updateTripCommentAutoCompleteVisibility(result.getFirstItem(), false)
+                    .subscribe(() ->
+                            getActivity().runOnUiThread(() -> {
+                                resultsAdapter.insert(result, position);
+                                resultsAdapter.notifyDataSetChanged();
+                                Toast.makeText(getContext(), R.string.result_restored, Toast.LENGTH_LONG).show();
+                            }), throwableConsumer);
+        } else {
+            presenter.updateTripCostCenterAutoCompleteVisibility(result.getFirstItem(), false)
+                    .subscribe(() ->
+                            getActivity().runOnUiThread(() -> {
+                                resultsAdapter.insert(result, position);
+                                resultsAdapter.notifyDataSetChanged();
+                                Toast.makeText(getContext(), R.string.result_restored, Toast.LENGTH_LONG).show();
+                            }), throwableConsumer);
+        }
     }
 }

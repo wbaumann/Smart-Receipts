@@ -39,6 +39,7 @@ import co.smartreceipts.android.receipts.editor.paymentmethods.PaymentMethodsVie
 import co.smartreceipts.android.utils.SoftKeyboardManager
 import co.smartreceipts.android.utils.butterknife.ButterKnifeActions
 import co.smartreceipts.android.widget.model.UiIndicator
+import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxbinding3.widget.textChanges
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.Observable
@@ -85,6 +86,10 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
     private var suggestedDate: Date = Date(Calendar.getInstance().timeInMillis)
 
     private lateinit var currencyListEditorPresenter: CurrencyListEditorPresenter
+
+    private lateinit var resultsAdapter: AutoCompleteArrayAdapter<Distance>
+
+    private var shouldHideResults: Boolean = false
 
     private var focusedView: View? = null
 
@@ -200,7 +205,7 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
         paymentMethodTableEventsListener = object : StubTableEventsListener<PaymentMethod>() {
             override fun onGetSuccess(list: List<PaymentMethod>) {
                 if (isAdded) {
-                    // TODO: Move to payment methods presenter
+                    // TODO: Move to payment methods presenter (todo copied from receipt create edit fragment)
                     val paymentMethods = ArrayList(list)
                     paymentMethods.add(PaymentMethod.NONE)
                     paymentMethodsAdapter.update(paymentMethods)
@@ -369,21 +374,111 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
 
     override fun displayAutoCompleteResults(field: AutoCompleteField, autoCompleteResults: ArrayList<AutoCompleteResult<Distance>>) {
         if (isAdded) {
-            val resultsAdapter = AutoCompleteArrayAdapter(requireContext(), autoCompleteResults)
-            when (field) {
-                DistanceAutoCompleteField.Location -> {
-                    text_distance_location.setAdapter(resultsAdapter)
-                    text_distance_location.showDropDown()
+            if (!shouldHideResults) {
+                resultsAdapter = AutoCompleteArrayAdapter(requireContext(), autoCompleteResults, this)
+                when (field) {
+                    DistanceAutoCompleteField.Location -> {
+                        text_distance_location.setAdapter(resultsAdapter)
+                        text_distance_location.showDropDown()
+                    }
+                    DistanceAutoCompleteField.Comment -> {
+                        text_distance_comment.setAdapter(resultsAdapter)
+                        text_distance_comment.showDropDown()
+                    }
+                    else -> throw IllegalArgumentException("Unsupported field type: $field")
                 }
-                DistanceAutoCompleteField.Comment -> {
-                    text_distance_comment.setAdapter(resultsAdapter)
-                    text_distance_comment.showDropDown()
-                }
-                else -> throw IllegalArgumentException("Unsupported field type: $field")
+            } else {
+                shouldHideResults = false
             }
         }
     }
 
+    override fun callback(removeAutoCompleteResult: Boolean, position: Int) {
+        val selectedItem = resultsAdapter.getItem(position)
+        if (selectedItem != null) {
+            if (!removeAutoCompleteResult) {
+                shouldHideResults = true
+                if (text_distance_location.isPopupShowing) {
+                    text_distance_location.setText(selectedItem.displayName)
+                    text_distance_location.setSelection(text_distance_location.text.length)
+                    text_distance_location.dismissDropDown()
+                } else {
+                    text_distance_comment.setText(selectedItem.displayName)
+                    text_distance_comment.setSelection(text_distance_comment.text.length)
+                    text_distance_comment.dismissDropDown()
+                }
+                SoftKeyboardManager.hideKeyboard(focusedView)
+            } else {
+                SoftKeyboardManager.hideKeyboard(focusedView)
+                val firstDistance = selectedItem.firstItem
+                if (text_distance_location.isPopupShowing) {
+                    presenter.updateDistanceLocationAutoCompleteVisibility(firstDistance, true)
+                            ?.subscribe({
+                                activity!!.runOnUiThread {
+                                    resultsAdapter.remove(selectedItem)
+                                    resultsAdapter.notifyDataSetChanged()
+                                    showUndoSnackbar(selectedItem, position, true)
+                                }
+                            }, {
+                                activity!!.runOnUiThread {
+                                    Toast.makeText(activity, R.string.delete_failed, Toast.LENGTH_LONG).show()
+                                }
+                            })
+                } else {
+                    presenter.updateDistanceCommentAutoCompleteVisibility(firstDistance, true)
+                            ?.subscribe({
+                                activity!!.runOnUiThread {
+                                    resultsAdapter.remove(selectedItem)
+                                    resultsAdapter.notifyDataSetChanged()
+                                    showUndoSnackbar(selectedItem, position, false)
+                                }
+                            }, {
+                                activity!!.runOnUiThread {
+                                    Toast.makeText(activity, R.string.delete_failed, Toast.LENGTH_LONG).show()
+                                }
+                            })
+                }
+            }
+        }
+    }
+
+    private fun showUndoSnackbar(result: AutoCompleteResult<Distance>, position: Int, useLocation: Boolean) {
+        val view = activity!!.findViewById<ConstraintLayout>(R.id.update_distance_layout)
+        val snackbar: Snackbar = Snackbar.make(view, getString(
+                R.string.item_removed_from_auto_complete, result.displayName), Snackbar.LENGTH_LONG)
+        snackbar.setAction(R.string.undo) { undoDelete(result, position, useLocation) }
+        snackbar.show()
+    }
+
+    private fun undoDelete(result: AutoCompleteResult<Distance>, position: Int, useLocation: Boolean) {
+        if (useLocation) {
+            presenter.updateDistanceLocationAutoCompleteVisibility(result.firstItem, false)
+                    ?.subscribe({
+                        activity!!.runOnUiThread {
+                            resultsAdapter.insert(result, position)
+                            resultsAdapter.notifyDataSetChanged()
+                            Toast.makeText(context, R.string.result_restored, Toast.LENGTH_LONG).show()
+                        }
+                    }, {
+                        activity!!.runOnUiThread {
+                            Toast.makeText(activity, R.string.result_restore_failed, Toast.LENGTH_LONG).show()
+                        }
+                    })
+        } else {
+            presenter.updateDistanceCommentAutoCompleteVisibility(result.firstItem, false)
+                    ?.subscribe({
+                        activity!!.runOnUiThread {
+                            resultsAdapter.insert(result, position)
+                            resultsAdapter.notifyDataSetChanged()
+                            Toast.makeText(context, R.string.result_restored, Toast.LENGTH_LONG).show()
+                        }
+                    }, {
+                        activity!!.runOnUiThread {
+                            Toast.makeText(activity, R.string.result_restore_failed, Toast.LENGTH_LONG).show()
+                        }
+                    })
+        }
+    }
 
     companion object {
         @JvmStatic

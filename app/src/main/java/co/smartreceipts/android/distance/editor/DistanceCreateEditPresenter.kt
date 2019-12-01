@@ -4,9 +4,11 @@ import co.smartreceipts.android.R
 import co.smartreceipts.android.autocomplete.AutoCompletePresenter
 import co.smartreceipts.android.di.scopes.FragmentScope
 import co.smartreceipts.android.model.Distance
+import co.smartreceipts.android.model.factory.DistanceBuilderFactory
 import co.smartreceipts.android.model.utils.ModelUtils
 import co.smartreceipts.android.widget.model.UiIndicator
 import co.smartreceipts.android.widget.viper.BaseViperPresenter
+import io.reactivex.Completable
 import java.math.BigDecimal
 import javax.inject.Inject
 
@@ -69,5 +71,34 @@ class DistanceCreateEditPresenter @Inject constructor(
         }
     }
 
+    fun updateDistanceLocationAutoCompleteVisibility(distance: Distance?, isHidden: Boolean): Completable? {
+        val updatedDistance = DistanceBuilderFactory(distance!!)
+                .setLocationHiddenFromAutoComplete(isHidden)
+                .build()
+
+        return interactor.updateDistance(distance, updatedDistance)
+                .flatMapCompletable {
+                    if (it.isPresent) {
+                        return@flatMapCompletable Completable.complete()
+                    } else {
+                        return@flatMapCompletable Completable.error(Exception("Failed to update distance auto complete visibility"))
+                    }
+                }
+    }
+
+    fun updateDistanceCommentAutoCompleteVisibility(distance: Distance?, isHidden: Boolean): Completable? {
+        val updatedDistance = DistanceBuilderFactory(distance!!)
+                .setCommentHiddenFromAutoComplete(isHidden)
+                .build()
+
+        return interactor.updateDistance(distance, updatedDistance)
+                .flatMapCompletable {
+                    if (it.isPresent) {
+                        return@flatMapCompletable Completable.complete()
+                    } else {
+                        return@flatMapCompletable Completable.error(Exception("Failed to update distance auto complete visibility"))
+                    }
+                }
+    }
 
 }

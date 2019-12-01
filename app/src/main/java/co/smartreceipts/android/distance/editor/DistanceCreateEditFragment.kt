@@ -367,7 +367,7 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
         }
     }
 
-    override fun displayAutoCompleteResults(field: AutoCompleteField, autoCompleteResults: List<AutoCompleteResult<Distance>>) {
+    override fun displayAutoCompleteResults(field: AutoCompleteField, autoCompleteResults: ArrayList<AutoCompleteResult<Distance>>) {
         if (isAdded) {
             val resultsAdapter = AutoCompleteArrayAdapter(requireContext(), autoCompleteResults)
             when (field) {

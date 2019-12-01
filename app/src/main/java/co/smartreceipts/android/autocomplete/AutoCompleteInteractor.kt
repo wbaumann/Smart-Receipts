@@ -1,5 +1,8 @@
 package co.smartreceipts.android.autocomplete
 
+import co.smartreceipts.android.model.Distance
+import co.smartreceipts.android.model.Receipt
+import co.smartreceipts.android.model.Trip
 import co.smartreceipts.android.settings.UserPreferenceManager
 import co.smartreceipts.android.settings.catalog.UserPreference
 import co.smartreceipts.android.utils.log.Logger
@@ -20,10 +23,10 @@ class AutoCompleteInteractor<Type> constructor(private val provider: AutoComplet
                 userPreferenceManager: UserPreferenceManager) : this(provider, resultsChecker, userPreferenceManager, Schedulers.io())
 
     /**
-     * Fetches a list of auto-completion results for a specific [field], given the user's current
-     * [input] for that field. We return a [List] to maintain a consistent ordering, but it is
-     * expected that all [AutoCompleteResult] instances will have a unique
-     * [AutoCompleteResult.displayName].
+     * Fetches an array list of auto-completion results for a specific [field], given the user's current
+     * [input] for that field. We return an [ArrayList] to maintain a consistent ordering and allow
+     * removal and additions to the adapter, but it is expected that all [AutoCompleteResult] instances
+     * will have a unique [AutoCompleteResult.displayName].
      *
      * We return a [Maybe] from this, since we except to either have a valid list of nothing,
      * depending on if the user has enabled the [UserPreference.Receipts.EnableAutoCompleteSuggestions]
@@ -34,13 +37,13 @@ class AutoCompleteInteractor<Type> constructor(private val provider: AutoComplet
      * @param field the [AutoCompleteField] to use
      * @param input the current user input [CharSequence]
      *
-     * @return a [Maybe], which will emit a [List] of [AutoCompleteResult] of [Type] (or nothing)
+     * @return a [Maybe], which will emit an [ArrayList] of [AutoCompleteResult] of [Type] (or nothing)
      */
-    fun getAutoCompleteResults(field: AutoCompleteField, input: CharSequence) : Maybe<List<AutoCompleteResult<Type>>> {
+    fun getAutoCompleteResults(field: AutoCompleteField, input: CharSequence) : Maybe<ArrayList<AutoCompleteResult<Type>>> {
         // Confirm that the user has this setting enable
-        if (userPreferenceManager.get(UserPreference.Receipts.EnableAutoCompleteSuggestions)) {
+        if (userPreferenceManager[UserPreference.Receipts.EnableAutoCompleteSuggestions]) {
             // And that we've typed this exact amount of characters (as the adapters manage filtering afterwards)
-            if (input.length == TEXT_LENGTH_TO_FETCH_RESULTS) {
+            if (input.length >= TEXT_LENGTH_TO_FETCH_RESULTS) {
                 return provider.tableController.get()
                         .subscribeOn(backgroundScheduler)
                         .flatMapMaybe { getResults ->
@@ -48,29 +51,68 @@ class AutoCompleteInteractor<Type> constructor(private val provider: AutoComplet
                             val resultsSet = mutableMapOf<CharSequence, AutoCompleteResult<Type>>()
                             getResults.forEach {
                                 if (resultsChecker.matchesInput(input, field, it)) {
-                                    val displayName = resultsChecker.getValue(field, it)
-                                    // Only allow input with new display names
-                                    if (!resultsSet.contains(displayName)) {
-                                        val result = AutoCompleteResult(displayName, it)
-                                        resultsSet[displayName] = result
-                                        results.add(result)
-                                    } else {
-                                        resultsSet[displayName]!!.additionalItems.add(it)
+                                    // make sure value wasn't removed by user
+                                    var removedByUser = false
+                                    if (it is Receipt) {
+                                        if (field.name() == "Name") {
+                                            if (it.isNameHiddenFromAutoComplete) {
+                                                removedByUser = true
+                                            }
+                                        } else if (field.name() == "Comment") {
+                                            if (it.isCommentHiddenFromAutoComplete) {
+                                                removedByUser = true
+                                            }
+                                        }
+                                    } else if (it is Trip) {
+                                        if (field.name() == "Name") {
+                                            if (it.isNameHiddenFromAutoComplete) {
+                                                removedByUser = true
+                                            }
+                                        } else if (field.name() == "Comment") {
+                                            if (it.isCommentHiddenFromAutoComplete) {
+                                                removedByUser = true
+                                            }
+                                        } else {
+                                            if (it.isCostCenterHiddenFromAutoComplete) {
+                                                removedByUser = true
+                                            }
+                                        }
+                                    } else if (it is Distance) {
+                                        if (field.name() == "Location") {
+                                            if (it.isLocationHiddenFromAutoComplete) {
+                                                removedByUser = true
+                                            }
+                                        } else if (field.name() == "Comment") {
+                                            if (it.isCommentHiddenFromAutoComplete) {
+                                                removedByUser = true
+                                            }
+                                        }
+                                    }
+
+                                    if (!removedByUser) {
+                                        val displayName = resultsChecker.getValue(field, it)
+                                        // Only allow input with new display names
+                                        if (!resultsSet.contains(displayName)) {
+                                            val result = AutoCompleteResult(displayName, it)
+                                            resultsSet[displayName] = result
+                                            results.add(result)
+                                        } else {
+                                            resultsSet[displayName]!!.additionalItems.add(it)
+                                        }
                                     }
                                 }
                             }
-                            Maybe.just(results.toList())
+                            Maybe.just(ArrayList(results))
                         }
                         .onErrorReturn {
-                            emptyList()
+                            arrayListOf<AutoCompleteResult<Type>>()
                         }
                         .doOnSuccess {
                             Logger.info(this, "Adding {} auto-completion results to {}.", it.size, field)
                         }
-
             }
         }
-        return Maybe.empty<List<AutoCompleteResult<Type>>>()
+        return Maybe.empty<ArrayList<AutoCompleteResult<Type>>>()
     }
 
     /**

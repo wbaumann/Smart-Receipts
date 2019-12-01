@@ -45,7 +45,7 @@ public class ReceiptBuilderFactory implements BuilderFactory<Receipt> {
     private TimeZone timeZone;
     private int id;
     private int index;
-    private boolean isReimbursable, isFullPage, isSelected;
+    private boolean isReimbursable, isFullPage, isSelected, isNameHiddenFromAutoComplete, isCommentHiddenFromAutoComplete;
     private SyncState syncState;
     private long orderId;
     private UUID uuid;
@@ -80,6 +80,8 @@ public class ReceiptBuilderFactory implements BuilderFactory<Receipt> {
         category = receipt.getCategory();
         comment = receipt.getComment();
         paymentMethod = receipt.getPaymentMethod();
+        isNameHiddenFromAutoComplete = receipt.isNameHiddenFromAutoComplete();
+        isCommentHiddenFromAutoComplete = receipt.isCommentHiddenFromAutoComplete();
         isReimbursable = receipt.isReimbursable();
         isFullPage = receipt.isFullPage();
         isSelected = receipt.isSelected();
@@ -276,6 +278,16 @@ public class ReceiptBuilderFactory implements BuilderFactory<Receipt> {
         return this;
     }
 
+    public ReceiptBuilderFactory setNameHiddenFromAutoComplete(boolean isHiddenFromAutoComplete) {
+        this.isNameHiddenFromAutoComplete = isHiddenFromAutoComplete;
+        return this;
+    }
+
+    public ReceiptBuilderFactory setCommentHiddenFromAutoComplete(boolean isHiddenFromAutoComplete) {
+        this.isCommentHiddenFromAutoComplete = isHiddenFromAutoComplete;
+        return this;
+    }
+
     @Override
     @NonNull
     public Receipt build() {
@@ -284,8 +296,8 @@ public class ReceiptBuilderFactory implements BuilderFactory<Receipt> {
                 paymentMethod == null ? PaymentMethod.Companion.getNONE() : paymentMethod, name,
                 category == null ? new CategoryBuilderFactory().build() : category, comment,
                 priceBuilderFactory.build(), taxBuilderFactory.build(), displayableDate,
-                isReimbursable, isFullPage, isSelected, extraEditText1,
-                extraEditText2, extraEditText3, syncState, orderId);
+                isReimbursable, isFullPage, isSelected, isNameHiddenFromAutoComplete, isCommentHiddenFromAutoComplete,
+                extraEditText1, extraEditText2, extraEditText3, syncState, orderId);
     }
 
 }

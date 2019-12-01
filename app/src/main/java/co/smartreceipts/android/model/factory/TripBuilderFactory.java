@@ -24,6 +24,7 @@ import co.smartreceipts.android.sync.model.impl.DefaultSyncState;
  */
 public final class TripBuilderFactory implements BuilderFactory<Trip> {
 
+    private boolean isNameHiddenFromAutoComplete, isCommentHiddenFromAutoComplete, isCostCenterHiddenFromAutoComplete;
     private int id;
     private UUID uuid;
     private File dir;
@@ -59,6 +60,9 @@ public final class TripBuilderFactory implements BuilderFactory<Trip> {
         startTimeZone = trip.getStartTimeZone();
         endTimeZone = trip.getEndTimeZone();
         syncState = trip.getSyncState();
+        isNameHiddenFromAutoComplete = trip.isNameHiddenFromAutoComplete();
+        isCommentHiddenFromAutoComplete = trip.isCommentHiddenFromAutoComplete();
+        isCostCenterHiddenFromAutoComplete = trip.isCostCenterHiddenFromAutoComplete();
     }
 
     public TripBuilderFactory setId(int id) {
@@ -157,11 +161,27 @@ public final class TripBuilderFactory implements BuilderFactory<Trip> {
         return this;
     }
 
+    public TripBuilderFactory setNameHiddenFromAutoComplete(boolean isHiddenFromAutoComplete) {
+        this.isNameHiddenFromAutoComplete = isHiddenFromAutoComplete;
+        return this;
+    }
+
+    public TripBuilderFactory setCommentHiddenFromAutoComplete(boolean isHiddenFromAutoComplete) {
+        this.isCommentHiddenFromAutoComplete = isHiddenFromAutoComplete;
+        return this;
+    }
+
+    public TripBuilderFactory setCostCenterHiddenFromAutoComplete(boolean isHiddenFromAutoComplete) {
+        this.isCostCenterHiddenFromAutoComplete = isHiddenFromAutoComplete;
+        return this;
+    }
+
     @Override
     @NonNull
     public Trip build() {
         final DisplayableDate startDisplayableDate = new DisplayableDate(startDate, startTimeZone);
         final DisplayableDate endDisplayableDate = new DisplayableDate(endDate, endTimeZone);
-        return new Trip(id, uuid, dir, startDisplayableDate, endDisplayableDate, defaultCurrency, comment, costCenter, syncState);
+        return new Trip(id, uuid, dir, startDisplayableDate, endDisplayableDate, defaultCurrency, comment,
+                costCenter, isNameHiddenFromAutoComplete, isCommentHiddenFromAutoComplete, isCostCenterHiddenFromAutoComplete, syncState);
     }
 }

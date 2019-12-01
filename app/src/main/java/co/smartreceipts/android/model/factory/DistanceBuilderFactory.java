@@ -16,6 +16,7 @@ import co.smartreceipts.android.currency.PriceCurrency;
 import co.smartreceipts.android.date.DisplayableDate;
 import co.smartreceipts.android.model.Distance;
 import co.smartreceipts.android.model.Keyed;
+import co.smartreceipts.android.model.PaymentMethod;
 import co.smartreceipts.android.model.Price;
 import co.smartreceipts.android.model.Trip;
 import co.smartreceipts.android.model.utils.ModelUtils;
@@ -30,6 +31,7 @@ public final class DistanceBuilderFactory implements BuilderFactory<Distance> {
 
     private static final int ROUNDING_PRECISION = Distance.RATE_PRECISION + 2;
 
+    private boolean isLocationHiddenFromAutoComplete, isCommentHiddenFromAutoComplete;
     private int id;
     private UUID uuid;
     private Trip trip;
@@ -40,6 +42,7 @@ public final class DistanceBuilderFactory implements BuilderFactory<Distance> {
     private BigDecimal rate;
     private PriceCurrency currency;
     private String comment;
+    private PaymentMethod paymentMethod;
     private SyncState syncState;
 
     public DistanceBuilderFactory() {
@@ -73,7 +76,10 @@ public final class DistanceBuilderFactory implements BuilderFactory<Distance> {
         rate = distance.getRate();
         currency = distance.getPrice().getCurrency();
         comment = distance.getComment();
+        paymentMethod = distance.getPaymentMethod();
         syncState = distance.getSyncState();
+        isLocationHiddenFromAutoComplete = distance.isLocationHiddenFromAutoComplete();
+        isCommentHiddenFromAutoComplete = distance.isCommentHiddenFromAutoComplete();
 
         // Clean up data here if this is from an import that might break things
         if (location == null) {
@@ -160,8 +166,23 @@ public final class DistanceBuilderFactory implements BuilderFactory<Distance> {
         return this;
     }
 
+    public DistanceBuilderFactory setPaymentMethod(@Nullable PaymentMethod method) {
+        paymentMethod = method;
+        return this;
+    }
+
     public DistanceBuilderFactory setSyncState(@NonNull SyncState syncState) {
         this.syncState = Preconditions.checkNotNull(syncState);
+        return this;
+    }
+
+    public DistanceBuilderFactory setLocationHiddenFromAutoComplete(boolean isHiddenFromAutoComplete) {
+        this.isLocationHiddenFromAutoComplete = isHiddenFromAutoComplete;
+        return this;
+    }
+
+    public DistanceBuilderFactory setCommentHiddenFromAutoComplete(boolean isHiddenFromAutoComplete) {
+        this.isCommentHiddenFromAutoComplete = isHiddenFromAutoComplete;
         return this;
     }
 
@@ -176,6 +197,7 @@ public final class DistanceBuilderFactory implements BuilderFactory<Distance> {
 
         final DisplayableDate displayableDate = new DisplayableDate(date, timeZone);
 
-        return new Distance(id, uuid, price, syncState, trip, location, scaledDistance, scaledRate, displayableDate, comment);
+        return new Distance(id, uuid, price, syncState, trip, location, scaledDistance, scaledRate, displayableDate, comment,
+                paymentMethod == null ? PaymentMethod.Companion.getNONE() : paymentMethod, isLocationHiddenFromAutoComplete, isCommentHiddenFromAutoComplete);
     }
 }

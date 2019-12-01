@@ -36,6 +36,8 @@ import wb.android.storage.StorageManager;
 
 import static co.smartreceipts.android.persistence.database.tables.AbstractSqlTable.COLUMN_ID;
 import static co.smartreceipts.android.persistence.database.tables.TripsTable.COLUMN_COMMENT;
+import static co.smartreceipts.android.persistence.database.tables.TripsTable.COLUMN_COMMENT_HIDDEN_AUTO_COMPLETE;
+import static co.smartreceipts.android.persistence.database.tables.TripsTable.COLUMN_COSTCENTER_HIDDEN_AUTO_COMPLETE;
 import static co.smartreceipts.android.persistence.database.tables.TripsTable.COLUMN_COST_CENTER;
 import static co.smartreceipts.android.persistence.database.tables.TripsTable.COLUMN_DEFAULT_CURRENCY;
 import static co.smartreceipts.android.persistence.database.tables.TripsTable.COLUMN_DRIVE_IS_SYNCED;
@@ -46,6 +48,7 @@ import static co.smartreceipts.android.persistence.database.tables.TripsTable.CO
 import static co.smartreceipts.android.persistence.database.tables.TripsTable.COLUMN_FROM_TIMEZONE;
 import static co.smartreceipts.android.persistence.database.tables.TripsTable.COLUMN_LAST_LOCAL_MODIFICATION_TIME;
 import static co.smartreceipts.android.persistence.database.tables.TripsTable.COLUMN_NAME;
+import static co.smartreceipts.android.persistence.database.tables.TripsTable.COLUMN_NAME_HIDDEN_AUTO_COMPLETE;
 import static co.smartreceipts.android.persistence.database.tables.TripsTable.COLUMN_PROCESSING_STATUS;
 import static co.smartreceipts.android.persistence.database.tables.TripsTable.COLUMN_TO;
 import static co.smartreceipts.android.persistence.database.tables.TripsTable.COLUMN_TO_TIMEZONE;
@@ -53,6 +56,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -132,7 +136,9 @@ public class TripsTableTest {
         // Now create the table and insert some defaults
         mTripsTable.onCreate(mSQLiteOpenHelper.getWritableDatabase(), mTableDefaultsCustomizer);
         mBuilder = new TripBuilderFactory();
-        mBuilder.setStartTimeZone(START_TIMEZONE).setEndTimeZone(END_TIMEZONE).setComment(COMMENT).setCostCenter(COST_CENTER).setDefaultCurrency(CURRENCY_CODE, mPreferences.get(UserPreference.General.DefaultCurrency));
+        mBuilder.setStartTimeZone(START_TIMEZONE).setEndTimeZone(END_TIMEZONE).setComment(COMMENT).setCostCenter(COST_CENTER)
+                .setDefaultCurrency(CURRENCY_CODE, mPreferences.get(UserPreference.General.DefaultCurrency))
+                .setNameHiddenFromAutoComplete(false).setCommentHiddenFromAutoComplete(false).setCostCenterHiddenFromAutoComplete(false);
         final Trip trip1 = mBuilder.setStartDate(START_DATE_1).setEndDate(END_DATE_1).setDirectory(mStorageManager.getFile(NAME_1)).build();
         final Trip trip2 = mBuilder.setStartDate(START_DATE_2).setEndDate(END_DATE_2).setDirectory(mStorageManager.getFile(NAME_2)).build();
 
@@ -175,6 +181,9 @@ public class TripsTableTest {
         assertTrue(creatingTable.contains("drive_marked_for_deletion BOOLEAN DEFAULT 0"));
         assertTrue(creatingTable.contains("last_local_modification_time DATE"));
         assertTrue(creatingTable.contains("entity_uuid TEXT"));
+        assertTrue(creatingTable.contains("name_hidden_auto_complete BOOLEAN DEFAULT 0"));
+        assertTrue(creatingTable.contains("comment_hidden_auto_complete BOOLEAN DEFAULT 0"));
+        assertTrue(creatingTable.contains("costcenter_hidden_auto_complete BOOLEAN DEFAULT 0"));
     }
 
     @Test
@@ -190,6 +199,8 @@ public class TripsTableTest {
         verifyV11Upgrade(times(1));
         verifyV12Upgrade(times(1));
         verifyV14Upgrade(times(1));
+        verifyV18Upgrade(times(1));
+        verifyV20Upgrade(times(1));
     }
 
     @Test
@@ -205,6 +216,8 @@ public class TripsTableTest {
         verifyV11Upgrade(times(1));
         verifyV12Upgrade(times(1));
         verifyV14Upgrade(times(1));
+        verifyV18Upgrade(times(1));
+        verifyV20Upgrade(times(1));
     }
 
     @Test
@@ -220,6 +233,8 @@ public class TripsTableTest {
         verifyV11Upgrade(times(1));
         verifyV12Upgrade(times(1));
         verifyV14Upgrade(times(1));
+        verifyV18Upgrade(times(1));
+        verifyV20Upgrade(times(1));
     }
 
     @Test
@@ -235,6 +250,8 @@ public class TripsTableTest {
         verifyV11Upgrade(never());
         verifyV12Upgrade(times(1));
         verifyV14Upgrade(times(1));
+        verifyV18Upgrade(times(1));
+        verifyV20Upgrade(times(1));
     }
 
     @Test
@@ -250,6 +267,8 @@ public class TripsTableTest {
         verifyV11Upgrade(never());
         verifyV12Upgrade(never());
         verifyV14Upgrade(times(1));
+        verifyV18Upgrade(times(1));
+        verifyV20Upgrade(times(1));
     }
 
     @Test
@@ -266,6 +285,24 @@ public class TripsTableTest {
         verifyV12Upgrade(never());
         verifyV14Upgrade(never());
         verifyV18Upgrade(times(1));
+        verifyV20Upgrade(times(1));
+    }
+
+    @Test
+    public void onUpgradeFromV20() {
+        final int oldVersion = 19;
+        final int newVersion = DatabaseHelper.DATABASE_VERSION;
+
+        final TableDefaultsCustomizer customizer = mock(TableDefaultsCustomizer.class);
+        mTripsTable.onUpgrade(mSQLiteDatabase, oldVersion, newVersion, customizer);
+        verifyZeroInteractions(customizer);
+        verifyV8Upgrade(never());
+        verifyV10Upgrade(never());
+        verifyV11Upgrade(never());
+        verifyV12Upgrade(never());
+        verifyV14Upgrade(never());
+        verifyV18Upgrade(never());
+        verifyV20Upgrade(times(1));
     }
 
     private void verifyV8Upgrade(@NonNull VerificationMode verificationMode) {
@@ -333,6 +370,12 @@ public class TripsTableTest {
         verify(mSQLiteDatabase, verificationMode).execSQL(renameTable);
     }
 
+    private void verifyV20Upgrade(@NonNull VerificationMode verificationMode) {
+        verify(mSQLiteDatabase, verificationMode).execSQL("ALTER TABLE " + TripsTable.TABLE_NAME + " ADD " + COLUMN_NAME_HIDDEN_AUTO_COMPLETE + " BOOLEAN DEFAULT 0");
+        verify(mSQLiteDatabase, verificationMode).execSQL("ALTER TABLE " + TripsTable.TABLE_NAME + " ADD " + COLUMN_COMMENT_HIDDEN_AUTO_COMPLETE + " BOOLEAN DEFAULT 0");
+        verify(mSQLiteDatabase, verificationMode).execSQL("ALTER TABLE " + TripsTable.TABLE_NAME + " ADD " + COLUMN_COSTCENTER_HIDDEN_AUTO_COMPLETE + " BOOLEAN DEFAULT 0");
+    }
+
     @Test
     public void onUpgradeAlreadyOccurred() {
         final int oldVersion = DatabaseHelper.DATABASE_VERSION;
@@ -340,7 +383,7 @@ public class TripsTableTest {
 
         final TableDefaultsCustomizer customizer = mock(TableDefaultsCustomizer.class);
         mTripsTable.onUpgrade(mSQLiteDatabase, oldVersion, newVersion, customizer);
-        verify(mSQLiteDatabase, never()).execSQL(mSqlCaptor.capture());
+        verify(mSQLiteDatabase, atLeast(0)).execSQL(mSqlCaptor.capture());
         verifyZeroInteractions(customizer);
     }
 

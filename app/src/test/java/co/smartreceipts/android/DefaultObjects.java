@@ -38,7 +38,8 @@ public class DefaultObjects {
                 new File(new File("").getAbsolutePath()),
                 new DisplayableDate(new Date(System.currentTimeMillis()), TimeZone.getDefault()),
                 new DisplayableDate(new Date(System.currentTimeMillis()), TimeZone.getDefault()),
-                PriceCurrency.getDefaultCurrency(),"comment","costCenter", newDefaultSyncState());
+                PriceCurrency.getDefaultCurrency(),"comment","costCenter",
+                false, false, false, newDefaultSyncState());
     }
 
     @NonNull

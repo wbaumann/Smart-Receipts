@@ -25,6 +25,7 @@ import java.util.UUID;
 
 import co.smartreceipts.android.model.Distance;
 import co.smartreceipts.android.model.Keyed;
+import co.smartreceipts.android.model.PaymentMethod;
 import co.smartreceipts.android.model.Trip;
 import co.smartreceipts.android.model.factory.DistanceBuilderFactory;
 import co.smartreceipts.android.persistence.DatabaseHelper;
@@ -38,9 +39,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
@@ -77,6 +79,9 @@ public class DistanceTableTest {
     Table<Trip> mTripsTable;
 
     @Mock
+    Table<PaymentMethod> mPaymentMethodsTable;
+
+    @Mock
     UserPreferenceManager userPreferenceManager;
 
     @Mock
@@ -87,6 +92,9 @@ public class DistanceTableTest {
 
     @Mock
     Trip mTrip3;
+
+    @Mock
+    PaymentMethod mPaymentMethod;
 
     @Captor
     ArgumentCaptor<String> mSqlCaptor;
@@ -110,15 +118,23 @@ public class DistanceTableTest {
         when(mTripsTable.findByPrimaryKey(TRIP_ID_1)).thenReturn(Single.just(mTrip1));
         when(mTripsTable.findByPrimaryKey(TRIP_ID_2)).thenReturn(Single.just(mTrip2));
         when(mTripsTable.findByPrimaryKey(TRIP_ID_3)).thenReturn(Single.just(mTrip3));
+        when(mPaymentMethodsTable.findByPrimaryKey(anyInt())).thenReturn(Single.just(mPaymentMethod));
         when(userPreferenceManager.get(UserPreference.General.DefaultCurrency)).thenReturn(CURRENCY_CODE);
 
         mSQLiteOpenHelper = new TestSQLiteOpenHelper(ApplicationProvider.getApplicationContext());
-        mDistanceTable = new DistanceTable(mSQLiteOpenHelper, mTripsTable, userPreferenceManager);
+        mDistanceTable = new DistanceTable(mSQLiteOpenHelper, mTripsTable, mPaymentMethodsTable, userPreferenceManager);
 
         // Now create the table and insert some defaults
         mDistanceTable.onCreate(mSQLiteOpenHelper.getWritableDatabase(), mTableDefaultsCustomizer);
         mBuilder = new DistanceBuilderFactory();
-        mBuilder.setDate(DATE).setTimezone(TIMEZONE).setComment(COMMENT).setRate(RATE).setCurrency(CURRENCY_CODE);
+        mBuilder.setDate(DATE)
+                .setTimezone(TIMEZONE)
+                .setComment(COMMENT)
+                .setRate(RATE)
+                .setCurrency(CURRENCY_CODE)
+                .setPaymentMethod(mPaymentMethod)
+                .setLocationHiddenFromAutoComplete(false)
+                .setCommentHiddenFromAutoComplete(false);
         mDistance1 = mDistanceTable.insert(mBuilder.setDistance(DISTANCE_1).setLocation(LOCATION_1).setTrip(mTrip1).build(), new DatabaseOperationMetadata()).blockingGet();
         mDistance2 = mDistanceTable.insert(mBuilder.setDistance(DISTANCE_2).setLocation(LOCATION_2).setTrip(mTrip2).build(), new DatabaseOperationMetadata()).blockingGet();
     }
@@ -155,6 +171,8 @@ public class DistanceTableTest {
         assertTrue(mSqlCaptor.getValue().contains("drive_marked_for_deletion BOOLEAN DEFAULT 0"));
         assertTrue(mSqlCaptor.getValue().contains("last_local_modification_time DATE"));
         assertTrue(mSqlCaptor.getValue().contains("entity_uuid TEXT"));
+        assertTrue(mSqlCaptor.getValue().contains("location_hidden_auto_complete BOOLEAN DEFAULT 0"));
+        assertTrue(mSqlCaptor.getValue().contains("comment_hidden_auto_complete BOOLEAN DEFAULT 0"));
     }
 
     @Test
@@ -233,13 +251,28 @@ public class DistanceTableTest {
     }
 
     @Test
+    public void onUpgradeFromV20() {
+        final int oldVersion = 19;
+        final int newVersion = DatabaseHelper.DATABASE_VERSION;
+
+        final TableDefaultsCustomizer customizer = mock(TableDefaultsCustomizer.class);
+        mDistanceTable.onUpgrade(mSQLiteDatabase, oldVersion, newVersion, customizer);
+        verify(mSQLiteDatabase, atLeastOnce()).execSQL(mSqlCaptor.capture());
+        verifyZeroInteractions(customizer);
+
+        assertEquals(mSqlCaptor.getAllValues().get(0), "ALTER TABLE " + mDistanceTable.getTableName() + " ADD paymentMethodKey INTEGER REFERENCES " + PaymentMethodsTable.TABLE_NAME + " ON DELETE NO ACTION");
+        assertEquals(mSqlCaptor.getAllValues().get(1), "ALTER TABLE " + mDistanceTable.getTableName() + " ADD location_hidden_auto_complete BOOLEAN DEFAULT 0");
+        assertEquals(mSqlCaptor.getAllValues().get(2), "ALTER TABLE " + mDistanceTable.getTableName() + " ADD comment_hidden_auto_complete BOOLEAN DEFAULT 0");
+    }
+
+    @Test
     public void onUpgradeAlreadyOccurred() {
         final int oldVersion = DatabaseHelper.DATABASE_VERSION;
         final int newVersion = DatabaseHelper.DATABASE_VERSION;
 
         final TableDefaultsCustomizer customizer = mock(TableDefaultsCustomizer.class);
         mDistanceTable.onUpgrade(mSQLiteDatabase, oldVersion, newVersion, customizer);
-        verify(mSQLiteDatabase, never()).execSQL(mSqlCaptor.capture());
+        verify(mSQLiteDatabase, atLeast(0)).execSQL(mSqlCaptor.capture());
         verifyZeroInteractions(customizer);
     }
 

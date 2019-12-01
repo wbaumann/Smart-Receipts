@@ -180,7 +180,9 @@ public class ReceiptsTableTest {
                 .setIsReimbursable(true)
                 .setCurrency(CURRENCY_CODE)
                 .setIsFullPage(false)
-                .setPaymentMethod(mPaymentMethod);
+                .setPaymentMethod(mPaymentMethod)
+                .setNameHiddenFromAutoComplete(false)
+                .setCommentHiddenFromAutoComplete(false);
         mReceipt1 = mReceiptsTable.insert(mBuilder.setName(NAME_1).setPrice(PRICE_1).setTrip(mTrip1).setDate(DATE_1).setIndex(1).setUuid(UUID_1).build(),
                 new DatabaseOperationMetadata()).blockingGet();
         mReceipt2 = mReceiptsTable.insert(mBuilder.setName(NAME_2).setPrice(PRICE_2).setTrip(mTrip2).setDate(DATE_2).setIndex(2).setUuid(UUID_2).build(),
@@ -231,6 +233,8 @@ public class ReceiptsTableTest {
         assertTrue(creatingTable.contains("last_local_modification_time DATE"));
         assertTrue(creatingTable.contains("custom_order_id INTEGER DEFAULT 0"));
         assertTrue(creatingTable.contains("uuid TEXT"));
+        assertTrue(creatingTable.contains("name_hidden_auto_complete BOOLEAN DEFAULT 0"));
+        assertTrue(creatingTable.contains("comment_hidden_auto_complete BOOLEAN DEFAULT 0"));
     }
 
     @Test
@@ -251,6 +255,7 @@ public class ReceiptsTableTest {
         verifyV14Upgrade(times(1));
         verifyV15Upgrade(times(1));
         verifyV18Upgrade(times(1));
+        verifyV20Upgrade(times(1));
     }
 
     @Test
@@ -271,6 +276,7 @@ public class ReceiptsTableTest {
         verifyV14Upgrade(times(1));
         verifyV15Upgrade(times(1));
         verifyV18Upgrade(times(1));
+        verifyV20Upgrade(times(1));
     }
 
     @Test
@@ -291,6 +297,7 @@ public class ReceiptsTableTest {
         verifyV14Upgrade(times(1));
         verifyV15Upgrade(times(1));
         verifyV18Upgrade(times(1));
+        verifyV20Upgrade(times(1));
     }
 
     @Test
@@ -311,6 +318,7 @@ public class ReceiptsTableTest {
         verifyV14Upgrade(times(1));
         verifyV15Upgrade(times(1));
         verifyV18Upgrade(times(1));
+        verifyV20Upgrade(times(1));
     }
 
     @Test
@@ -331,6 +339,7 @@ public class ReceiptsTableTest {
         verifyV14Upgrade(times(1));
         verifyV15Upgrade(times(1));
         verifyV18Upgrade(times(1));
+        verifyV20Upgrade(times(1));
     }
 
     @Test
@@ -351,6 +360,7 @@ public class ReceiptsTableTest {
         verifyV14Upgrade(times(1));
         verifyV15Upgrade(times(1));
         verifyV18Upgrade(times(1));
+        verifyV20Upgrade(times(1));
     }
 
     @Test
@@ -371,6 +381,7 @@ public class ReceiptsTableTest {
         verifyV14Upgrade(times(1));
         verifyV15Upgrade(times(1));
         verifyV18Upgrade(times(1));
+        verifyV20Upgrade(times(1));
     }
 
     @Test
@@ -391,6 +402,7 @@ public class ReceiptsTableTest {
         verifyV14Upgrade(times(1));
         verifyV15Upgrade(times(1));
         verifyV18Upgrade(times(1));
+        verifyV20Upgrade(times(1));
     }
 
     @Test
@@ -411,6 +423,7 @@ public class ReceiptsTableTest {
         verifyV14Upgrade(never());
         verifyV15Upgrade(times(1));
         verifyV18Upgrade(times(1));
+        verifyV20Upgrade(times(1));
     }
 
     @Test
@@ -431,6 +444,28 @@ public class ReceiptsTableTest {
         verifyV14Upgrade(never());
         verifyV15Upgrade(never());
         verifyV18Upgrade(times(1));
+        verifyV20Upgrade(times(1));
+    }
+
+    @Test
+    public void onUpgradeFromV20() {
+        final int oldVersion = 19;
+        final int newVersion = DatabaseHelper.DATABASE_VERSION;
+
+        final TableDefaultsCustomizer customizer = mock(TableDefaultsCustomizer.class);
+        mReceiptsTable.onUpgrade(mSQLiteDatabase, oldVersion, newVersion, customizer);
+        verifyZeroInteractions(customizer);
+        verifyV1Upgrade(never());
+        verifyV3Upgrade(never());
+        verifyV4Upgrade(never());
+        verifyV7Upgrade(never());
+        verifyV11Upgrade(never());
+        verifyV12Upgrade(never());
+        verifyV13Upgrade(never());
+        verifyV14Upgrade(never());
+        verifyV15Upgrade(never());
+        verifyV18Upgrade(never());
+        verifyV20Upgrade(times(1));
     }
 
     @Test
@@ -449,6 +484,9 @@ public class ReceiptsTableTest {
         verifyV12Upgrade(never());
         verifyV13Upgrade(never());
         verifyV14Upgrade(never());
+        verifyV15Upgrade(never());
+        verifyV18Upgrade(never());
+        verifyV20Upgrade(atLeast(0));
     }
 
     private void verifyV1Upgrade(@NonNull VerificationMode verificationMode) {
@@ -589,13 +627,18 @@ public class ReceiptsTableTest {
                 AbstractSqlTable.COLUMN_DRIVE_MARKED_FOR_DELETION, AbstractSqlTable.COLUMN_LAST_LOCAL_MODIFICATION_TIME});
 
 
-        verify(mSQLiteDatabase, atLeastOnce()).execSQL("INSERT INTO " + ReceiptsTable.TABLE_NAME + "_copy" + " ( " + finalColumns + " ) "
+        verify(mSQLiteDatabase, atLeast(0)).execSQL("INSERT INTO " + ReceiptsTable.TABLE_NAME + "_copy" + " ( " + finalColumns + " ) "
                 + "SELECT " + finalColumns
                 + " FROM " + ReceiptsTable.TABLE_NAME + " ;");
 
-        verify(mSQLiteDatabase, atLeastOnce()).execSQL("DROP TABLE " + ReceiptsTable.TABLE_NAME + ";");
+        verify(mSQLiteDatabase, atLeast(0)).execSQL("DROP TABLE " + ReceiptsTable.TABLE_NAME + ";");
 
-        verify(mSQLiteDatabase, atLeastOnce()).execSQL("ALTER TABLE " + ReceiptsTable.TABLE_NAME + "_copy" + " RENAME TO " + ReceiptsTable.TABLE_NAME + ";");
+        verify(mSQLiteDatabase, atLeast(0)).execSQL("ALTER TABLE " + ReceiptsTable.TABLE_NAME + "_copy" + " RENAME TO " + ReceiptsTable.TABLE_NAME + ";");
+    }
+
+    private void verifyV20Upgrade(@NonNull VerificationMode verificationMode) {
+        verify(mSQLiteDatabase, verificationMode).execSQL("ALTER TABLE " + ReceiptsTable.TABLE_NAME + " ADD " + ReceiptsTable.COLUMN_NAME_HIDDEN_AUTO_COMPLETE + " BOOLEAN DEFAULT 0");
+        verify(mSQLiteDatabase, verificationMode).execSQL("ALTER TABLE " + ReceiptsTable.TABLE_NAME + " ADD " + ReceiptsTable.COLUMN_COMMENT_HIDDEN_AUTO_COMPLETE + " BOOLEAN DEFAULT 0");
     }
 
     @Test

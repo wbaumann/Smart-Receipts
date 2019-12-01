@@ -15,7 +15,6 @@ import java.sql.Date;
 import java.util.TimeZone;
 import java.util.UUID;
 
-import co.smartreceipts.android.model.Source;
 import co.smartreceipts.android.model.Trip;
 import co.smartreceipts.android.model.factory.TripBuilderFactory;
 import co.smartreceipts.android.persistence.database.operations.DatabaseOperationMetadata;
@@ -45,6 +44,9 @@ public class TripDatabaseAdapterTest {
     private static final String COST_CENTER = "Cost Center";
     private static final String CURRENCY_CODE = "USD";
     private static final String USER_PREFERENCES_CURRENCY_CODE = "EUR";
+    private static final boolean NAME_HIDDEN_FROM_AUTO_COMPLETE = false;
+    private static final boolean COMMENT_HIDDEN_FROM_AUTO_COMPLETE = false;
+    private static final boolean COST_CENTER_HIDDEN_FROM_AUTO_COMPLETE = false;
 
     // Class under test
     TripDatabaseAdapter mTripDatabaseAdapter;
@@ -81,6 +83,9 @@ public class TripDatabaseAdapterTest {
         final int defaultCurrencyIndex = 8;
         final int idIndex = 9;
         final int uuidIndex = 10;
+        final int nameHiddenFromAutoCompleteIndex = 11;
+        final int commentHiddenFromAutoCompleteIndex = 12;
+        final int costCenterHiddenFromAutoCompleteIndex = 13;
 
         when(mCursor.getColumnIndex("id")).thenReturn(idIndex);
         when(mCursor.getColumnIndex("name")).thenReturn(nameIndex);
@@ -92,6 +97,9 @@ public class TripDatabaseAdapterTest {
         when(mCursor.getColumnIndex("trips_cost_center")).thenReturn(costCenterIndex);
         when(mCursor.getColumnIndex("trips_default_currency")).thenReturn(defaultCurrencyIndex);
         when(mCursor.getColumnIndex("entity_uuid")).thenReturn(uuidIndex);
+        when(mCursor.getColumnIndex("name_hidden_auto_complete")).thenReturn(nameHiddenFromAutoCompleteIndex);
+        when(mCursor.getColumnIndex("comment_hidden_auto_complete")).thenReturn(commentHiddenFromAutoCompleteIndex);
+        when(mCursor.getColumnIndex("costcenter_hidden_auto_complete")).thenReturn(costCenterHiddenFromAutoCompleteIndex);
 
         when(mCursor.getInt(idIndex)).thenReturn(ID);
         when(mCursor.getString(nameIndex)).thenReturn(NAME);
@@ -103,6 +111,9 @@ public class TripDatabaseAdapterTest {
         when(mCursor.getString(costCenterIndex)).thenReturn(COST_CENTER);
         when(mCursor.getString(defaultCurrencyIndex)).thenReturn(CURRENCY_CODE);
         when(mCursor.getString(uuidIndex)).thenReturn(TRIP_UUID.toString());
+        when(mCursor.getInt(nameHiddenFromAutoCompleteIndex)).thenReturn(NAME_HIDDEN_FROM_AUTO_COMPLETE ? 1 : 0);
+        when(mCursor.getInt(commentHiddenFromAutoCompleteIndex)).thenReturn(COMMENT_HIDDEN_FROM_AUTO_COMPLETE ? 1 : 0);
+        when(mCursor.getInt(costCenterHiddenFromAutoCompleteIndex)).thenReturn(COST_CENTER_HIDDEN_FROM_AUTO_COMPLETE ? 1 : 0);
 
 
         when(mTrip.getId()).thenReturn(ID);
@@ -116,6 +127,10 @@ public class TripDatabaseAdapterTest {
         when(mTrip.getDefaultCurrencyCode()).thenReturn(CURRENCY_CODE);
         when(mTrip.getSyncState()).thenReturn(mSyncState);
         when(mTrip.getUuid()).thenReturn(TRIP_UUID);
+        when(mTrip.isNameHiddenFromAutoComplete()).thenReturn(NAME_HIDDEN_FROM_AUTO_COMPLETE);
+        when(mTrip.isCommentHiddenFromAutoComplete()).thenReturn(COMMENT_HIDDEN_FROM_AUTO_COMPLETE);
+        when(mTrip.isCostCenterHiddenFromAutoComplete()).thenReturn(COST_CENTER_HIDDEN_FROM_AUTO_COMPLETE);
+
 
         when(mPreferences.get(UserPreference.General.DefaultCurrency)).thenReturn(USER_PREFERENCES_CURRENCY_CODE);
         when(mStorageManager.getFile(NAME)).thenReturn(new File(NAME));
@@ -141,6 +156,9 @@ public class TripDatabaseAdapterTest {
                 .setCostCenter(COST_CENTER)
                 .setDefaultCurrency(CURRENCY_CODE, mPreferences.get(UserPreference.General.DefaultCurrency))
                 .setSyncState(mSyncState)
+                .setNameHiddenFromAutoComplete(NAME_HIDDEN_FROM_AUTO_COMPLETE)
+                .setCommentHiddenFromAutoComplete(COMMENT_HIDDEN_FROM_AUTO_COMPLETE)
+                .setCostCenterHiddenFromAutoComplete(COST_CENTER_HIDDEN_FROM_AUTO_COMPLETE)
                 .build();
         assertEquals(trip, mTripDatabaseAdapter.read(mCursor));
     }
@@ -163,6 +181,10 @@ public class TripDatabaseAdapterTest {
         assertEquals(COST_CENTER, contentValues.getAsString("trips_cost_center"));
         assertEquals(CURRENCY_CODE, contentValues.getAsString("trips_default_currency"));
         assertEquals(TRIP_UUID.toString(), contentValues.getAsString("entity_uuid"));
+        assertEquals(NAME_HIDDEN_FROM_AUTO_COMPLETE, contentValues.getAsBoolean("name_hidden_auto_complete"));
+        assertEquals(COMMENT_HIDDEN_FROM_AUTO_COMPLETE, contentValues.getAsBoolean("comment_hidden_auto_complete"));
+        assertEquals(COST_CENTER_HIDDEN_FROM_AUTO_COMPLETE, contentValues.getAsBoolean("costcenter_hidden_auto_complete"));
+
         assertEquals(sync, contentValues.getAsString(sync));
         assertFalse(contentValues.containsKey("miles_new"));
         assertFalse(contentValues.containsKey("trips_filters"));
@@ -188,6 +210,9 @@ public class TripDatabaseAdapterTest {
         assertEquals(COST_CENTER, contentValues.getAsString("trips_cost_center"));
         assertEquals(CURRENCY_CODE, contentValues.getAsString("trips_default_currency"));
         assertEquals(TRIP_UUID.toString(), contentValues.getAsString("entity_uuid"));
+        assertEquals(NAME_HIDDEN_FROM_AUTO_COMPLETE, contentValues.getAsBoolean("name_hidden_auto_complete"));
+        assertEquals(COMMENT_HIDDEN_FROM_AUTO_COMPLETE, contentValues.getAsBoolean("comment_hidden_auto_complete"));
+        assertEquals(COST_CENTER_HIDDEN_FROM_AUTO_COMPLETE, contentValues.getAsBoolean("costcenter_hidden_auto_complete"));
         assertEquals(sync, contentValues.getAsString(sync));
         assertFalse(contentValues.containsKey("miles_new"));
         assertFalse(contentValues.containsKey("trips_filters"));
@@ -209,6 +234,9 @@ public class TripDatabaseAdapterTest {
                 .setCostCenter(COST_CENTER)
                 .setDefaultCurrency(CURRENCY_CODE, mPreferences.get(UserPreference.General.DefaultCurrency))
                 .setSyncState(mGetSyncState)
+                .setNameHiddenFromAutoComplete(NAME_HIDDEN_FROM_AUTO_COMPLETE)
+                .setCommentHiddenFromAutoComplete(COMMENT_HIDDEN_FROM_AUTO_COMPLETE)
+                .setCostCenterHiddenFromAutoComplete(COST_CENTER_HIDDEN_FROM_AUTO_COMPLETE)
                 .build();
         assertEquals(trip, mTripDatabaseAdapter.build(mTrip, ID, TRIP_UUID, mock(DatabaseOperationMetadata.class)));
         assertEquals(trip.getSyncState(), mTripDatabaseAdapter.build(mTrip, ID, TRIP_UUID, mock(DatabaseOperationMetadata.class)).getSyncState());

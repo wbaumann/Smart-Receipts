@@ -20,7 +20,7 @@ class AutoCompleteArrayAdapter<Type>(context: Context,
     : ArrayAdapter<AutoCompleteResult<Type>>(context, R.layout.auto_complete_view, autoCompleteResults) {
 
     interface ClickListener {
-        fun callback(removeAutoCompleteResult: Boolean, position: Int)
+        fun onClick(removeAutoCompleteResult: Boolean, position: Int)
     }
 
     /**
@@ -40,21 +40,19 @@ class AutoCompleteArrayAdapter<Type>(context: Context,
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {
-        var listItem: View? = convertView
-        if (listItem == null)
-            listItem = LayoutInflater.from(context).inflate(R.layout.auto_complete_view, parent, false)
+        val listItem: View? = convertView ?: LayoutInflater.from(context).inflate(R.layout.auto_complete_view, parent, false)
 
         val result = getItem(position)
 
         val name = listItem!!.findViewById(R.id.auto_complete_name) as TextView
         name.text = result.displayName
         name.setOnClickListener {
-            listener.callback(false, position)
+            listener.onClick(false, position)
         }
 
         val image = listItem!!.findViewById(R.id.imgAutoCompleteDelete) as ImageView
         image.setOnClickListener {
-            listener.callback(true, position)
+            listener.onClick(true, position)
         }
         return listItem
     }

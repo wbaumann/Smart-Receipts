@@ -1,5 +1,8 @@
 package co.smartreceipts.android.autocomplete
 
+import co.smartreceipts.android.autocomplete.distance.DistanceAutoCompleteField
+import co.smartreceipts.android.autocomplete.receipt.ReceiptAutoCompleteField
+import co.smartreceipts.android.autocomplete.trip.TripAutoCompleteField
 import co.smartreceipts.android.model.Distance
 import co.smartreceipts.android.model.Receipt
 import co.smartreceipts.android.model.Trip
@@ -52,41 +55,24 @@ class AutoCompleteInteractor<Type> constructor(private val provider: AutoComplet
                             getResults.forEach {
                                 if (resultsChecker.matchesInput(input, field, it)) {
                                     // make sure value wasn't removed by user
-                                    var removedByUser = false
-                                    if (it is Receipt) {
-                                        if (field.name() == "Name") {
-                                            if (it.isNameHiddenFromAutoComplete) {
-                                                removedByUser = true
-                                            }
-                                        } else if (field.name() == "Comment") {
-                                            if (it.isCommentHiddenFromAutoComplete) {
-                                                removedByUser = true
-                                            }
+                                    val removedByUser = when (it) {
+                                        is Receipt -> when (field) {
+                                            ReceiptAutoCompleteField.Name -> it.isNameHiddenFromAutoComplete
+                                            ReceiptAutoCompleteField.Comment -> it.isCommentHiddenFromAutoComplete
+                                            else -> false
                                         }
-                                    } else if (it is Trip) {
-                                        if (field.name() == "Name") {
-                                            if (it.isNameHiddenFromAutoComplete) {
-                                                removedByUser = true
-                                            }
-                                        } else if (field.name() == "Comment") {
-                                            if (it.isCommentHiddenFromAutoComplete) {
-                                                removedByUser = true
-                                            }
-                                        } else {
-                                            if (it.isCostCenterHiddenFromAutoComplete) {
-                                                removedByUser = true
-                                            }
+                                        is Trip -> when (field) {
+                                            TripAutoCompleteField.Name -> it.isNameHiddenFromAutoComplete
+                                            TripAutoCompleteField.Comment -> it.isCommentHiddenFromAutoComplete
+                                            TripAutoCompleteField.CostCenter -> it.isCostCenterHiddenFromAutoComplete
+                                            else -> false
                                         }
-                                    } else if (it is Distance) {
-                                        if (field.name() == "Location") {
-                                            if (it.isLocationHiddenFromAutoComplete) {
-                                                removedByUser = true
-                                            }
-                                        } else if (field.name() == "Comment") {
-                                            if (it.isCommentHiddenFromAutoComplete) {
-                                                removedByUser = true
-                                            }
+                                        is Distance -> when (field) {
+                                            DistanceAutoCompleteField.Location -> it.isLocationHiddenFromAutoComplete
+                                            DistanceAutoCompleteField.Comment -> it.isCommentHiddenFromAutoComplete
+                                            else -> false
                                         }
+                                        else -> false
                                     }
 
                                     if (!removedByUser) {

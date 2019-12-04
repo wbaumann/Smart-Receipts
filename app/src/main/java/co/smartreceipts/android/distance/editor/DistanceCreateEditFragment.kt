@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintLayout
 import butterknife.BindViews
 import butterknife.ButterKnife
 import butterknife.ViewCollections
@@ -51,7 +52,8 @@ import java.sql.Date
 import java.util.*
 import javax.inject.Inject
 
-class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.OnFocusChangeListener, PaymentMethodsView {
+class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.OnFocusChangeListener,
+        PaymentMethodsView, AutoCompleteArrayAdapter.ClickListener {
     @Inject
     lateinit var presenter: DistanceCreateEditPresenter
 
@@ -392,7 +394,7 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
         }
     }
 
-    override fun callback(removeAutoCompleteResult: Boolean, position: Int) {
+    override fun onClick(removeAutoCompleteResult: Boolean, position: Int) {
         val selectedItem = resultsAdapter.getItem(position)
         if (selectedItem != null) {
             if (!removeAutoCompleteResult) {

@@ -541,7 +541,7 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
     }
 
     @Override
-    public void callback(boolean removeAutoCompleteResult, int position) {
+    public void onClick(boolean removeAutoCompleteResult, int position) {
         final AutoCompleteResult<Trip> selectedItem = resultsAdapter.getItem(position);
         if (selectedItem != null) {
             if (!removeAutoCompleteResult) {

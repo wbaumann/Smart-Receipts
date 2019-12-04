@@ -942,7 +942,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     }
 
     @Override
-    public void callback(boolean removeAutoCompleteResult, int position) {
+    public void onClick(boolean removeAutoCompleteResult, int position) {
         final AutoCompleteResult<Receipt> selectedItem = resultsAdapter.getItem(position);
         if (selectedItem != null) {
             final Receipt firstReceipt = selectedItem.getFirstItem();

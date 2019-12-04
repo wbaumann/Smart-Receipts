@@ -167,7 +167,7 @@ public final class DistanceBuilderFactory implements BuilderFactory<Distance> {
     }
 
     public DistanceBuilderFactory setPaymentMethod(@Nullable PaymentMethod method) {
-        paymentMethod = method;
+        this.paymentMethod = method;
         return this;
     }
 

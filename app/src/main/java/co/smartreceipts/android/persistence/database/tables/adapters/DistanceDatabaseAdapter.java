@@ -97,12 +97,9 @@ public final class DistanceDatabaseAdapter implements SelectionBackedDatabaseAda
                 .setCurrency(rateCurrency)
                 .setComment(comment)
                 .setSyncState(syncState)
+                .setPaymentMethod(paymentMethod)
                 .setLocationHiddenFromAutoComplete(isLocationHiddenFromAutoComplete)
                 .setCommentHiddenFromAutoComplete(isCommentHiddenFromAutoComplete);
-
-        if (paymentMethod != null) {
-            builder.setPaymentMethod(paymentMethod);
-        }
 
         return builder.build();
     }

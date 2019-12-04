@@ -54,8 +54,8 @@ class Distance(
     /**
      *  Checks if the comment of distance should be shown in auto complete results
      */
-    val isCommentHiddenFromAutoComplete: Boolean
-) : Keyed, Parcelable, Priceable, Comparable<Distance>, Syncable {
+    override val isCommentHiddenFromAutoComplete: Boolean
+) : Keyed, Parcelable, Priceable, Comparable<Distance>, Syncable, AutoCompleteCommentMetadata {
 
     /**
      * The [Date] in which the [displayableDate] was set

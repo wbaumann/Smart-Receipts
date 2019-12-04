@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
-import androidx.constraintlayout.widget.ConstraintLayout
 import butterknife.BindViews
 import butterknife.ButterKnife
 import butterknife.ViewCollections
@@ -51,7 +50,7 @@ import java.sql.Date
 import java.util.*
 import javax.inject.Inject
 
-class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.OnFocusChangeListener, PaymentMethodsView, AutoCompleteArrayAdapter.ClickListener {
+class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.OnFocusChangeListener, PaymentMethodsView {
     @Inject
     lateinit var presenter: DistanceCreateEditPresenter
 

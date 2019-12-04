@@ -44,11 +44,11 @@ class Trip @JvmOverloads constructor(
     /**
      *  Checks if the name of trip should be shown in auto complete results
      */
-    val isNameHiddenFromAutoComplete: Boolean,
+    override val isNameHiddenFromAutoComplete: Boolean,
     /**
      *  Checks if the comment of trip should be shown in auto complete results
      */
-    val isCommentHiddenFromAutoComplete: Boolean,
+    override val isCommentHiddenFromAutoComplete: Boolean,
     /**
      *  Checks if the cost center of trip should be shown in auto complete results
      */
@@ -67,7 +67,7 @@ class Trip @JvmOverloads constructor(
      */
     var dailySubTotal: Price = PriceBuilderFactory().setPrice(0.0).setCurrency(tripCurrency).build()
 
-) : Keyed, Parcelable, Priceable, Comparable<Trip>, Syncable, Searchable {
+) : Keyed, Parcelable, Priceable, Comparable<Trip>, Syncable, Searchable, AutoCompleteNameCommentMetadata {
 
     /**
      * The [Date] upon which this trip began

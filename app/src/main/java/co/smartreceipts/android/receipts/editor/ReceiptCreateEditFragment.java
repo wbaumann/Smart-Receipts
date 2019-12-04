@@ -977,6 +977,9 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
                 SoftKeyboardManager.hideKeyboard(focusedView);
             } else {
                 SoftKeyboardManager.hideKeyboard(focusedView);
+                final Consumer<Throwable> throwableConsumer = throwable ->
+                        getActivity().runOnUiThread(() ->
+                                Toast.makeText(getActivity(), R.string.delete_failed, Toast.LENGTH_LONG).show());
                 if (nameBox.isPopupShowing()) {
                     presenter.updateReceiptNameAutoCompleteVisibility(firstReceipt, true)
                             .subscribe(() ->
@@ -984,9 +987,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
                                         resultsAdapter.remove(selectedItem);
                                         resultsAdapter.notifyDataSetChanged();
                                         showUndoSnackbar(selectedItem, position, true);
-                                    }), throwable ->
-                                    getActivity().runOnUiThread(() ->
-                                            Toast.makeText(getActivity(), R.string.delete_failed, Toast.LENGTH_LONG).show()));
+                                    }), throwableConsumer);
                 } else {
                     presenter.updateReceiptCommentAutoCompleteVisibility(firstReceipt, true)
                             .subscribe(() ->
@@ -994,9 +995,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
                                         resultsAdapter.remove(selectedItem);
                                         resultsAdapter.notifyDataSetChanged();
                                         showUndoSnackbar(selectedItem, position, false);
-                                    }), throwable ->
-                                    getActivity().runOnUiThread(() ->
-                                            Toast.makeText(getActivity(), R.string.delete_failed, Toast.LENGTH_LONG).show()));
+                                    }), throwableConsumer);
                 }
             }
         }

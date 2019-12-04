@@ -417,6 +417,7 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
             } else {
                 SoftKeyboardManager.hideKeyboard(focusedView)
                 val firstDistance = selectedItem.firstItem
+                val throwableConsumer = Consumer<Throwable> { activity!!.runOnUiThread { Toast.makeText(activity, R.string.delete_failed, Toast.LENGTH_LONG).show() } }
                 if (text_distance_location.isPopupShowing) {
                     presenter.updateDistanceLocationAutoCompleteVisibility(firstDistance, true)
                             ?.subscribe({
@@ -425,11 +426,7 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
                                     resultsAdapter.notifyDataSetChanged()
                                     showUndoSnackbar(selectedItem, position, true)
                                 }
-                            }, {
-                                activity!!.runOnUiThread {
-                                    Toast.makeText(activity, R.string.delete_failed, Toast.LENGTH_LONG).show()
-                                }
-                            })
+                            }, {throwableConsumer})
                 } else {
                     presenter.updateDistanceCommentAutoCompleteVisibility(firstDistance, true)
                             ?.subscribe({
@@ -438,11 +435,7 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
                                     resultsAdapter.notifyDataSetChanged()
                                     showUndoSnackbar(selectedItem, position, false)
                                 }
-                            }, {
-                                activity!!.runOnUiThread {
-                                    Toast.makeText(activity, R.string.delete_failed, Toast.LENGTH_LONG).show()
-                                }
-                            })
+                            }, {throwableConsumer})
                 }
             }
         }

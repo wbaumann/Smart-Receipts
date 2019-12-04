@@ -2,10 +2,10 @@ package co.smartreceipts.android;
 
 import javax.inject.Inject;
 
-public class ExtraInitializerPlusImpl implements ExtraInitializer {
+public class ExtraInitializerFlossImpl implements ExtraInitializer {
     
     @Inject
-    public ExtraInitializerPlusImpl() {
+    public ExtraInitializerFlossImpl() {
     }
 
 

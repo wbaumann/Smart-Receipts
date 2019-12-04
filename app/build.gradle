@@ -99,8 +99,8 @@ android {
             applicationId "co.smartreceipts.fire.department.tracker.android"
             dimension "versionType"
         }
-        fossFlavor {
-            applicationId "wb.receipts.foss"
+        flossFlavor {
+            applicationId "wb.receipts.floss"
             dimension"versionType"
         }
     }

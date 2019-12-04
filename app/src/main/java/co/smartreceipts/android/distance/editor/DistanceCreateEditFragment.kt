@@ -280,8 +280,8 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
     }
 
     override fun present(uiIndicator: UiIndicator<Int>) {
-        when {
-            uiIndicator.state == UiIndicator.State.Success -> navigationHandler.navigateBack()
+        when (uiIndicator.state) {
+            UiIndicator.State.Success -> navigationHandler.navigateBack()
             else -> if (uiIndicator.state == UiIndicator.State.Error && uiIndicator.data.isPresent) {
                 Toast.makeText(requireContext(), uiIndicator.data.get(), Toast.LENGTH_LONG).show()
             }

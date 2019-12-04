@@ -268,6 +268,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     private FooterButtonArrayAdapter<Category> categoriesAdapter;
     private FooterButtonArrayAdapter<PaymentMethod> paymentMethodsAdapter;
     private AutoCompleteArrayAdapter<Receipt> resultsAdapter;
+    private Snackbar snackbar;
     private boolean shouldHideResults;
 
     @NonNull
@@ -652,6 +653,9 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
         currencyExchangeRateEditorPresenter.unsubscribe();
         autoCompletePresenter.unsubscribe();
         samsungDecimalInputPresenter.unsubscribe();
+        if (snackbar != null && snackbar.isShown()) {
+            snackbar.dismiss();
+        }
         super.onStop();
     }
 
@@ -1026,7 +1030,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
 
     private void showUndoSnackbar(AutoCompleteResult<Receipt> result, int position, boolean useNameBox) {
         View view = getActivity().findViewById(R.id.update_receipt_layout);
-        Snackbar snackbar = Snackbar.make(view, getString(
+        snackbar = Snackbar.make(view, getString(
                 R.string.item_removed_from_auto_complete, result.getDisplayName()), Snackbar.LENGTH_LONG);
         snackbar.setAction(R.string.undo, v -> undoDelete(result, position, useNameBox));
         snackbar.show();

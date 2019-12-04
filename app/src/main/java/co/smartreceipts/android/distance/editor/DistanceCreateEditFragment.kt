@@ -94,6 +94,8 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
 
     private var focusedView: View? = null
 
+    private lateinit var snackbar: Snackbar
+
     private lateinit var paymentMethodsAdapter: FooterButtonArrayAdapter<PaymentMethod>
 
     private lateinit var paymentMethodTableEventsListener: TableEventsListener<PaymentMethod>
@@ -241,6 +243,9 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
         presenter.unsubscribe()
         currencyListEditorPresenter.unsubscribe()
         paymentMethodsPresenter.unsubscribe()
+        if (::snackbar.isInitialized && snackbar.isShown) {
+            snackbar.dismiss()
+        }
         super.onStop()
     }
 
@@ -445,7 +450,7 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
 
     private fun showUndoSnackbar(result: AutoCompleteResult<Distance>, position: Int, useLocation: Boolean) {
         val view = activity!!.findViewById<ConstraintLayout>(R.id.update_distance_layout)
-        val snackbar: Snackbar = Snackbar.make(view, getString(
+        snackbar = Snackbar.make(view, getString(
                 R.string.item_removed_from_auto_complete, result.displayName), Snackbar.LENGTH_LONG)
         snackbar.setAction(R.string.undo) { undoDelete(result, position, useLocation) }
         snackbar.show()

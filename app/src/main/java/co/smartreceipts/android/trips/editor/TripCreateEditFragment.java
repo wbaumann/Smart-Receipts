@@ -146,6 +146,7 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
     private View focusedView;
 
     private AutoCompleteArrayAdapter<Trip> resultsAdapter;
+    private Snackbar snackbar;
     private boolean shouldHideResults;
 
     public static TripCreateEditFragment newInstance() {
@@ -284,6 +285,9 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
         tripAutoCompletePresenter.unsubscribe();
         currencyListEditorPresenter.unsubscribe();
         tripDatesPresenter.unsubscribe();
+        if (snackbar != null && snackbar.isShown()) {
+            snackbar.dismiss();
+        }
         super.onStop();
     }
 
@@ -597,7 +601,7 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
 
     private void showUndoSnackbar(AutoCompleteResult<Trip> result, int position, int fieldToUse) {
         View view = getActivity().findViewById(R.id.update_trip_layout);
-        Snackbar snackbar = Snackbar.make(view, getString(
+        snackbar = Snackbar.make(view, getString(
                 R.string.item_removed_from_auto_complete, result.getDisplayName()), Snackbar.LENGTH_LONG);
         snackbar.setAction(R.string.undo, v -> undoDelete(result, position, fieldToUse));
         snackbar.show();

@@ -13,7 +13,7 @@ import javax.inject.Inject;
 
 import co.smartreceipts.android.analytics.Analytics;
 import co.smartreceipts.android.analytics.crash.CrashReporter;
-import co.smartreceipts.android.aws.cognito.CognitoManager;
+import co.smartreceipts.aws.cognito.CognitoManager;
 import co.smartreceipts.android.date.DateFormatter;
 import co.smartreceipts.android.di.AppComponent;
 import co.smartreceipts.android.di.BaseAppModule;
@@ -30,11 +30,10 @@ import co.smartreceipts.android.rating.data.AppRatingPreferencesStorage;
 import co.smartreceipts.android.receipts.ordering.ReceiptsOrderer;
 import co.smartreceipts.android.settings.UserPreferenceManager;
 import co.smartreceipts.android.sync.cleanup.MarkedForDeletionCleaner;
-import co.smartreceipts.android.utils.StrictModeConfiguration;
 import co.smartreceipts.android.utils.WBUncaughtExceptionHandler;
 import co.smartreceipts.android.utils.cache.SmartReceiptsTemporaryFileCache;
 import co.smartreceipts.android.utils.leaks.MemoryLeakMonitor;
-import co.smartreceipts.android.utils.log.Logger;
+import co.smartreceipts.core.utils.log.Logger;
 import co.smartreceipts.android.utils.rx.DefaultRxErrorHandler;
 import co.smartreceipts.android.versioning.AppVersionManager;
 import dagger.android.AndroidInjector;
@@ -125,9 +124,9 @@ public class SmartReceiptsApplication extends Application implements HasAndroidI
     public void onCreate() {
         super.onCreate();
 
-        if (BuildConfig.DEBUG) {
-            StrictModeConfiguration.enable();
-        }
+//        if (BuildConfig.DEBUG) {
+//            StrictModeConfiguration.enable();
+//        }
 
         appComponent = DaggerAppComponent.builder()
                 .baseAppModule(new BaseAppModule(this))

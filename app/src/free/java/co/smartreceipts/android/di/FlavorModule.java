@@ -14,7 +14,11 @@ import co.smartreceipts.android.analytics.AnalyticsManager;
 import co.smartreceipts.android.analytics.GoogleAnalytics;
 import co.smartreceipts.android.analytics.impl.firebase.FirebaseAnalytics;
 import co.smartreceipts.android.analytics.impl.logger.AnalyticsLogger;
+import co.smartreceipts.android.aws.cognito.CognitoManager;
+import co.smartreceipts.android.aws.cognito.CognitoManagerInterface;
 import co.smartreceipts.android.di.scopes.ApplicationScope;
+import co.smartreceipts.android.ocr.OcrManager;
+import co.smartreceipts.android.ocr.OcrManager;
 import co.smartreceipts.android.purchases.wallet.DefaultPurchaseWallet;
 import co.smartreceipts.android.purchases.wallet.PurchaseWallet;
 import co.smartreceipts.android.settings.UserPreferenceManager;
@@ -46,5 +50,17 @@ public class FlavorModule {
     @ApplicationScope
     public static Tracker provideGoogleAnalyticsTracker(Context context) {
         return com.google.android.gms.analytics.GoogleAnalytics.getInstance(context).newTracker(R.xml.analytics);
+    }
+
+    @Provides
+    @ApplicationScope
+    public static OcrManagerInterface provideOcrManager(OcrManager ocrManager) {
+        return ocrManager;
+    }
+
+    @Provides
+    @ApplicationScope
+    public static CognitoManagerInterface provideCognitoManager(CognitoManager cognitoManager) {
+        return cognitoManager;
     }
 }

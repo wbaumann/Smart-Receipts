@@ -35,4 +35,16 @@ public class FlavorModule {
     public static Analytics provideAnalytics(UserPreferenceManager userPreferenceManager, FirebaseAnalytics firebaseAnalytics) {
         return new AnalyticsManager(Arrays.asList(new AnalyticsLogger(), firebaseAnalytics), userPreferenceManager);
     }
+
+    @Provides
+    @ApplicationScope
+    public static OcrManagerInterface provideOcrManager(OcrManager ocrManager) {
+        return ocrManager;
+    }
+
+    @Provides
+    @ApplicationScope
+    public static CognitoManagerInterface provideCognitoManager(CognitoManager cognitoManager) {
+        return cognitoManager;
+    }
 }

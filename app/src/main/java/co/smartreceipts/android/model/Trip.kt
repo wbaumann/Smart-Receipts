@@ -52,7 +52,8 @@ class Trip @JvmOverloads constructor(
     /**
      *  Checks if the cost center of trip should be shown in auto complete results
      */
-    val isCostCenterHiddenFromAutoComplete: Boolean,
+    override val isCostCenterHiddenFromAutoComplete: Boolean,
+    override val isLocationHiddenFromAutoComplete: Boolean,
     /**
      * The [SyncState] to track the remote sync progress
      */
@@ -67,7 +68,7 @@ class Trip @JvmOverloads constructor(
      */
     var dailySubTotal: Price = PriceBuilderFactory().setPrice(0.0).setCurrency(tripCurrency).build()
 
-) : Keyed, Parcelable, Priceable, Comparable<Trip>, Syncable, Searchable, AutoCompleteNameCommentMetadata {
+) : Keyed, Parcelable, Priceable, Comparable<Trip>, Syncable, Searchable, AutoCompleteMetadata {
 
     /**
      * The [Date] upon which this trip began

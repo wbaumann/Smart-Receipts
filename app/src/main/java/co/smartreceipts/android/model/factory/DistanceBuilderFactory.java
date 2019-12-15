@@ -198,6 +198,6 @@ public final class DistanceBuilderFactory implements BuilderFactory<Distance> {
         final DisplayableDate displayableDate = new DisplayableDate(date, timeZone);
 
         return new Distance(id, uuid, price, syncState, trip, location, scaledDistance, scaledRate, displayableDate, comment,
-                paymentMethod == null ? PaymentMethod.Companion.getNONE() : paymentMethod, isLocationHiddenFromAutoComplete, isCommentHiddenFromAutoComplete);
+                paymentMethod == null ? PaymentMethod.Companion.getNONE() : paymentMethod, isLocationHiddenFromAutoComplete, isCommentHiddenFromAutoComplete, false, false);
     }
 }

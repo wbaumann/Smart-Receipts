@@ -182,6 +182,6 @@ public final class TripBuilderFactory implements BuilderFactory<Trip> {
         final DisplayableDate startDisplayableDate = new DisplayableDate(startDate, startTimeZone);
         final DisplayableDate endDisplayableDate = new DisplayableDate(endDate, endTimeZone);
         return new Trip(id, uuid, dir, startDisplayableDate, endDisplayableDate, defaultCurrency, comment,
-                costCenter, isNameHiddenFromAutoComplete, isCommentHiddenFromAutoComplete, isCostCenterHiddenFromAutoComplete, syncState);
+                costCenter, isNameHiddenFromAutoComplete, isCommentHiddenFromAutoComplete, isCostCenterHiddenFromAutoComplete, false, syncState);
     }
 }

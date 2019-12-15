@@ -48,14 +48,13 @@ class Distance(
      */
     val paymentMethod: PaymentMethod,
     /**
-     *  Checks if the location of distance should be shown in auto complete results
-     */
-    val isLocationHiddenFromAutoComplete: Boolean,
-    /**
      *  Checks if the comment of distance should be shown in auto complete results
      */
-    override val isCommentHiddenFromAutoComplete: Boolean
-) : Keyed, Parcelable, Priceable, Comparable<Distance>, Syncable, AutoCompleteCommentMetadata {
+    override val isLocationHiddenFromAutoComplete: Boolean,
+    override val isCommentHiddenFromAutoComplete: Boolean,
+    override val isNameHiddenFromAutoComplete: Boolean,
+    override val isCostCenterHiddenFromAutoComplete: Boolean
+) : Keyed, Parcelable, Priceable, Comparable<Distance>, Syncable, AutoCompleteMetadata {
 
     /**
      * The [Date] in which the [displayableDate] was set

@@ -78,6 +78,8 @@ class Receipt constructor(
      *  Checks if the comment of receipt should be shown in auto complete results
      */
     override val isCommentHiddenFromAutoComplete: Boolean,
+    override val isLocationHiddenFromAutoComplete: Boolean,
+    override val isCostCenterHiddenFromAutoComplete: Boolean,
     /**
      * An extra [String], which certain white-label builds might have
      */
@@ -92,7 +94,7 @@ class Receipt constructor(
     val extraEditText3: String?,
     override val syncState: SyncState,
     override val customOrderId: Long
-) : Keyed, Parcelable, Priceable, Draggable<Receipt>, Syncable, Searchable, AutoCompleteNameCommentMetadata {
+) : Keyed, Parcelable, Priceable, Draggable<Receipt>, Syncable, Searchable, AutoCompleteMetadata {
 
     /**
      * The [Date] in which the [displayableDate] was set

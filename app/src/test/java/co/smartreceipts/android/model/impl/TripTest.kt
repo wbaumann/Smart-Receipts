@@ -64,7 +64,7 @@ class TripTest {
         syncState = DefaultObjects.newDefaultSyncState()
         trip = Trip(
             ID, TRIP_UUID, DIRECTORY, START_DISPLAYABLE_DATE, END_DISPLAYABLE_DATE, CURRENCY, COMMENT,
-            COST_CENTER, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, COST_CENTER_HIDDEN_AUTO_COMPLETE, syncState
+            COST_CENTER, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, COST_CENTER_HIDDEN_AUTO_COMPLETE, false, syncState
         )
     }
 
@@ -184,7 +184,7 @@ class TripTest {
             trip.compareTo(
                 Trip(
                     ID, TRIP_UUID, DIRECTORY, START_DISPLAYABLE_DATE, END_DISPLAYABLE_DATE, CURRENCY, COMMENT, COST_CENTER,
-                        NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, COST_CENTER_HIDDEN_AUTO_COMPLETE, syncState
+                        NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, COST_CENTER_HIDDEN_AUTO_COMPLETE, false, syncState
                 )
             ) == 0
         )
@@ -192,7 +192,7 @@ class TripTest {
             trip.compareTo(
                 Trip(
                     ID, TRIP_UUID, DIRECTORY, START_DISPLAYABLE_DATE, DisplayableDate(Date(END_DATE.time * 2), END_TIMEZONE), CURRENCY, COMMENT,
-                    COST_CENTER, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, COST_CENTER_HIDDEN_AUTO_COMPLETE, syncState
+                    COST_CENTER, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, COST_CENTER_HIDDEN_AUTO_COMPLETE, false, syncState
                 )
             ) > 0
         )
@@ -200,7 +200,7 @@ class TripTest {
             trip.compareTo(
                 Trip(
                     ID, TRIP_UUID, DIRECTORY, START_DISPLAYABLE_DATE, DisplayableDate(Date(0), END_TIMEZONE), CURRENCY, COMMENT, COST_CENTER,
-                        NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, COST_CENTER_HIDDEN_AUTO_COMPLETE, syncState
+                        NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, COST_CENTER_HIDDEN_AUTO_COMPLETE, false, syncState
                 )
             ) < 0
         )
@@ -213,7 +213,7 @@ class TripTest {
             trip,
             Trip(
                 ID, TRIP_UUID, DIRECTORY, START_DISPLAYABLE_DATE, END_DISPLAYABLE_DATE, CURRENCY, COMMENT, COST_CENTER,
-                    NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, COST_CENTER_HIDDEN_AUTO_COMPLETE, syncState
+                    NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, COST_CENTER_HIDDEN_AUTO_COMPLETE, false, syncState
             )
         )
         assertThat(trip, not(equalTo(Any())))
@@ -224,7 +224,7 @@ class TripTest {
                 equalTo(
                     Trip(
                         ID, TRIP_UUID, File(""), START_DISPLAYABLE_DATE, END_DISPLAYABLE_DATE, CURRENCY, COMMENT, COST_CENTER,
-                            NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, COST_CENTER_HIDDEN_AUTO_COMPLETE, syncState
+                            NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, COST_CENTER_HIDDEN_AUTO_COMPLETE, false, syncState
                     )
                 )
             )
@@ -235,7 +235,7 @@ class TripTest {
                 equalTo(
                     Trip(
                         ID, TRIP_UUID, DIRECTORY, DisplayableDate(Date(System.currentTimeMillis()), START_TIMEZONE), END_DISPLAYABLE_DATE, CURRENCY,
-                        COMMENT, COST_CENTER, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, COST_CENTER_HIDDEN_AUTO_COMPLETE, syncState
+                        COMMENT, COST_CENTER, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, COST_CENTER_HIDDEN_AUTO_COMPLETE, false, syncState
                     )
                 )
             )
@@ -246,7 +246,7 @@ class TripTest {
                 equalTo(
                     Trip(
                         ID, TRIP_UUID, DIRECTORY, DisplayableDate(START_DATE, TimeZone.getTimeZone(TimeZone.getAvailableIDs()[2])), END_DISPLAYABLE_DATE,
-                        CURRENCY, COMMENT, COST_CENTER, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, COST_CENTER_HIDDEN_AUTO_COMPLETE, syncState
+                        CURRENCY, COMMENT, COST_CENTER, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, COST_CENTER_HIDDEN_AUTO_COMPLETE, false, syncState
                     )
                 )
             )
@@ -257,7 +257,7 @@ class TripTest {
                 equalTo(
                     Trip(
                         ID, TRIP_UUID, DIRECTORY, START_DISPLAYABLE_DATE, DisplayableDate(Date(System.currentTimeMillis()), END_TIMEZONE), CURRENCY,
-                        COMMENT, COST_CENTER, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, COST_CENTER_HIDDEN_AUTO_COMPLETE, syncState
+                        COMMENT, COST_CENTER, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, COST_CENTER_HIDDEN_AUTO_COMPLETE, false, syncState
                     )
                 )
             )
@@ -268,7 +268,7 @@ class TripTest {
                 equalTo(
                     Trip(
                         ID, TRIP_UUID, DIRECTORY, START_DISPLAYABLE_DATE, DisplayableDate(END_DATE, TimeZone.getTimeZone(TimeZone.getAvailableIDs()[2])),
-                        CURRENCY, COMMENT, COST_CENTER, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, COST_CENTER_HIDDEN_AUTO_COMPLETE, syncState
+                        CURRENCY, COMMENT, COST_CENTER, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, COST_CENTER_HIDDEN_AUTO_COMPLETE, false, syncState
                     )
                 )
             )
@@ -280,7 +280,7 @@ class TripTest {
                     Trip(
                         ID, TRIP_UUID, DIRECTORY, START_DISPLAYABLE_DATE, END_DISPLAYABLE_DATE,
                         PriceCurrency.getInstance("EUR"), COMMENT, COST_CENTER,
-                            NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, COST_CENTER_HIDDEN_AUTO_COMPLETE, syncState
+                            NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, COST_CENTER_HIDDEN_AUTO_COMPLETE, false, syncState
                     )
                 )
             )
@@ -291,7 +291,7 @@ class TripTest {
                 equalTo(
                     Trip(
                         ID, TRIP_UUID, DIRECTORY, START_DISPLAYABLE_DATE, END_DISPLAYABLE_DATE, CURRENCY, "bad",
-                        COST_CENTER, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, COST_CENTER_HIDDEN_AUTO_COMPLETE, syncState
+                        COST_CENTER, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, COST_CENTER_HIDDEN_AUTO_COMPLETE, false, syncState
                     )
                 )
             )
@@ -302,7 +302,7 @@ class TripTest {
                 equalTo(
                     Trip(
                         ID, TRIP_UUID, DIRECTORY, START_DISPLAYABLE_DATE, END_DISPLAYABLE_DATE, CURRENCY, COMMENT, "bad",
-                            NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, COST_CENTER_HIDDEN_AUTO_COMPLETE, syncState
+                            NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, COST_CENTER_HIDDEN_AUTO_COMPLETE, false, syncState
                     )
                 )
             )
@@ -311,12 +311,12 @@ class TripTest {
         // Special equals cases (source, price, and daily subtotal don't count):
         val tripWithPrice = Trip(
             ID, TRIP_UUID, DIRECTORY, START_DISPLAYABLE_DATE, END_DISPLAYABLE_DATE, CURRENCY, COMMENT,
-            COST_CENTER, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, COST_CENTER_HIDDEN_AUTO_COMPLETE, syncState
+            COST_CENTER, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, COST_CENTER_HIDDEN_AUTO_COMPLETE, false, syncState
         )
 
         val tripWithDailySubTotal = Trip(
             ID, TRIP_UUID, DIRECTORY, START_DISPLAYABLE_DATE, END_DISPLAYABLE_DATE, CURRENCY, COMMENT,
-            COST_CENTER, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, COST_CENTER_HIDDEN_AUTO_COMPLETE, syncState
+            COST_CENTER, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, COST_CENTER_HIDDEN_AUTO_COMPLETE, false, syncState
         )
 
         tripWithPrice.price = price!!
@@ -325,7 +325,7 @@ class TripTest {
             trip,
             Trip(
                 ID, TRIP_UUID, DIRECTORY, START_DISPLAYABLE_DATE, END_DISPLAYABLE_DATE, CURRENCY, COMMENT, COST_CENTER,
-                    NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, COST_CENTER_HIDDEN_AUTO_COMPLETE, syncState
+                    NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, COST_CENTER_HIDDEN_AUTO_COMPLETE, false, syncState
             )
         )
         assertEquals(trip, tripWithPrice)

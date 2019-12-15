@@ -297,7 +297,7 @@ public class ReceiptBuilderFactory implements BuilderFactory<Receipt> {
                 category == null ? new CategoryBuilderFactory().build() : category, comment,
                 priceBuilderFactory.build(), taxBuilderFactory.build(), displayableDate,
                 isReimbursable, isFullPage, isSelected, isNameHiddenFromAutoComplete, isCommentHiddenFromAutoComplete,
-                extraEditText1, extraEditText2, extraEditText3, syncState, orderId);
+                false, false, extraEditText1, extraEditText2, extraEditText3, syncState, orderId);
     }
 
 }

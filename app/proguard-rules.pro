@@ -9,14 +9,15 @@
 
 ##### Our ProGuard configurations #####
 
+-whyareyoukeeping class com.amazonaws.*
+-dontobfuscate
+
 # Preserve the line number information for debugging stack traces.
 -keepattributes SourceFile,LineNumberTable
 
 # Keep annotations
 -keepattributes *Annotation*
 
-# Keep all exceptions for tracking purposes
--keep public class * extends java.lang.Exception
 
 ## Keep all of our classes as they are
 #-keep class co.smartreceipts.** { *; }

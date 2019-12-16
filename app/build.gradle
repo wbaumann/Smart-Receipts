@@ -90,14 +90,17 @@ android {
         free {
             applicationId "wb.receipts"
             dimension "versionType"
+            proguardFile 'flavor-not-floss-rules.pro'
         }
         plusFlavor {
             applicationId "wb.receiptspro"
             dimension "versionType"
+            proguardFile 'flavor-not-floss-rules.pro'
         }
         fireDepartmentFlavor {
             applicationId "co.smartreceipts.fire.department.tracker.android"
             dimension "versionType"
+            proguardFile 'flavor-not-floss-rules.pro'
         }
         flossFlavor {
             applicationId "wb.receipts.floss"
@@ -197,17 +200,15 @@ android {
         implementation "com.github.pqpo:SmartCropper:$SMART_CROPPER_VERSION"
 
         // Dagger
-        implementation "com.google.dagger:dagger-android-support:$DAGGER_VERSION"
-        implementation "com.google.dagger:dagger:$DAGGER_VERSION"
         kapt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
         kapt "com.google.dagger:dagger-android-processor:$DAGGER_VERSION"
 
-        // Crashlytics
+        // Crashlyticsb
         implementation "com.crashlytics.sdk.android:crashlytics:$CRASHLYTICS_VERSION"
 
         implementation "com.google.android.gms:play-services-oss-licenses:$GOOGLE_OSS_VERSION"
 
-//        // Unit Tests
+        // Unit Tests
         testImplementation "org.robolectric:robolectric:$ROBOLECTRIC_VERSION"
         testImplementation "junit:junit:$JUNIT_VERSION"
         testImplementation "org.mockito:mockito-core:$MOCKITO_VERSION"

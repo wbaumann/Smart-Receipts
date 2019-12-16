@@ -7,31 +7,28 @@ import co.smartreceipts.android.ExtraInitializerFlossImpl;
 import co.smartreceipts.android.analytics.Analytics;
 import co.smartreceipts.android.analytics.AnalyticsManager;
 import co.smartreceipts.android.analytics.impl.logger.AnalyticsLogger;
-import co.smartreceipts.aws.cognito.CognitoManager;
-import co.smartreceipts.aws.cognito.NoOpCognitoManager;
-import co.smartreceipts.core.di.scopes.ApplicationScope;
 import co.smartreceipts.android.ocr.NoOpOcrManager;
 import co.smartreceipts.android.ocr.OcrManager;
 import co.smartreceipts.android.purchases.wallet.DefaultPurchaseWallet;
 import co.smartreceipts.android.purchases.wallet.PurchaseWallet;
 import co.smartreceipts.android.settings.UserPreferenceManager;
+import co.smartreceipts.aws.cognito.CognitoManager;
+import co.smartreceipts.aws.cognito.NoOpCognitoManager;
+import co.smartreceipts.core.di.scopes.ApplicationScope;
+import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class FlavorModule {
+public abstract class FlavorModule {
 
-    @Provides
+    @Binds
     @ApplicationScope
-    public static PurchaseWallet providePurchaseWallet(DefaultPurchaseWallet defaultPurchaseWallet) {
-        return defaultPurchaseWallet;
-    }
+    public abstract PurchaseWallet providePurchaseWallet(DefaultPurchaseWallet defaultPurchaseWallet);
 
-    @Provides
+    @Binds
     @ApplicationScope
-    public static ExtraInitializer provideExtraInitializer(ExtraInitializerFlossImpl flossInitializer) {
-        return flossInitializer;
-    }
+    public abstract ExtraInitializer provideExtraInitializer(ExtraInitializerFlossImpl flossInitializer);
 
     @Provides
     @ApplicationScope
@@ -39,15 +36,11 @@ public class FlavorModule {
         return new AnalyticsManager(Arrays.asList(new AnalyticsLogger()), userPreferenceManager);
     }
 
-    @Provides
+    @Binds
     @ApplicationScope
-    public static OcrManager provideOcrManager(NoOpOcrManager ocrManager) {
-        return ocrManager;
-    }
+    public abstract OcrManager provideOcrManager(NoOpOcrManager ocrManager);
 
-    @Provides
+    @Binds
     @ApplicationScope
-    public static CognitoManager provideCognitoManager(NoOpCognitoManager cognitoManager) {
-        return cognitoManager;
-    }
+    public abstract CognitoManager provideCognitoManager(NoOpCognitoManager cognitoManager);
 }

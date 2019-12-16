@@ -88,7 +88,6 @@ public class CognitoManagerImpl implements CognitoManager {
      * fetch a valid entry, this should be treated as a singleton for the lifetime of the parent
      * {@link CognitoManagerImpl} object, since we use a replay subject
      */
-    @Override
     @NonNull
     public Observable<Optional<CognitoCachingCredentialsProvider>> getCognitoCachingCredentialsProvider() {
         return cachingCredentialsProviderReplaySubject

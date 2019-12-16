@@ -8,7 +8,7 @@ import java.io.File
 import javax.inject.Inject
 
 @ApplicationScope
-class NoOpOcrManager @Inject constructor(): OcrManager {
+class  NoOpOcrManager @Inject constructor(): OcrManager {
 
     override fun initialize() {}
 

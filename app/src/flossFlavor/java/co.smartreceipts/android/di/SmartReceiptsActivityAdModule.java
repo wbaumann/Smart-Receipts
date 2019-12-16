@@ -3,16 +3,14 @@ package co.smartreceipts.android.di;
 import co.smartreceipts.android.ad.AdPresenter;
 import co.smartreceipts.android.ad.EmptyBannerAdPresenter;
 import co.smartreceipts.core.di.scopes.ActivityScope;
+import dagger.Binds;
 import dagger.Module;
-import dagger.Provides;
 
 @Module
-public class SmartReceiptsActivityAdModule {
+public abstract class SmartReceiptsActivityAdModule {
 
-    @Provides
+    @Binds
     @ActivityScope
-    public static AdPresenter provideAdPresenter(EmptyBannerAdPresenter emptyBannerAdPresenter) {
-        return emptyBannerAdPresenter;
-    }
+    public abstract AdPresenter provideAdPresenter(EmptyBannerAdPresenter emptyBannerAdPresenter);
 
 }

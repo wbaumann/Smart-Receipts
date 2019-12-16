@@ -54,13 +54,13 @@ public class FlavorModule {
 
     @Provides
     @ApplicationScope
-    public static OcrManagerInterface provideOcrManager(OcrManager ocrManager) {
+    public static OcrManager provideOcrManager(OcrManagerImpl ocrManager) {
         return ocrManager;
     }
 
     @Provides
     @ApplicationScope
-    public static CognitoManagerInterface provideCognitoManager(CognitoManager cognitoManager) {
+    public static CognitoManager provideCognitoManager(CognitoManagerImpl cognitoManager) {
         return cognitoManager;
     }
 }

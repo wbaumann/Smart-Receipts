@@ -10,6 +10,7 @@ import com.google.common.base.Preconditions;
 import com.hadisatrio.optional.Optional;
 
 import co.smartreceipts.aws.cognito.CognitoManager;
+import co.smartreceipts.aws.cognito.CognitoManagerImpl;
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.subjects.ReplaySubject;
@@ -35,25 +36,29 @@ class S3ClientFactory {
     synchronized Observable<Optional<AmazonS3Client>> getAmazonS3() {
         if (amazonS3ReplaySubject == null) {
             amazonS3ReplaySubject = ReplaySubject.createWithSize(1);
-            amazonS3Disposable = cognitoManager.getCognitoCachingCredentialsProvider()
-                    .<Optional<AmazonS3Client>>map(cognitoCachingCredentialsProvider -> {
+
+            if (cognitoManager instanceof CognitoManagerImpl) {
+                amazonS3Disposable = ((CognitoManagerImpl)cognitoManager).getCognitoCachingCredentialsProvider()
+                        .<Optional<AmazonS3Client>>map(cognitoCachingCredentialsProvider -> {
                             if (cognitoCachingCredentialsProvider.isPresent()) {
                                 return Optional.of(new AmazonS3Client(
                                         cognitoCachingCredentialsProvider.get(), Region.getRegion(Regions.US_EAST_1)));
                             } else {
                                 return Optional.absent();
                             }
-                    })
-                    .subscribe(amazonS3ClientOptional -> {
-                        amazonS3ReplaySubject.onNext(amazonS3ClientOptional);
-                        if (amazonS3ClientOptional.isPresent()) {
-                            amazonS3ReplaySubject.onComplete();
-                            if (amazonS3Disposable != null) {
-                                amazonS3Disposable.dispose();
-                            }
-                        }
-                    }, throwable -> amazonS3ReplaySubject.onError(throwable),
-                            () -> amazonS3ReplaySubject.onComplete());
+                        })
+                        .subscribe(amazonS3ClientOptional -> {
+                                    amazonS3ReplaySubject.onNext(amazonS3ClientOptional);
+                                    if (amazonS3ClientOptional.isPresent()) {
+                                        amazonS3ReplaySubject.onComplete();
+                                        if (amazonS3Disposable != null) {
+                                            amazonS3Disposable.dispose();
+                                        }
+                                    }
+                                }, throwable -> amazonS3ReplaySubject.onError(throwable),
+                                () -> amazonS3ReplaySubject.onComplete());
+
+            }
         }
         return amazonS3ReplaySubject;
     }

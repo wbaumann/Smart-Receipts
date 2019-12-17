@@ -547,6 +547,19 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
                     paymentMethods.add(PaymentMethod.Companion.getNONE());
                     paymentMethodsAdapter.update(paymentMethods);
                     paymentMethodsSpinner.setAdapter(paymentMethodsAdapter);
+                    paymentMethodsSpinner.setOnItemSelectedListener(
+                            new AdapterView.OnItemSelectedListener() {
+                                @Override
+                                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                                    final PaymentMethod paymentMethod = paymentMethodsAdapter.getItem(i);
+                                    reimbursableCheckbox.setChecked(paymentMethod.isReimbursable());
+                                }
+
+                                @Override
+                                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                                }
+                            });
                     if (getEditableItem() != null) {
                         // Here we manually loop through all payment methods and check for id == id in case the user changed this via "Manage"
                         final PaymentMethod receiptPaymentMethod = getEditableItem().getPaymentMethod();

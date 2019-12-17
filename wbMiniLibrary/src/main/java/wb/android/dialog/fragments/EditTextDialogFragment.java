@@ -4,8 +4,12 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import androidx.fragment.app.DialogFragment;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 
 public class EditTextDialogFragment extends DialogFragment implements DialogInterface.OnClickListener {
 
@@ -61,11 +65,11 @@ public class EditTextDialogFragment extends DialogFragment implements DialogInte
 	}
 	
 	@Override
+	@NonNull
 	public Dialog onCreateDialog(final Bundle savedInstanceState) {
 		if (savedInstanceState != null) {
 			mText = savedInstanceState.getString(BUNDLE_CURRENT_TEXT);
-		}
-		else {
+		} else {
 			mText = getArgumentString(KEY_TEXT, "");
 		}
 		
@@ -105,9 +109,8 @@ public class EditTextDialogFragment extends DialogFragment implements DialogInte
 	private String getArgumentString(final String key, final String defaultValue) {
 		if (getArguments().containsKey(key)) {
 			return getArguments().getString(key);
-		}
-		else {
-			return "";
+		} else {
+			return defaultValue;
 		}
 	}
 	

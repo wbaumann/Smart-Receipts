@@ -15,6 +15,8 @@ import co.smartreceipts.android.persistence.database.controllers.TableController
 import co.smartreceipts.android.persistence.database.controllers.impl.PaymentMethodsTableController;
 import co.smartreceipts.android.persistence.database.operations.DatabaseOperationMetadata;
 import co.smartreceipts.android.persistence.database.tables.ordering.OrderingPreferencesManager;
+import co.smartreceipts.android.settings.UserPreferenceManager;
+import co.smartreceipts.android.settings.catalog.UserPreference;
 import co.smartreceipts.android.settings.widget.editors.DraggableEditableListFragment;
 import co.smartreceipts.android.settings.widget.editors.adapters.DraggableEditableCardsAdapter;
 import dagger.android.support.AndroidSupportInjection;
@@ -29,6 +31,9 @@ public class PaymentMethodsListFragment extends DraggableEditableListFragment<Pa
 
     @Inject
     OrderingPreferencesManager orderingPreferencesManager;
+
+    @Inject
+    UserPreferenceManager userPreferenceManager;
 
     public static PaymentMethodsListFragment newInstance() {
         return new PaymentMethodsListFragment();
@@ -80,7 +85,7 @@ public class PaymentMethodsListFragment extends DraggableEditableListFragment<Pa
         };
         final String title = getString(R.string.payment_method_add);
         final String positiveButtonText = getString(R.string.add);
-        showDialog(title, null, positiveButtonText, onClickListener);
+        showDialog(title, null, positiveButtonText, userPreferenceManager.get(UserPreference.Receipts.ReceiptsDefaultAsReimbursable), onClickListener);
     }
 
     private void showDialog(final String title, final String text, final String positiveButtonText, final EditTextDialogFragment.OnClickListener onClickListener) {

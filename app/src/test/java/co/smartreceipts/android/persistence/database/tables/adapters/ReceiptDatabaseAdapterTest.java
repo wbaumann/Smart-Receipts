@@ -70,7 +70,7 @@ public class ReceiptDatabaseAdapterTest {
     private static final int DESCENDING_INDEX = 3;
     private static final int ASCENDING_INDEX = 2;
     private static final int CURSOR_COUNT = 4;
-    private static final PaymentMethod PAYMENT_METHOD = new PaymentMethod(PAYMENT_METHOD_ID, PAYMENT_METHOD_UUID, "method");
+    private static final PaymentMethod PAYMENT_METHOD = new PaymentMethod(PAYMENT_METHOD_ID, PAYMENT_METHOD_UUID, "method", false);
     private static final boolean FULL_PAGE = true;
     private static final boolean NAME_HIDDEN_FROM_AUTO_COMPLETE = false;
     private static final boolean COMMENT_HIDDEN_FROM_AUTO_COMPLETE = false;

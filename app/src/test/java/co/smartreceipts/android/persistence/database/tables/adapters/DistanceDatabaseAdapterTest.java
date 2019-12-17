@@ -51,7 +51,7 @@ public class DistanceDatabaseAdapterTest {
     private static final UUID DIST_UUID = UUID.randomUUID();
     private static final int PAYMENT_METHOD_ID = 2;
     private static final UUID PAYMENT_METHOD_UUID = UUID.randomUUID();
-    private static final PaymentMethod PAYMENT_METHOD = new PaymentMethod(PAYMENT_METHOD_ID, PAYMENT_METHOD_UUID, "method");
+    private static final PaymentMethod PAYMENT_METHOD = new PaymentMethod(PAYMENT_METHOD_ID, PAYMENT_METHOD_UUID, "method", false);
     private static final boolean LOCATION_HIDDEN_FROM_AUTO_COMPLETE = false;
     private static final boolean COMMENT_HIDDEN_FROM_AUTO_COMPLETE = false;
 

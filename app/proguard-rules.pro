@@ -9,8 +9,7 @@
 
 ##### Our ProGuard configurations #####
 
--whyareyoukeeping class com.amazonaws.*
--dontobfuscate
+#-whyareyoukeeping class com.amazonaws.*
 
 # Preserve the line number information for debugging stack traces.
 -keepattributes SourceFile,LineNumberTable
@@ -19,15 +18,7 @@
 -keepattributes *Annotation*
 
 
-## Keep all of our classes as they are
-#-keep class co.smartreceipts.** { *; }
-#-dontwarn co.smartreceipts.**
-#-keep class wb.android.** { *; }
-#-dontwarn wb.android.**
-#-keep class wb.receipts.** { *; }
-#-dontwarn wb.receipts.**
-#-keep class wb.receiptspro.** { *; }
-#-dontwarn wb.receiptspro.**
+-dontobfuscate
 
 # Keep native classes
 -keepclasseswithmembernames class * {

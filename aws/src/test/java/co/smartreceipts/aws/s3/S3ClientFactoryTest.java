@@ -11,7 +11,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 
-import co.smartreceipts.aws.cognito.CognitoManager;
+import co.smartreceipts.aws.cognito.CognitoManagerImpl;
 import io.reactivex.Observable;
 import io.reactivex.observers.TestObserver;
 import io.reactivex.subjects.BehaviorSubject;
@@ -27,7 +27,7 @@ public class S3ClientFactoryTest {
     S3ClientFactory s3ClientFactory;
 
     @Mock
-    CognitoManager cognitoManager;
+    CognitoManagerImpl cognitoManager;
 
     @Mock
     CognitoCachingCredentialsProvider cognitoCachingCredentialsProvider;

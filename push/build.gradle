@@ -2,6 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
@@ -28,27 +29,17 @@ android {
 }
 
 dependencies {
+    implementation project(':core')
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    implementation "com.android.support:support-v4:$SUPPORT_LIBRARY_VERSION"
-    implementation "com.android.support:appcompat-v7:$SUPPORT_LIBRARY_VERSION"
-
-    implementation project(':core')
-
-    implementation "com.amazonaws:aws-android-sdk-core:$AWS_SDK_VERSION"
-    implementation "com.amazonaws:aws-android-sdk-s3:$AWS_SDK_VERSION"
-
-    implementation "com.hadisatrio:Optional:$OPTIONAL_VERSION"
-
-    // Unit Tests
-    testImplementation "org.robolectric:robolectric:$ROBOLECTRIC_VERSION"
-    testImplementation "junit:junit:$JUNIT_VERSION"
-    testImplementation "org.mockito:mockito-core:$MOCKITO_VERSION"
-    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$MOCKITO_KOTLIN_VERSION"
-    testImplementation "androidx.test:core:$ANDROID_TEST_RUNNER_VERSION"
-
     kapt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
     kapt "com.google.dagger:dagger-android-processor:$DAGGER_VERSION"
+
+    // firebase
+    implementation "com.google.firebase:firebase-core:$FIREBASE_CORE_VERSION"
+    implementation "com.google.firebase:firebase-crash:$FIREBASE_CRASH_VERSION"
+    implementation "com.google.firebase:firebase-messaging:$FIREBASE_MESSAGING_VERSION"
 
 }

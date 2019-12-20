@@ -14,11 +14,12 @@ import org.robolectric.RobolectricTestRunner;
 import java.lang.reflect.Constructor;
 
 import co.smartreceipts.android.analytics.Analytics;
-import co.smartreceipts.android.identity.IdentityManager;
-import co.smartreceipts.core.identity.apis.me.MeResponse;
+import co.smartreceipts.android.identity.IdentityManagerImpl;
 import co.smartreceipts.android.push.apis.me.UpdatePushTokensRequest;
-import co.smartreceipts.android.push.internal.FcmTokenRetriever;
-import co.smartreceipts.android.push.store.PushDataStore;
+import co.smartreceipts.push.internal.FcmTokenRetriever;
+import co.smartreceipts.push.store.PushDataStore;
+import co.smartreceipts.core.identity.apis.me.MeResponse;
+import co.smartreceipts.push.PushMessageReceiver;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
@@ -37,7 +38,7 @@ public class PushManagerTest {
     PushManager pushManager;
 
     @Mock
-    IdentityManager identityManager;
+    IdentityManagerImpl identityManager;
 
     @Mock
     Analytics analytics;

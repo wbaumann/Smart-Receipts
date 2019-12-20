@@ -1,6 +1,5 @@
 package co.smartreceipts.android.push;
 
-import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 
@@ -19,9 +18,11 @@ import co.smartreceipts.core.di.scopes.ApplicationScope;
 import co.smartreceipts.android.identity.IdentityManager;
 import co.smartreceipts.android.push.apis.me.UpdatePushTokensRequest;
 import co.smartreceipts.android.push.apis.me.UpdateUserPushTokens;
-import co.smartreceipts.android.push.internal.FcmTokenRetriever;
-import co.smartreceipts.android.push.store.PushDataStore;
+import co.smartreceipts.push.internal.FcmTokenRetriever;
+import co.smartreceipts.push.store.PushDataStore;
+import co.smartreceipts.core.di.scopes.ApplicationScope;
 import co.smartreceipts.core.utils.log.Logger;
+import co.smartreceipts.push.PushMessageReceiver;
 import io.reactivex.Scheduler;
 import io.reactivex.schedulers.Schedulers;
 

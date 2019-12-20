@@ -1,4 +1,4 @@
-package co.smartreceipts.android.push.store;
+package co.smartreceipts.push.store;
 
 import android.content.SharedPreferences;
 import androidx.annotation.NonNull;

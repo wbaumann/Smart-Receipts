@@ -1,4 +1,4 @@
-package co.smartreceipts.android.push;
+package co.smartreceipts.push;
 
 import androidx.annotation.NonNull;
 

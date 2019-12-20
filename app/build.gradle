@@ -129,6 +129,7 @@ android {
         implementation project(':core')
         implementation project(':wbMiniLibrary')
         implementation project(':aws')
+        implementation project(':push')
 
         implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 

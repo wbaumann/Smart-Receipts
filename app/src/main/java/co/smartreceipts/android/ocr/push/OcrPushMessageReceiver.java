@@ -7,7 +7,7 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.concurrent.TimeUnit;
 
-import co.smartreceipts.android.push.PushMessageReceiver;
+import co.smartreceipts.push.PushMessageReceiver;
 import io.reactivex.Observable;
 import io.reactivex.Scheduler;
 import io.reactivex.schedulers.Schedulers;

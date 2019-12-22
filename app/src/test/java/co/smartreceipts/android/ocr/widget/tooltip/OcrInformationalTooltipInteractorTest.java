@@ -9,9 +9,9 @@ import org.robolectric.RobolectricTestRunner;
 
 import co.smartreceipts.android.analytics.Analytics;
 import co.smartreceipts.android.config.ConfigurationManager;
-import co.smartreceipts.android.identity.IdentityManager;
 import co.smartreceipts.android.ocr.purchases.OcrPurchaseTracker;
 import co.smartreceipts.android.utils.ConfigurableResourceFeature;
+import co.smartreceipts.core.identity.IdentityManager;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.observers.TestObserver;

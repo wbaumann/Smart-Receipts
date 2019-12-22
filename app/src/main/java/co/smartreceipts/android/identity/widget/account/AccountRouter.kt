@@ -3,7 +3,7 @@ package co.smartreceipts.android.identity.widget.account
 import co.smartreceipts.android.activities.NavigationHandler
 import co.smartreceipts.android.activities.SmartReceiptsActivity
 import co.smartreceipts.core.di.scopes.FragmentScope
-import co.smartreceipts.android.identity.IdentityManager
+import co.smartreceipts.core.identity.IdentityManager
 import co.smartreceipts.core.utils.log.Logger
 import javax.inject.Inject
 

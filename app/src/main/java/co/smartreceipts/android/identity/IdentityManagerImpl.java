@@ -20,15 +20,15 @@ import co.smartreceipts.android.apis.WebServiceManager;
 import co.smartreceipts.android.identity.apis.login.LoginPayload;
 import co.smartreceipts.android.identity.apis.login.LoginResponse;
 import co.smartreceipts.android.identity.apis.login.LoginService;
-import co.smartreceipts.android.identity.apis.login.LoginType;
-import co.smartreceipts.android.identity.apis.login.UserCredentialsPayload;
+import co.smartreceipts.core.identity.apis.login.LoginType;
+import co.smartreceipts.core.identity.apis.login.UserCredentialsPayload;
 import co.smartreceipts.android.identity.apis.me.MeService;
 import co.smartreceipts.android.identity.apis.signup.SignUpPayload;
 import co.smartreceipts.android.identity.apis.signup.SignUpService;
 import co.smartreceipts.core.identity.store.MutableIdentityStore;
 import co.smartreceipts.android.push.apis.me.UpdatePushTokensRequest;
 import co.smartreceipts.core.di.scopes.ApplicationScope;
-import co.smartreceipts.core.identity.IdentityManagerInterface;
+import co.smartreceipts.core.identity.IdentityManager;
 import co.smartreceipts.core.identity.apis.me.MeResponse;
 import co.smartreceipts.core.identity.store.EmailAddress;
 import co.smartreceipts.core.identity.store.Token;
@@ -40,8 +40,10 @@ import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.BehaviorSubject;
 
 
+// TODO: 20.12.2019 recheck using of IdentityManagerImpl later
+
 @ApplicationScope
-public class IdentityManager implements IdentityManagerInterface {
+public class IdentityManagerImpl implements IdentityManager {
 
     private final WebServiceManager webServiceManager;
     private final Analytics analytics;
@@ -50,17 +52,17 @@ public class IdentityManager implements IdentityManagerInterface {
     private final Scheduler initializationScheduler;
 
     @Inject
-    public IdentityManager(@NonNull Analytics analytics,
-                           @NonNull MutableIdentityStore mutableIdentityStore,
-                           @NonNull WebServiceManager webServiceManager) {
+    public IdentityManagerImpl(@NonNull Analytics analytics,
+                               @NonNull MutableIdentityStore mutableIdentityStore,
+                               @NonNull WebServiceManager webServiceManager) {
         this(analytics, mutableIdentityStore, webServiceManager, Schedulers.io());
 
     }
 
-    public IdentityManager(@NonNull Analytics analytics,
-                           @NonNull MutableIdentityStore mutableIdentityStore,
-                           @NonNull WebServiceManager webServiceManager,
-                           @NonNull Scheduler initializationScheduler) {
+    public IdentityManagerImpl(@NonNull Analytics analytics,
+                               @NonNull MutableIdentityStore mutableIdentityStore,
+                               @NonNull WebServiceManager webServiceManager,
+                               @NonNull Scheduler initializationScheduler) {
         this.webServiceManager = webServiceManager;
         this.analytics = analytics;
         this.mutableIdentityStore = mutableIdentityStore;
@@ -68,6 +70,7 @@ public class IdentityManager implements IdentityManagerInterface {
         this.isLoggedInBehaviorSubject = BehaviorSubject.create();
     }
 
+    @Override
     @SuppressLint("CheckResult")
     public void initialize() {
         Observable.fromCallable(mutableIdentityStore::isLoggedIn)
@@ -153,7 +156,7 @@ public class IdentityManager implements IdentityManagerInterface {
                             Logger.error(this, "Failed to complete the sign up request", throwable);
                             analytics.record(Events.Identity.UserSignUpFailure);
                         }
-                    analytics.record(new ErrorEvent(IdentityManager.this, throwable));
+                    analytics.record(new ErrorEvent(IdentityManagerImpl.this, throwable));
                 })
                 .doOnComplete(() -> {
                         isLoggedInBehaviorSubject.onNext(true);

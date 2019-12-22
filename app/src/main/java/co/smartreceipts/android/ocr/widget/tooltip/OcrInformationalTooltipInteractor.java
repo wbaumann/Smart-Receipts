@@ -1,6 +1,7 @@
 package co.smartreceipts.android.ocr.widget.tooltip;
 
 import android.annotation.SuppressLint;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 
@@ -13,10 +14,10 @@ import co.smartreceipts.android.analytics.events.DataPoint;
 import co.smartreceipts.android.analytics.events.DefaultDataPointEvent;
 import co.smartreceipts.android.analytics.events.Events;
 import co.smartreceipts.android.config.ConfigurationManager;
-import co.smartreceipts.core.di.scopes.ApplicationScope;
-import co.smartreceipts.android.identity.IdentityManager;
 import co.smartreceipts.android.ocr.purchases.OcrPurchaseTracker;
 import co.smartreceipts.android.utils.ConfigurableResourceFeature;
+import co.smartreceipts.core.di.scopes.ApplicationScope;
+import co.smartreceipts.core.identity.IdentityManager;
 import co.smartreceipts.core.utils.log.Logger;
 import io.reactivex.Observable;
 import io.reactivex.Scheduler;

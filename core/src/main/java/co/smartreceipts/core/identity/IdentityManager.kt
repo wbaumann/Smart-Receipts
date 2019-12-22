@@ -4,9 +4,11 @@ import co.smartreceipts.core.identity.apis.me.MeResponse
 import co.smartreceipts.core.identity.store.IdentityStore
 import io.reactivex.Observable
 
-interface IdentityManagerInterface : IdentityStore {
-
-    fun getMe(): Observable<MeResponse>
+interface IdentityManager : IdentityStore {
 
     val isLoggedInStream: Observable<Boolean>
+
+    fun initialize()
+
+    fun getMe(): Observable<MeResponse>
 }

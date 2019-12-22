@@ -1,6 +1,6 @@
-package co.smartreceipts.android.analytics
+package co.smartreceipts.core.analytics
 
-import co.smartreceipts.android.analytics.events.Event
+import co.smartreceipts.core.analytics.events.Event
 
 /**
  * A default contract which can be used for logging events

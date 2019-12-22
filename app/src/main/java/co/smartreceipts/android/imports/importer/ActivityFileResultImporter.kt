@@ -2,8 +2,8 @@ package co.smartreceipts.android.imports.importer
 
 import android.net.Uri
 import androidx.annotation.VisibleForTesting
-import co.smartreceipts.android.analytics.Analytics
-import co.smartreceipts.android.analytics.events.ErrorEvent
+import co.smartreceipts.core.analytics.Analytics
+import co.smartreceipts.core.analytics.events.ErrorEvent
 import co.smartreceipts.core.di.scopes.ApplicationScope
 import co.smartreceipts.android.imports.FileImportProcessorFactory
 import co.smartreceipts.android.model.Trip

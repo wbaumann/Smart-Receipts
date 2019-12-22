@@ -6,8 +6,8 @@ import androidx.annotation.UiThread
 import co.smartreceipts.android.R
 import com.hadisatrio.optional.Optional
 
-import co.smartreceipts.android.analytics.Analytics
-import co.smartreceipts.android.analytics.events.Events
+import co.smartreceipts.core.analytics.Analytics
+import co.smartreceipts.core.analytics.events.Events
 import co.smartreceipts.android.columns.ordering.CsvColumnsOrderer
 import co.smartreceipts.android.columns.ordering.PdfColumnsOrderer
 import co.smartreceipts.core.di.scopes.FragmentScope

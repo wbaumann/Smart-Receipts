@@ -4,9 +4,9 @@ import java.util.Arrays;
 
 import co.smartreceipts.android.ExtraInitializer;
 import co.smartreceipts.android.ExtraInitializerFlossImpl;
-import co.smartreceipts.android.analytics.Analytics;
+import co.smartreceipts.core.analytics.Analytics;
 import co.smartreceipts.android.analytics.AnalyticsManager;
-import co.smartreceipts.android.analytics.impl.logger.AnalyticsLogger;
+import co.smartreceipts.android.analytics.impl.AnalyticsLogger;
 import co.smartreceipts.android.ocr.NoOpOcrManager;
 import co.smartreceipts.android.ocr.OcrManager;
 import co.smartreceipts.android.purchases.wallet.DefaultPurchaseWallet;

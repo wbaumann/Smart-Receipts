@@ -9,9 +9,9 @@ import java.io.File;
 
 import javax.inject.Inject;
 
-import co.smartreceipts.android.analytics.Analytics;
-import co.smartreceipts.android.analytics.events.ErrorEvent;
-import co.smartreceipts.android.analytics.events.Events;
+import co.smartreceipts.core.analytics.Analytics;
+import co.smartreceipts.core.analytics.events.ErrorEvent;
+import co.smartreceipts.core.analytics.events.Events;
 import co.smartreceipts.android.apis.ApiValidationException;
 import co.smartreceipts.android.apis.WebServiceManager;
 import co.smartreceipts.android.config.ConfigurationManager;

@@ -20,8 +20,8 @@ import javax.inject.Inject;
 
 import co.smartreceipts.android.R;
 import co.smartreceipts.android.activities.NavigationHandler;
-import co.smartreceipts.android.analytics.Analytics;
-import co.smartreceipts.android.analytics.events.Events;
+import co.smartreceipts.core.analytics.Analytics;
+import co.smartreceipts.core.analytics.events.Events;
 import co.smartreceipts.android.date.DateFormatter;
 import co.smartreceipts.android.model.Trip;
 import co.smartreceipts.android.persistence.PersistenceManager;

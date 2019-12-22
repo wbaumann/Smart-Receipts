@@ -6,8 +6,8 @@ import android.content.ContentResolver
 import android.content.Intent
 import android.net.Uri
 import co.smartreceipts.android.R
-import co.smartreceipts.android.analytics.Analytics
-import co.smartreceipts.android.analytics.events.Events
+import co.smartreceipts.core.analytics.Analytics
+import co.smartreceipts.core.analytics.events.Events
 import co.smartreceipts.android.images.CropImageActivity
 import co.smartreceipts.android.imports.RequestCodes
 import co.smartreceipts.android.imports.importer.ActivityFileResultImporter

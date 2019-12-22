@@ -12,8 +12,8 @@ import androidx.fragment.app.DialogFragment;
 import javax.inject.Inject;
 
 import co.smartreceipts.android.R;
-import co.smartreceipts.android.analytics.Analytics;
-import co.smartreceipts.android.analytics.events.Events;
+import co.smartreceipts.core.analytics.Analytics;
+import co.smartreceipts.core.analytics.events.Events;
 import co.smartreceipts.android.purchases.plus.SmartReceiptsTitle;
 import co.smartreceipts.android.workers.EmailAssistant;
 import dagger.android.support.AndroidSupportInjection;

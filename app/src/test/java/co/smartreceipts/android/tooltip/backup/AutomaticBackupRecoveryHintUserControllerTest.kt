@@ -3,8 +3,8 @@ package co.smartreceipts.android.tooltip.backup
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import co.smartreceipts.android.R
-import co.smartreceipts.android.analytics.Analytics
-import co.smartreceipts.android.analytics.events.Events
+import co.smartreceipts.core.analytics.Analytics
+import co.smartreceipts.core.analytics.events.Events
 import co.smartreceipts.android.purchases.PurchaseManager
 import co.smartreceipts.android.purchases.model.InAppPurchase
 import co.smartreceipts.android.purchases.wallet.PurchaseWallet

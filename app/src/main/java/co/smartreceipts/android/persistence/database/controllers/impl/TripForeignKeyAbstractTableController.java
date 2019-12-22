@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import co.smartreceipts.android.analytics.Analytics;
-import co.smartreceipts.android.analytics.events.ErrorEvent;
+import co.smartreceipts.core.analytics.Analytics;
+import co.smartreceipts.core.analytics.events.ErrorEvent;
 import co.smartreceipts.android.model.Keyed;
 import co.smartreceipts.android.model.Trip;
 import co.smartreceipts.android.persistence.database.controllers.TableController;

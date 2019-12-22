@@ -8,10 +8,10 @@ import com.google.common.base.Preconditions;
 import javax.inject.Inject;
 
 import co.smartreceipts.android.activities.NavigationHandler;
-import co.smartreceipts.android.analytics.Analytics;
-import co.smartreceipts.android.analytics.events.DataPoint;
-import co.smartreceipts.android.analytics.events.DefaultDataPointEvent;
-import co.smartreceipts.android.analytics.events.Events;
+import co.smartreceipts.core.analytics.Analytics;
+import co.smartreceipts.core.analytics.events.DataPoint;
+import co.smartreceipts.core.analytics.events.DefaultDataPointEvent;
+import co.smartreceipts.core.analytics.events.Events;
 import co.smartreceipts.android.sync.BackupProvidersManager;
 import co.smartreceipts.android.sync.errors.CriticalSyncError;
 import co.smartreceipts.android.sync.errors.SyncErrorType;

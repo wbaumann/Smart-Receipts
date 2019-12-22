@@ -1,15 +1,14 @@
 package co.smartreceipts.android.analytics
 
 import androidx.annotation.VisibleForTesting
-
+import co.smartreceipts.android.settings.UserPreferenceManager
+import co.smartreceipts.android.settings.catalog.UserPreference
+import co.smartreceipts.core.analytics.Analytics
+import co.smartreceipts.core.analytics.events.Event
 import com.google.common.base.Preconditions
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
-
-import co.smartreceipts.android.analytics.events.Event
-import co.smartreceipts.android.settings.UserPreferenceManager
-import co.smartreceipts.android.settings.catalog.UserPreference
 
 class AnalyticsManager @VisibleForTesting
 internal constructor(analyticsList: List<Analytics>,

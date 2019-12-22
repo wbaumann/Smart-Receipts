@@ -2,8 +2,8 @@ package co.smartreceipts.android.utils.rx;
 
 import com.google.common.base.Preconditions;
 
-import co.smartreceipts.android.analytics.Analytics;
-import co.smartreceipts.android.analytics.events.ErrorEvent;
+import co.smartreceipts.core.analytics.Analytics;
+import co.smartreceipts.core.analytics.events.ErrorEvent;
 import co.smartreceipts.core.utils.log.Logger;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.exceptions.UndeliverableException;

@@ -16,8 +16,8 @@ import javax.inject.Inject;
 
 import co.smartreceipts.android.R;
 import co.smartreceipts.android.SmartReceiptsApplication;
-import co.smartreceipts.android.analytics.Analytics;
-import co.smartreceipts.android.analytics.events.ErrorEvent;
+import co.smartreceipts.core.analytics.Analytics;
+import co.smartreceipts.core.analytics.events.ErrorEvent;
 import co.smartreceipts.android.persistence.DatabaseHelper;
 import co.smartreceipts.android.sync.BackupProvidersManager;
 import co.smartreceipts.android.sync.model.RemoteBackupMetadata;

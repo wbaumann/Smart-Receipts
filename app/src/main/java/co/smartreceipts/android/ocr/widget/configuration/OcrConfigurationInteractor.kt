@@ -1,9 +1,9 @@
 package co.smartreceipts.android.ocr.widget.configuration
 
-import co.smartreceipts.android.analytics.Analytics
-import co.smartreceipts.android.analytics.events.DataPoint
-import co.smartreceipts.android.analytics.events.DefaultDataPointEvent
-import co.smartreceipts.android.analytics.events.Events
+import co.smartreceipts.core.analytics.Analytics
+import co.smartreceipts.core.analytics.events.DataPoint
+import co.smartreceipts.core.analytics.events.DefaultDataPointEvent
+import co.smartreceipts.core.analytics.events.Events
 import co.smartreceipts.android.ocr.purchases.OcrPurchaseTracker
 import co.smartreceipts.android.purchases.PurchaseManager
 import co.smartreceipts.android.purchases.model.AvailablePurchase
@@ -68,7 +68,13 @@ constructor(
 
     fun startOcrPurchase(inAppPurchase: InAppPurchase?) {
         if (inAppPurchase != null) {
-            analytics.record(DefaultDataPointEvent(Events.Ocr.OcrPurchaseClicked).addDataPoint(DataPoint("sku", inAppPurchase)))
+            analytics.record(
+                DefaultDataPointEvent(Events.Ocr.OcrPurchaseClicked).addDataPoint(
+                DataPoint(
+                    "sku",
+                    inAppPurchase
+                )
+            ))
             purchaseManager.initiatePurchase(inAppPurchase, PurchaseSource.Ocr)
         } else {
             Logger.error(this, "Unexpected state in which the in app purchase is null")
@@ -76,12 +82,24 @@ constructor(
     }
 
     fun setOcrIsEnabled(ocrIsEnabled: Boolean) {
-        analytics.record(DefaultDataPointEvent(Events.Ocr.OcrIsEnabledToggled).addDataPoint(DataPoint("value", ocrIsEnabled)))
+        analytics.record(
+            DefaultDataPointEvent(Events.Ocr.OcrIsEnabledToggled).addDataPoint(
+            DataPoint(
+                "value",
+                ocrIsEnabled
+            )
+        ))
         userPreferenceManager[UserPreference.Misc.OcrIsEnabled] = ocrIsEnabled
     }
 
     fun setAllowUsToSaveImagesRemotely(saveImagesRemotely: Boolean) {
-        analytics.record(DefaultDataPointEvent(Events.Ocr.OcrIncognitoModeToggled).addDataPoint(DataPoint("value", !saveImagesRemotely)))
+        analytics.record(
+            DefaultDataPointEvent(Events.Ocr.OcrIncognitoModeToggled).addDataPoint(
+            DataPoint(
+                "value",
+                !saveImagesRemotely
+            )
+        ))
         userPreferenceManager[UserPreference.Misc.OcrIncognitoMode] = !saveImagesRemotely
     }
 

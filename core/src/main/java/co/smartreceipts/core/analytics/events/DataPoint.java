@@ -1,4 +1,4 @@
-package co.smartreceipts.android.analytics.events;
+package co.smartreceipts.core.analytics.events;
 
 import androidx.annotation.NonNull;
 

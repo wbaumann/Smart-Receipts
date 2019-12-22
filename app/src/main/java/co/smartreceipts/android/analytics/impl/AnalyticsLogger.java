@@ -1,12 +1,12 @@
-package co.smartreceipts.android.analytics.impl.logger;
+package co.smartreceipts.android.analytics.impl;
 
 import androidx.annotation.NonNull;
 
 import java.util.List;
 
-import co.smartreceipts.android.analytics.Analytics;
-import co.smartreceipts.android.analytics.events.DataPoint;
-import co.smartreceipts.android.analytics.events.Event;
+import co.smartreceipts.core.analytics.Analytics;
+import co.smartreceipts.core.analytics.events.DataPoint;
+import co.smartreceipts.core.analytics.events.Event;
 import co.smartreceipts.core.utils.log.Logger;
 
 public class AnalyticsLogger implements Analytics {

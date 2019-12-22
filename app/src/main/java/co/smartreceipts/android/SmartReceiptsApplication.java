@@ -11,7 +11,6 @@ import com.tom_roush.pdfbox.util.PDFBoxResourceLoader;
 
 import javax.inject.Inject;
 
-import co.smartreceipts.android.analytics.Analytics;
 import co.smartreceipts.android.analytics.crash.CrashReporter;
 import co.smartreceipts.android.date.DateFormatter;
 import co.smartreceipts.android.di.AppComponent;
@@ -35,6 +34,7 @@ import co.smartreceipts.android.utils.leaks.MemoryLeakMonitor;
 import co.smartreceipts.android.utils.rx.DefaultRxErrorHandler;
 import co.smartreceipts.android.versioning.AppVersionManager;
 import co.smartreceipts.aws.cognito.CognitoManager;
+import co.smartreceipts.core.analytics.Analytics;
 import co.smartreceipts.core.identity.IdentityManager;
 import co.smartreceipts.core.utils.log.Logger;
 import dagger.android.AndroidInjector;

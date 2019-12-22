@@ -11,9 +11,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.inject.Inject;
 
-import co.smartreceipts.android.analytics.Analytics;
-import co.smartreceipts.android.analytics.events.ErrorEvent;
-import co.smartreceipts.android.analytics.events.Events;
+import co.smartreceipts.core.analytics.Analytics;
+import co.smartreceipts.core.analytics.events.ErrorEvent;
+import co.smartreceipts.core.analytics.events.Events;
 import co.smartreceipts.android.identity.IdentityManagerImpl;
 import co.smartreceipts.android.push.apis.me.UpdatePushTokensRequest;
 import co.smartreceipts.android.push.apis.me.UpdateUserPushTokens;

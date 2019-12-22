@@ -3,8 +3,8 @@ package co.smartreceipts.android.tooltip.rating
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import co.smartreceipts.android.R
-import co.smartreceipts.android.analytics.Analytics
-import co.smartreceipts.android.analytics.events.Events
+import co.smartreceipts.core.analytics.Analytics
+import co.smartreceipts.core.analytics.events.Events
 import co.smartreceipts.android.rating.AppRatingManager
 import co.smartreceipts.android.tooltip.TooltipView
 import co.smartreceipts.android.tooltip.model.TooltipInteraction

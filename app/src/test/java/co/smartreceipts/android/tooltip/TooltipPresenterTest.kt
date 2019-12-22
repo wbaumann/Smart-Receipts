@@ -3,7 +3,7 @@ package co.smartreceipts.android.tooltip
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import co.smartreceipts.android.R
-import co.smartreceipts.android.analytics.Analytics
+import co.smartreceipts.core.analytics.Analytics
 import co.smartreceipts.android.tooltip.model.TooltipType
 import co.smartreceipts.android.tooltip.model.TooltipInteraction
 import co.smartreceipts.android.tooltip.model.TooltipMetadata

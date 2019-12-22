@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import co.smartreceipts.android.analytics.Analytics;
+import co.smartreceipts.core.analytics.Analytics;
 import co.smartreceipts.android.ocr.purchases.OcrPurchaseTracker;
 import co.smartreceipts.android.purchases.PurchaseManager;
 import co.smartreceipts.android.purchases.model.AvailablePurchase;

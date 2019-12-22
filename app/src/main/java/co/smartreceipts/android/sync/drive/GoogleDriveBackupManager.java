@@ -38,7 +38,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.inject.Inject;
 
-import co.smartreceipts.android.analytics.Analytics;
+import co.smartreceipts.core.analytics.Analytics;
 import co.smartreceipts.android.persistence.DatabaseHelper;
 import co.smartreceipts.android.persistence.database.controllers.impl.ReceiptTableController;
 import co.smartreceipts.android.persistence.database.restore.DatabaseRestorer;

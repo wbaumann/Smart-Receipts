@@ -11,8 +11,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import javax.inject.Inject;
 
-import co.smartreceipts.android.analytics.Analytics;
-import co.smartreceipts.android.analytics.events.ErrorEvent;
+import co.smartreceipts.core.analytics.Analytics;
+import co.smartreceipts.core.analytics.events.ErrorEvent;
 import co.smartreceipts.core.di.scopes.ApplicationScope;
 import co.smartreceipts.android.model.Receipt;
 import co.smartreceipts.android.model.Trip;

@@ -1,4 +1,4 @@
-package co.smartreceipts.android.analytics.events;
+package co.smartreceipts.core.analytics.events;
 
 import androidx.annotation.NonNull;
 
@@ -6,7 +6,7 @@ import com.google.common.base.Preconditions;
 
 import java.util.Collections;
 
-import co.smartreceipts.android.utils.ExceptionUtils;
+import co.smartreceipts.core.utils.ExceptionUtils;
 
 public class ErrorEvent extends DefaultEvent {
 

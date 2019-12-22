@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.annotation.AnyThread
 import androidx.annotation.UiThread
 import co.smartreceipts.android.R
-import co.smartreceipts.android.analytics.Analytics
-import co.smartreceipts.android.analytics.events.Events
+import co.smartreceipts.core.analytics.Analytics
+import co.smartreceipts.core.analytics.events.Events
 import co.smartreceipts.core.di.scopes.FragmentScope
 import co.smartreceipts.android.rating.AppRatingManager
 import co.smartreceipts.android.tooltip.TooltipView
@@ -29,7 +29,8 @@ class RateThisAppTooltipController @Inject constructor(private val context: Cont
                                                        private val tooltipView: TooltipView,
                                                        private var router: RateThisAppTooltipRouter,
                                                        private val appRatingManager: AppRatingManager,
-                                                       private val analytics: Analytics) : TooltipController {
+                                                       private val analytics: Analytics
+) : TooltipController {
 
     @UiThread
     override fun shouldDisplayTooltip(): Single<Optional<TooltipMetadata>> {

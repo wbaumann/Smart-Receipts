@@ -1,9 +1,9 @@
 package co.smartreceipts.android.tooltip
 
-import co.smartreceipts.android.analytics.Analytics
-import co.smartreceipts.android.analytics.events.DataPoint
-import co.smartreceipts.android.analytics.events.DefaultDataPointEvent
-import co.smartreceipts.android.analytics.events.Events
+import co.smartreceipts.core.analytics.Analytics
+import co.smartreceipts.core.analytics.events.DataPoint
+import co.smartreceipts.core.analytics.events.DefaultDataPointEvent
+import co.smartreceipts.core.analytics.events.Events
 import co.smartreceipts.core.di.scopes.FragmentScope
 import co.smartreceipts.android.tooltip.model.TooltipInteraction
 import co.smartreceipts.android.tooltip.model.TooltipMetadata
@@ -24,7 +24,8 @@ import javax.inject.Inject
 @FragmentScope
 class TooltipPresenter @Inject constructor(view: TooltipView,
                                            private val tooltipControllerProvider: TooltipControllerProvider,
-                                           private val analytics: Analytics) : BasePresenter<TooltipView>(view) {
+                                           private val analytics: Analytics
+) : BasePresenter<TooltipView>(view) {
 
     /**
      * We use this to emit an event, whenever the user interacts with a [TooltipMetadata] where
@@ -74,7 +75,13 @@ class TooltipPresenter @Inject constructor(view: TooltipView,
                 }
                 .doOnNext {
                     Logger.info(this, "Displaying tooltip: {}", it)
-                    analytics.record(DefaultDataPointEvent(Events.Informational.DisplayingTooltip).addDataPoint(DataPoint("tooltip", it)))
+                    analytics.record(
+                        DefaultDataPointEvent(Events.Informational.DisplayingTooltip).addDataPoint(
+                        DataPoint(
+                            "tooltip",
+                            it
+                        )
+                    ))
                     this.activeTooltip = it
                     this.activeTooltipController = tooltipControllerProvider.get(it.tooltipType)
                 }

@@ -11,8 +11,8 @@ import androidx.appcompat.widget.Toolbar
 import co.smartreceipts.android.R
 import co.smartreceipts.android.activities.NavigationHandler
 import co.smartreceipts.android.activities.SmartReceiptsActivity
-import co.smartreceipts.android.analytics.Analytics
-import co.smartreceipts.android.analytics.events.Events
+import co.smartreceipts.core.analytics.Analytics
+import co.smartreceipts.core.analytics.events.Events
 import co.smartreceipts.android.images.CropImageActivity
 import co.smartreceipts.android.imports.CameraInteractionController
 import co.smartreceipts.android.imports.RequestCodes

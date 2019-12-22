@@ -13,7 +13,7 @@ import org.robolectric.RobolectricTestRunner;
 
 import java.lang.reflect.Constructor;
 
-import co.smartreceipts.android.analytics.Analytics;
+import co.smartreceipts.core.analytics.Analytics;
 import co.smartreceipts.android.identity.IdentityManagerImpl;
 import co.smartreceipts.android.push.apis.me.UpdatePushTokensRequest;
 import co.smartreceipts.push.internal.FcmTokenRetriever;

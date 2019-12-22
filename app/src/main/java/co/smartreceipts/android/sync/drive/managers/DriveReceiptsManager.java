@@ -9,8 +9,8 @@ import com.google.common.base.Preconditions;
 import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import co.smartreceipts.android.analytics.Analytics;
-import co.smartreceipts.android.analytics.events.ErrorEvent;
+import co.smartreceipts.core.analytics.Analytics;
+import co.smartreceipts.core.analytics.events.ErrorEvent;
 import co.smartreceipts.android.model.Receipt;
 import co.smartreceipts.android.model.factory.ReceiptBuilderFactoryFactory;
 import co.smartreceipts.android.persistence.database.controllers.TableController;

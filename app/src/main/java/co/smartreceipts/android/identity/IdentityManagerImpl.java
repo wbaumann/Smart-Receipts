@@ -12,13 +12,13 @@ import org.reactivestreams.Subscriber;
 
 import javax.inject.Inject;
 
-import co.smartreceipts.android.analytics.Analytics;
-import co.smartreceipts.android.analytics.events.ErrorEvent;
-import co.smartreceipts.android.analytics.events.Events;
+import co.smartreceipts.core.analytics.Analytics;
+import co.smartreceipts.core.analytics.events.ErrorEvent;
+import co.smartreceipts.core.analytics.events.Events;
 import co.smartreceipts.android.apis.ApiValidationException;
 import co.smartreceipts.android.apis.WebServiceManager;
-import co.smartreceipts.android.identity.apis.login.LoginPayload;
-import co.smartreceipts.android.identity.apis.login.LoginResponse;
+import co.smartreceipts.core.identity.apis.login.LoginPayload;
+import co.smartreceipts.core.identity.apis.login.LoginResponse;
 import co.smartreceipts.android.identity.apis.login.LoginService;
 import co.smartreceipts.core.identity.apis.login.LoginType;
 import co.smartreceipts.core.identity.apis.login.UserCredentialsPayload;

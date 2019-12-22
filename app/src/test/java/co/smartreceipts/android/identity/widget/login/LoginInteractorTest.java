@@ -13,7 +13,7 @@ import org.robolectric.RobolectricTestRunner;
 
 import co.smartreceipts.android.R;
 import co.smartreceipts.android.identity.IdentityManagerImpl;
-import co.smartreceipts.android.identity.apis.login.LoginResponse;
+import co.smartreceipts.core.identity.apis.login.LoginResponse;
 import co.smartreceipts.core.identity.apis.login.SmartReceiptsUserLogin;
 import co.smartreceipts.core.identity.apis.login.SmartReceiptsUserSignUp;
 import co.smartreceipts.core.identity.apis.login.UserCredentialsPayload;

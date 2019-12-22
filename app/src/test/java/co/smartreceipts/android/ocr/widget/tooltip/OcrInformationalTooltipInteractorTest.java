@@ -7,7 +7,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 
-import co.smartreceipts.android.analytics.Analytics;
+import co.smartreceipts.core.analytics.Analytics;
 import co.smartreceipts.android.config.ConfigurationManager;
 import co.smartreceipts.android.ocr.purchases.OcrPurchaseTracker;
 import co.smartreceipts.android.utils.ConfigurableResourceFeature;

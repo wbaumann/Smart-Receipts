@@ -1,4 +1,4 @@
-package co.smartreceipts.android.identity.apis.login
+package co.smartreceipts.core.identity.apis.login
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
@@ -7,16 +7,15 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
-class SmartReceiptsUserSignUpTest {
+class SmartReceiptsUserLoginTest {
 
     @Test
     fun getters() {
-        val login = SmartReceiptsUserSignUp("email", "password")
-        assertNull(login.typeString)
+        val login = SmartReceiptsUserLogin("email", "password")
+        assertEquals(login.typeString, "login")
         assertEquals(login.email, "email")
         assertEquals(login.password, "password")
-        assertEquals(login.loginType, LoginType.SignUp)
+        assertEquals(login.loginType, LoginType.LogIn)
         assertNull(login.token)
     }
-
 }

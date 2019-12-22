@@ -20,10 +20,10 @@ import javax.inject.Inject;
 
 import co.smartreceipts.android.R;
 import co.smartreceipts.android.ad.AdPresenter;
-import co.smartreceipts.android.analytics.Analytics;
-import co.smartreceipts.android.analytics.events.DataPoint;
-import co.smartreceipts.android.analytics.events.DefaultDataPointEvent;
-import co.smartreceipts.android.analytics.events.Events;
+import co.smartreceipts.core.analytics.Analytics;
+import co.smartreceipts.core.analytics.events.DataPoint;
+import co.smartreceipts.core.analytics.events.DefaultDataPointEvent;
+import co.smartreceipts.core.analytics.events.Events;
 import co.smartreceipts.android.config.ConfigurationManager;
 import co.smartreceipts.android.imports.RequestCodes;
 import co.smartreceipts.android.fragments.PermissionAlertDialogFragment;

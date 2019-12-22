@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.annotation.AnyThread
 import androidx.annotation.UiThread
 import co.smartreceipts.android.R
-import co.smartreceipts.android.analytics.Analytics
-import co.smartreceipts.android.analytics.events.Events
+import co.smartreceipts.core.analytics.Analytics
+import co.smartreceipts.core.analytics.events.Events
 import com.hadisatrio.optional.Optional
 
 import co.smartreceipts.core.di.scopes.FragmentScope

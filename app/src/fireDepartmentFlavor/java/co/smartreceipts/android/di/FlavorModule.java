@@ -44,4 +44,8 @@ public abstract class FlavorModule {
     @Binds
     @ApplicationScope
     public abstract CognitoManager provideCognitoManager(CognitoManagerImpl cognitoManager);
+
+    @Binds
+    @ApplicationScope
+    public abstract PushManager providePushManager(PushManagerImpl pushManager);
 }

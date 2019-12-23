@@ -4,6 +4,8 @@ import java.util.Arrays;
 
 import co.smartreceipts.android.ExtraInitializer;
 import co.smartreceipts.android.ExtraInitializerFlossImpl;
+import co.smartreceipts.push.NoOpPushManager;
+import co.smartreceipts.push.PushManager;
 import co.smartreceipts.core.analytics.Analytics;
 import co.smartreceipts.android.analytics.AnalyticsManager;
 import co.smartreceipts.android.analytics.impl.AnalyticsLogger;
@@ -43,4 +45,8 @@ public abstract class FlavorModule {
     @Binds
     @ApplicationScope
     public abstract CognitoManager provideCognitoManager(NoOpCognitoManager cognitoManager);
+
+    @Binds
+    @ApplicationScope
+    public abstract PushManager providePushManager(NoOpPushManager pushManager);
 }

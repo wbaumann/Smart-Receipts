@@ -17,9 +17,12 @@
 -dontwarn com.amazonaws.http.**
 -dontwarn com.amazonaws.metrics.**
 
+
+##### FireBase ProGuard configurations #####
+-keep class com.google.firebase.provider.FirebaseInitProvider
+
 # Keep all exceptions for tracking purposes
 -keep public class * extends java.lang.Exception
-
 -keep class org.apache.commons.logging.**               { *; }
 -keep class com.amazonaws.services.sqs.QueueUrlHandler  { *; }
 -keep class com.amazonaws.javax.xml.transform.sax.*     { public *; }

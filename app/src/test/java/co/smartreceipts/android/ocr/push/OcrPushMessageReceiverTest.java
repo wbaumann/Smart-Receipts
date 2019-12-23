@@ -11,6 +11,7 @@ import org.robolectric.RobolectricTestRunner;
 
 import java.lang.reflect.Constructor;
 
+import co.smartreceipts.push.ocr.OcrPushMessageReceiver;
 import io.reactivex.observers.TestObserver;
 import io.reactivex.schedulers.Schedulers;
 

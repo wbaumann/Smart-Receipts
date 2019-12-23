@@ -15,7 +15,8 @@ import java.lang.reflect.Constructor;
 
 import co.smartreceipts.core.analytics.Analytics;
 import co.smartreceipts.android.identity.IdentityManagerImpl;
-import co.smartreceipts.android.push.apis.me.UpdatePushTokensRequest;
+import co.smartreceipts.core.identity.apis.push.UpdatePushTokensRequest;
+import co.smartreceipts.push.PushManagerImpl;
 import co.smartreceipts.push.internal.FcmTokenRetriever;
 import co.smartreceipts.push.store.PushDataStore;
 import co.smartreceipts.core.identity.apis.me.MeResponse;
@@ -35,7 +36,7 @@ public class PushManagerTest {
     private static final String TOKEN = "token";
 
     // Class under test
-    PushManager pushManager;
+    PushManagerImpl pushManager;
 
     @Mock
     IdentityManagerImpl identityManager;
@@ -58,7 +59,7 @@ public class PushManagerTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        pushManager = new PushManager(identityManager, analytics, fcmTokenRetriever, pushDataStore, Schedulers.trampoline());
+        pushManager = new PushManagerImpl(identityManager, analytics, fcmTokenRetriever, pushDataStore, Schedulers.trampoline());
     }
 
     @Test

@@ -26,7 +26,7 @@ import co.smartreceipts.android.identity.apis.me.MeService;
 import co.smartreceipts.android.identity.apis.signup.SignUpPayload;
 import co.smartreceipts.android.identity.apis.signup.SignUpService;
 import co.smartreceipts.core.identity.store.MutableIdentityStore;
-import co.smartreceipts.android.push.apis.me.UpdatePushTokensRequest;
+import co.smartreceipts.core.identity.apis.push.UpdatePushTokensRequest;
 import co.smartreceipts.core.di.scopes.ApplicationScope;
 import co.smartreceipts.core.identity.IdentityManager;
 import co.smartreceipts.core.identity.apis.me.MeResponse;
@@ -41,6 +41,7 @@ import io.reactivex.subjects.BehaviorSubject;
 
 
 // TODO: 20.12.2019 recheck using of IdentityManagerImpl later
+// TODO: 23.12.2019 move tests to modules
 
 @ApplicationScope
 public class IdentityManagerImpl implements IdentityManager {
@@ -188,6 +189,7 @@ public class IdentityManagerImpl implements IdentityManager {
         }
     }
 
+    @Override
     @NonNull
     public Observable<MeResponse> updateMe(@NonNull UpdatePushTokensRequest request) {
         if (isLoggedIn()) {

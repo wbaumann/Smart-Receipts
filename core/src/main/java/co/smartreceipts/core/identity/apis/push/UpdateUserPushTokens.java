@@ -1,4 +1,4 @@
-package co.smartreceipts.android.push.apis.me;
+package co.smartreceipts.core.identity.apis.push;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

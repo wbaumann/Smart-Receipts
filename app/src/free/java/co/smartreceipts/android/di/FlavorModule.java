@@ -63,4 +63,8 @@ public class FlavorModule {
     public static CognitoManager provideCognitoManager(CognitoManagerImpl cognitoManager) {
         return cognitoManager;
     }
+
+    @Binds
+    @ApplicationScope
+    public abstract PushManager providePushManager(PushManagerImpl pushManager);
 }

@@ -1,4 +1,4 @@
-package co.smartreceipts.android.ocr.push;
+package co.smartreceipts.push.ocr;
 
 import androidx.annotation.NonNull;
 

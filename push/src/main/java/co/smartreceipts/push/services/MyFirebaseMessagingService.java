@@ -1,13 +1,14 @@
-package co.smartreceipts.android.push.services;
+package co.smartreceipts.push.services;
 
 import androidx.annotation.NonNull;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-import co.smartreceipts.android.SmartReceiptsApplication;
-import co.smartreceipts.android.push.PushManager;
+import co.smartreceipts.push.PushManagerImpl;
 import co.smartreceipts.core.utils.log.Logger;
+import co.smartreceipts.push.PushManager;
+import co.smartreceipts.push.PushManagerProvider;
 
 /**
  * There are two types of messages data messages and notification messages. Data messages are handled
@@ -23,19 +24,24 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         Logger.info(this, "onMessageReceived");
-        final SmartReceiptsApplication application = (SmartReceiptsApplication) getApplication();
 
-        PushManager pushManager = application.getAppComponent().providePushManager();
-        pushManager.onMessageReceived(remoteMessage);
+        final PushManager pushManager = ((PushManagerProvider) getApplication()).getPushManager();
+
+        if (pushManager instanceof PushManagerImpl) {
+            ((PushManagerImpl) pushManager).onMessageReceived(remoteMessage);
+        }
     }
 
     @Override
     public void onNewToken(@NonNull String token) {
         super.onNewToken(token);
         Logger.info(this, "onTokenRefresh");
-        final SmartReceiptsApplication application = (SmartReceiptsApplication) getApplication();
 
-        PushManager pushManager = application.getAppComponent().providePushManager();
-        pushManager.onTokenRefresh();
+
+        final PushManager pushManager = ((PushManagerProvider) getApplication()).getPushManager();
+
+        if (pushManager instanceof PushManagerImpl) {
+            ((PushManagerImpl) pushManager).onTokenRefresh();
+        }
     }
 }

@@ -157,13 +157,6 @@
 
 
 
-##### FireBase ProGuard configurations #####
-
--keep class com.google.firebase.provider.FirebaseInitProvider
-
-
-
-
 # All below here are from: https://gist.github.com/jemshit/767ab25a9670eb0083bafa65f8d786bb
 
 ### RxJava, RxAndroid (https://gist.github.com/kosiara/487868792fbd3214f9c9)

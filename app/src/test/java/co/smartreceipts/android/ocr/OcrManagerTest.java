@@ -13,6 +13,7 @@ import org.robolectric.RobolectricTestRunner;
 
 import java.io.File;
 
+import co.smartreceipts.push.PushManagerImpl;
 import co.smartreceipts.core.analytics.Analytics;
 import co.smartreceipts.android.apis.WebServiceManager;
 import co.smartreceipts.android.config.ConfigurationManager;
@@ -21,10 +22,9 @@ import co.smartreceipts.android.ocr.apis.model.OcrResponse;
 import co.smartreceipts.android.ocr.apis.model.RecognitionRequest;
 import co.smartreceipts.android.ocr.apis.model.RecognitionResponse;
 import co.smartreceipts.android.ocr.purchases.OcrPurchaseTracker;
-import co.smartreceipts.android.ocr.push.OcrPushMessageReceiver;
-import co.smartreceipts.android.ocr.push.OcrPushMessageReceiverFactory;
+import co.smartreceipts.push.ocr.OcrPushMessageReceiver;
+import co.smartreceipts.push.ocr.OcrPushMessageReceiverFactory;
 import co.smartreceipts.android.ocr.widget.tooltip.OcrInformationalTooltipInteractor;
-import co.smartreceipts.android.push.PushManager;
 import co.smartreceipts.android.settings.UserPreferenceManager;
 import co.smartreceipts.android.settings.catalog.UserPreference;
 import co.smartreceipts.android.utils.ConfigurableResourceFeature;
@@ -61,7 +61,7 @@ public class OcrManagerTest {
     WebServiceManager ocrWebServiceManager;
 
     @Mock
-    PushManager pushManager;
+    PushManagerImpl pushManager;
 
     @Mock
     OcrPurchaseTracker ocrPurchaseTracker;

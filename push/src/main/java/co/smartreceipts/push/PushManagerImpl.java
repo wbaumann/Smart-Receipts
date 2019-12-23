@@ -1,4 +1,4 @@
-package co.smartreceipts.android.push;
+package co.smartreceipts.push;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
@@ -14,12 +14,11 @@ import javax.inject.Inject;
 import co.smartreceipts.core.analytics.Analytics;
 import co.smartreceipts.core.analytics.events.ErrorEvent;
 import co.smartreceipts.core.analytics.events.Events;
-import co.smartreceipts.android.identity.IdentityManagerImpl;
-import co.smartreceipts.android.push.apis.me.UpdatePushTokensRequest;
-import co.smartreceipts.android.push.apis.me.UpdateUserPushTokens;
 import co.smartreceipts.core.di.scopes.ApplicationScope;
+import co.smartreceipts.core.identity.IdentityManager;
 import co.smartreceipts.core.utils.log.Logger;
-import co.smartreceipts.push.PushMessageReceiver;
+import co.smartreceipts.core.identity.apis.push.UpdatePushTokensRequest;
+import co.smartreceipts.core.identity.apis.push.UpdateUserPushTokens;
 import co.smartreceipts.push.internal.FcmTokenRetriever;
 import co.smartreceipts.push.store.PushDataStore;
 import io.reactivex.Scheduler;
@@ -27,9 +26,9 @@ import io.reactivex.schedulers.Schedulers;
 
 
 @ApplicationScope
-public class PushManager {
+public class PushManagerImpl implements PushManager {
 
-    private final IdentityManagerImpl identityManager;
+    private final IdentityManager identityManager;
     private final Analytics analytics;
     private final FcmTokenRetriever fcmTokenRetriever;
     private final PushDataStore pushDataStore;
@@ -37,18 +36,18 @@ public class PushManager {
     private final CopyOnWriteArrayList<PushMessageReceiver> pushMessageReceivers = new CopyOnWriteArrayList<>();
 
     @Inject
-    public PushManager(@NonNull IdentityManagerImpl identityManager,
-                       @NonNull Analytics analytics,
-                       @NonNull PushDataStore pushDataStore) {
+    public PushManagerImpl(@NonNull IdentityManager identityManager,
+                           @NonNull Analytics analytics,
+                           @NonNull PushDataStore pushDataStore) {
         this(identityManager, analytics, new FcmTokenRetriever(), pushDataStore, Schedulers.io());
     }
 
     @VisibleForTesting
-    public PushManager(@NonNull IdentityManagerImpl identityManager,
-                       @NonNull Analytics analytics,
-                       @NonNull FcmTokenRetriever fcmTokenRetriever,
-                       @NonNull PushDataStore pushDataStore,
-                       @NonNull Scheduler subscribeOnScheduler) {
+    public PushManagerImpl(@NonNull IdentityManager identityManager,
+                           @NonNull Analytics analytics,
+                           @NonNull FcmTokenRetriever fcmTokenRetriever,
+                           @NonNull PushDataStore pushDataStore,
+                           @NonNull Scheduler subscribeOnScheduler) {
         this.identityManager = Preconditions.checkNotNull(identityManager);
         this.analytics = Preconditions.checkNotNull(analytics);
         this.fcmTokenRetriever = Preconditions.checkNotNull(fcmTokenRetriever);
@@ -56,13 +55,14 @@ public class PushManager {
         this.subscribeOnScheduler = Preconditions.checkNotNull(subscribeOnScheduler);
     }
 
+    @Override
     public void initialize() {
         identityManager.isLoggedInStream()
                 .subscribeOn(subscribeOnScheduler)
                 .flatMapSingle(isLoggedIn -> pushDataStore.isRemoteRefreshRequiredSingle()
                         .map(isRefreshRequired -> isRefreshRequired && isLoggedIn))
                 .filter(shouldPushTokenBeUploaded -> {
-                    Logger.debug(PushManager.this, "Is a push token update required? {}.", shouldPushTokenBeUploaded);
+                    Logger.debug(PushManagerImpl.this, "Is a push token update required? {}.", shouldPushTokenBeUploaded);
                     return shouldPushTokenBeUploaded;
                 })
                 .doOnNext(ignore -> analytics.record(Events.Identity.PushTokenUploadRequired))
@@ -72,13 +72,13 @@ public class PushManager {
                     return identityManager.updateMe(request);
                 })
                 .subscribe(meResponse -> {
-                    Logger.info(PushManager.this, "Successfully uploaded our push notification token");
+                    Logger.info(PushManagerImpl.this, "Successfully uploaded our push notification token");
                     pushDataStore.setRemoteRefreshRequired(false);
                     analytics.record(Events.Identity.PushTokenSucceeded);
                 }, throwable -> {
                     analytics.record(Events.Identity.PushTokenFailed);
-                    analytics.record(new ErrorEvent(PushManager.this, throwable));
-                    Logger.error(PushManager.this, "Failed to upload our push notification token", throwable);
+                    analytics.record(new ErrorEvent(PushManagerImpl.this, throwable));
+                    Logger.error(PushManagerImpl.this, "Failed to upload our push notification token", throwable);
                 });
     }
 

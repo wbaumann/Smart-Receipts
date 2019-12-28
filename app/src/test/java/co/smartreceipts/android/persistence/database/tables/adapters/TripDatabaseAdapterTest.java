@@ -15,6 +15,7 @@ import java.sql.Date;
 import java.util.TimeZone;
 import java.util.UUID;
 
+import co.smartreceipts.android.model.AutoCompleteMetadata;
 import co.smartreceipts.android.model.Trip;
 import co.smartreceipts.android.model.factory.TripBuilderFactory;
 import co.smartreceipts.android.persistence.database.operations.DatabaseOperationMetadata;
@@ -68,6 +69,9 @@ public class TripDatabaseAdapterTest {
 
     @Mock
     SyncState mSyncState, mGetSyncState;
+
+    @Mock
+    AutoCompleteMetadata mAutoCompleteMetadata;
 
     @Before
     public void setUp() throws Exception {
@@ -127,9 +131,10 @@ public class TripDatabaseAdapterTest {
         when(mTrip.getDefaultCurrencyCode()).thenReturn(CURRENCY_CODE);
         when(mTrip.getSyncState()).thenReturn(mSyncState);
         when(mTrip.getUuid()).thenReturn(TRIP_UUID);
-        when(mTrip.isNameHiddenFromAutoComplete()).thenReturn(NAME_HIDDEN_FROM_AUTO_COMPLETE);
-        when(mTrip.isCommentHiddenFromAutoComplete()).thenReturn(COMMENT_HIDDEN_FROM_AUTO_COMPLETE);
-        when(mTrip.isCostCenterHiddenFromAutoComplete()).thenReturn(COST_CENTER_HIDDEN_FROM_AUTO_COMPLETE);
+        when(mTrip.getAutoCompleteMetadata()).thenReturn(mAutoCompleteMetadata);
+        when(mTrip.getAutoCompleteMetadata().isNameHiddenFromAutoComplete()).thenReturn(NAME_HIDDEN_FROM_AUTO_COMPLETE);
+        when(mTrip.getAutoCompleteMetadata().isCommentHiddenFromAutoComplete()).thenReturn(COMMENT_HIDDEN_FROM_AUTO_COMPLETE);
+        when(mTrip.getAutoCompleteMetadata().isCostCenterHiddenFromAutoComplete()).thenReturn(COST_CENTER_HIDDEN_FROM_AUTO_COMPLETE);
 
 
         when(mPreferences.get(UserPreference.General.DefaultCurrency)).thenReturn(USER_PREFERENCES_CURRENCY_CODE);

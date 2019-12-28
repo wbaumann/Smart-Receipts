@@ -13,7 +13,6 @@ import co.smartreceipts.android.model.factory.TripBuilderFactory;
 import co.smartreceipts.android.persistence.database.operations.DatabaseOperationMetadata;
 import co.smartreceipts.android.persistence.database.operations.OperationFamilyType;
 import co.smartreceipts.android.persistence.database.tables.CategoriesTable;
-import co.smartreceipts.android.persistence.database.tables.ReceiptsTable;
 import co.smartreceipts.android.persistence.database.tables.TripsTable;
 import co.smartreceipts.android.settings.UserPreferenceManager;
 import co.smartreceipts.android.settings.catalog.UserPreference;
@@ -98,9 +97,9 @@ public final class TripDatabaseAdapter implements DatabaseAdapter<Trip> {
         values.put(TripsTable.COLUMN_COST_CENTER, trip.getCostCenter());
         values.put(TripsTable.COLUMN_DEFAULT_CURRENCY, trip.getDefaultCurrencyCode());
         values.put(TripsTable.COLUMN_UUID, trip.getUuid().toString());
-        values.put(TripsTable.COLUMN_NAME_HIDDEN_AUTO_COMPLETE, trip.isNameHiddenFromAutoComplete());
-        values.put(TripsTable.COLUMN_COMMENT_HIDDEN_AUTO_COMPLETE, trip.isCommentHiddenFromAutoComplete());
-        values.put(TripsTable.COLUMN_COSTCENTER_HIDDEN_AUTO_COMPLETE, trip.isCostCenterHiddenFromAutoComplete());
+        values.put(TripsTable.COLUMN_NAME_HIDDEN_AUTO_COMPLETE, trip.getAutoCompleteMetadata().isNameHiddenFromAutoComplete());
+        values.put(TripsTable.COLUMN_COMMENT_HIDDEN_AUTO_COMPLETE, trip.getAutoCompleteMetadata().isCommentHiddenFromAutoComplete());
+        values.put(TripsTable.COLUMN_COSTCENTER_HIDDEN_AUTO_COMPLETE, trip.getAutoCompleteMetadata().isCostCenterHiddenFromAutoComplete());
         if (databaseOperationMetadata.getOperationFamilyType() == OperationFamilyType.Sync) {
             values.putAll(syncStateAdapter.write(trip.getSyncState()));
         } else {

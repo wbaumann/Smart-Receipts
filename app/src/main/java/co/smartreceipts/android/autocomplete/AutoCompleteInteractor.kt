@@ -57,19 +57,19 @@ class AutoCompleteInteractor<Type> constructor(private val provider: AutoComplet
                                     // make sure value wasn't removed by user
                                     val removedByUser = when (it) {
                                         is Receipt -> when (field) {
-                                            ReceiptAutoCompleteField.Name -> it.isNameHiddenFromAutoComplete
-                                            ReceiptAutoCompleteField.Comment -> it.isCommentHiddenFromAutoComplete
+                                            ReceiptAutoCompleteField.Name -> it.autoCompleteMetadata.isNameHiddenFromAutoComplete
+                                            ReceiptAutoCompleteField.Comment -> it.autoCompleteMetadata.isCommentHiddenFromAutoComplete
                                             else -> false
                                         }
                                         is Trip -> when (field) {
-                                            TripAutoCompleteField.Name -> it.isNameHiddenFromAutoComplete
-                                            TripAutoCompleteField.Comment -> it.isCommentHiddenFromAutoComplete
-                                            TripAutoCompleteField.CostCenter -> it.isCostCenterHiddenFromAutoComplete
+                                            TripAutoCompleteField.Name -> it.autoCompleteMetadata.isNameHiddenFromAutoComplete
+                                            TripAutoCompleteField.Comment -> it.autoCompleteMetadata.isCommentHiddenFromAutoComplete
+                                            TripAutoCompleteField.CostCenter -> it.autoCompleteMetadata.isCostCenterHiddenFromAutoComplete
                                             else -> false
                                         }
                                         is Distance -> when (field) {
-                                            DistanceAutoCompleteField.Location -> it.isLocationHiddenFromAutoComplete
-                                            DistanceAutoCompleteField.Comment -> it.isCommentHiddenFromAutoComplete
+                                            DistanceAutoCompleteField.Location -> it.autoCompleteMetadata.isLocationHiddenFromAutoComplete
+                                            DistanceAutoCompleteField.Comment -> it.autoCompleteMetadata.isCommentHiddenFromAutoComplete
                                             else -> false
                                         }
                                         else -> false

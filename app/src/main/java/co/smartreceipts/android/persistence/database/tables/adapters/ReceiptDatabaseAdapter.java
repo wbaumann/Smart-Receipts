@@ -212,8 +212,8 @@ public final class ReceiptDatabaseAdapter implements SelectionBackedDatabaseAdap
         values.put(ReceiptsTable.COLUMN_REIMBURSABLE, receipt.isReimbursable());
         values.put(ReceiptsTable.COLUMN_NOTFULLPAGEIMAGE, !receipt.isFullPage());
         values.put(ReceiptsTable.COLUMN_UUID, receipt.getUuid().toString());
-        values.put(ReceiptsTable.COLUMN_NAME_HIDDEN_AUTO_COMPLETE, receipt.isNameHiddenFromAutoComplete());
-        values.put(ReceiptsTable.COLUMN_COMMENT_HIDDEN_AUTO_COMPLETE, receipt.isCommentHiddenFromAutoComplete());
+        values.put(ReceiptsTable.COLUMN_NAME_HIDDEN_AUTO_COMPLETE, receipt.getAutoCompleteMetadata().isNameHiddenFromAutoComplete());
+        values.put(ReceiptsTable.COLUMN_COMMENT_HIDDEN_AUTO_COMPLETE, receipt.getAutoCompleteMetadata().isCommentHiddenFromAutoComplete());
 
         // Add file
         final File file = receipt.getFile();

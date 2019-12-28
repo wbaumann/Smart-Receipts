@@ -71,16 +71,6 @@ class Receipt constructor(
      */
     val isSelected: Boolean,
     /**
-     *  Checks if the name of receipt should be shown in auto complete results
-     */
-    override val isNameHiddenFromAutoComplete: Boolean,
-    /**
-     *  Checks if the comment of receipt should be shown in auto complete results
-     */
-    override val isCommentHiddenFromAutoComplete: Boolean,
-    override val isLocationHiddenFromAutoComplete: Boolean,
-    override val isCostCenterHiddenFromAutoComplete: Boolean,
-    /**
      * An extra [String], which certain white-label builds might have
      */
     val extraEditText1: String?,
@@ -93,8 +83,9 @@ class Receipt constructor(
      */
     val extraEditText3: String?,
     override val syncState: SyncState,
-    override val customOrderId: Long
-) : Keyed, Parcelable, Priceable, Draggable<Receipt>, Syncable, Searchable, AutoCompleteMetadata {
+    override val customOrderId: Long,
+    val autoCompleteMetadata: AutoCompleteMetadata
+) : Keyed, Parcelable, Priceable, Draggable<Receipt>, Syncable, Searchable {
 
     /**
      * The [Date] in which the [displayableDate] was set
@@ -165,8 +156,7 @@ class Receipt constructor(
                 ", timeZone=" + timeZone.id +
                 ", isReimbursable=" + isReimbursable +
                 ", isFullPage=" + isFullPage +
-                ", isNameHiddenFromAutoComplete=" + isNameHiddenFromAutoComplete +
-                ", isCommentHiddenFromAutoComplete=" + isCommentHiddenFromAutoComplete +
+                ", autoCompleteMetadata=" + autoCompleteMetadata +
                 ", extraEditText1='" + extraEditText1 + '\''.toString() +
                 ", extraEditText2='" + extraEditText2 + '\''.toString() +
                 ", extraEditText3='" + extraEditText3 + '\''.toString() +
@@ -195,8 +185,7 @@ class Receipt constructor(
         if (price != that.price) return false
         if (tax != that.tax) return false
         if (displayableDate != that.displayableDate) return false
-        if (isNameHiddenFromAutoComplete != that.isNameHiddenFromAutoComplete) return false
-        if (isCommentHiddenFromAutoComplete != that.isCommentHiddenFromAutoComplete) return false
+        if (autoCompleteMetadata != that.autoCompleteMetadata) return false
         if (if (extraEditText1 != null) extraEditText1 != that.extraEditText1 else that.extraEditText1 != null)
             return false
         if (if (extraEditText2 != null) extraEditText2 != that.extraEditText2 else that.extraEditText2 != null)
@@ -223,8 +212,7 @@ class Receipt constructor(
         result = 31 * result + displayableDate.hashCode()
         result = 31 * result + if (isReimbursable) 1 else 0
         result = 31 * result + if (isFullPage) 1 else 0
-        result = 31 * result + if (isNameHiddenFromAutoComplete) 1 else 0
-        result = 31 * result + if (isCommentHiddenFromAutoComplete) 1 else 0
+        result = 31 * result + autoCompleteMetadata.hashCode()
         result = 31 * result + (extraEditText1?.hashCode() ?: 0)
         result = 31 * result + (extraEditText2?.hashCode() ?: 0)
         result = 31 * result + (extraEditText3?.hashCode() ?: 0)

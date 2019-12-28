@@ -138,12 +138,12 @@ class DistanceTest {
 
     @Test
     fun getLocationHiddenFromAutoComplete() {
-        assertEquals(LOCATION_HIDDEN_AUTO_COMPLETE, distance.isLocationHiddenFromAutoComplete)
+        assertEquals(LOCATION_HIDDEN_AUTO_COMPLETE, distance.autoCompleteMetadata.isLocationHiddenFromAutoComplete)
     }
 
     @Test
     fun getCommentHiddenFromAutoComplete() {
-        assertEquals(COMMENT_HIDDEN_AUTO_COMPLETE, distance.isCommentHiddenFromAutoComplete)
+        assertEquals(COMMENT_HIDDEN_AUTO_COMPLETE, distance.autoCompleteMetadata.isCommentHiddenFromAutoComplete)
     }
 
     @Test

@@ -42,19 +42,6 @@ class Trip @JvmOverloads constructor(
      */
     val costCenter: String,
     /**
-     *  Checks if the name of trip should be shown in auto complete results
-     */
-    override val isNameHiddenFromAutoComplete: Boolean,
-    /**
-     *  Checks if the comment of trip should be shown in auto complete results
-     */
-    override val isCommentHiddenFromAutoComplete: Boolean,
-    /**
-     *  Checks if the cost center of trip should be shown in auto complete results
-     */
-    override val isCostCenterHiddenFromAutoComplete: Boolean,
-    override val isLocationHiddenFromAutoComplete: Boolean,
-    /**
      * The [SyncState] to track the remote sync progress
      */
     override val syncState: SyncState = DefaultSyncState(),
@@ -66,9 +53,9 @@ class Trip @JvmOverloads constructor(
      * The daily sub-total [Price] (i.e. all expenditures that occurred today) for this trip,
      * daily sub-total of a trip exists as a function of it's receipt children (and not itself)
      */
-    var dailySubTotal: Price = PriceBuilderFactory().setPrice(0.0).setCurrency(tripCurrency).build()
-
-) : Keyed, Parcelable, Priceable, Comparable<Trip>, Syncable, Searchable, AutoCompleteMetadata {
+    var dailySubTotal: Price = PriceBuilderFactory().setPrice(0.0).setCurrency(tripCurrency).build(),
+    val autoCompleteMetadata: AutoCompleteMetadata
+) : Keyed, Parcelable, Priceable, Comparable<Trip>, Syncable, Searchable {
 
     /**
      * The [Date] upon which this trip began
@@ -164,9 +151,7 @@ class Trip @JvmOverloads constructor(
         if (comment != that.comment) return false
         if (startDisplayableDate != that.startDisplayableDate) return false
         if (endDisplayableDate != that.endDisplayableDate) return false
-        if (isNameHiddenFromAutoComplete != that.isNameHiddenFromAutoComplete) return false
-        if (isCommentHiddenFromAutoComplete != that.isCommentHiddenFromAutoComplete) return false
-        if (isCostCenterHiddenFromAutoComplete != that.isCostCenterHiddenFromAutoComplete) return false
+        if (autoCompleteMetadata != that.autoCompleteMetadata) return false
         return if (tripCurrency != that.tripCurrency) false else costCenter == that.costCenter
 
     }
@@ -181,9 +166,7 @@ class Trip @JvmOverloads constructor(
         result = 31 * result + endDisplayableDate.hashCode()
         result = 31 * result + tripCurrency.hashCode()
         result = 31 * result + costCenter.hashCode()
-        result = 31 * result + isNameHiddenFromAutoComplete.hashCode()
-        result = 31 * result + isCommentHiddenFromAutoComplete.hashCode()
-        result = 31 * result + isCostCenterHiddenFromAutoComplete.hashCode()
+        result = 31 * result + autoCompleteMetadata.hashCode()
         return result
     }
 
@@ -199,9 +182,7 @@ class Trip @JvmOverloads constructor(
                 ", startDisplayableDate=" + startDisplayableDate +
                 ", endDisplayableDate=" + endDisplayableDate +
                 ", tripCurrency=" + tripCurrency +
-                ", isNameHiddenFromAutoComplete=" + isNameHiddenFromAutoComplete +
-                ", isCommentHiddenFromAutoComplete=" + isCommentHiddenFromAutoComplete +
-                ", isCostCenterHiddenFromAutoComplete=" + isCostCenterHiddenFromAutoComplete +
+                ", autoCompleteMetadata=" + autoCompleteMetadata +
                 '}'.toString()
     }
 

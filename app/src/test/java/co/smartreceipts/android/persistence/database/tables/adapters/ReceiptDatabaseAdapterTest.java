@@ -19,6 +19,7 @@ import java.util.TimeZone;
 import java.util.UUID;
 
 import co.smartreceipts.android.currency.PriceCurrency;
+import co.smartreceipts.android.model.AutoCompleteMetadata;
 import co.smartreceipts.android.model.Category;
 import co.smartreceipts.android.model.PaymentMethod;
 import co.smartreceipts.android.model.Price;
@@ -111,6 +112,9 @@ public class ReceiptDatabaseAdapterTest {
 
     @Mock
     SyncState mSyncState, mGetSyncState;
+
+    @Mock
+    AutoCompleteMetadata mAutoCompleteMetadata;
 
     @Before
     public void setUp() throws Exception {
@@ -210,8 +214,9 @@ public class ReceiptDatabaseAdapterTest {
         when(mReceipt.getIndex()).thenReturn(DESCENDING_INDEX);
         when(mReceipt.getSyncState()).thenReturn(mSyncState);
         when(mReceipt.getUuid()).thenReturn(RECEIPT_UUID);
-        when(mReceipt.isNameHiddenFromAutoComplete()).thenReturn(NAME_HIDDEN_FROM_AUTO_COMPLETE);
-        when(mReceipt.isCommentHiddenFromAutoComplete()).thenReturn(COMMENT_HIDDEN_FROM_AUTO_COMPLETE);
+        when(mReceipt.getAutoCompleteMetadata()).thenReturn(mAutoCompleteMetadata);
+        when(mReceipt.getAutoCompleteMetadata().isNameHiddenFromAutoComplete()).thenReturn(NAME_HIDDEN_FROM_AUTO_COMPLETE);
+        when(mReceipt.getAutoCompleteMetadata().isCommentHiddenFromAutoComplete()).thenReturn(COMMENT_HIDDEN_FROM_AUTO_COMPLETE);
 
         when(mTrip.getId()).thenReturn(PARENT_TRIP_ID);
         when(mTrip.getName()).thenReturn(PARENT_DIR.getName());

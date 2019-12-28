@@ -1,20 +1,24 @@
 package co.smartreceipts.android.model
 
-interface AutoCompleteMetadata {
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
+data class AutoCompleteMetadata(
     /**
      *  Checks if the name of object should be shown in auto complete results
      */
-    val isNameHiddenFromAutoComplete: Boolean
+    var isNameHiddenFromAutoComplete: Boolean,
     /**
      *  Checks if the comment of object should be shown in auto complete results
      */
-    val isCommentHiddenFromAutoComplete: Boolean
+    var isCommentHiddenFromAutoComplete: Boolean,
     /**
-     *  Checks if the location of distance should be shown in auto complete results
+     *  Checks if the location of object should be shown in auto complete results
      */
-    val isLocationHiddenFromAutoComplete: Boolean
+    var isLocationHiddenFromAutoComplete: Boolean,
     /**
-     *  Checks if the cost center of trip should be shown in auto complete results
+     *  Checks if the cost center of object should be shown in auto complete results
      */
-    val isCostCenterHiddenFromAutoComplete: Boolean
-}
+    var isCostCenterHiddenFromAutoComplete: Boolean
+): Parcelable

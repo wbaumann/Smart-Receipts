@@ -16,6 +16,7 @@ import java.util.TimeZone;
 import java.util.UUID;
 
 import co.smartreceipts.android.currency.PriceCurrency;
+import co.smartreceipts.android.model.AutoCompleteMetadata;
 import co.smartreceipts.android.model.Distance;
 import co.smartreceipts.android.model.PaymentMethod;
 import co.smartreceipts.android.model.Price;
@@ -83,6 +84,9 @@ public class DistanceDatabaseAdapterTest {
     @Mock
     SyncState mSyncState, mGetSyncState;
 
+    @Mock
+    AutoCompleteMetadata mAutoCompleteMetadata;
+
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
@@ -139,8 +143,9 @@ public class DistanceDatabaseAdapterTest {
         when(mDistance.getSyncState()).thenReturn(mSyncState);
         when(mDistance.getUuid()).thenReturn(DIST_UUID);
         when(mDistance.getPaymentMethod()).thenReturn(PAYMENT_METHOD);
-        when(mDistance.isLocationHiddenFromAutoComplete()).thenReturn(LOCATION_HIDDEN_FROM_AUTO_COMPLETE);
-        when(mDistance.isCommentHiddenFromAutoComplete()).thenReturn(COMMENT_HIDDEN_FROM_AUTO_COMPLETE);
+        when(mDistance.getAutoCompleteMetadata()).thenReturn(mAutoCompleteMetadata);
+        when(mDistance.getAutoCompleteMetadata().isLocationHiddenFromAutoComplete()).thenReturn(LOCATION_HIDDEN_FROM_AUTO_COMPLETE);
+        when(mDistance.getAutoCompleteMetadata().isCommentHiddenFromAutoComplete()).thenReturn(COMMENT_HIDDEN_FROM_AUTO_COMPLETE);
 
         when(mTrip.getId()).thenReturn(PARENT_ID);
         when(mPrice.getCurrencyCode()).thenReturn(CURRENCY_CODE);

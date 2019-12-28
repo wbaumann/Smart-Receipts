@@ -14,6 +14,7 @@ import java.util.UUID;
 
 import co.smartreceipts.android.currency.PriceCurrency;
 import co.smartreceipts.android.date.DisplayableDate;
+import co.smartreceipts.android.model.AutoCompleteMetadata;
 import co.smartreceipts.android.model.Distance;
 import co.smartreceipts.android.model.Keyed;
 import co.smartreceipts.android.model.PaymentMethod;
@@ -31,7 +32,6 @@ public final class DistanceBuilderFactory implements BuilderFactory<Distance> {
 
     private static final int ROUNDING_PRECISION = Distance.RATE_PRECISION + 2;
 
-    private boolean isLocationHiddenFromAutoComplete, isCommentHiddenFromAutoComplete;
     private int id;
     private UUID uuid;
     private Trip trip;
@@ -44,6 +44,7 @@ public final class DistanceBuilderFactory implements BuilderFactory<Distance> {
     private String comment;
     private PaymentMethod paymentMethod;
     private SyncState syncState;
+    private AutoCompleteMetadata autoCompleteMetadata;
 
     public DistanceBuilderFactory() {
         this(Keyed.MISSING_ID);
@@ -59,6 +60,7 @@ public final class DistanceBuilderFactory implements BuilderFactory<Distance> {
         rate = BigDecimal.ZERO;
         comment = "";
         syncState = new DefaultSyncState();
+        autoCompleteMetadata = new AutoCompleteMetadata(false, false, false, false);
     }
 
     public DistanceBuilderFactory(@NonNull Distance distance) {
@@ -78,8 +80,7 @@ public final class DistanceBuilderFactory implements BuilderFactory<Distance> {
         comment = distance.getComment();
         paymentMethod = distance.getPaymentMethod();
         syncState = distance.getSyncState();
-        isLocationHiddenFromAutoComplete = distance.isLocationHiddenFromAutoComplete();
-        isCommentHiddenFromAutoComplete = distance.isCommentHiddenFromAutoComplete();
+        autoCompleteMetadata = distance.getAutoCompleteMetadata();
 
         // Clean up data here if this is from an import that might break things
         if (location == null) {
@@ -177,12 +178,12 @@ public final class DistanceBuilderFactory implements BuilderFactory<Distance> {
     }
 
     public DistanceBuilderFactory setLocationHiddenFromAutoComplete(boolean isHiddenFromAutoComplete) {
-        this.isLocationHiddenFromAutoComplete = isHiddenFromAutoComplete;
+        this.autoCompleteMetadata.setLocationHiddenFromAutoComplete(isHiddenFromAutoComplete);
         return this;
     }
 
     public DistanceBuilderFactory setCommentHiddenFromAutoComplete(boolean isHiddenFromAutoComplete) {
-        this.isCommentHiddenFromAutoComplete = isHiddenFromAutoComplete;
+        this.autoCompleteMetadata.setCommentHiddenFromAutoComplete(isHiddenFromAutoComplete);
         return this;
     }
 
@@ -198,6 +199,6 @@ public final class DistanceBuilderFactory implements BuilderFactory<Distance> {
         final DisplayableDate displayableDate = new DisplayableDate(date, timeZone);
 
         return new Distance(id, uuid, price, syncState, trip, location, scaledDistance, scaledRate, displayableDate, comment,
-                paymentMethod == null ? PaymentMethod.Companion.getNONE() : paymentMethod, isLocationHiddenFromAutoComplete, isCommentHiddenFromAutoComplete, false, false);
+                paymentMethod == null ? PaymentMethod.Companion.getNONE() : paymentMethod, autoCompleteMetadata);
     }
 }

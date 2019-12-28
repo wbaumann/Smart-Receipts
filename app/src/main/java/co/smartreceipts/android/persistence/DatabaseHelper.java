@@ -3,6 +3,7 @@ package co.smartreceipts.android.persistence;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -14,9 +15,11 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import javax.annotation.Nonnull;
+
 import co.smartreceipts.android.database.DatabaseContext;
 import co.smartreceipts.android.date.DateUtils;
-import co.smartreceipts.android.di.scopes.ApplicationScope;
+import co.smartreceipts.core.di.scopes.ApplicationScope;
 import co.smartreceipts.android.model.Distance;
 import co.smartreceipts.android.model.Priceable;
 import co.smartreceipts.android.model.Receipt;
@@ -36,9 +39,10 @@ import co.smartreceipts.android.persistence.database.tables.TripsTable;
 import co.smartreceipts.android.persistence.database.tables.ordering.OrderingPreferencesManager;
 import co.smartreceipts.android.settings.UserPreferenceManager;
 import co.smartreceipts.android.settings.catalog.UserPreference;
-import co.smartreceipts.android.utils.log.Logger;
+import co.smartreceipts.core.utils.log.Logger;
 import co.smartreceipts.android.utils.sorting.AlphabeticalCaseInsensitiveCharSequenceComparator;
 import io.reactivex.Single;
+import io.reactivex.schedulers.Schedulers;
 import wb.android.storage.StorageManager;
 
 @ApplicationScope
@@ -301,6 +305,54 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         mFullCurrencyList.addAll(CurrencyUtils.getAllCurrencies());
         mFullCurrencyList.addAll(0, getMostRecentlyUsedCurrencies());
         return mFullCurrencyList;
+    }
+
+    public Single<List<String>> search(@NonNull String input, @Nonnull String tableName, @Nonnull String resultColumn,
+                                       @Nullable String orderByColumn, @Nonnull String... searchColumns) {
+        return Single.fromCallable(() -> {
+                    final List<String> results = new ArrayList<>();
+
+                    synchronized (mDatabaseLock) {
+                        Cursor cursor = null;
+
+                        try {
+                            final SQLiteDatabase db = getReadableDatabase();
+                            final String baseQuery = String.format("SELECT DISTINCT %s FROM %s WHERE ", resultColumn, tableName);
+                            StringBuilder builder = new StringBuilder(baseQuery);
+
+                            for (int i = 0; i < searchColumns.length; i++) {
+                                if (i != 0) {
+                                    builder.append(" OR ");
+                                }
+
+                                builder.append(searchColumns[i])
+                                        .append(" like '")
+                                        .append(input)
+                                        .append("%' ");
+                            }
+
+                            if (orderByColumn != null) {
+                                builder.append(" ORDER BY ")
+                                        .append(orderByColumn);
+                            }
+
+                            cursor = db.rawQuery(builder.toString(), null);
+                            if (cursor != null && cursor.moveToFirst()) {
+                                do {
+                                    results.add(cursor.getString(0));
+                                } while (cursor.moveToNext());
+                            }
+
+                        } finally {
+                            if (cursor != null) {
+                                cursor.close();
+                            }
+                        }
+                    }
+                    return results;
+                }
+        )
+                .subscribeOn(Schedulers.io());
     }
 
     private List<CharSequence> getMostRecentlyUsedCurrencies() {

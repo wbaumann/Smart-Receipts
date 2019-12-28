@@ -10,15 +10,16 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
-import androidx.annotation.NonNull;
-import androidx.core.app.NavUtils;
-import androidx.core.app.TaskStackBuilder;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NavUtils;
+import androidx.core.app.TaskStackBuilder;
 
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
 
@@ -54,8 +55,8 @@ import co.smartreceipts.android.purchases.wallet.PurchaseWallet;
 import co.smartreceipts.android.settings.UserPreferenceManager;
 import co.smartreceipts.android.settings.catalog.UserPreference;
 import co.smartreceipts.android.utils.IntentUtils;
-import co.smartreceipts.android.utils.log.LogConstants;
-import co.smartreceipts.android.utils.log.Logger;
+import co.smartreceipts.core.utils.log.LogConstants;
+import co.smartreceipts.core.utils.log.Logger;
 import co.smartreceipts.android.workers.EmailAssistant;
 import dagger.android.AndroidInjection;
 import io.reactivex.Observable;
@@ -188,8 +189,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
         compositeDisposable.add(purchaseManager.getAllAvailablePurchaseSkus()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(inAppPurchases -> {
-                    Logger.info(SettingsActivity.this, "The following purchases are available: {}", availablePurchases);
                     availablePurchases = inAppPurchases;
+                    Logger.info(SettingsActivity.this, "The following purchases are available: {}", availablePurchases);
                 }, throwable -> Logger.warn(SettingsActivity.this, "Failed to retrieve purchases for this session.", throwable)));
     }
 

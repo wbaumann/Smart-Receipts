@@ -47,14 +47,8 @@ class Distance(
      * The payment method associated with this receipt item.
      */
     val paymentMethod: PaymentMethod,
-    /**
-     *  Checks if the comment of distance should be shown in auto complete results
-     */
-    override val isLocationHiddenFromAutoComplete: Boolean,
-    override val isCommentHiddenFromAutoComplete: Boolean,
-    override val isNameHiddenFromAutoComplete: Boolean,
-    override val isCostCenterHiddenFromAutoComplete: Boolean
-) : Keyed, Parcelable, Priceable, Comparable<Distance>, Syncable, AutoCompleteMetadata {
+    val autoCompleteMetadata: AutoCompleteMetadata
+) : Keyed, Parcelable, Priceable, Comparable<Distance>, Syncable {
 
     /**
      * The [Date] in which the [displayableDate] was set
@@ -90,7 +84,7 @@ class Distance(
 
     override fun toString(): String {
         return "Distance [uuid=$uuid, location=$location, distance=$distance, displayableDate=$displayableDate, rate=$rate, price= $price, " +
-                "comment=$comment, paymentMethod=$paymentMethod, isLocationHiddenFromAutoComplete=$isLocationHiddenFromAutoComplete, isCommentHiddenFromAutoComplete=$isCommentHiddenFromAutoComplete]"
+                "comment=$comment, paymentMethod=$paymentMethod, autoCompleteMetadata=$autoCompleteMetadata]"
     }
 
     override fun compareTo(other: Distance): Int {
@@ -113,8 +107,7 @@ class Distance(
         if (displayableDate != other.displayableDate) return false
         if (comment != other.comment) return false
         if (paymentMethod != other.paymentMethod) return false
-        if (isLocationHiddenFromAutoComplete != other.isLocationHiddenFromAutoComplete) return false
-        if (isCommentHiddenFromAutoComplete != other.isCommentHiddenFromAutoComplete) return false
+        if (autoCompleteMetadata != other.autoCompleteMetadata) return false
 
         return true
     }
@@ -130,8 +123,7 @@ class Distance(
         result = 31 * result + displayableDate.hashCode()
         result = 31 * result + comment.hashCode()
         result = 31 * result + paymentMethod.hashCode()
-        result = 31 * result + isLocationHiddenFromAutoComplete.hashCode()
-        result = 31 * result + isCommentHiddenFromAutoComplete.hashCode()
+        result = 31 * result + autoCompleteMetadata.hashCode()
         return result
     }
 

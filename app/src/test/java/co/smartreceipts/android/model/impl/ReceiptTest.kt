@@ -8,12 +8,10 @@ import co.smartreceipts.android.persistence.DatabaseHelper
 import co.smartreceipts.android.sync.model.SyncState
 import co.smartreceipts.android.utils.TestLocaleToggler
 import co.smartreceipts.android.utils.testParcel
-import junit.framework.Assert.*
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.core.IsNot.not
 import org.junit.After
-import org.junit.Assert
-import org.junit.Assert.assertThat
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -57,6 +55,7 @@ class ReceiptTest {
     private lateinit var price: Price
     private lateinit var tax: Price
     private lateinit var syncState: SyncState
+    private lateinit var autoCompleteMetadata: AutoCompleteMetadata
 
     @Before
     @Throws(Exception::class)
@@ -69,9 +68,10 @@ class ReceiptTest {
         price = DefaultObjects.newDefaultPrice()
         tax = DefaultObjects.newDefaultTax()
         syncState = DefaultObjects.newDefaultSyncState()
+        autoCompleteMetadata = DefaultObjects.newAutoCompleteMetadata()
         receipt = Receipt(
             ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DISPLAYABLE_DATE, REIMBURSABLE,
-            FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+            FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
         )
     }
 
@@ -117,11 +117,11 @@ class ReceiptTest {
         val pdfFileWithUpperCaseExtension = File("file.PDF")
         val pdfReceipt = Receipt(
                 ID, REC_UUID, INDEX, trip, pdfFile, paymentMethod, NAME, category, COMMENT, price, tax, DISPLAYABLE_DATE, REIMBURSABLE,
-                FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
         )
         val pdfReceiptWithUpperCaseExtension = Receipt(
                 ID, REC_UUID, INDEX, trip, pdfFileWithUpperCaseExtension, paymentMethod, NAME, category, COMMENT, price, tax, DISPLAYABLE_DATE, REIMBURSABLE,
-                FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
         )
         assertFalse(receipt.hasPDF())
         assertTrue(pdfReceipt.hasPDF())
@@ -139,27 +139,27 @@ class ReceiptTest {
 
         val pngReceipt = Receipt(
                 ID, REC_UUID, INDEX, trip, pngFile, paymentMethod, NAME, category, COMMENT, price, tax, DISPLAYABLE_DATE, REIMBURSABLE,
-                FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
         )
         val jpgReceipt = Receipt(
                 ID, REC_UUID, INDEX, trip, jpgFile, paymentMethod, NAME, category, COMMENT, price, tax, DISPLAYABLE_DATE, REIMBURSABLE,
-                FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
         )
         val jpegReceipt = Receipt(
                 ID, REC_UUID, INDEX, trip, jpegFile, paymentMethod, NAME, category, COMMENT, price, tax, DISPLAYABLE_DATE, REIMBURSABLE,
-                FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
         )
         val pngReceiptWithUpperCaseExtension = Receipt(
                 ID, REC_UUID, INDEX, trip, pngFileWithUpperCaseExtension, paymentMethod, NAME, category, COMMENT, price, tax, DISPLAYABLE_DATE, REIMBURSABLE,
-                FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
         )
         val jpgReceiptWithUpperCaseExtension = Receipt(
                 ID, REC_UUID, INDEX, trip, jpgFileWithUpperCaseExtension, paymentMethod, NAME, category, COMMENT, price, tax, DISPLAYABLE_DATE, REIMBURSABLE,
-                FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
         )
         val jpegReceiptWithUpperCaseExtension = Receipt(
                 ID, REC_UUID, INDEX, trip, jpegFileWithUpperCaseExtension, paymentMethod, NAME, category, COMMENT, price, tax, DISPLAYABLE_DATE, REIMBURSABLE,
-                FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
         )
         assertFalse(receipt.hasImage())
         assertTrue(pngReceipt.hasImage())
@@ -222,19 +222,19 @@ class ReceiptTest {
 
     @Test
     fun getNameHiddenFromAutoComplete() {
-        assertEquals(NAME_HIDDEN_AUTO_COMPLETE, receipt.isNameHiddenFromAutoComplete)
+        assertEquals(NAME_HIDDEN_AUTO_COMPLETE, receipt.autoCompleteMetadata.isNameHiddenFromAutoComplete)
     }
 
     @Test
     fun getCommentHiddenFromAutoComplete() {
-        assertEquals(COMMENT_HIDDEN_AUTO_COMPLETE, receipt.isCommentHiddenFromAutoComplete)
+        assertEquals(COMMENT_HIDDEN_AUTO_COMPLETE, receipt.autoCompleteMetadata.isCommentHiddenFromAutoComplete)
     }
 
     @Test
     fun getExtraEditText1() {
         val nullExtra1Receipt = Receipt(
             ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DISPLAYABLE_DATE, REIMBURSABLE, FULL_PAGE,
-            IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, null, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+            IS_SELECTED, null, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
         )
         val noDataExtra1Receipt = ReceiptBuilderFactory(nullExtra1Receipt).setExtraEditText1(DatabaseHelper.NO_DATA).build()
 
@@ -250,7 +250,7 @@ class ReceiptTest {
     fun getExtraEditText2() {
         val nullExtra2Receipt = Receipt(
             ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DISPLAYABLE_DATE, REIMBURSABLE, FULL_PAGE,
-            IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, null, EXTRA3, syncState, CUSTOM_ORDER
+            IS_SELECTED, EXTRA1, null, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
         )
         val noDataExtra2Receipt = ReceiptBuilderFactory(nullExtra2Receipt).setExtraEditText2(DatabaseHelper.NO_DATA).build()
 
@@ -266,7 +266,7 @@ class ReceiptTest {
     fun getExtraEditText3() {
         val nullExtra3Receipt = Receipt(
             ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DISPLAYABLE_DATE, REIMBURSABLE, FULL_PAGE,
-            IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, null, syncState, CUSTOM_ORDER
+            IS_SELECTED, EXTRA1, EXTRA2, null, syncState, CUSTOM_ORDER, autoCompleteMetadata
         )
         val noDataExtra3Receipt = ReceiptBuilderFactory(nullExtra3Receipt).setExtraEditText3(DatabaseHelper.NO_DATA).build()
 
@@ -289,36 +289,32 @@ class ReceiptTest {
             receipt.compareTo(
                 Receipt(
                     ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DISPLAYABLE_DATE, REIMBURSABLE,
-                    FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                    FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
                 )
             ) == 0
         )
         assertTrue(
-            receipt.compareTo(
-                Receipt(
-                    ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DisplayableDate(Date(DATE.time * 2), TIMEZONE),
-                    REIMBURSABLE, FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                receipt > Receipt(
+                        ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DisplayableDate(Date(DATE.time * 2), TIMEZONE),
+                        REIMBURSABLE, FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
                 )
-            ) > 0
         )
         assertTrue(
-            receipt.compareTo(
-                Receipt(
-                    ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DisplayableDate(Date(0), TIMEZONE),
-                    REIMBURSABLE, FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                receipt < Receipt(
+                        ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DisplayableDate(Date(0), TIMEZONE),
+                        REIMBURSABLE, FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
                 )
-            ) < 0
         )
     }
 
     @Test
     fun testHashCode() {
-        Assert.assertEquals(receipt.hashCode().toLong(), receipt.hashCode().toLong())
-        Assert.assertEquals(
+        assertEquals(receipt.hashCode().toLong(), receipt.hashCode().toLong())
+        assertEquals(
             receipt.hashCode().toLong(),
             Receipt(
                 ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DISPLAYABLE_DATE, REIMBURSABLE,
-                FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
             ).hashCode().toLong()
         )
         assertThat(
@@ -327,7 +323,7 @@ class ReceiptTest {
                 equalTo(
                     Receipt(
                         -1, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DISPLAYABLE_DATE,
-                        REIMBURSABLE, FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                        REIMBURSABLE, FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
                     ).hashCode()
                 )
             )
@@ -338,7 +334,7 @@ class ReceiptTest {
                 equalTo(
                     Receipt(
                         ID, REC_UUID, INDEX + 1, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, 
-                            DISPLAYABLE_DATE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                            DISPLAYABLE_DATE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
                     ).hashCode()
                 )
             )
@@ -349,7 +345,7 @@ class ReceiptTest {
                 equalTo(
                     Receipt(
                         ID, REC_UUID, INDEX, mock(Trip::class.java), file, paymentMethod, NAME, category, COMMENT, price, tax, 
-                            DISPLAYABLE_DATE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                            DISPLAYABLE_DATE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
                     ).hashCode()
                 )
             )
@@ -360,7 +356,7 @@ class ReceiptTest {
                 equalTo(
                     Receipt(
                         ID, REC_UUID, INDEX, trip, mock(File::class.java), paymentMethod, NAME, category, COMMENT, price, tax,
-                            DISPLAYABLE_DATE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                            DISPLAYABLE_DATE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
                     ).hashCode()
                 )
             )
@@ -371,7 +367,7 @@ class ReceiptTest {
                 equalTo(
                     Receipt(
                         ID, REC_UUID, INDEX, trip, file, mock(PaymentMethod::class.java), NAME, category, COMMENT, price, tax,
-                            DISPLAYABLE_DATE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                            DISPLAYABLE_DATE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
                     ).hashCode()
                 )
             )
@@ -382,7 +378,7 @@ class ReceiptTest {
                 equalTo(
                     Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, "bad", category, COMMENT, price, tax, DISPLAYABLE_DATE,
-                        REIMBURSABLE, FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                        REIMBURSABLE, FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
                     ).hashCode()
                 )
             )
@@ -393,7 +389,7 @@ class ReceiptTest {
                 equalTo(
                     Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, mock(Category::class.java), COMMENT, price, tax,
-                            DISPLAYABLE_DATE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                            DISPLAYABLE_DATE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
                     ).hashCode()
                 )
             )
@@ -404,7 +400,7 @@ class ReceiptTest {
                 equalTo(
                     Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, "bad", price, tax, DISPLAYABLE_DATE,
-                        REIMBURSABLE, FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                        REIMBURSABLE, FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
                     ).hashCode()
                 )
             )
@@ -415,7 +411,7 @@ class ReceiptTest {
                 equalTo(
                     Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, mock(Price::class.java), tax,
-                            DISPLAYABLE_DATE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                            DISPLAYABLE_DATE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
                     ).hashCode()
                 )
             )
@@ -426,7 +422,7 @@ class ReceiptTest {
                 equalTo(
                     Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, mock(Price::class.java),
-                            DISPLAYABLE_DATE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                            DISPLAYABLE_DATE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
                     ).hashCode()
                 )
             )
@@ -437,8 +433,8 @@ class ReceiptTest {
                 equalTo(
                     Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax,
-                        DisplayableDate(Date(System.currentTimeMillis()), TIMEZONE), REIMBURSABLE, FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2,
-                        EXTRA3, syncState, CUSTOM_ORDER
+                        DisplayableDate(Date(System.currentTimeMillis()), TIMEZONE), REIMBURSABLE, FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2,
+                        EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
                     ).hashCode()
                 )
             )
@@ -449,7 +445,7 @@ class ReceiptTest {
                 equalTo(
                     Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DISPLAYABLE_DATE, !REIMBURSABLE,
-                        FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                        FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
                     ).hashCode()
                 )
             )
@@ -460,7 +456,7 @@ class ReceiptTest {
                 equalTo(
                     Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DISPLAYABLE_DATE, REIMBURSABLE,
-                        !FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                        !FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
                     ).hashCode()
                 )
             )
@@ -471,7 +467,7 @@ class ReceiptTest {
                 equalTo(
                     Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DISPLAYABLE_DATE, REIMBURSABLE,
-                        FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, "bad", EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                        FULL_PAGE, IS_SELECTED, "bad", EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
                     ).hashCode()
                 )
             )
@@ -482,7 +478,7 @@ class ReceiptTest {
                 equalTo(
                     Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DISPLAYABLE_DATE, REIMBURSABLE,
-                        FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, "bad", EXTRA3, syncState, CUSTOM_ORDER
+                        FULL_PAGE, IS_SELECTED, EXTRA1, "bad", EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
                     ).hashCode()
                 )
             )
@@ -493,37 +489,37 @@ class ReceiptTest {
                 equalTo(
                     Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DISPLAYABLE_DATE, REIMBURSABLE,
-                        FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, "bad", syncState, CUSTOM_ORDER
+                        FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, "bad", syncState, CUSTOM_ORDER, autoCompleteMetadata
                     ).hashCode()
                 )
             )
         )
 
         // Special equals cases (we don't check on the sources don't count, and selected doesn't count):
-        Assert.assertEquals(
+        assertEquals(
             receipt.hashCode().toLong(),
             Receipt(
                 ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DISPLAYABLE_DATE, REIMBURSABLE,
-                FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
             ).hashCode().toLong()
         )
-        Assert.assertEquals(
+        assertEquals(
             receipt.hashCode().toLong(),
             Receipt(
                 ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DISPLAYABLE_DATE, REIMBURSABLE,
-                FULL_PAGE, !IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                FULL_PAGE, !IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
             ).hashCode().toLong()
         )
     }
 
     @Test
     fun testEquals() {
-        Assert.assertEquals(receipt, receipt)
-        Assert.assertEquals(
+        assertEquals(receipt, receipt)
+        assertEquals(
             receipt,
             Receipt(
                 ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DISPLAYABLE_DATE, REIMBURSABLE,
-                FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
             )
         )
         assertThat(receipt, not(equalTo(Any())))
@@ -534,7 +530,7 @@ class ReceiptTest {
                 equalTo(
                     Receipt(
                         -1, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DISPLAYABLE_DATE,
-                        REIMBURSABLE, FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                        REIMBURSABLE, FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
                     )
                 )
             )
@@ -545,7 +541,7 @@ class ReceiptTest {
                 equalTo(
                     Receipt(
                         ID, REC_UUID, INDEX + 1, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DISPLAYABLE_DATE,
-                        REIMBURSABLE, FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                        REIMBURSABLE, FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
                     )
                 )
             )
@@ -556,7 +552,7 @@ class ReceiptTest {
                 equalTo(
                     Receipt(
                         ID, REC_UUID, INDEX, mock(Trip::class.java), file, paymentMethod, NAME, category, COMMENT, price, tax,
-                            DISPLAYABLE_DATE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                            DISPLAYABLE_DATE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
                     )
                 )
             )
@@ -567,7 +563,7 @@ class ReceiptTest {
                 equalTo(
                     Receipt(
                         ID, REC_UUID, INDEX, trip, mock(File::class.java), paymentMethod, NAME, category, COMMENT, price, tax,
-                            DISPLAYABLE_DATE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                            DISPLAYABLE_DATE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
                     )
                 )
             )
@@ -578,7 +574,7 @@ class ReceiptTest {
                 equalTo(
                     Receipt(
                         ID, REC_UUID, INDEX, trip, file, mock(PaymentMethod::class.java), NAME, category, COMMENT, price, tax,
-                            DISPLAYABLE_DATE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                            DISPLAYABLE_DATE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
                     )
                 )
             )
@@ -589,7 +585,7 @@ class ReceiptTest {
                 equalTo(
                     Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, "bad", category, COMMENT, price, tax, DISPLAYABLE_DATE,
-                        REIMBURSABLE, FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                        REIMBURSABLE, FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
                     )
                 )
             )
@@ -600,7 +596,7 @@ class ReceiptTest {
                 equalTo(
                     Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, mock(Category::class.java), COMMENT, price, tax,
-                            DISPLAYABLE_DATE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                            DISPLAYABLE_DATE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
                     )
                 )
             )
@@ -611,7 +607,7 @@ class ReceiptTest {
                 equalTo(
                     Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, "bad", price, tax, DISPLAYABLE_DATE,
-                        REIMBURSABLE, FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                        REIMBURSABLE, FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
                     )
                 )
             )
@@ -622,7 +618,7 @@ class ReceiptTest {
                 equalTo(
                     Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, mock(Price::class.java), tax,
-                            DISPLAYABLE_DATE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                            DISPLAYABLE_DATE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
                     )
                 )
             )
@@ -633,7 +629,7 @@ class ReceiptTest {
                 equalTo(
                     Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, mock(Price::class.java),
-                        DISPLAYABLE_DATE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                        DISPLAYABLE_DATE, REIMBURSABLE, FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
                     )
                 )
             )
@@ -644,8 +640,8 @@ class ReceiptTest {
                 equalTo(
                     Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax,
-                        DisplayableDate(Date(System.currentTimeMillis()), TIMEZONE), REIMBURSABLE, FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2,
-                        EXTRA3, syncState, CUSTOM_ORDER
+                        DisplayableDate(Date(System.currentTimeMillis()), TIMEZONE), REIMBURSABLE, FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2,
+                        EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
                     )
                 )
             )
@@ -656,7 +652,7 @@ class ReceiptTest {
                 equalTo(
                     Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DISPLAYABLE_DATE, !REIMBURSABLE,
-                        FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                        FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
                     )
                 )
             )
@@ -667,7 +663,7 @@ class ReceiptTest {
                 equalTo(
                     Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DISPLAYABLE_DATE, REIMBURSABLE,
-                        !FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                        !FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
                     )
                 )
             )
@@ -678,7 +674,7 @@ class ReceiptTest {
                 equalTo(
                     Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DISPLAYABLE_DATE, REIMBURSABLE,
-                        FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, "bad", EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                        FULL_PAGE, IS_SELECTED, "bad", EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
                     )
                 )
             )
@@ -689,7 +685,7 @@ class ReceiptTest {
                 equalTo(
                     Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DISPLAYABLE_DATE, REIMBURSABLE,
-                        FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, "bad", EXTRA3, syncState, CUSTOM_ORDER
+                        FULL_PAGE, IS_SELECTED, EXTRA1, "bad", EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
                     )
                 )
             )
@@ -700,25 +696,25 @@ class ReceiptTest {
                 equalTo(
                     Receipt(
                         ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DISPLAYABLE_DATE, REIMBURSABLE,
-                        FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, "bad", syncState, CUSTOM_ORDER
+                        FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, "bad", syncState, CUSTOM_ORDER, autoCompleteMetadata
                     )
                 )
             )
         )
 
         // Special equals cases (we don't check on the sources don't count, and selected doesn't count):
-        Assert.assertEquals(
+        assertEquals(
             receipt,
             Receipt(
                 ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DISPLAYABLE_DATE, REIMBURSABLE,
-                FULL_PAGE, IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                FULL_PAGE, IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
             )
         )
-        Assert.assertEquals(
+        assertEquals(
             receipt,
             Receipt(
                 ID, REC_UUID, INDEX, trip, file, paymentMethod, NAME, category, COMMENT, price, tax, DISPLAYABLE_DATE, REIMBURSABLE,
-                FULL_PAGE, !IS_SELECTED, NAME_HIDDEN_AUTO_COMPLETE, COMMENT_HIDDEN_AUTO_COMPLETE, false, false, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER
+                FULL_PAGE, !IS_SELECTED, EXTRA1, EXTRA2, EXTRA3, syncState, CUSTOM_ORDER, autoCompleteMetadata
             )
         )
     }

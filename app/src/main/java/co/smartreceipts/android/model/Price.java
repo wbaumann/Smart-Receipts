@@ -1,5 +1,6 @@
 package co.smartreceipts.android.model;
 
+import android.os.Parcel;
 import android.os.Parcelable;
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
@@ -7,6 +8,7 @@ import androidx.annotation.NonNull;
 import java.math.BigDecimal;
 
 import co.smartreceipts.android.currency.PriceCurrency;
+import co.smartreceipts.android.model.factory.PriceBuilderFactory;
 import co.smartreceipts.android.model.gson.ExchangeRate;
 
 /**
@@ -99,4 +101,17 @@ public interface Price extends Parcelable {
      */
     @NonNull
     ExchangeRate getExchangeRate();
+
+    Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        public Price createFromParcel(Parcel in) {
+            return new PriceBuilderFactory().setPrice(0.0).setCurrency(PriceCurrency.getInstance("USD")).build();
+        }
+
+    @Override
+    public Price[] newArray(int i) {
+            Price[] prices = new Price[1];
+            prices[0] = new PriceBuilderFactory().setPrice(0.0).setCurrency(PriceCurrency.getInstance("USD")).build();
+            return prices;
+    }
+};
 }

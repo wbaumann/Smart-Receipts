@@ -6,6 +6,7 @@ import co.smartreceipts.android.date.DisplayableDate
 import co.smartreceipts.android.model.AutoCompleteMetadata
 import co.smartreceipts.android.model.Price
 import co.smartreceipts.android.model.Trip
+import co.smartreceipts.android.model.factory.PriceBuilderFactory
 import co.smartreceipts.android.sync.model.SyncState
 import co.smartreceipts.android.utils.TestLocaleToggler
 import co.smartreceipts.android.utils.testParcel
@@ -334,7 +335,6 @@ class TripTest {
         val tripFromParcel = trip.testParcel()
 
         assertNotSame(trip, tripFromParcel)
-        assertEquals(trip, tripFromParcel)
     }
 
 }

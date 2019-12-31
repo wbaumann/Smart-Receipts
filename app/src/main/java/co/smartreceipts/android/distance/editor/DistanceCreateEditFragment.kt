@@ -25,6 +25,7 @@ import co.smartreceipts.android.currency.widget.DefaultCurrencyListEditorView
 import co.smartreceipts.android.date.DateFormatter
 import co.smartreceipts.android.distance.editor.currency.DistanceCurrencyCodeSupplier
 import co.smartreceipts.android.fragments.WBFragment
+import co.smartreceipts.android.model.AutoCompleteType
 import co.smartreceipts.android.model.Distance
 import co.smartreceipts.android.model.PaymentMethod
 import co.smartreceipts.android.model.Trip
@@ -441,7 +442,7 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
         }
     }
 
-    private fun showUndoSnackbar(result: AutoCompleteResult<Distance>, position: Int, useLocation: Boolean) {
+    override fun showUndoSnackbar(result: AutoCompleteResult<Distance>, position: Int, autoCompleteType: AutoCompleteType) {
         val view = activity!!.findViewById<ConstraintLayout>(R.id.update_distance_layout)
         snackbar = Snackbar.make(view, getString(
                 R.string.item_removed_from_auto_complete, result.displayName), Snackbar.LENGTH_LONG)

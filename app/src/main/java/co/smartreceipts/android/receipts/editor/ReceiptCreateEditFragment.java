@@ -72,6 +72,7 @@ import co.smartreceipts.android.fragments.ReceiptInputCache;
 import co.smartreceipts.android.fragments.WBFragment;
 import co.smartreceipts.android.keyboard.decimal.SamsungDecimalInputPresenter;
 import co.smartreceipts.android.keyboard.decimal.SamsungDecimalInputView;
+import co.smartreceipts.android.model.AutoCompleteType;
 import co.smartreceipts.android.model.Category;
 import co.smartreceipts.android.model.PaymentMethod;
 import co.smartreceipts.android.model.Price;
@@ -1040,7 +1041,8 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
         return getFlexString(flex, id);
     }
 
-    private void showUndoSnackbar(AutoCompleteResult<Receipt> result, int position, boolean useNameBox) {
+    @Override
+    public void showUndoSnackbar(AutoCompleteResult<Receipt> result, int position, @NotNull AutoCompleteType autoCompleteType) {
         View view = getActivity().findViewById(R.id.update_receipt_layout);
         snackbar = Snackbar.make(view, getString(
                 R.string.item_removed_from_auto_complete, result.getDisplayName()), Snackbar.LENGTH_LONG);

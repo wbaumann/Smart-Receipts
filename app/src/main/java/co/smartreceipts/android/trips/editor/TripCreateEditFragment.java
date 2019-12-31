@@ -54,6 +54,7 @@ import co.smartreceipts.android.date.DateEditText;
 import co.smartreceipts.android.date.DateFormatter;
 import co.smartreceipts.android.editor.Editor;
 import co.smartreceipts.android.fragments.WBFragment;
+import co.smartreceipts.android.model.AutoCompleteType;
 import co.smartreceipts.android.model.Trip;
 import co.smartreceipts.android.persistence.DatabaseHelper;
 import co.smartreceipts.android.settings.UserPreferenceManager;
@@ -599,7 +600,8 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
         }
     }
 
-    private void showUndoSnackbar(AutoCompleteResult<Trip> result, int position, int fieldToUse) {
+    @Override
+    public void showUndoSnackbar(AutoCompleteResult<Trip> result, int position, @NotNull AutoCompleteType autoCompleteType) {
         View view = getActivity().findViewById(R.id.update_trip_layout);
         snackbar = Snackbar.make(view, getString(
                 R.string.item_removed_from_auto_complete, result.getDisplayName()), Snackbar.LENGTH_LONG);

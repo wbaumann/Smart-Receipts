@@ -1,6 +1,7 @@
 package co.smartreceipts.android.autocomplete
 
 import androidx.annotation.UiThread
+import co.smartreceipts.android.model.AutoCompleteType
 import io.reactivex.Observable
 
 
@@ -28,4 +29,5 @@ interface AutoCompleteView<Type> {
     @UiThread
     fun displayAutoCompleteResults(field: AutoCompleteField, results: ArrayList<AutoCompleteResult<Type>>)
 
+    fun showUndoSnackbar(result: AutoCompleteResult<Type>, position: Int, autoCompleteType: AutoCompleteType)
 }

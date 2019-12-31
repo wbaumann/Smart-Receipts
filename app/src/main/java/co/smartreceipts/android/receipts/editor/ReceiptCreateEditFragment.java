@@ -237,7 +237,8 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     @BindViews({R.id.receipt_input_guide_image_payment_method, R.id.receipt_input_payment_method})
     List<View> paymentMethodsViewsList;
 
-    @BindViews({R.id.receipt_input_guide_image_exchange_rate, R.id.receipt_input_exchange_rate, R.id.receipt_input_exchanged_result, R.id.receipt_input_exchange_rate_base_currency})
+    @BindViews({R.id.receipt_input_guide_image_exchange_rate, R.id.receipt_input_exchange_rate,
+            R.id.receipt_input_exchanged_result, R.id.receipt_input_exchange_rate_base_currency})
     List<View> exchangeRateViewsList;
 
     // Flex fields (ie for white-label projects)
@@ -332,7 +333,8 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
 
         if (savedInstanceState == null) {
             if (isNewReceipt()) {
-                new ChildFragmentNavigationHandler(this).addChild(new ReceiptCreateEditFragmentTooltipFragment(), R.id.update_receipt_tooltip);
+                new ChildFragmentNavigationHandler(this).addChild(
+                        new ReceiptCreateEditFragmentTooltipFragment(), R.id.update_receipt_tooltip);
             }
         }
 

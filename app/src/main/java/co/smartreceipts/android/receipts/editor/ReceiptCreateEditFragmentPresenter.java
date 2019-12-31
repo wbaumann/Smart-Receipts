@@ -6,6 +6,7 @@ import java.util.TimeZone;
 import javax.inject.Inject;
 
 import co.smartreceipts.android.di.scopes.FragmentScope;
+import co.smartreceipts.android.model.AutoCompleteType;
 import co.smartreceipts.android.model.Category;
 import co.smartreceipts.android.model.PaymentMethod;
 import co.smartreceipts.android.model.Receipt;
@@ -168,25 +169,20 @@ public class ReceiptCreateEditFragmentPresenter {
         return false;
     }
 
-    Completable updateReceiptNameAutoCompleteVisibility(Receipt receipt, boolean isHidden) {
-        Receipt updatedReceipt = new ReceiptBuilderFactory(receipt)
-                .setNameHiddenFromAutoComplete(isHidden)
-                .build();
+    Completable updateReceiptAutoCompleteVisibility(Receipt receipt, boolean isHidden, AutoCompleteType autoCompleteType) {
+        Receipt updatedReceipt;
 
-        return receiptTableController.update(receipt, updatedReceipt, new DatabaseOperationMetadata())
-                .flatMapCompletable(optional -> {
-                    if (optional.isPresent()) {
-                        return Completable.complete();
-                    } else {
-                        return Completable.error(new Exception("Failed to update receipt auto complete visibility"));
-                    }
-                });
-    }
-
-    Completable updateReceiptCommentAutoCompleteVisibility(Receipt receipt, boolean isHidden) {
-        Receipt updatedReceipt = new ReceiptBuilderFactory(receipt)
-                .setCommentHiddenFromAutoComplete(isHidden)
-                .build();
+        if (autoCompleteType == AutoCompleteType.Name) {
+            updatedReceipt = new ReceiptBuilderFactory(receipt)
+                    .setNameHiddenFromAutoComplete(isHidden)
+                    .build();
+        } else if (autoCompleteType == AutoCompleteType.Comment) {
+            updatedReceipt = new ReceiptBuilderFactory(receipt)
+                    .setCommentHiddenFromAutoComplete(isHidden)
+                    .build();
+        } else {
+            updatedReceipt = new ReceiptBuilderFactory(receipt).build();
+        }
 
         return receiptTableController.update(receipt, updatedReceipt, new DatabaseOperationMetadata())
                 .flatMapCompletable(optional -> {

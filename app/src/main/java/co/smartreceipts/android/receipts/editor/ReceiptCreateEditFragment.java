@@ -993,26 +993,22 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
                 SoftKeyboardManager.hideKeyboard(focusedView);
             } else {
                 SoftKeyboardManager.hideKeyboard(focusedView);
-                final Consumer<Throwable> throwableConsumer = throwable ->
-                        getActivity().runOnUiThread(() ->
-                                Toast.makeText(getActivity(), R.string.delete_failed, Toast.LENGTH_LONG).show());
+
+                AutoCompleteType autoCompleteType;
                 if (nameBox.isPopupShowing()) {
-                    presenter.updateReceiptNameAutoCompleteVisibility(firstReceipt, true)
-                            .subscribe(() ->
-                                    getActivity().runOnUiThread(() -> {
-                                        resultsAdapter.remove(selectedItem);
-                                        resultsAdapter.notifyDataSetChanged();
-                                        showUndoSnackbar(selectedItem, position, true);
-                                    }), throwableConsumer);
+                    autoCompleteType = AutoCompleteType.Name;
                 } else {
-                    presenter.updateReceiptCommentAutoCompleteVisibility(firstReceipt, true)
-                            .subscribe(() ->
-                                    getActivity().runOnUiThread(() -> {
-                                        resultsAdapter.remove(selectedItem);
-                                        resultsAdapter.notifyDataSetChanged();
-                                        showUndoSnackbar(selectedItem, position, false);
-                                    }), throwableConsumer);
+                    autoCompleteType = AutoCompleteType.Comment;
                 }
+
+                presenter.updateReceiptAutoCompleteVisibility(firstReceipt, true, autoCompleteType)
+                        .subscribe(() ->
+                                getActivity().runOnUiThread(() -> {
+                                    resultsAdapter.remove(selectedItem);
+                                    resultsAdapter.notifyDataSetChanged();
+                                    showUndoSnackbar(selectedItem, position, autoCompleteType);
+                                }), throwable -> getActivity().runOnUiThread(() ->
+                                Toast.makeText(getActivity(), R.string.delete_failed, Toast.LENGTH_LONG).show()));
             }
         }
     }
@@ -1048,31 +1044,15 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
         View view = getActivity().findViewById(R.id.update_receipt_layout);
         snackbar = Snackbar.make(view, getString(
                 R.string.item_removed_from_auto_complete, result.getDisplayName()), Snackbar.LENGTH_LONG);
-        snackbar.setAction(R.string.undo, v -> undoDelete(result, position, useNameBox));
+        snackbar.setAction(R.string.undo, v ->
+                presenter.updateReceiptAutoCompleteVisibility(result.getFirstItem(), false, autoCompleteType)
+                .subscribe(() -> getActivity().runOnUiThread(() -> {
+                    resultsAdapter.insert(result, position);
+                    resultsAdapter.notifyDataSetChanged();
+                    Toast.makeText(getContext(), R.string.result_restored, Toast.LENGTH_LONG).show();
+                }), throwable -> getActivity().runOnUiThread(() ->
+                        Toast.makeText(getContext(), R.string.result_restore_failed, Toast.LENGTH_LONG).show())));
         snackbar.show();
-    }
-
-    private void undoDelete(AutoCompleteResult<Receipt> result, int position, boolean useNameBox) {
-        final Consumer<Throwable> throwableConsumer = throwable ->
-                getActivity().runOnUiThread(() ->
-                        Toast.makeText(getContext(), R.string.result_restore_failed, Toast.LENGTH_LONG).show());
-        if (useNameBox) {
-            presenter.updateReceiptNameAutoCompleteVisibility(result.getFirstItem(), false)
-                    .subscribe(() ->
-                            getActivity().runOnUiThread(() -> {
-                                resultsAdapter.insert(result, position);
-                                resultsAdapter.notifyDataSetChanged();
-                                Toast.makeText(getContext(), R.string.result_restored, Toast.LENGTH_LONG).show();
-                            }), throwableConsumer);
-        } else {
-            presenter.updateReceiptCommentAutoCompleteVisibility(result.getFirstItem(), false)
-                    .subscribe(() ->
-                            getActivity().runOnUiThread(() -> {
-                                resultsAdapter.insert(result, position);
-                                resultsAdapter.notifyDataSetChanged();
-                                Toast.makeText(getContext(), R.string.result_restored, Toast.LENGTH_LONG).show();
-                            }), throwableConsumer);
-        }
     }
 
 }

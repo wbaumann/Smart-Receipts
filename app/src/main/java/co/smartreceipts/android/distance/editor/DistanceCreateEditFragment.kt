@@ -418,26 +418,20 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
             } else {
                 SoftKeyboardManager.hideKeyboard(focusedView)
                 val firstDistance = selectedItem.firstItem
-                val throwableConsumer = Consumer<Throwable> { activity!!.runOnUiThread { Toast.makeText(activity, R.string.delete_failed, Toast.LENGTH_LONG).show() } }
-                if (text_distance_location.isPopupShowing) {
-                    presenter.updateDistanceLocationAutoCompleteVisibility(firstDistance, true)
-                            ?.subscribe({
-                                activity!!.runOnUiThread {
-                                    resultsAdapter.remove(selectedItem)
-                                    resultsAdapter.notifyDataSetChanged()
-                                    showUndoSnackbar(selectedItem, position, true)
-                                }
-                            }, {throwableConsumer})
-                } else {
-                    presenter.updateDistanceCommentAutoCompleteVisibility(firstDistance, true)
-                            ?.subscribe({
-                                activity!!.runOnUiThread {
-                                    resultsAdapter.remove(selectedItem)
-                                    resultsAdapter.notifyDataSetChanged()
-                                    showUndoSnackbar(selectedItem, position, false)
-                                }
-                            }, {throwableConsumer})
+
+                val autoCompleteType: AutoCompleteType = when(text_distance_location.isPopupShowing) {
+                    true -> AutoCompleteType.Location
+                    false -> AutoCompleteType.Comment
                 }
+
+                presenter.updateDistanceAutoCompleteVisibility(firstDistance, true, autoCompleteType)
+                        ?.subscribe({
+                            activity!!.runOnUiThread {
+                                resultsAdapter.remove(selectedItem)
+                                resultsAdapter.notifyDataSetChanged()
+                                showUndoSnackbar(selectedItem, position, autoCompleteType)
+                            }
+                        }, { activity!!.runOnUiThread { Toast.makeText(activity, R.string.delete_failed, Toast.LENGTH_LONG).show()}})
             }
         }
     }
@@ -446,38 +440,13 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
         val view = activity!!.findViewById<ConstraintLayout>(R.id.update_distance_layout)
         snackbar = Snackbar.make(view, getString(
                 R.string.item_removed_from_auto_complete, result.displayName), Snackbar.LENGTH_LONG)
-        snackbar.setAction(R.string.undo) { undoDelete(result, position, useLocation) }
+        snackbar.setAction(R.string.undo) { presenter.updateDistanceAutoCompleteVisibility(result.firstItem, false, autoCompleteType)
+                ?.subscribe({activity!!.runOnUiThread {
+                    resultsAdapter.insert(result, position)
+                    resultsAdapter.notifyDataSetChanged()
+                    Toast.makeText(context, R.string.result_restored, Toast.LENGTH_LONG).show()
+                }}, {activity!!.runOnUiThread { Toast.makeText(activity, R.string.result_restore_failed, Toast.LENGTH_LONG).show() }}) }
         snackbar.show()
-    }
-
-    private fun undoDelete(result: AutoCompleteResult<Distance>, position: Int, useLocation: Boolean) {
-        if (useLocation) {
-            presenter.updateDistanceLocationAutoCompleteVisibility(result.firstItem, false)
-                    ?.subscribe({
-                        activity!!.runOnUiThread {
-                            resultsAdapter.insert(result, position)
-                            resultsAdapter.notifyDataSetChanged()
-                            Toast.makeText(context, R.string.result_restored, Toast.LENGTH_LONG).show()
-                        }
-                    }, {
-                        activity!!.runOnUiThread {
-                            Toast.makeText(activity, R.string.result_restore_failed, Toast.LENGTH_LONG).show()
-                        }
-                    })
-        } else {
-            presenter.updateDistanceCommentAutoCompleteVisibility(result.firstItem, false)
-                    ?.subscribe({
-                        activity!!.runOnUiThread {
-                            resultsAdapter.insert(result, position)
-                            resultsAdapter.notifyDataSetChanged()
-                            Toast.makeText(context, R.string.result_restored, Toast.LENGTH_LONG).show()
-                        }
-                    }, {
-                        activity!!.runOnUiThread {
-                            Toast.makeText(activity, R.string.result_restore_failed, Toast.LENGTH_LONG).show()
-                        }
-                    })
-        }
     }
 
     companion object {

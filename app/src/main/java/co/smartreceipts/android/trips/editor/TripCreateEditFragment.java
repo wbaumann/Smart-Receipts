@@ -568,34 +568,25 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
             } else {
                 SoftKeyboardManager.hideKeyboard(focusedView);
                 final Trip firstReceipt = selectedItem.getFirstItem();
-                final Consumer<Throwable> throwableConsumer = throwable ->
-                        getActivity().runOnUiThread(() ->
-                                Toast.makeText(getActivity(), R.string.delete_failed, Toast.LENGTH_LONG).show());
+
+                AutoCompleteType autoCompleteType;
                 if (nameBox.isPopupShowing()) {
-                    presenter.updateTripNameAutoCompleteVisibility(firstReceipt, true)
-                            .subscribe(() ->
-                                    getActivity().runOnUiThread(() -> {
-                                        resultsAdapter.remove(selectedItem);
-                                        resultsAdapter.notifyDataSetChanged();
-                                        showUndoSnackbar(selectedItem, position, 0);
-                                    }), throwableConsumer);
+                    autoCompleteType = AutoCompleteType.Name;
                 } else if (commentBox.isPopupShowing()) {
-                    presenter.updateTripCommentAutoCompleteVisibility(firstReceipt, true)
-                            .subscribe(() ->
-                                    getActivity().runOnUiThread(() -> {
-                                        resultsAdapter.remove(selectedItem);
-                                        resultsAdapter.notifyDataSetChanged();
-                                        showUndoSnackbar(selectedItem, position, 1);
-                                    }), throwableConsumer);
+                    autoCompleteType = AutoCompleteType.Comment;
                 } else {
-                    presenter.updateTripCostCenterAutoCompleteVisibility(firstReceipt, true)
-                            .subscribe(() ->
-                                    getActivity().runOnUiThread(() -> {
-                                        resultsAdapter.remove(selectedItem);
-                                        resultsAdapter.notifyDataSetChanged();
-                                        showUndoSnackbar(selectedItem, position, 2);
-                                    }), throwableConsumer);
+                    autoCompleteType = AutoCompleteType.CostCenter;
                 }
+
+                presenter.updateTripAutoCompleteVisibility(firstReceipt, true, autoCompleteType)
+                        .subscribe(() ->
+                                getActivity().runOnUiThread(() -> {
+                                    resultsAdapter.remove(selectedItem);
+                                    resultsAdapter.notifyDataSetChanged();
+                                    showUndoSnackbar(selectedItem, position, autoCompleteType);
+                                }), throwable ->
+                                getActivity().runOnUiThread(() ->
+                                        Toast.makeText(getActivity(), R.string.delete_failed, Toast.LENGTH_LONG).show()));
             }
         }
     }
@@ -605,38 +596,15 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
         View view = getActivity().findViewById(R.id.update_trip_layout);
         snackbar = Snackbar.make(view, getString(
                 R.string.item_removed_from_auto_complete, result.getDisplayName()), Snackbar.LENGTH_LONG);
-        snackbar.setAction(R.string.undo, v -> undoDelete(result, position, fieldToUse));
+        snackbar.setAction(R.string.undo, v -> presenter.updateTripAutoCompleteVisibility(result.getFirstItem(), false, autoCompleteType)
+                .subscribe(() -> getActivity().runOnUiThread(() -> {
+                    resultsAdapter.insert(result, position);
+                    resultsAdapter.notifyDataSetChanged();
+                    Toast.makeText(getContext(), R.string.result_restored, Toast.LENGTH_LONG).show();
+                }), throwable ->
+                        getActivity().runOnUiThread(() ->
+                                Toast.makeText(getContext(), R.string.result_restore_failed, Toast.LENGTH_LONG).show())));
         snackbar.show();
     }
 
-    private void undoDelete(AutoCompleteResult<Trip> result, int position, int fieldToUse) {
-        final Consumer<Throwable> throwableConsumer = throwable ->
-                getActivity().runOnUiThread(() ->
-                        Toast.makeText(getContext(), R.string.result_restore_failed, Toast.LENGTH_LONG).show());
-        if (fieldToUse == 0) {
-            presenter.updateTripNameAutoCompleteVisibility(result.getFirstItem(), false)
-                    .subscribe(() ->
-                            getActivity().runOnUiThread(() -> {
-                                resultsAdapter.insert(result, position);
-                                resultsAdapter.notifyDataSetChanged();
-                                Toast.makeText(getContext(), R.string.result_restored, Toast.LENGTH_LONG).show();
-                            }), throwableConsumer);
-        } else if (fieldToUse == 1) {
-            presenter.updateTripCommentAutoCompleteVisibility(result.getFirstItem(), false)
-                    .subscribe(() ->
-                            getActivity().runOnUiThread(() -> {
-                                resultsAdapter.insert(result, position);
-                                resultsAdapter.notifyDataSetChanged();
-                                Toast.makeText(getContext(), R.string.result_restored, Toast.LENGTH_LONG).show();
-                            }), throwableConsumer);
-        } else {
-            presenter.updateTripCostCenterAutoCompleteVisibility(result.getFirstItem(), false)
-                    .subscribe(() ->
-                            getActivity().runOnUiThread(() -> {
-                                resultsAdapter.insert(result, position);
-                                resultsAdapter.notifyDataSetChanged();
-                                Toast.makeText(getContext(), R.string.result_restored, Toast.LENGTH_LONG).show();
-                            }), throwableConsumer);
-        }
-    }
 }

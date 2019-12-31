@@ -3,6 +3,7 @@ package co.smartreceipts.android.distance.editor
 import co.smartreceipts.android.R
 import co.smartreceipts.android.autocomplete.AutoCompletePresenter
 import co.smartreceipts.android.di.scopes.FragmentScope
+import co.smartreceipts.android.model.AutoCompleteType
 import co.smartreceipts.android.model.Distance
 import co.smartreceipts.android.model.factory.DistanceBuilderFactory
 import co.smartreceipts.android.model.utils.ModelUtils
@@ -71,25 +72,17 @@ class DistanceCreateEditPresenter @Inject constructor(
         }
     }
 
-    fun updateDistanceLocationAutoCompleteVisibility(distance: Distance?, isHidden: Boolean): Completable? {
-        val updatedDistance = DistanceBuilderFactory(distance!!)
-                .setLocationHiddenFromAutoComplete(isHidden)
-                .build()
-
-        return interactor.updateDistance(distance, updatedDistance)
-                .flatMapCompletable {
-                    if (it.isPresent) {
-                        return@flatMapCompletable Completable.complete()
-                    } else {
-                        return@flatMapCompletable Completable.error(Exception("Failed to update distance auto complete visibility"))
-                    }
-                }
-    }
-
-    fun updateDistanceCommentAutoCompleteVisibility(distance: Distance?, isHidden: Boolean): Completable? {
-        val updatedDistance = DistanceBuilderFactory(distance!!)
-                .setCommentHiddenFromAutoComplete(isHidden)
-                .build()
+    fun updateDistanceAutoCompleteVisibility(distance: Distance?, isHidden: Boolean, autoCompleteType: AutoCompleteType): Completable? {
+        val updatedDistance: Distance = when (autoCompleteType) {
+            AutoCompleteType.Location -> DistanceBuilderFactory(distance!!)
+                    .setLocationHiddenFromAutoComplete(isHidden)
+                    .build()
+            AutoCompleteType.Comment -> DistanceBuilderFactory(distance!!)
+                    .setCommentHiddenFromAutoComplete(isHidden)
+                    .build()
+            else -> DistanceBuilderFactory(distance!!)
+                    .build()
+        }
 
         return interactor.updateDistance(distance, updatedDistance)
                 .flatMapCompletable {

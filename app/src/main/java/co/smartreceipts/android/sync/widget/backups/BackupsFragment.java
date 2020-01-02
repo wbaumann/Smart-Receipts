@@ -1,16 +1,9 @@
 package co.smartreceipts.android.sync.widget.backups;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,12 +15,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
+
 import javax.inject.Inject;
 
 import co.smartreceipts.android.R;
 import co.smartreceipts.android.activities.NavigationHandler;
 import co.smartreceipts.android.fragments.SelectAutomaticBackupProviderDialogFragment;
 import co.smartreceipts.android.fragments.WBFragment;
+import co.smartreceipts.android.imports.intents.widget.info.IntentImportInformationPresenter;
 import co.smartreceipts.android.persistence.PersistenceManager;
 import co.smartreceipts.android.purchases.PurchaseManager;
 import co.smartreceipts.android.purchases.model.InAppPurchase;
@@ -39,7 +40,7 @@ import co.smartreceipts.android.sync.BackupProvidersManager;
 import co.smartreceipts.android.sync.network.NetworkManager;
 import co.smartreceipts.android.sync.network.SupportedNetworkType;
 import co.smartreceipts.android.sync.provider.SyncProvider;
-import co.smartreceipts.android.utils.log.Logger;
+import co.smartreceipts.core.utils.log.Logger;
 import dagger.android.support.AndroidSupportInjection;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -59,6 +60,8 @@ public class BackupsFragment extends WBFragment implements BackupProviderChangeL
     PurchaseManager purchaseManager;
     @Inject
     NavigationHandler navigationHandler;
+    @Inject
+    IntentImportInformationPresenter intentImportInformationPresenter;
 
     private RemoteBackupsDataCache remoteBackupsDataCache;
     private CompositeDisposable compositeDisposable;
@@ -172,13 +175,18 @@ public class BackupsFragment extends WBFragment implements BackupProviderChangeL
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == IMPORT_SMR_REQUEST_CODE) {
-                if (data != null) {
-                    navigationHandler.showDialog(ImportLocalBackupDialogFragment.newInstance(data.getData()));
-                }
-            }
+        if (data != null) {
+            data.setAction(Intent.ACTION_VIEW);
+            getActivity().setIntent(data);
+            intentImportInformationPresenter.subscribe();
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        Logger.info(this, "onDestroy");
+        intentImportInformationPresenter.unsubscribe();
+        super.onDestroy();
     }
 
     @Override

@@ -5,13 +5,17 @@ import androidx.annotation.NonNull;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import co.smartreceipts.android.date.DateFormatter;
+import co.smartreceipts.android.model.Distance;
+import co.smartreceipts.android.model.Receipt;
 import co.smartreceipts.android.model.Trip;
 import co.smartreceipts.android.persistence.DatabaseHelper;
 import co.smartreceipts.android.persistence.PersistenceManager;
 import co.smartreceipts.android.settings.UserPreferenceManager;
-import co.smartreceipts.android.utils.log.Logger;
+import co.smartreceipts.core.utils.log.Logger;
 import co.smartreceipts.android.workers.reports.AbstractReport;
 import co.smartreceipts.android.workers.reports.ReportGenerationException;
 import co.smartreceipts.android.workers.reports.ReportResourcesManager;
@@ -49,8 +53,10 @@ public abstract class PdfBoxAbstractReport extends AbstractReport {
 
             createSections(trip, pdfBoxReportFile);
 
+            final List<Receipt> receipts = new ArrayList<>(getDatabase().getReceiptsTable().getBlocking(trip, false));
+            final List<Distance> distances = new ArrayList<>(getDatabase().getDistanceTable().getBlocking(trip, false));
 
-            pdfBoxReportFile.writeFile(pdfStream, trip);
+            pdfBoxReportFile.writeFile(pdfStream, trip, receipts, distances);
 
             return getStorageManager().getFile(trip.getDirectory(), outputFileName);
 

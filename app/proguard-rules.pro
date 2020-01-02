@@ -9,14 +9,14 @@
 
 ##### Our ProGuard configurations #####
 
+#-whyareyoukeeping class com.amazonaws.*
+
 # Preserve the line number information for debugging stack traces.
 -keepattributes SourceFile,LineNumberTable
 
 # Keep annotations
 -keepattributes *Annotation*
 
-# Keep all exceptions for tracking purposes
--keep public class * extends java.lang.Exception
 
 # Keep all of our classes as they are
 -keep class co.smartreceipts.** { *; }
@@ -154,24 +154,6 @@
 -keep class org.slf4j.** { *; }
 -keepattributes *Annotation*
 -dontwarn ch.qos.logback.core.net.*
-
-
-
-##### AWS ProGuard configurations #####
-
-# Class names are needed in reflection
--keepnames class com.amazonaws.**
--keepnames class com.amazon.**
-# Request handlers defined in request.handlers
--keep class com.amazonaws.services.**.*Handler
-# The following are referenced but aren't required to run
--dontwarn com.fasterxml.jackson.**
--dontwarn org.apache.commons.logging.**
-# Android 6.0 release removes support for the Apache HTTP client
--dontwarn org.apache.http.**
-# The SDK has several references of Apache HTTP client
--dontwarn com.amazonaws.http.**
--dontwarn com.amazonaws.metrics.**
 
 
 

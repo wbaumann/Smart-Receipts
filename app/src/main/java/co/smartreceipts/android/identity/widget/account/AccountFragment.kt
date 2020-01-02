@@ -11,12 +11,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import co.smartreceipts.android.R
 import co.smartreceipts.android.date.DateFormatter
 import co.smartreceipts.android.identity.apis.organizations.OrganizationModel
-import co.smartreceipts.android.identity.store.EmailAddress
+import co.smartreceipts.core.identity.store.EmailAddress
 import co.smartreceipts.android.identity.widget.account.organizations.OrganizationsListAdapter
 import co.smartreceipts.android.identity.widget.account.subscriptions.SubscriptionsListAdapter
 import co.smartreceipts.android.purchases.subscriptions.RemoteSubscription
 import co.smartreceipts.android.widget.model.UiIndicator
-import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding3.view.clicks
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.account_info_fragment.*
@@ -45,7 +45,7 @@ class AccountFragment : Fragment(), AccountView {
     override lateinit var uploadSettingsClicks: Observable<OrganizationModel>
 
 
-    override val logoutButtonClicks: Observable<Any> get() = RxView.clicks(logout_button)
+    override val logoutButtonClicks: Observable<Unit> get() = logout_button.clicks()
 
 
     override fun onAttach(context: Context?) {

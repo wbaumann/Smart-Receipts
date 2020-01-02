@@ -1,9 +1,9 @@
 package co.smartreceipts.android.identity.organization
 
-import co.smartreceipts.android.di.scopes.ApplicationScope
+import co.smartreceipts.core.di.scopes.ApplicationScope
 import co.smartreceipts.android.settings.UserPreferenceManager
 import co.smartreceipts.android.settings.catalog.UserPreference
-import co.smartreceipts.android.utils.log.Logger
+import co.smartreceipts.core.utils.log.Logger
 import com.hadisatrio.optional.Optional
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -24,15 +24,7 @@ class AppPreferencesSynchronizer @Inject constructor(private val userPreferenceM
         return userPreferenceManager.userPreferencesSingle
             .flatMap { userPreferences ->
                 for (userPreference in userPreferences) {
-                    val prefName = userPreferenceManager.name(userPreference)
-
-                    // TODO: 24.06.2019 temporary hack (need server fix)
-                    if (prefName == "EmailSubject") {
-                        appPreferencesMap[prefName] = ""
-                    } else {
-                        appPreferencesMap[prefName] = userPreferenceManager.get(userPreference)
-                    }
-
+                    appPreferencesMap[userPreferenceManager.name(userPreference)] = userPreferenceManager.get(userPreference)
                 }
                 Single.just(appPreferencesMap)
             }
@@ -120,15 +112,7 @@ class AppPreferencesSynchronizer @Inject constructor(private val userPreferenceM
                 appPreferenceValue, preferenceValue
             )
 
-
-            val equals : Boolean;
-            // TODO: 24.06.2019 temporary hack
-            if (preferenceName == "EmailSubject") {
-                equals = true
-            } else {
-                equals = appPreferenceValue == preferenceValue
-            }
-
+            val equals: Boolean = appPreferenceValue == preferenceValue
 
             if (!equals && apply) {
                 Logger.debug(this, "Applying organization preferences: set \'{}\' to \'{}\'", preferenceName, preferenceValue)

@@ -1,12 +1,13 @@
 package co.smartreceipts.android.identity.widget.account
 
-import co.smartreceipts.android.di.scopes.ApplicationScope
+import androidx.annotation.VisibleForTesting
+import co.smartreceipts.core.di.scopes.ApplicationScope
 import co.smartreceipts.android.identity.IdentityManager
 import co.smartreceipts.android.identity.apis.organizations.Organization
 import co.smartreceipts.android.identity.apis.organizations.OrganizationModel
 import co.smartreceipts.android.identity.apis.organizations.OrganizationUser
 import co.smartreceipts.android.identity.organization.OrganizationManager
-import co.smartreceipts.android.identity.store.EmailAddress
+import co.smartreceipts.core.identity.store.EmailAddress
 import co.smartreceipts.android.ocr.purchases.OcrPurchaseTracker
 import co.smartreceipts.android.purchases.subscriptions.RemoteSubscription
 import co.smartreceipts.android.purchases.subscriptions.RemoteSubscriptionManager
@@ -39,7 +40,9 @@ class AccountInteractor constructor(
 
     fun logOut() = identityManager.logOut()
 
-    fun getEmail(): EmailAddress = identityManager.email ?: EmailAddress("")
+    fun getEmail(): EmailAddress = identityManager.email ?: EmailAddress(
+        ""
+    )
 
 
     fun getOrganizations(): Single<List<OrganizationModel>> {
@@ -86,9 +89,17 @@ class AccountInteractor constructor(
             .observeOn(observeOnScheduler)
     }
 
+    @VisibleForTesting
     private fun getUserRole(organization: Organization): OrganizationUser.UserRole {
-        // TODO: 12.11.2018 implement getting real user role
-        return OrganizationUser.UserRole.ADMIN
+        val defaultRole = OrganizationUser.UserRole.USER
+
+        for (user in organization.organizationUsers) {
+            if (identityManager.userId?.id.equals(user.userId)) {
+                 return user.role
+            }
+        }
+
+        return defaultRole
     }
 
 }

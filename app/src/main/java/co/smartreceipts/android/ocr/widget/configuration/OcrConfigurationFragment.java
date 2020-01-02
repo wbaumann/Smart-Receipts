@@ -3,13 +3,6 @@ package co.smartreceipts.android.ocr.widget.configuration;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,7 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 
-import com.jakewharton.rxbinding2.widget.RxCompoundButton;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.jakewharton.rxbinding3.widget.RxCompoundButton;
 
 import java.util.List;
 
@@ -30,9 +31,9 @@ import butterknife.Unbinder;
 import co.smartreceipts.android.R;
 import co.smartreceipts.android.analytics.Analytics;
 import co.smartreceipts.android.analytics.events.Events;
-import co.smartreceipts.android.identity.store.EmailAddress;
+import co.smartreceipts.core.identity.store.EmailAddress;
 import co.smartreceipts.android.purchases.model.AvailablePurchase;
-import co.smartreceipts.android.utils.log.Logger;
+import co.smartreceipts.core.utils.log.Logger;
 import dagger.android.support.AndroidSupportInjection;
 import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
@@ -210,13 +211,13 @@ public class OcrConfigurationFragment extends Fragment implements OcrConfigurati
     @NonNull
     @Override
     public Consumer<? super Boolean> getOcrIsEnabledConsumer() {
-        return RxCompoundButton.checked(ocrIsEnabledCheckbox);
+        return isChecked -> ocrIsEnabledCheckbox.setChecked(isChecked);
     }
 
     @NonNull
     @Override
     public Consumer<? super Boolean> getAllowUsToSaveImagesRemotelyConsumer() {
-        return RxCompoundButton.checked(allowUsToSaveImagesRemotelyCheckbox);
+        return isChecked -> allowUsToSaveImagesRemotelyCheckbox.setChecked(isChecked);
     }
 
     @Override

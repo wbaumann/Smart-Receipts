@@ -1,8 +1,6 @@
 package co.smartreceipts.android.di;
 
 import co.smartreceipts.android.activities.SmartReceiptsActivity;
-import co.smartreceipts.android.di.scopes.ActivityScope;
-import co.smartreceipts.android.di.scopes.FragmentScope;
 import co.smartreceipts.android.fragments.ImportPhotoPdfDialogFragment;
 import co.smartreceipts.android.fragments.ReceiptMoveCopyDialogFragment;
 import co.smartreceipts.android.fragments.SelectAutomaticBackupProviderDialogFragment;
@@ -14,6 +12,8 @@ import co.smartreceipts.android.rating.FeedbackDialogFragment;
 import co.smartreceipts.android.rating.RatingDialogFragment;
 import co.smartreceipts.android.receipts.attacher.ReceiptAttachmentDialogFragment;
 import co.smartreceipts.android.receipts.attacher.ReceiptRemoveAttachmentDialogFragment;
+import co.smartreceipts.android.search.SearchActivity;
+import co.smartreceipts.android.search.SearchModule;
 import co.smartreceipts.android.settings.widget.SettingsActivity;
 import co.smartreceipts.android.settings.widget.editors.categories.CategoriesListFragment;
 import co.smartreceipts.android.settings.widget.editors.categories.CategoryEditorDialogFragment;
@@ -25,6 +25,8 @@ import co.smartreceipts.android.sync.widget.backups.DownloadRemoteBackupImagesPr
 import co.smartreceipts.android.sync.widget.backups.ExportBackupWorkerProgressDialogFragment;
 import co.smartreceipts.android.sync.widget.backups.ImportLocalBackupWorkerProgressDialogFragment;
 import co.smartreceipts.android.sync.widget.backups.ImportRemoteBackupWorkerProgressDialogFragment;
+import co.smartreceipts.core.di.scopes.ActivityScope;
+import co.smartreceipts.core.di.scopes.FragmentScope;
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
 
@@ -47,6 +49,10 @@ public abstract class GlobalBindingModule {
     @ActivityScope
     @ContributesAndroidInjector(modules = CropModule.class)
     public abstract CropImageActivity cropImageActivity();
+
+    @ActivityScope
+    @ContributesAndroidInjector(modules = SearchModule.class)
+    public abstract SearchActivity searchActivity();
 
     @FragmentScope
     @ContributesAndroidInjector

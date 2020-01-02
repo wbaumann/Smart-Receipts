@@ -19,7 +19,7 @@ import co.smartreceipts.android.persistence.database.controllers.grouping.result
 import co.smartreceipts.android.persistence.database.controllers.grouping.results.SumCategoryGroupingResult;
 import co.smartreceipts.android.purchases.wallet.PurchaseWallet;
 import co.smartreceipts.android.settings.UserPreferenceManager;
-import co.smartreceipts.android.utils.log.Logger;
+import co.smartreceipts.core.utils.log.Logger;
 import co.smartreceipts.android.workers.reports.ReportResourcesManager;
 import co.smartreceipts.android.workers.reports.pdf.PdfReportFile;
 import co.smartreceipts.android.workers.reports.pdf.colors.PdfColorManager;
@@ -52,9 +52,10 @@ public class PdfBoxReportFile implements PdfReportFile, PdfBoxSectionFactory {
 
 
     @Override
-    public void writeFile(@NonNull OutputStream outStream, @NonNull Trip trip) throws IOException {
+    public void writeFile(@NonNull OutputStream outStream, @NonNull Trip trip, @NonNull List<Receipt> receipts,
+                          @NonNull List<Distance> distances) throws IOException {
         try {
-            final PdfBoxWriter writer = new PdfBoxWriter(pdDocument, pdfBoxContext, new DefaultPdfBoxPageDecorations(pdfBoxContext, trip));
+            final PdfBoxWriter writer = new PdfBoxWriter(pdDocument, pdfBoxContext, new DefaultPdfBoxPageDecorations(pdfBoxContext, trip, receipts, distances));
             for (PdfBoxSection section : sections) {
                 section.writeSection(pdDocument, writer);
             }
@@ -94,7 +95,9 @@ public class PdfBoxReportFile implements PdfReportFile, PdfBoxSectionFactory {
 
     @NonNull
     @Override
-    public PdfBoxReceiptsImagesPdfSection createReceiptsImagesSection(@NonNull Trip trip, @NonNull List<Receipt> receipts) {
-        return new PdfBoxReceiptsImagesPdfSection(pdfBoxContext, pdDocument, trip, receipts);
+    public PdfBoxReceiptsImagesPdfSection createReceiptsImagesSection(@NonNull Trip trip,
+                                                                      @NonNull List<Receipt> receipts,
+                                                                      @NonNull List<Distance> distances) {
+        return new PdfBoxReceiptsImagesPdfSection(pdfBoxContext, pdDocument, trip, receipts, distances);
     }
 }

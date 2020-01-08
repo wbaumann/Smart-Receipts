@@ -332,6 +332,7 @@ class TripTest {
         val tripFromParcel = trip.testParcel()
 
         assertNotSame(trip, tripFromParcel)
+        assertEquals(trip, tripFromParcel)
     }
 
 }

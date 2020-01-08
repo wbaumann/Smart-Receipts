@@ -46,7 +46,7 @@ class Trip @JvmOverloads constructor(
      */
     override val syncState: SyncState = DefaultSyncState(),
     /**
-     * As the price of a trip exists as a function of it's receipt children (and not itself), [Price] must be var
+     * As the price of a trip exists as a function of its receipt children (and not itself), [Price] must be var
      */
     override var price: Price = PriceBuilderFactory().setPrice(0.0).setCurrency(tripCurrency).build(),
     /**
@@ -151,6 +151,9 @@ class Trip @JvmOverloads constructor(
         if (comment != that.comment) return false
         if (startDisplayableDate != that.startDisplayableDate) return false
         if (endDisplayableDate != that.endDisplayableDate) return false
+        if (syncState != that.syncState) return false
+        if (price != that.price) return false
+        if (dailySubTotal != that.dailySubTotal) return false
         if (autoCompleteMetadata != that.autoCompleteMetadata) return false
         return if (tripCurrency != that.tripCurrency) false else costCenter == that.costCenter
 
@@ -166,6 +169,9 @@ class Trip @JvmOverloads constructor(
         result = 31 * result + endDisplayableDate.hashCode()
         result = 31 * result + tripCurrency.hashCode()
         result = 31 * result + costCenter.hashCode()
+        result = 31 * result + syncState.hashCode()
+        result = 31 * result + price.hashCode()
+        result = 31 * result + dailySubTotal.hashCode()
         result = 31 * result + autoCompleteMetadata.hashCode()
         return result
     }
@@ -182,6 +188,7 @@ class Trip @JvmOverloads constructor(
                 ", startDisplayableDate=" + startDisplayableDate +
                 ", endDisplayableDate=" + endDisplayableDate +
                 ", tripCurrency=" + tripCurrency +
+                ", syncState=" + syncState +
                 ", autoCompleteMetadata=" + autoCompleteMetadata +
                 '}'.toString()
     }

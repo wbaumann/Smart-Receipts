@@ -21,4 +21,4 @@ data class AutoCompleteMetadata(
      *  Checks if the cost center of object should be shown in auto complete results
      */
     var isCostCenterHiddenFromAutoComplete: Boolean
-): Parcelable
+) : Parcelable

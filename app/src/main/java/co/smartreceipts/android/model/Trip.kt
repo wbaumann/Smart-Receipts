@@ -46,7 +46,7 @@ class Trip @JvmOverloads constructor(
      */
     override val syncState: SyncState = DefaultSyncState(),
     /**
-     * As the price of a trip exists as a function of it's receipt children (and not itself), [Price] must be var
+     * As the price of a trip exists as a function of its receipt children (and not itself), [Price] must be var
      */
     override var price: Price = PriceBuilderFactory().setPrice(0.0).setCurrency(tripCurrency).build(),
     /**

@@ -17,7 +17,6 @@ import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
@@ -54,10 +53,8 @@ class TripTest {
 
     private lateinit var syncState: SyncState
 
-    @Mock
     private var price: Price = PriceBuilderFactory().setPrice(0.0).setCurrency(CURRENCY).build()
 
-    @Mock
     private var autoCompleteMetadata: AutoCompleteMetadata = AutoCompleteMetadata(isNameHiddenFromAutoComplete = NAME_HIDDEN_AUTO_COMPLETE, isCommentHiddenFromAutoComplete = COMMENT_HIDDEN_AUTO_COMPLETE, isLocationHiddenFromAutoComplete = false, isCostCenterHiddenFromAutoComplete = COST_CENTER_HIDDEN_AUTO_COMPLETE)
 
     @Before
@@ -335,6 +332,7 @@ class TripTest {
         val tripFromParcel = trip.testParcel()
 
         assertNotSame(trip, tripFromParcel)
+        assertEquals(trip, tripFromParcel)
     }
 
 }

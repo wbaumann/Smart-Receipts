@@ -5,7 +5,7 @@ import co.smartreceipts.android.purchases.apis.subscriptions.SubscriptionsApiSer
 import co.smartreceipts.android.purchases.wallet.PurchaseWallet
 import co.smartreceipts.core.di.scopes.ApplicationScope
 import co.smartreceipts.core.identity.IdentityManager
-import co.smartreceipts.core.utils.log.Logger
+import co.smartreceipts.analytics.log.Logger
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.schedulers.Schedulers

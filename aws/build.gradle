@@ -11,6 +11,8 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        missingDimensionStrategy 'isFloss', 'notFloss'
     }
 
     buildTypes {
@@ -25,6 +27,7 @@ android {
     }
     buildToolsVersion = rootProject.ext.buildToolsVersion
 
+    publishNonDefault true
 }
 
 dependencies {
@@ -48,6 +51,9 @@ dependencies {
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$MOCKITO_KOTLIN_VERSION"
     testImplementation "androidx.test:core:$ANDROID_TEST_RUNNER_VERSION"
 
+    // Dagger
+    implementation "com.google.dagger:dagger-android-support:$DAGGER_VERSION"
+    implementation "com.google.dagger:dagger:$DAGGER_VERSION"
     kapt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
     kapt "com.google.dagger:dagger-android-processor:$DAGGER_VERSION"
 

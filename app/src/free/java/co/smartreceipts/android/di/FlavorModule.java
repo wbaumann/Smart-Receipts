@@ -6,14 +6,14 @@ import com.google.android.gms.analytics.Tracker;
 
 import java.util.Arrays;
 
+import co.smartreceipts.analytics.Analytics;
+import co.smartreceipts.analytics.FirebaseAnalytics;
+import co.smartreceipts.analytics.impl.AnalyticsLogger;
 import co.smartreceipts.android.ExtraInitializer;
 import co.smartreceipts.android.ExtraInitializerFreeImpl;
 import co.smartreceipts.android.R;
-import co.smartreceipts.core.analytics.Analytics;
 import co.smartreceipts.android.analytics.AnalyticsManager;
 import co.smartreceipts.android.analytics.GoogleAnalytics;
-import co.smartreceipts.android.analytics.impl.FirebaseAnalytics;
-import co.smartreceipts.android.analytics.impl.AnalyticsLogger;
 import co.smartreceipts.android.ocr.OcrManager;
 import co.smartreceipts.android.ocr.OcrManagerImpl;
 import co.smartreceipts.android.purchases.wallet.DefaultPurchaseWallet;
@@ -22,6 +22,9 @@ import co.smartreceipts.android.settings.UserPreferenceManager;
 import co.smartreceipts.aws.cognito.CognitoManager;
 import co.smartreceipts.aws.cognito.CognitoManagerImpl;
 import co.smartreceipts.core.di.scopes.ApplicationScope;
+import co.smartreceipts.push.PushManager;
+import co.smartreceipts.push.PushManagerImpl;
+import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 

@@ -11,7 +11,7 @@ import javax.inject.Inject;
 import co.smartreceipts.core.di.scopes.ApplicationScope;
 import co.smartreceipts.core.identity.IdentityManager;
 import co.smartreceipts.core.identity.apis.me.User;
-import co.smartreceipts.core.utils.log.Logger;
+import co.smartreceipts.analytics.log.Logger;
 import io.reactivex.Single;
 
 @ApplicationScope

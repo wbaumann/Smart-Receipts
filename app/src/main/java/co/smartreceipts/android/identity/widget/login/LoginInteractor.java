@@ -14,7 +14,7 @@ import co.smartreceipts.core.di.scopes.ApplicationScope;
 import co.smartreceipts.android.identity.IdentityManagerImpl;
 import co.smartreceipts.core.identity.apis.login.LoginType;
 import co.smartreceipts.core.identity.apis.login.UserCredentialsPayload;
-import co.smartreceipts.core.utils.log.Logger;
+import co.smartreceipts.analytics.log.Logger;
 import co.smartreceipts.android.widget.model.UiIndicator;
 import io.reactivex.Maybe;
 import io.reactivex.Observable;

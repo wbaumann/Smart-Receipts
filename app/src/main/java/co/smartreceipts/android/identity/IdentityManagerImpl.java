@@ -12,9 +12,9 @@ import org.reactivestreams.Subscriber;
 
 import javax.inject.Inject;
 
-import co.smartreceipts.core.analytics.Analytics;
-import co.smartreceipts.core.analytics.events.ErrorEvent;
-import co.smartreceipts.core.analytics.events.Events;
+import co.smartreceipts.analytics.Analytics;
+import co.smartreceipts.analytics.events.ErrorEvent;
+import co.smartreceipts.analytics.events.Events;
 import co.smartreceipts.android.apis.ApiValidationException;
 import co.smartreceipts.android.apis.WebServiceManager;
 import co.smartreceipts.core.identity.apis.login.LoginPayload;
@@ -33,7 +33,7 @@ import co.smartreceipts.core.identity.apis.me.MeResponse;
 import co.smartreceipts.core.identity.store.EmailAddress;
 import co.smartreceipts.core.identity.store.Token;
 import co.smartreceipts.core.identity.store.UserId;
-import co.smartreceipts.core.utils.log.Logger;
+import co.smartreceipts.analytics.log.Logger;
 import io.reactivex.Observable;
 import io.reactivex.Scheduler;
 import io.reactivex.schedulers.Schedulers;

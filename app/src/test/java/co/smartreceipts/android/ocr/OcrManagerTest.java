@@ -14,7 +14,7 @@ import org.robolectric.RobolectricTestRunner;
 import java.io.File;
 
 import co.smartreceipts.push.PushManagerImpl;
-import co.smartreceipts.core.analytics.Analytics;
+import co.smartreceipts.analytics.Analytics;
 import co.smartreceipts.android.apis.WebServiceManager;
 import co.smartreceipts.android.config.ConfigurationManager;
 import co.smartreceipts.android.ocr.apis.OcrService;

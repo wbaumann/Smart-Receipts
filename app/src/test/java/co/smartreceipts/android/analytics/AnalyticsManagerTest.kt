@@ -1,10 +1,10 @@
 package co.smartreceipts.android.analytics
 
+import co.smartreceipts.analytics.Analytics
+import co.smartreceipts.analytics.events.Event
 import co.smartreceipts.android.SameThreadExecutorService
-import co.smartreceipts.core.analytics.events.Event
 import co.smartreceipts.android.settings.UserPreferenceManager
 import co.smartreceipts.android.settings.catalog.UserPreference
-import co.smartreceipts.core.analytics.Analytics
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Before
 import org.junit.Test

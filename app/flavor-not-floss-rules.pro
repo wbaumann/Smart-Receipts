@@ -1,3 +1,5 @@
+
+
 ##### AWS ProGuard configurations #####
 
 # Class names are needed in reflection

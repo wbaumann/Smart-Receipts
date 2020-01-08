@@ -1,15 +1,15 @@
 package co.smartreceipts.android.tooltip
 
-import co.smartreceipts.core.analytics.Analytics
-import co.smartreceipts.core.analytics.events.DataPoint
-import co.smartreceipts.core.analytics.events.DefaultDataPointEvent
-import co.smartreceipts.core.analytics.events.Events
-import co.smartreceipts.core.di.scopes.FragmentScope
+import co.smartreceipts.analytics.Analytics
+import co.smartreceipts.analytics.events.DataPoint
+import co.smartreceipts.analytics.events.DefaultDataPointEvent
+import co.smartreceipts.analytics.events.Events
+import co.smartreceipts.analytics.log.Logger
 import co.smartreceipts.android.tooltip.model.TooltipInteraction
 import co.smartreceipts.android.tooltip.model.TooltipMetadata
-import co.smartreceipts.core.utils.log.Logger
 import co.smartreceipts.android.widget.mvp.BasePresenter
 import co.smartreceipts.android.widget.mvp.Presenter
+import co.smartreceipts.core.di.scopes.FragmentScope
 import com.hadisatrio.optional.Optional
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -77,10 +77,7 @@ class TooltipPresenter @Inject constructor(view: TooltipView,
                     Logger.info(this, "Displaying tooltip: {}", it)
                     analytics.record(
                         DefaultDataPointEvent(Events.Informational.DisplayingTooltip).addDataPoint(
-                        DataPoint(
-                            "tooltip",
-                            it
-                        )
+                            DataPoint("tooltip", it)
                     ))
                     this.activeTooltip = it
                     this.activeTooltipController = tooltipControllerProvider.get(it.tooltipType)

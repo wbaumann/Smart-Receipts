@@ -1,2 +1,2 @@
-include ':app', ':aws', ':core', ':push'
+include ':app', ':aws', ':core', ':push', ':analytics'
 include ':wbMiniLibrary'

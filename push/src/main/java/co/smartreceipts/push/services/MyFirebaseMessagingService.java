@@ -6,7 +6,7 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import co.smartreceipts.push.PushManagerImpl;
-import co.smartreceipts.core.utils.log.Logger;
+import co.smartreceipts.analytics.log.Logger;
 import co.smartreceipts.push.PushManager;
 import co.smartreceipts.push.PushManagerProvider;
 

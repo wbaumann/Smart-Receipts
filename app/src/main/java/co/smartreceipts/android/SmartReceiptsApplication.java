@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 
+import co.smartreceipts.analytics.Analytics;
 import co.smartreceipts.android.analytics.crash.CrashReporter;
 import co.smartreceipts.android.date.DateFormatter;
 import co.smartreceipts.android.di.AppComponent;
@@ -24,7 +25,6 @@ import co.smartreceipts.android.ocr.OcrManager;
 import co.smartreceipts.android.persistence.DatabaseHelper;
 import co.smartreceipts.android.persistence.database.tables.ordering.OrderingPreferencesManager;
 import co.smartreceipts.android.purchases.PurchaseManager;
-import co.smartreceipts.push.PushManager;
 import co.smartreceipts.android.rating.data.AppRatingPreferencesStorage;
 import co.smartreceipts.android.receipts.ordering.ReceiptsOrderer;
 import co.smartreceipts.android.settings.UserPreferenceManager;
@@ -36,9 +36,9 @@ import co.smartreceipts.android.utils.leaks.MemoryLeakMonitor;
 import co.smartreceipts.android.utils.rx.DefaultRxErrorHandler;
 import co.smartreceipts.android.versioning.AppVersionManager;
 import co.smartreceipts.aws.cognito.CognitoManager;
-import co.smartreceipts.core.analytics.Analytics;
 import co.smartreceipts.core.identity.IdentityManager;
-import co.smartreceipts.core.utils.log.Logger;
+import co.smartreceipts.analytics.log.Logger;
+import co.smartreceipts.push.PushManager;
 import co.smartreceipts.push.PushManagerProvider;
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;

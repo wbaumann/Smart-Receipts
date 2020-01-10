@@ -12,8 +12,6 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
-        missingDimensionStrategy 'isFloss', 'notFloss'
     }
 
     buildTypes {
@@ -28,6 +26,16 @@ android {
     }
     buildToolsVersion = rootProject.ext.buildToolsVersion
 
+    flavorDimensions "isFloss"
+    productFlavors {
+        floss {
+            dimension "isFloss"
+        }
+
+        notFloss {
+            dimension "isFloss"
+        }
+    }
 }
 
 dependencies {
@@ -37,16 +45,14 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // Dagger
-    implementation "com.google.dagger:dagger-android-support:$DAGGER_VERSION"
-    implementation "com.google.dagger:dagger:$DAGGER_VERSION"
     kapt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
     kapt "com.google.dagger:dagger-android-processor:$DAGGER_VERSION"
 
     // firebase
-    implementation "com.google.firebase:firebase-core:$FIREBASE_CORE_VERSION"
-    implementation "com.google.firebase:firebase-crash:$FIREBASE_CRASH_VERSION"
+    notFlossImplementation "com.google.firebase:firebase-core:$FIREBASE_CORE_VERSION"
+    notFlossImplementation "com.google.firebase:firebase-crash:$FIREBASE_CRASH_VERSION"
     // we must use api here during to this dagger issue https://github.com/google/dagger/issues/970 (stackoverflow https://stackoverflow.com/questions/47124987/dagger-2-cannot-access-retrofit)
-    api "com.google.firebase:firebase-messaging:$FIREBASE_MESSAGING_VERSION"
+    notFlossApi "com.google.firebase:firebase-messaging:$FIREBASE_MESSAGING_VERSION"
 
     // Unit Tests
     testImplementation "org.robolectric:robolectric:$ROBOLECTRIC_VERSION"

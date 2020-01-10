@@ -121,7 +121,7 @@ public class OcrManagerTest {
         when(recognitionData.getRecognitionData()).thenReturn(ocrResponse);
         when(ocrService.scanReceipt(new RecognitionRequest("ocr/" + IMG_NAME, false))).thenReturn(Observable.just(recognitionResponse));
         when(ocrService.scanReceipt(new RecognitionRequest("ocr/" + IMG_NAME, true))).thenReturn(Observable.just(recognitionResponse));
-        when(pushMessageReceiver.getOcrPushResponse()).thenReturn(Observable.just(new Object()));
+        when(pushMessageReceiver.getPushResponse()).thenReturn(Observable.just(new Object()));
         when(ocrService.getRecognitionResult(ID)).thenReturn(Observable.just(recognitionResponse));
         when(userPreferenceManager.get(UserPreference.Misc.OcrIsEnabled)).thenReturn(true);
         when(userPreferenceManager.get(UserPreference.Misc.OcrIncognitoMode)).thenReturn(false);
@@ -204,7 +204,7 @@ public class OcrManagerTest {
         verify(ocrService, never()).scanReceipt(any(RecognitionRequest.class));
         verify(ocrService, never()).getRecognitionResult(anyString());
         verify(ocrPurchaseTracker, never()).decrementRemainingScans();
-        verify(pushMessageReceiver, never()).getOcrPushResponse();
+        verify(pushMessageReceiver, never()).getPushResponse();
         verifyZeroInteractions(ocrWebServiceManager);
     }
 
@@ -223,7 +223,7 @@ public class OcrManagerTest {
         verify(ocrService, never()).scanReceipt(any(RecognitionRequest.class));
         verify(ocrService, never()).getRecognitionResult(anyString());
         verify(ocrPurchaseTracker, never()).decrementRemainingScans();
-        verify(pushMessageReceiver, never()).getOcrPushResponse();
+        verify(pushMessageReceiver, never()).getPushResponse();
         verifyZeroInteractions(ocrWebServiceManager);
     }
 
@@ -242,7 +242,7 @@ public class OcrManagerTest {
         verify(pushManager).unregisterReceiver(pushMessageReceiver);
         verify(ocrService, never()).getRecognitionResult(anyString());
         verify(ocrPurchaseTracker, never()).decrementRemainingScans();
-        verify(pushMessageReceiver, never()).getOcrPushResponse();
+        verify(pushMessageReceiver, never()).getPushResponse();
     }
 
     @Test
@@ -261,7 +261,7 @@ public class OcrManagerTest {
         verify(ocrService, never()).getRecognitionResult(anyString());
         verify(ocrPurchaseTracker, never()).decrementRemainingScans();
         verify(ocrPurchaseTracker, never()).decrementRemainingScans();
-        verify(pushMessageReceiver, never()).getOcrPushResponse();
+        verify(pushMessageReceiver, never()).getPushResponse();
     }
 
     @Test
@@ -313,7 +313,7 @@ public class OcrManagerTest {
 
     @Test
     public void scanCompletesEvenIfPushMessageTimesOutStillContinuesProcessing() {
-        when(pushMessageReceiver.getOcrPushResponse()).thenReturn(Observable.error(new Exception("timeout")));
+        when(pushMessageReceiver.getPushResponse()).thenReturn(Observable.error(new Exception("timeout")));
         ocrManager.scan(file).subscribe(testObserver);
 
         testObserver.awaitTerminalEvent();

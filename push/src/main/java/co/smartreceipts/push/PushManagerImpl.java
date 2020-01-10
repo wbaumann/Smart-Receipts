@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 
 import com.google.common.base.Preconditions;
-import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.Collections;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -14,11 +13,11 @@ import javax.inject.Inject;
 import co.smartreceipts.analytics.Analytics;
 import co.smartreceipts.analytics.events.ErrorEvent;
 import co.smartreceipts.analytics.events.Events;
+import co.smartreceipts.analytics.log.Logger;
 import co.smartreceipts.core.di.scopes.ApplicationScope;
 import co.smartreceipts.core.identity.IdentityManager;
 import co.smartreceipts.core.identity.apis.push.UpdatePushTokensRequest;
 import co.smartreceipts.core.identity.apis.push.UpdateUserPushTokens;
-import co.smartreceipts.analytics.log.Logger;
 import co.smartreceipts.push.internal.FcmTokenRetriever;
 import co.smartreceipts.push.store.PushDataStore;
 import io.reactivex.Scheduler;
@@ -95,7 +94,7 @@ public class PushManagerImpl implements PushManager {
         initialize();
     }
 
-    public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
+    public void onMessageReceived(@NonNull Object remoteMessage) {
         for (final PushMessageReceiver pushMessageReceiver : pushMessageReceivers) {
             pushMessageReceiver.onMessageReceived(remoteMessage);
         }

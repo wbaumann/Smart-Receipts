@@ -12,7 +12,7 @@ import io.reactivex.Observable;
 public class FcmTokenRetriever {
 
     @NonNull
-    public Task<InstanceIdResult> getToken() {
+    private Task<InstanceIdResult> getToken() {
         return FirebaseInstanceId.getInstance().getInstanceId();
     }
 

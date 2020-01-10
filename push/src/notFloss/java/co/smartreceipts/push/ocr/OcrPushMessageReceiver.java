@@ -22,16 +22,17 @@ public class OcrPushMessageReceiver implements PushMessageReceiver {
     private final Subject<Object> pushResultSubject = PublishSubject.create();
     private final Scheduler subscribeOnScheduler;
 
-    public OcrPushMessageReceiver() {
+    OcrPushMessageReceiver() {
         this(Schedulers.io());
     }
 
-    public OcrPushMessageReceiver(@NonNull Scheduler subscribeOnScheduler) {
+    OcrPushMessageReceiver(@NonNull Scheduler subscribeOnScheduler) {
         this.subscribeOnScheduler = Preconditions.checkNotNull(subscribeOnScheduler);
     }
 
     @Override
-    public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
+    public void onMessageReceived(@NonNull Object remoteMessage) {
+        Preconditions.checkArgument(remoteMessage instanceof RemoteMessage);
         Observable.just(remoteMessage)
                 .subscribeOn(subscribeOnScheduler)
                 .map(message -> new Object())

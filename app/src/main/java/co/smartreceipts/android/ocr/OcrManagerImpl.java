@@ -135,7 +135,7 @@ public class OcrManagerImpl implements OcrManager {
                     })
                     .flatMap(recognitionId -> {
                         Logger.debug(OcrManagerImpl.this, "Awaiting completion of recognition request {}.", recognitionId);
-                        return ocrPushMessageReceiver.getOcrPushResponse()
+                        return ocrPushMessageReceiver.getPushResponse()
                                 .doOnNext(ignore -> analytics.record(Events.Ocr.OcrPushMessageReceived))
                                 .doOnError(ignore -> analytics.record(Events.Ocr.OcrPushMessageTimeOut))
                                 .onErrorReturn(throwable -> {

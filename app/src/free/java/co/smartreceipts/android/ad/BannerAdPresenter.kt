@@ -2,6 +2,11 @@ package co.smartreceipts.android.ad
 
 import android.app.Activity
 import android.view.View
+import co.smartreceipts.analytics.Analytics
+import co.smartreceipts.analytics.events.DataPoint
+import co.smartreceipts.analytics.events.DefaultDataPointEvent
+import co.smartreceipts.analytics.events.Events
+import co.smartreceipts.analytics.log.Logger
 import co.smartreceipts.android.R
 import co.smartreceipts.android.ad.upsell.UpsellAdView
 import co.smartreceipts.android.purchases.PurchaseManager
@@ -10,12 +15,7 @@ import co.smartreceipts.android.purchases.source.PurchaseSource
 import co.smartreceipts.android.settings.UserPreferenceManager
 import co.smartreceipts.android.settings.catalog.UserPreference
 import co.smartreceipts.android.utils.UiThread
-import co.smartreceipts.core.analytics.Analytics
-import co.smartreceipts.core.analytics.events.DataPoint
-import co.smartreceipts.core.analytics.events.DefaultDataPointEvent
-import co.smartreceipts.core.analytics.events.Events
 import co.smartreceipts.core.di.scopes.ActivityScope
-import co.smartreceipts.core.utils.log.Logger
 import javax.inject.Inject
 
 @ActivityScope

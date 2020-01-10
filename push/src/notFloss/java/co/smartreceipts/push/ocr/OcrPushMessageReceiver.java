@@ -42,7 +42,8 @@ public class OcrPushMessageReceiver implements PushMessageReceiver {
                 });
     }
 
-    public Observable<Object> getOcrPushResponse() {
+    @Override
+    public Observable<Object> getPushResponse() {
         return pushResultSubject
                 .timeout(TIMEOUT_SECONDS, TimeUnit.SECONDS);
     }

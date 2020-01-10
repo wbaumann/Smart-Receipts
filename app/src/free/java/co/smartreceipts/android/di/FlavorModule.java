@@ -4,11 +4,11 @@ import android.content.Context;
 
 import com.google.android.gms.analytics.Tracker;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 import co.smartreceipts.analytics.Analytics;
-import co.smartreceipts.analytics.FirebaseAnalytics;
-import co.smartreceipts.analytics.impl.AnalyticsLogger;
+import co.smartreceipts.analytics.AnalyticsProvider;
 import co.smartreceipts.android.ExtraInitializer;
 import co.smartreceipts.android.ExtraInitializerFreeImpl;
 import co.smartreceipts.android.R;
@@ -29,7 +29,7 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class FlavorModule {
+public abstract class FlavorModule {
 
     @Provides
     @ApplicationScope
@@ -45,8 +45,10 @@ public class FlavorModule {
 
     @Provides
     @ApplicationScope
-    public static Analytics provideAnalytics(UserPreferenceManager userPreferenceManager, FirebaseAnalytics firebaseAnalytics, GoogleAnalytics googleAnalytics) {
-        return new AnalyticsManager(Arrays.asList(new AnalyticsLogger(), firebaseAnalytics, googleAnalytics), userPreferenceManager);
+    public static Analytics provideAnalytics(UserPreferenceManager userPreferenceManager, Context context, GoogleAnalytics googleAnalytics) {
+        final List<Analytics> defaultAnalytics = new ArrayList<>(new AnalyticsProvider(context).getAnalytics());
+        defaultAnalytics.add(googleAnalytics);
+        return new AnalyticsManager(defaultAnalytics, userPreferenceManager);
     }
 
     @Provides

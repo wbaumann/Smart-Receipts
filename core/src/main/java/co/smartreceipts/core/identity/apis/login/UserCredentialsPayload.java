@@ -9,8 +9,6 @@ import com.google.common.base.Preconditions;
 
 import java.io.Serializable;
 
-// TODO: 22.12.2019 to Kotlin, @Parcelize
-
 public abstract class UserCredentialsPayload implements Serializable, Parcelable {
 
     private final String type;

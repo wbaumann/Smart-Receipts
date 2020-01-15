@@ -40,9 +40,6 @@ import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.BehaviorSubject;
 
 
-// TODO: 20.12.2019 recheck using of IdentityManagerImpl later
-// TODO: 23.12.2019 move tests to modules
-
 @ApplicationScope
 public class IdentityManagerImpl implements IdentityManager {
 

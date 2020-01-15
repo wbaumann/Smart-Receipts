@@ -10,7 +10,8 @@
 ##### Our ProGuard configurations #####
 
 #-whyareyoukeeping class com.amazonaws.*
--whyareyoukeeping class com.google.firebase.*
+#-whyareyoukeeping class com.google.firebase.*
+
 
 # Preserve the line number information for debugging stack traces.
 -keepattributes SourceFile,LineNumberTable

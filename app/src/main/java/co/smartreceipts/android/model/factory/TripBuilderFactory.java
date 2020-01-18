@@ -13,7 +13,6 @@ import java.util.UUID;
 
 import co.smartreceipts.android.currency.PriceCurrency;
 import co.smartreceipts.android.date.DisplayableDate;
-import co.smartreceipts.android.model.AutoCompleteMetadata;
 import co.smartreceipts.android.model.Keyed;
 import co.smartreceipts.android.model.Trip;
 import co.smartreceipts.android.sync.model.SyncState;
@@ -33,7 +32,6 @@ public final class TripBuilderFactory implements BuilderFactory<Trip> {
     private TimeZone startTimeZone, endTimeZone;
     private PriceCurrency defaultCurrency;
     private SyncState syncState;
-    private AutoCompleteMetadata autoCompleteMetadata;
 
     public TripBuilderFactory() {
         id = Keyed.MISSING_ID;
@@ -47,7 +45,6 @@ public final class TripBuilderFactory implements BuilderFactory<Trip> {
         startTimeZone = TimeZone.getDefault();
         endTimeZone = TimeZone.getDefault();
         syncState = new DefaultSyncState();
-        autoCompleteMetadata = new AutoCompleteMetadata(false, false, false, false);
     }
 
     public TripBuilderFactory(@NonNull Trip trip) {
@@ -62,7 +59,6 @@ public final class TripBuilderFactory implements BuilderFactory<Trip> {
         startTimeZone = trip.getStartTimeZone();
         endTimeZone = trip.getEndTimeZone();
         syncState = trip.getSyncState();
-        autoCompleteMetadata = trip.getAutoCompleteMetadata();
     }
 
     public TripBuilderFactory setId(int id) {
@@ -161,27 +157,12 @@ public final class TripBuilderFactory implements BuilderFactory<Trip> {
         return this;
     }
 
-    public TripBuilderFactory setNameHiddenFromAutoComplete(boolean isHiddenFromAutoComplete) {
-        this.autoCompleteMetadata.setNameHiddenFromAutoComplete(isHiddenFromAutoComplete);
-        return this;
-    }
-
-    public TripBuilderFactory setCommentHiddenFromAutoComplete(boolean isHiddenFromAutoComplete) {
-        this.autoCompleteMetadata.setCommentHiddenFromAutoComplete(isHiddenFromAutoComplete);
-        return this;
-    }
-
-    public TripBuilderFactory setCostCenterHiddenFromAutoComplete(boolean isHiddenFromAutoComplete) {
-        this.autoCompleteMetadata.setCostCenterHiddenFromAutoComplete(isHiddenFromAutoComplete);
-        return this;
-    }
-
     @Override
     @NonNull
     public Trip build() {
         final DisplayableDate startDisplayableDate = new DisplayableDate(startDate, startTimeZone);
         final DisplayableDate endDisplayableDate = new DisplayableDate(endDate, endTimeZone);
         return new Trip(id, uuid, dir, startDisplayableDate, endDisplayableDate, defaultCurrency,
-                comment, costCenter, syncState, autoCompleteMetadata);
+                comment, costCenter, syncState);
     }
 }

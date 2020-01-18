@@ -26,7 +26,6 @@ import com.jakewharton.rxbinding3.widget.RxTextView;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
@@ -468,7 +467,7 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
     }
 
     @Override
-    public void displayAutoCompleteResults(@NotNull AutoCompleteField field, @NotNull ArrayList<AutoCompleteResult<Trip>> autoCompleteResults) {
+    public void displayAutoCompleteResults(@NotNull AutoCompleteField field, @NotNull List<AutoCompleteResult<Trip>> autoCompleteResults) {
         if (!shouldHideResults) {
             resultsAdapter = new AutoCompleteArrayAdapter<>(requireContext(), autoCompleteResults, this);
             if (field == TripAutoCompleteField.Name) {

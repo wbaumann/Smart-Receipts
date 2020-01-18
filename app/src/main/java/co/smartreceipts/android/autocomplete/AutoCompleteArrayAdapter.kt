@@ -15,7 +15,7 @@ import android.widget.ImageView
  * Modifies the core [ArrayAdapter] contract to address a bug that is specific to auto-completion
  */
 class AutoCompleteArrayAdapter<Type>(context: Context,
-                                     autoCompleteResults: ArrayList<AutoCompleteResult<Type>>,
+                                     autoCompleteResults: List<AutoCompleteResult<Type>>,
                                      private val listener: ClickListener)
     : ArrayAdapter<AutoCompleteResult<Type>>(context, R.layout.auto_complete_view, autoCompleteResults) {
 

@@ -16,7 +16,6 @@ import java.util.TimeZone;
 import java.util.UUID;
 
 import co.smartreceipts.android.currency.PriceCurrency;
-import co.smartreceipts.android.model.AutoCompleteMetadata;
 import co.smartreceipts.android.model.Distance;
 import co.smartreceipts.android.model.PaymentMethod;
 import co.smartreceipts.android.model.Price;
@@ -84,9 +83,6 @@ public class DistanceDatabaseAdapterTest {
     @Mock
     SyncState mSyncState, mGetSyncState;
 
-    @Mock
-    AutoCompleteMetadata mAutoCompleteMetadata;
-
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
@@ -143,9 +139,6 @@ public class DistanceDatabaseAdapterTest {
         when(mDistance.getSyncState()).thenReturn(mSyncState);
         when(mDistance.getUuid()).thenReturn(DIST_UUID);
         when(mDistance.getPaymentMethod()).thenReturn(PAYMENT_METHOD);
-        when(mDistance.getAutoCompleteMetadata()).thenReturn(mAutoCompleteMetadata);
-        when(mDistance.getAutoCompleteMetadata().isLocationHiddenFromAutoComplete()).thenReturn(LOCATION_HIDDEN_FROM_AUTO_COMPLETE);
-        when(mDistance.getAutoCompleteMetadata().isCommentHiddenFromAutoComplete()).thenReturn(COMMENT_HIDDEN_FROM_AUTO_COMPLETE);
 
         when(mTrip.getId()).thenReturn(PARENT_ID);
         when(mPrice.getCurrencyCode()).thenReturn(CURRENCY_CODE);
@@ -174,8 +167,6 @@ public class DistanceDatabaseAdapterTest {
                 .setComment(COMMENT)
                 .setSyncState(mSyncState)
                 .setPaymentMethod(PAYMENT_METHOD)
-                .setLocationHiddenFromAutoComplete(LOCATION_HIDDEN_FROM_AUTO_COMPLETE)
-                .setCommentHiddenFromAutoComplete(COMMENT_HIDDEN_FROM_AUTO_COMPLETE)
                 .build();
         assertEquals(distance, mDistanceDatabaseAdapter.read(mCursor));
     }
@@ -194,8 +185,6 @@ public class DistanceDatabaseAdapterTest {
                 .setComment(COMMENT)
                 .setSyncState(mSyncState)
                 .setPaymentMethod(PAYMENT_METHOD)
-                .setLocationHiddenFromAutoComplete(LOCATION_HIDDEN_FROM_AUTO_COMPLETE)
-                .setCommentHiddenFromAutoComplete(COMMENT_HIDDEN_FROM_AUTO_COMPLETE)
                 .build();
         assertEquals(distance, mDistanceDatabaseAdapter.readForSelection(mCursor, mTrip, true));
     }
@@ -214,8 +203,6 @@ public class DistanceDatabaseAdapterTest {
                 .setComment(COMMENT)
                 .setSyncState(mSyncState)
                 .setPaymentMethod(PAYMENT_METHOD)
-                .setLocationHiddenFromAutoComplete(LOCATION_HIDDEN_FROM_AUTO_COMPLETE)
-                .setCommentHiddenFromAutoComplete(COMMENT_HIDDEN_FROM_AUTO_COMPLETE)
                 .build();
         assertEquals(distance, mDistanceDatabaseAdapter.readForSelection(mCursor, mTrip, false));
     }
@@ -239,8 +226,6 @@ public class DistanceDatabaseAdapterTest {
         assertEquals(DIST_UUID.toString(), contentValues.getAsString(DistanceTable.COLUMN_UUID));
         assertEquals(sync, contentValues.getAsString(sync));
         assertEquals(PAYMENT_METHOD_ID, (int) contentValues.getAsInteger(DistanceTable.COLUMN_PAYMENT_METHOD_ID));
-        assertEquals(LOCATION_HIDDEN_FROM_AUTO_COMPLETE, contentValues.getAsBoolean(DistanceTable.COLUMN_LOCATION_HIDDEN_AUTO_COMPLETE));
-        assertEquals(COMMENT_HIDDEN_FROM_AUTO_COMPLETE, contentValues.getAsBoolean(DistanceTable.COLUMN_COMMENT_HIDDEN_AUTO_COMPLETE));
         assertFalse(contentValues.containsKey(DistanceTable.COLUMN_ID));
     }
 
@@ -263,8 +248,6 @@ public class DistanceDatabaseAdapterTest {
         assertEquals(DIST_UUID.toString(), contentValues.getAsString(DistanceTable.COLUMN_UUID));
         assertEquals(sync, contentValues.getAsString(sync));
         assertEquals(PAYMENT_METHOD_ID, (int) contentValues.getAsInteger(DistanceTable.COLUMN_PAYMENT_METHOD_ID));
-        assertEquals(LOCATION_HIDDEN_FROM_AUTO_COMPLETE, contentValues.getAsBoolean(DistanceTable.COLUMN_LOCATION_HIDDEN_AUTO_COMPLETE));
-        assertEquals(COMMENT_HIDDEN_FROM_AUTO_COMPLETE, contentValues.getAsBoolean(DistanceTable.COLUMN_COMMENT_HIDDEN_AUTO_COMPLETE));
         assertFalse(contentValues.containsKey(DistanceTable.COLUMN_ID));
     }
 
@@ -282,8 +265,6 @@ public class DistanceDatabaseAdapterTest {
                 .setComment(COMMENT)
                 .setSyncState(mGetSyncState)
                 .setPaymentMethod(PAYMENT_METHOD)
-                .setLocationHiddenFromAutoComplete(LOCATION_HIDDEN_FROM_AUTO_COMPLETE)
-                .setCommentHiddenFromAutoComplete(COMMENT_HIDDEN_FROM_AUTO_COMPLETE)
                 .build();
         assertEquals(distance, mDistanceDatabaseAdapter.build(mDistance, ID, DIST_UUID, mock(DatabaseOperationMetadata.class)));
         assertEquals(distance.getSyncState(), mDistanceDatabaseAdapter.build(mDistance, ID, DIST_UUID, mock(DatabaseOperationMetadata.class)).getSyncState());

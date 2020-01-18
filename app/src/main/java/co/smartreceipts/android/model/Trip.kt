@@ -53,8 +53,7 @@ class Trip @JvmOverloads constructor(
      * The daily sub-total [Price] (i.e. all expenditures that occurred today) for this trip,
      * daily sub-total of a trip exists as a function of it's receipt children (and not itself)
      */
-    var dailySubTotal: Price = PriceBuilderFactory().setPrice(0.0).setCurrency(tripCurrency).build(),
-    val autoCompleteMetadata: AutoCompleteMetadata
+    var dailySubTotal: Price = PriceBuilderFactory().setPrice(0.0).setCurrency(tripCurrency).build()
 ) : Keyed, Parcelable, Priceable, Comparable<Trip>, Syncable, Searchable {
 
     /**
@@ -154,7 +153,6 @@ class Trip @JvmOverloads constructor(
         if (syncState != that.syncState) return false
         if (price != that.price) return false
         if (dailySubTotal != that.dailySubTotal) return false
-        if (autoCompleteMetadata != that.autoCompleteMetadata) return false
         return if (tripCurrency != that.tripCurrency) false else costCenter == that.costCenter
 
     }
@@ -172,7 +170,6 @@ class Trip @JvmOverloads constructor(
         result = 31 * result + syncState.hashCode()
         result = 31 * result + price.hashCode()
         result = 31 * result + dailySubTotal.hashCode()
-        result = 31 * result + autoCompleteMetadata.hashCode()
         return result
     }
 
@@ -189,7 +186,6 @@ class Trip @JvmOverloads constructor(
                 ", endDisplayableDate=" + endDisplayableDate +
                 ", tripCurrency=" + tripCurrency +
                 ", syncState=" + syncState +
-                ", autoCompleteMetadata=" + autoCompleteMetadata +
                 '}'.toString()
     }
 

@@ -46,8 +46,7 @@ class Distance(
     /**
      * The payment method associated with this receipt item.
      */
-    val paymentMethod: PaymentMethod,
-    val autoCompleteMetadata: AutoCompleteMetadata
+    val paymentMethod: PaymentMethod
 ) : Keyed, Parcelable, Priceable, Comparable<Distance>, Syncable {
 
     /**
@@ -84,7 +83,7 @@ class Distance(
 
     override fun toString(): String {
         return "Distance [uuid=$uuid, location=$location, distance=$distance, displayableDate=$displayableDate, rate=$rate, price= $price, " +
-                "comment=$comment, paymentMethod=$paymentMethod, autoCompleteMetadata=$autoCompleteMetadata]"
+                "comment=$comment, paymentMethod=$paymentMethod]"
     }
 
     override fun compareTo(other: Distance): Int {
@@ -107,7 +106,6 @@ class Distance(
         if (displayableDate != other.displayableDate) return false
         if (comment != other.comment) return false
         if (paymentMethod != other.paymentMethod) return false
-        if (autoCompleteMetadata != other.autoCompleteMetadata) return false
 
         return true
     }
@@ -123,7 +121,6 @@ class Distance(
         result = 31 * result + displayableDate.hashCode()
         result = 31 * result + comment.hashCode()
         result = 31 * result + paymentMethod.hashCode()
-        result = 31 * result + autoCompleteMetadata.hashCode()
         return result
     }
 

@@ -28,7 +28,7 @@ public class OcrPushMessageReceiverTest {
 
     @Test
     public void onMessageReceivedTriggersObservable() throws Exception {
-        TestObserver<Object> testObserver = ocrPushMessageReceiver.getOcrPushResponse().test();
+        TestObserver<Object> testObserver = ocrPushMessageReceiver.getPushResponse().test();
 
         final Constructor<RemoteMessage> constructor = RemoteMessage.class.getDeclaredConstructor(Bundle.class);
         constructor.setAccessible(true);

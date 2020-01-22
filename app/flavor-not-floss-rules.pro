@@ -45,3 +45,23 @@
 -dontwarn com.amazonaws.services.sqs.**
 
 -dontnote com.amazonaws.services.sqs.QueueUrlHandler
+
+
+
+### Google Drive API
+# Needed to keep generic types and @Key annotations accessed via reflection
+-keepattributes Signature,RuntimeVisibleAnnotations,AnnotationDefault,*Annotation*
+-keepclassmembers class * {
+  @com.google.api.client.util.Key <fields>;
+}
+
+-keep class * extends com.google.api.client.json.GenericJson {
+*;
+}
+-keep class com.google.api.services.drive.** {
+*;
+}
+
+-keep class com.google.** { *;}
+-keep interface com.google.** { *;}
+-dontwarn com.google.**

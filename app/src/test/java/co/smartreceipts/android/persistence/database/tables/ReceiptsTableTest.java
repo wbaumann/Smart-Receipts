@@ -55,7 +55,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.atLeast;
-import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -253,7 +252,7 @@ public class ReceiptsTableTest {
         verifyV14Upgrade(times(1));
         verifyV15Upgrade(times(1));
         verifyV18Upgrade(times(1));
-        verifyV20Upgrade(times(1));
+        verifyV19Upgrade(times(1));
     }
 
     @Test
@@ -274,7 +273,7 @@ public class ReceiptsTableTest {
         verifyV14Upgrade(times(1));
         verifyV15Upgrade(times(1));
         verifyV18Upgrade(times(1));
-        verifyV20Upgrade(times(1));
+        verifyV19Upgrade(times(1));
     }
 
     @Test
@@ -295,7 +294,7 @@ public class ReceiptsTableTest {
         verifyV14Upgrade(times(1));
         verifyV15Upgrade(times(1));
         verifyV18Upgrade(times(1));
-        verifyV20Upgrade(times(1));
+        verifyV19Upgrade(times(1));
     }
 
     @Test
@@ -316,7 +315,7 @@ public class ReceiptsTableTest {
         verifyV14Upgrade(times(1));
         verifyV15Upgrade(times(1));
         verifyV18Upgrade(times(1));
-        verifyV20Upgrade(times(1));
+        verifyV19Upgrade(times(1));
     }
 
     @Test
@@ -337,7 +336,7 @@ public class ReceiptsTableTest {
         verifyV14Upgrade(times(1));
         verifyV15Upgrade(times(1));
         verifyV18Upgrade(times(1));
-        verifyV20Upgrade(times(1));
+        verifyV19Upgrade(times(1));
     }
 
     @Test
@@ -358,7 +357,7 @@ public class ReceiptsTableTest {
         verifyV14Upgrade(times(1));
         verifyV15Upgrade(times(1));
         verifyV18Upgrade(times(1));
-        verifyV20Upgrade(times(1));
+        verifyV19Upgrade(times(1));
     }
 
     @Test
@@ -379,7 +378,7 @@ public class ReceiptsTableTest {
         verifyV14Upgrade(times(1));
         verifyV15Upgrade(times(1));
         verifyV18Upgrade(times(1));
-        verifyV20Upgrade(times(1));
+        verifyV19Upgrade(times(1));
     }
 
     @Test
@@ -400,7 +399,7 @@ public class ReceiptsTableTest {
         verifyV14Upgrade(times(1));
         verifyV15Upgrade(times(1));
         verifyV18Upgrade(times(1));
-        verifyV20Upgrade(times(1));
+        verifyV19Upgrade(times(1));
     }
 
     @Test
@@ -421,7 +420,7 @@ public class ReceiptsTableTest {
         verifyV14Upgrade(never());
         verifyV15Upgrade(times(1));
         verifyV18Upgrade(times(1));
-        verifyV20Upgrade(times(1));
+        verifyV19Upgrade(times(1));
     }
 
     @Test
@@ -442,11 +441,11 @@ public class ReceiptsTableTest {
         verifyV14Upgrade(never());
         verifyV15Upgrade(never());
         verifyV18Upgrade(times(1));
-        verifyV20Upgrade(times(1));
+        verifyV19Upgrade(times(1));
     }
 
     @Test
-    public void onUpgradeFromV20() {
+    public void onUpgradeFromV19() {
         final int oldVersion = 19;
         final int newVersion = DatabaseHelper.DATABASE_VERSION;
 
@@ -463,7 +462,7 @@ public class ReceiptsTableTest {
         verifyV14Upgrade(never());
         verifyV15Upgrade(never());
         verifyV18Upgrade(never());
-        verifyV20Upgrade(times(1));
+        verifyV19Upgrade(times(1));
     }
 
     @Test
@@ -484,7 +483,7 @@ public class ReceiptsTableTest {
         verifyV14Upgrade(never());
         verifyV15Upgrade(never());
         verifyV18Upgrade(never());
-        verifyV20Upgrade(atLeast(0));
+        verifyV19Upgrade(never());
     }
 
     private void verifyV1Upgrade(@NonNull VerificationMode verificationMode) {
@@ -634,7 +633,7 @@ public class ReceiptsTableTest {
         verify(mSQLiteDatabase, atLeast(0)).execSQL("ALTER TABLE " + ReceiptsTable.TABLE_NAME + "_copy" + " RENAME TO " + ReceiptsTable.TABLE_NAME + ";");
     }
 
-    private void verifyV20Upgrade(@NonNull VerificationMode verificationMode) {
+    private void verifyV19Upgrade(@NonNull VerificationMode verificationMode) {
         verify(mSQLiteDatabase, verificationMode).execSQL("ALTER TABLE " + ReceiptsTable.TABLE_NAME + " ADD " + ReceiptsTable.COLUMN_NAME_HIDDEN_AUTO_COMPLETE + " BOOLEAN DEFAULT 0");
         verify(mSQLiteDatabase, verificationMode).execSQL("ALTER TABLE " + ReceiptsTable.TABLE_NAME + " ADD " + ReceiptsTable.COLUMN_COMMENT_HIDDEN_AUTO_COMPLETE + " BOOLEAN DEFAULT 0");
     }

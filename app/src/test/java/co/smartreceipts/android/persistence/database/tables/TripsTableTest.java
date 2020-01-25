@@ -53,7 +53,7 @@ import static co.smartreceipts.android.persistence.database.tables.TripsTable.CO
 import static co.smartreceipts.android.persistence.database.tables.TripsTable.COLUMN_TO;
 import static co.smartreceipts.android.persistence.database.tables.TripsTable.COLUMN_TO_TIMEZONE;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -399,7 +399,7 @@ public class TripsTableTest {
         final List<Trip> trips = mTripsTable.get().blockingGet();
         // Also confirm the new one is first b/c of date ordering
         assertEquals(trips, Arrays.asList(trip, mTrip1, mTrip2));
-        assertFalse(trip.getUuid().equals(Keyed.Companion.getMISSING_UUID()));
+        assertNotEquals(trip.getUuid(), Keyed.Companion.getMISSING_UUID());
     }
 
     @Test
@@ -437,7 +437,7 @@ public class TripsTableTest {
 
         final Trip updatedTrip = mTripsTable.update(mTrip1, mBuilder.setDirectory(mStorageManager.getFile(NAME_3)).setUuid(UUID.randomUUID()).build(), new DatabaseOperationMetadata()).blockingGet();
         assertNotNull(updatedTrip);
-        assertFalse(mTrip1.equals(updatedTrip));
+        assertNotEquals(mTrip1, updatedTrip);
         assertEquals(oldUuid, updatedTrip.getUuid());
 
         final List<Trip> trips = mTripsTable.get().blockingGet();

@@ -50,7 +50,7 @@ import io.reactivex.Single;
 import wb.android.storage.StorageManager;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -714,7 +714,7 @@ public class ReceiptsTableTest {
                 new DatabaseOperationMetadata()).blockingGet();
 
         assertNotNull(updatedReceipt);
-        assertFalse(mReceipt1.equals(updatedReceipt));
+        assertNotEquals(mReceipt1, updatedReceipt);
         assertEquals(UUID_1, updatedReceipt.getUuid());
 
         final List<Receipt> receipts = mReceiptsTable.get().blockingGet();
@@ -725,7 +725,7 @@ public class ReceiptsTableTest {
     public void updateWithOlderDate() {
         final Receipt updatedReceipt = mReceiptsTable.update(mReceipt1, mBuilder.setName(NAME_3).setPrice(PRICE_3).setTrip(mTrip3).setDate(DATE_1).setIndex(1).build(), new DatabaseOperationMetadata()).blockingGet();
         assertNotNull(updatedReceipt);
-        assertFalse(mReceipt1.equals(updatedReceipt));
+        assertNotEquals(mReceipt1, updatedReceipt);
 
         final List<Receipt> receipts = mReceiptsTable.get().blockingGet();
         assertEquals(receipts, Arrays.asList(mReceipt2, updatedReceipt)); // Note: The receipt with the more recent date appears first

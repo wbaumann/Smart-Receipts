@@ -165,7 +165,7 @@ public class DistanceTable extends TripForeignKeyAbstractSqlTable<Distance> {
             onUpgradeToAddUUID(db, oldVersion);
         }
 
-        if (oldVersion <= 20) {
+        if (oldVersion <= 19) {
             final String alterDistance = "ALTER TABLE " + TABLE_NAME + " ADD " + COLUMN_PAYMENT_METHOD_ID + " INTEGER REFERENCES " + PaymentMethodsTable.TABLE_NAME + " ON DELETE NO ACTION";
             final String alterDistance2 = "ALTER TABLE " + TABLE_NAME + " ADD " + COLUMN_LOCATION_HIDDEN_AUTO_COMPLETE + " BOOLEAN DEFAULT 0";
             final String alterDistance3 = "ALTER TABLE " + TABLE_NAME + " ADD " + COLUMN_COMMENT_HIDDEN_AUTO_COMPLETE + " BOOLEAN DEFAULT 0";

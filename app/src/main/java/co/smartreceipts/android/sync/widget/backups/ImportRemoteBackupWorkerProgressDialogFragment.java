@@ -111,7 +111,11 @@ public class ImportRemoteBackupWorkerProgressDialogFragment extends DialogFragme
                     }
                 }, throwable -> {
                     analytics.record(new ErrorEvent(ImportRemoteBackupWorkerProgressDialogFragment.this, throwable));
-                    Toast.makeText(getActivity(), getString(R.string.IMPORT_ERROR), Toast.LENGTH_LONG).show();
+                    if (throwable.getMessage().contains("More than five missing files")) {
+                        Toast.makeText(getActivity(), getString(R.string.IMPORT_MISSING_ERROR), Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getActivity(), getString(R.string.IMPORT_ERROR), Toast.LENGTH_LONG).show();
+                    }
                     remoteBackupsDataCache.removeCachedRestoreBackupFor(backupMetadata);
                     dismiss();
                 }, () -> {

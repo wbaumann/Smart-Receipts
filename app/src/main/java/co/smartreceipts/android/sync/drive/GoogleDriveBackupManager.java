@@ -274,7 +274,7 @@ public class GoogleDriveBackupManager implements BackupProvider {
 
     @NonNull
     @Override
-    public Single<List<File>> downloadAllData(@NonNull RemoteBackupMetadata remoteBackupMetadata, @NonNull File downloadLocation) {
+    public Single<List<Optional<File>>> downloadAllData(@NonNull RemoteBackupMetadata remoteBackupMetadata, @NonNull File downloadLocation) {
         final DriveClientInitializer driveClientInitializerRef;
         synchronized (initializationLock) {
             driveClientInitializerRef = driveClientInitializer;
@@ -288,7 +288,7 @@ public class GoogleDriveBackupManager implements BackupProvider {
 
     @NonNull
     @Override
-    public Single<List<File>> debugDownloadAllData(@NonNull RemoteBackupMetadata remoteBackupMetadata, @NonNull File downloadLocation) {
+    public Single<List<Optional<File>>> debugDownloadAllData(@NonNull RemoteBackupMetadata remoteBackupMetadata, @NonNull File downloadLocation) {
         final DriveClientInitializer driveClientInitializerRef;
         synchronized (initializationLock) {
             driveClientInitializerRef = driveClientInitializer;

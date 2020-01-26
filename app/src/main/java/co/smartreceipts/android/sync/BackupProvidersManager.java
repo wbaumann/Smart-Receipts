@@ -6,6 +6,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
 import com.google.common.base.Preconditions;
+import com.hadisatrio.optional.Optional;
 
 import java.io.File;
 import java.sql.Date;
@@ -135,13 +136,13 @@ public class BackupProvidersManager implements BackupProvider {
 
     @NonNull
     @Override
-    public Single<List<File>> downloadAllData(@NonNull RemoteBackupMetadata remoteBackupMetadata, @NonNull File downloadLocation) {
+    public Single<List<Optional<File>>> downloadAllData(@NonNull RemoteBackupMetadata remoteBackupMetadata, @NonNull File downloadLocation) {
         return backupProvider.downloadAllData(remoteBackupMetadata, downloadLocation);
     }
 
     @NonNull
     @Override
-    public Single<List<File>> debugDownloadAllData(@NonNull RemoteBackupMetadata remoteBackupMetadata, @NonNull File downloadLocation) {
+    public Single<List<Optional<File>>> debugDownloadAllData(@NonNull RemoteBackupMetadata remoteBackupMetadata, @NonNull File downloadLocation) {
         return backupProvider.debugDownloadAllData(remoteBackupMetadata, downloadLocation);
     }
 

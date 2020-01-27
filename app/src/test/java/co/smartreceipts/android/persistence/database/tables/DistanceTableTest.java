@@ -5,9 +5,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.test.core.app.ApplicationProvider;
 
-import junit.framework.Assert;
-
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,13 +35,13 @@ import co.smartreceipts.android.settings.catalog.UserPreference;
 import io.reactivex.Single;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
@@ -249,7 +248,7 @@ public class DistanceTableTest {
     }
 
     @Test
-    public void onUpgradeFromV20() {
+    public void onUpgradeFromV19() {
         final int oldVersion = 19;
         final int newVersion = DatabaseHelper.DATABASE_VERSION;
 
@@ -270,7 +269,7 @@ public class DistanceTableTest {
 
         final TableDefaultsCustomizer customizer = mock(TableDefaultsCustomizer.class);
         mDistanceTable.onUpgrade(mSQLiteDatabase, oldVersion, newVersion, customizer);
-        verify(mSQLiteDatabase, atLeast(0)).execSQL(mSqlCaptor.capture());
+        verify(mSQLiteDatabase, never()).execSQL(mSqlCaptor.capture());
         verifyZeroInteractions(customizer);
     }
 
@@ -302,7 +301,7 @@ public class DistanceTableTest {
         final List<Distance> distances = mDistanceTable.get().blockingGet();
         assertEquals(distances, Arrays.asList(mDistance1, mDistance2, distance));
         assertNotNull(distance.getUuid());
-        assertFalse(distance.getUuid().equals(Keyed.Companion.getMISSING_UUID()));
+        assertNotEquals(distance.getUuid(), Keyed.Companion.getMISSING_UUID());
     }
 
     @Test
@@ -329,7 +328,7 @@ public class DistanceTableTest {
                 .setLocation(LOCATION_3).setTrip(mTrip3).build(), new DatabaseOperationMetadata()).blockingGet();
 
         assertNotNull(updatedDistance);
-        assertFalse(mDistance1.equals(updatedDistance));
+        assertNotEquals(mDistance1, updatedDistance);
         assertEquals(oldUuid, updatedDistance.getUuid());
 
         final List<Distance> distances = mDistanceTable.get().blockingGet();

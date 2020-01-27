@@ -53,10 +53,9 @@ import static co.smartreceipts.android.persistence.database.tables.TripsTable.CO
 import static co.smartreceipts.android.persistence.database.tables.TripsTable.COLUMN_TO;
 import static co.smartreceipts.android.persistence.database.tables.TripsTable.COLUMN_TO_TIMEZONE;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -200,7 +199,7 @@ public class TripsTableTest {
         verifyV12Upgrade(times(1));
         verifyV14Upgrade(times(1));
         verifyV18Upgrade(times(1));
-        verifyV20Upgrade(times(1));
+        verifyV19Upgrade(times(1));
     }
 
     @Test
@@ -217,7 +216,7 @@ public class TripsTableTest {
         verifyV12Upgrade(times(1));
         verifyV14Upgrade(times(1));
         verifyV18Upgrade(times(1));
-        verifyV20Upgrade(times(1));
+        verifyV19Upgrade(times(1));
     }
 
     @Test
@@ -234,7 +233,7 @@ public class TripsTableTest {
         verifyV12Upgrade(times(1));
         verifyV14Upgrade(times(1));
         verifyV18Upgrade(times(1));
-        verifyV20Upgrade(times(1));
+        verifyV19Upgrade(times(1));
     }
 
     @Test
@@ -251,7 +250,7 @@ public class TripsTableTest {
         verifyV12Upgrade(times(1));
         verifyV14Upgrade(times(1));
         verifyV18Upgrade(times(1));
-        verifyV20Upgrade(times(1));
+        verifyV19Upgrade(times(1));
     }
 
     @Test
@@ -268,7 +267,7 @@ public class TripsTableTest {
         verifyV12Upgrade(never());
         verifyV14Upgrade(times(1));
         verifyV18Upgrade(times(1));
-        verifyV20Upgrade(times(1));
+        verifyV19Upgrade(times(1));
     }
 
     @Test
@@ -285,11 +284,11 @@ public class TripsTableTest {
         verifyV12Upgrade(never());
         verifyV14Upgrade(never());
         verifyV18Upgrade(times(1));
-        verifyV20Upgrade(times(1));
+        verifyV19Upgrade(times(1));
     }
 
     @Test
-    public void onUpgradeFromV20() {
+    public void onUpgradeFromV19() {
         final int oldVersion = 19;
         final int newVersion = DatabaseHelper.DATABASE_VERSION;
 
@@ -302,7 +301,7 @@ public class TripsTableTest {
         verifyV12Upgrade(never());
         verifyV14Upgrade(never());
         verifyV18Upgrade(never());
-        verifyV20Upgrade(times(1));
+        verifyV19Upgrade(times(1));
     }
 
     private void verifyV8Upgrade(@NonNull VerificationMode verificationMode) {
@@ -370,7 +369,7 @@ public class TripsTableTest {
         verify(mSQLiteDatabase, verificationMode).execSQL(renameTable);
     }
 
-    private void verifyV20Upgrade(@NonNull VerificationMode verificationMode) {
+    private void verifyV19Upgrade(@NonNull VerificationMode verificationMode) {
         verify(mSQLiteDatabase, verificationMode).execSQL("ALTER TABLE " + TripsTable.TABLE_NAME + " ADD " + COLUMN_NAME_HIDDEN_AUTO_COMPLETE + " BOOLEAN DEFAULT 0");
         verify(mSQLiteDatabase, verificationMode).execSQL("ALTER TABLE " + TripsTable.TABLE_NAME + " ADD " + COLUMN_COMMENT_HIDDEN_AUTO_COMPLETE + " BOOLEAN DEFAULT 0");
         verify(mSQLiteDatabase, verificationMode).execSQL("ALTER TABLE " + TripsTable.TABLE_NAME + " ADD " + COLUMN_COSTCENTER_HIDDEN_AUTO_COMPLETE + " BOOLEAN DEFAULT 0");
@@ -383,7 +382,7 @@ public class TripsTableTest {
 
         final TableDefaultsCustomizer customizer = mock(TableDefaultsCustomizer.class);
         mTripsTable.onUpgrade(mSQLiteDatabase, oldVersion, newVersion, customizer);
-        verify(mSQLiteDatabase, atLeast(0)).execSQL(mSqlCaptor.capture());
+        verify(mSQLiteDatabase, never()).execSQL(mSqlCaptor.capture());
         verifyZeroInteractions(customizer);
     }
 
@@ -401,7 +400,7 @@ public class TripsTableTest {
         final List<Trip> trips = mTripsTable.get().blockingGet();
         // Also confirm the new one is first b/c of date ordering
         assertEquals(trips, Arrays.asList(trip, mTrip1, mTrip2));
-        assertFalse(trip.getUuid().equals(Keyed.Companion.getMISSING_UUID()));
+        assertNotEquals(trip.getUuid(), Keyed.Companion.getMISSING_UUID());
     }
 
     @Test
@@ -439,7 +438,7 @@ public class TripsTableTest {
 
         final Trip updatedTrip = mTripsTable.update(mTrip1, mBuilder.setDirectory(mStorageManager.getFile(NAME_3)).setUuid(UUID.randomUUID()).build(), new DatabaseOperationMetadata()).blockingGet();
         assertNotNull(updatedTrip);
-        assertFalse(mTrip1.equals(updatedTrip));
+        assertNotEquals(mTrip1, updatedTrip);
         assertEquals(oldUuid, updatedTrip.getUuid());
 
         final List<Trip> trips = mTripsTable.get().blockingGet();

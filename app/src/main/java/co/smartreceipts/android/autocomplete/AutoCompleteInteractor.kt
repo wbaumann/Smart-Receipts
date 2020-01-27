@@ -8,7 +8,7 @@ import co.smartreceipts.android.model.Receipt
 import co.smartreceipts.android.model.Trip
 import co.smartreceipts.android.settings.UserPreferenceManager
 import co.smartreceipts.android.settings.catalog.UserPreference
-import co.smartreceipts.core.utils.log.Logger
+import co.smartreceipts.analytics.log.Logger
 import io.reactivex.Maybe
 import io.reactivex.Scheduler
 import io.reactivex.schedulers.Schedulers

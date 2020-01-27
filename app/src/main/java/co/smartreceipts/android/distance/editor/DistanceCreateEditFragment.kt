@@ -9,12 +9,12 @@ import androidx.appcompat.widget.Toolbar
 import butterknife.BindViews
 import butterknife.ButterKnife
 import butterknife.ViewCollections
+import co.smartreceipts.analytics.Analytics
+import co.smartreceipts.analytics.events.Events
 import co.smartreceipts.android.R
 import co.smartreceipts.android.activities.NavigationHandler
 import co.smartreceipts.android.activities.SmartReceiptsActivity
 import co.smartreceipts.android.adapters.FooterButtonArrayAdapter
-import co.smartreceipts.android.analytics.Analytics
-import co.smartreceipts.android.analytics.events.Events
 import co.smartreceipts.android.autocomplete.AutoCompleteArrayAdapter
 import co.smartreceipts.android.autocomplete.AutoCompleteField
 import co.smartreceipts.android.autocomplete.AutoCompleteResult

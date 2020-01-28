@@ -5,7 +5,7 @@ import java.util.TimeZone;
 
 import javax.inject.Inject;
 
-import co.smartreceipts.android.model.AutoCompleteType;
+import co.smartreceipts.core.di.scopes.FragmentScope;
 import co.smartreceipts.android.model.Category;
 import co.smartreceipts.android.model.PaymentMethod;
 import co.smartreceipts.android.model.Receipt;
@@ -21,8 +21,7 @@ import co.smartreceipts.android.purchases.source.PurchaseSource;
 import co.smartreceipts.android.purchases.wallet.PurchaseWallet;
 import co.smartreceipts.android.settings.UserPreferenceManager;
 import co.smartreceipts.android.settings.catalog.UserPreference;
-import co.smartreceipts.core.di.scopes.FragmentScope;
-import co.smartreceipts.core.utils.log.Logger;
+import co.smartreceipts.analytics.log.Logger;
 import io.reactivex.Completable;
 
 @FragmentScope

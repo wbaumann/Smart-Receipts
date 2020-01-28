@@ -2,11 +2,13 @@ package co.smartreceipts.android.persistence.database.tables;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import androidx.annotation.NonNull;
 import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
 
 import com.google.common.base.Preconditions;
 
+import co.smartreceipts.analytics.log.Logger;
 import co.smartreceipts.android.model.Distance;
 import co.smartreceipts.android.model.PaymentMethod;
 import co.smartreceipts.android.model.Trip;
@@ -15,7 +17,6 @@ import co.smartreceipts.android.persistence.database.tables.adapters.DistanceDat
 import co.smartreceipts.android.persistence.database.tables.ordering.OrderByColumn;
 import co.smartreceipts.android.settings.UserPreferenceManager;
 import co.smartreceipts.android.settings.catalog.UserPreference;
-import co.smartreceipts.core.utils.log.Logger;
 
 /**
  * Stores all database operations related to the {@link Distance} model objects
@@ -164,7 +165,7 @@ public class DistanceTable extends TripForeignKeyAbstractSqlTable<Distance> {
             onUpgradeToAddUUID(db, oldVersion);
         }
 
-        if (oldVersion <= 20) {
+        if (oldVersion <= 19) {
             final String alterDistance = "ALTER TABLE " + TABLE_NAME + " ADD " + COLUMN_PAYMENT_METHOD_ID + " INTEGER REFERENCES " + PaymentMethodsTable.TABLE_NAME + " ON DELETE NO ACTION";
             final String alterDistance2 = "ALTER TABLE " + TABLE_NAME + " ADD " + COLUMN_LOCATION_HIDDEN_AUTO_COMPLETE + " BOOLEAN DEFAULT 0";
             final String alterDistance3 = "ALTER TABLE " + TABLE_NAME + " ADD " + COLUMN_COMMENT_HIDDEN_AUTO_COMPLETE + " BOOLEAN DEFAULT 0";

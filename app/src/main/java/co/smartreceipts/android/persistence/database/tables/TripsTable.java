@@ -15,7 +15,7 @@ import co.smartreceipts.android.persistence.database.tables.adapters.SyncStateAd
 import co.smartreceipts.android.persistence.database.tables.adapters.TripDatabaseAdapter;
 import co.smartreceipts.android.persistence.database.tables.ordering.OrderByColumn;
 import co.smartreceipts.android.settings.UserPreferenceManager;
-import co.smartreceipts.core.utils.log.Logger;
+import co.smartreceipts.analytics.log.Logger;
 import wb.android.storage.StorageManager;
 
 public class TripsTable extends AbstractSqlTable<Trip> {
@@ -201,7 +201,7 @@ public class TripsTable extends AbstractSqlTable<Trip> {
             onUpgradeToAddUUID(db, oldVersion);
         }
 
-        if (oldVersion <= 20) { // Added a timezone column to the receipts table
+        if (oldVersion <= 19) {
             final String alterReceipts = "ALTER TABLE " + TripsTable.TABLE_NAME + " ADD " + COLUMN_NAME_HIDDEN_AUTO_COMPLETE + " BOOLEAN DEFAULT 0";
             final String alterReceipts2 = "ALTER TABLE " + TripsTable.TABLE_NAME + " ADD " + COLUMN_COMMENT_HIDDEN_AUTO_COMPLETE + " BOOLEAN DEFAULT 0";
             final String alterReceipts3 = "ALTER TABLE " + TripsTable.TABLE_NAME + " ADD " + COLUMN_COSTCENTER_HIDDEN_AUTO_COMPLETE + " BOOLEAN DEFAULT 0";

@@ -23,7 +23,6 @@ import co.smartreceipts.android.persistence.database.controllers.impl.TripTableC
 import co.smartreceipts.android.persistence.database.operations.DatabaseOperationMetadata;
 import co.smartreceipts.android.settings.catalog.UserPreference;
 import co.smartreceipts.android.utils.FileUtils;
-import co.smartreceipts.core.di.scopes.FragmentScope;
 import io.reactivex.Completable;
 
 @FragmentScope

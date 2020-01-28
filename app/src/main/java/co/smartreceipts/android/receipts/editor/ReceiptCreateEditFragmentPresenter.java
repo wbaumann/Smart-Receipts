@@ -6,6 +6,7 @@ import java.util.TimeZone;
 import javax.inject.Inject;
 
 import co.smartreceipts.core.di.scopes.FragmentScope;
+import co.smartreceipts.android.model.AutoCompleteType;
 import co.smartreceipts.android.model.Category;
 import co.smartreceipts.android.model.PaymentMethod;
 import co.smartreceipts.android.model.Receipt;

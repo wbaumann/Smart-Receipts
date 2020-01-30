@@ -95,9 +95,9 @@ public class DriveRestoreDataManager {
                     List<Optional<java.io.File>> javaFileList = new ArrayList<>();
                     for (File file : fileList.getFiles()) {
                         String filename = file.getId() + "__" + file.getOriginalFilename();
-                        Optional<java.io.File> single = mDriveStreamsManager.download(file.getId(), new java.io.File(downloadLocation, filename)).blockingGet();
-                        if (single.isPresent()) {
-                            javaFileList.add(Optional.of(single.get()));
+                        Optional<java.io.File> optional = mDriveStreamsManager.download(file.getId(), new java.io.File(downloadLocation, filename)).blockingGet();
+                        if (optional.isPresent()) {
+                            javaFileList.add(optional.get());
                         }
                     }
                     return Single.just(javaFileList);
@@ -120,9 +120,9 @@ public class DriveRestoreDataManager {
                         if (f.getModifiedTime().getValue() > date.getTime()) {
                             String filename = ModelUtils.getFormattedDate(
                                     new Date(f.getModifiedTime().getValue()), TimeZone.getDefault(), mContext, "-") + "_" + f.getOriginalFilename();
-                            Optional<java.io.File> single = mDriveStreamsManager.download(f.getId(), new java.io.File(downloadLocation, filename)).blockingGet();
-                            if (single.isPresent()) {
-                                javaFileList.add(single.get());
+                            Optional<java.io.File> optional = mDriveStreamsManager.download(f.getId(), new java.io.File(downloadLocation, filename)).blockingGet();
+                            if (optional.isPresent()) {
+                                javaFileList.add(optional.get());
                             }
                         }
                     }

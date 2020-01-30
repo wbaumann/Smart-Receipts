@@ -5,8 +5,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
-import com.hadisatrio.optional.Optional;
-
 import java.io.File;
 import java.sql.Date;
 import java.util.List;
@@ -98,7 +96,7 @@ public interface BackupProvider {
      * @return a {@link Single} that contains the downloaded images
      */
     @NonNull
-    Single<List<Optional<File>>> downloadAllData(@NonNull final RemoteBackupMetadata remoteBackupMetadata, @NonNull final File downloadLocation);
+    Single<List<File>> downloadAllData(@NonNull final RemoteBackupMetadata remoteBackupMetadata, @NonNull final File downloadLocation);
 
     /**
      * Downloads an existing backup to a specific location in a debug friendly manner
@@ -108,7 +106,7 @@ public interface BackupProvider {
      * @return an {@link Single} that contains the downloaded images
      */
     @NonNull
-    Single<List<Optional<File>>> debugDownloadAllData(@NonNull final RemoteBackupMetadata remoteBackupMetadata, @NonNull final File downloadLocation);
+    Single<List<File>> debugDownloadAllData(@NonNull final RemoteBackupMetadata remoteBackupMetadata, @NonNull final File downloadLocation);
 
     /**
      * @return an {@link Observable} that emits {@link CriticalSyncError} instances whenever they occur,

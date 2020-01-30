@@ -5,8 +5,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
-import com.hadisatrio.optional.Optional;
-
 import java.io.File;
 import java.sql.Date;
 import java.util.Collections;
@@ -88,13 +86,13 @@ public class NoOpBackupProvider implements BackupProvider {
 
     @NonNull
     @Override
-    public Single<List<Optional<File>>> downloadAllData(@NonNull RemoteBackupMetadata remoteBackupMetadata, @NonNull File downloadLocation) {
+    public Single<List<File>> downloadAllData(@NonNull RemoteBackupMetadata remoteBackupMetadata, @NonNull File downloadLocation) {
         return Single.just(Collections.emptyList());
     }
 
     @NonNull
     @Override
-    public Single<List<Optional<File>>> debugDownloadAllData(@NonNull RemoteBackupMetadata remoteBackupMetadata, @NonNull File downloadLocation) {
+    public Single<List<File>> debugDownloadAllData(@NonNull RemoteBackupMetadata remoteBackupMetadata, @NonNull File downloadLocation) {
         return Single.just(Collections.emptyList());
     }
 

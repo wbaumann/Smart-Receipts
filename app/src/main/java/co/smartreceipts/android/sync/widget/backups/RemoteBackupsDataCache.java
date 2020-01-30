@@ -174,7 +174,7 @@ public class RemoteBackupsDataCache {
     }
 
     @NonNull
-    private Single<List<Optional<File>>> downloadData(@NonNull RemoteBackupMetadata remoteBackupMetadata, boolean debugMode, File cacheDir) {
+    private Single<List<File>> downloadData(@NonNull RemoteBackupMetadata remoteBackupMetadata, boolean debugMode, File cacheDir) {
         if (debugMode) {
             return mBackupProvidersManager.debugDownloadAllData(remoteBackupMetadata, cacheDir);
         } else {

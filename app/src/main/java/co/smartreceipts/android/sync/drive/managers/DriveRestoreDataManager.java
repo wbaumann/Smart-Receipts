@@ -81,18 +81,18 @@ public class DriveRestoreDataManager {
     }
 
     @NonNull
-    public Single<List<Optional<java.io.File>>> downloadAllBackupMetadataImages(@NonNull final RemoteBackupMetadata remoteBackupMetadata, @NonNull final java.io.File downloadLocation) {
+    public Single<List<java.io.File>> downloadAllBackupMetadataImages(@NonNull final RemoteBackupMetadata remoteBackupMetadata, @NonNull final java.io.File downloadLocation) {
         return downloadBackupMetadataImages(remoteBackupMetadata, true, downloadLocation);
     }
 
     @NonNull
-    public Single<List<Optional<java.io.File>>> downloadAllFilesInDriveFolder(@NonNull final RemoteBackupMetadata remoteBackupMetadata, @NonNull final java.io.File downloadLocation) {
+    public Single<List<java.io.File>> downloadAllFilesInDriveFolder(@NonNull final RemoteBackupMetadata remoteBackupMetadata, @NonNull final java.io.File downloadLocation) {
         Preconditions.checkNotNull(remoteBackupMetadata);
         Preconditions.checkNotNull(downloadLocation);
 
         return mDriveStreamsManager.getFilesInFolder(remoteBackupMetadata.getId().getId())
                 .flatMap(fileList -> {
-                    List<Optional<java.io.File>> javaFileList = new ArrayList<>();
+                    List<java.io.File> javaFileList = new ArrayList<>();
                     for (File file : fileList.getFiles()) {
                         String filename = file.getId() + "__" + file.getOriginalFilename();
                         Optional<java.io.File> optional = mDriveStreamsManager.download(file.getId(), new java.io.File(downloadLocation, filename)).blockingGet();
@@ -131,7 +131,7 @@ public class DriveRestoreDataManager {
     }
 
     @NonNull
-    private Single<List<Optional<java.io.File>>> downloadBackupMetadataImages(@NonNull final RemoteBackupMetadata remoteBackupMetadata, final boolean overwriteExistingData,
+    private Single<List<java.io.File>> downloadBackupMetadataImages(@NonNull final RemoteBackupMetadata remoteBackupMetadata, final boolean overwriteExistingData,
                                                                     @NonNull final java.io.File downloadLocation) {
         Preconditions.checkNotNull(remoteBackupMetadata);
         Preconditions.checkNotNull(downloadLocation);
@@ -173,16 +173,15 @@ public class DriveRestoreDataManager {
                 })
                 .flatMapSingle(partialReceipt -> {
                     Logger.debug(DriveRestoreDataManager.this, "Downloading file for partial receipt: {}", partialReceipt.driveId);
-                    Single<Optional<Optional<java.io.File>>> singleOptionalOptional = downloadFileForReceipt(partialReceipt, downloadLocation);
-                    Optional<Optional<java.io.File>> optionalOptional = singleOptionalOptional.blockingGet();
-                    Optional<java.io.File> file = optionalOptional.get();
-                    if (!file.isPresent()) {
+                    Single<Optional<java.io.File>> singleOptional = downloadFileForReceipt(partialReceipt, downloadLocation);
+                    Optional<java.io.File> optionalFile = singleOptional.blockingGet();
+                    if (!optionalFile.isPresent()) {
                         missingFileCount.getAndIncrement();
                         if (missingFileCount.get() > 5) {
                             return Single.error(new Exception("Aborting import: More than five missing files"));
                         }
                     }
-                    return singleOptionalOptional;
+                    return singleOptional;
                 })
                 .filter(Optional::isPresent)
                 .map(Optional::get)
@@ -279,7 +278,7 @@ public class DriveRestoreDataManager {
         });
     }
 
-    private Single<Optional<Optional<java.io.File>>> downloadFileForReceipt(@NonNull final PartialReceipt partialReceipt, @NonNull final java.io.File inDirectory) {
+    private Single<Optional<java.io.File>> downloadFileForReceipt(@NonNull final PartialReceipt partialReceipt, @NonNull final java.io.File inDirectory) {
         final java.io.File receiptFile = new java.io.File(new java.io.File(inDirectory, partialReceipt.parentTripName), partialReceipt.fileName);
         return mDriveStreamsManager.download(partialReceipt.driveId.getId(), receiptFile)
                 .map(Optional::of)

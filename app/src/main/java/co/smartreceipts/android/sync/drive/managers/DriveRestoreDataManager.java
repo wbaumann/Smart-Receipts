@@ -281,7 +281,6 @@ public class DriveRestoreDataManager {
     private Single<Optional<java.io.File>> downloadFileForReceipt(@NonNull final PartialReceipt partialReceipt, @NonNull final java.io.File inDirectory) {
         final java.io.File receiptFile = new java.io.File(new java.io.File(inDirectory, partialReceipt.parentTripName), partialReceipt.fileName);
         return mDriveStreamsManager.download(partialReceipt.driveId.getId(), receiptFile)
-                .map(Optional::of)
                 .doOnError(throwable -> Logger.error(DriveRestoreDataManager.this, "Failed to download {} in {} with id {}.", partialReceipt.fileName, partialReceipt.parentTripName, partialReceipt.driveId));
     }
 

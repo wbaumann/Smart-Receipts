@@ -161,7 +161,7 @@ public class DriveServiceHelper {
         return Single.error(e);
       }
     } catch (GoogleJsonResponseException e) {
-      Logger.error(DriveServiceHelper.this, "Failed write file with GoogleJsonResponseException: ", e);
+      Logger.warn(DriveServiceHelper.this, "Failed write file with GoogleJsonResponseException: ", e);
       return Single.just(Optional.absent());
     } catch (IOException e) {
       Logger.error(DriveServiceHelper.this, "Failed write file with IOException: ", e);

@@ -37,6 +37,8 @@ import io.reactivex.Single;
 
 public class DriveRestoreDataManager {
 
+    private static final Integer ALLOWED_DOWNLOAD_FAILURES = 5;
+
     private final Context mContext;
     private final DriveStreamsManager mDriveStreamsManager;
     private final DriveDatabaseManager mDriveDatabaseManager;
@@ -177,7 +179,7 @@ public class DriveRestoreDataManager {
                     Optional<java.io.File> optionalFile = singleOptional.blockingGet();
                     if (!optionalFile.isPresent()) {
                         missingFileCount.getAndIncrement();
-                        if (missingFileCount.get() > 5) {
+                        if (missingFileCount.get() > ALLOWED_DOWNLOAD_FAILURES) {
                             return Single.error(new Exception("Aborting import: More than five missing files"));
                         }
                     }

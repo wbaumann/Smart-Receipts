@@ -199,7 +199,7 @@ public class SmartReceiptsApplication extends Application implements HasAndroidI
         pushManager.initialize();
         cognitoManager.initialize();
         ocrManager.initialize();
-        crashReporter.initialize();
+        crashReporter.initialize(userPreferenceManager.get(UserPreference.Privacy.EnableCrashTracking));
         receiptsOrderer.initialize();
         picassoInitializer.initialize();
         markedForDeletionCleaner.safelyDeleteAllOutstandingItems();

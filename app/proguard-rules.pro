@@ -12,6 +12,7 @@
 # Checkers for floss flavor
 #-whyareyoukeeping class com.amazonaws.*
 #-whyareyoukeeping class com.google.firebase.*
+#-whyareyoukeeping class com.crashlytics.*
 
 
 # Preserve the line number information for debugging stack traces.
@@ -251,10 +252,6 @@
 ### Picasso
 -dontwarn com.squareup.okhttp.**
 
-
-### Fabric
--keep class com.crashlytics.** { *; }
--dontwarn com.crashlytics.**
 
 ### SmartCropper
 -keep class me.pqpo.smartcropperlib.**{*;}

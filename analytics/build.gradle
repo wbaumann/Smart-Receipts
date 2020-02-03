@@ -58,4 +58,7 @@ dependencies {
     // Logger
     implementation "org.slf4j:slf4j-api:$SLF4J_VERSION"
 
+    // Crashlytics
+    notFlossImplementation "com.crashlytics.sdk.android:crashlytics:$CRASHLYTICS_VERSION"
+
 }

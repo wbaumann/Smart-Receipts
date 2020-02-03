@@ -21,6 +21,7 @@ import co.smartreceipts.android.persistence.DatabaseHelper;
 import co.smartreceipts.android.persistence.database.controllers.impl.TripTableController;
 import co.smartreceipts.android.persistence.database.tables.Table;
 import co.smartreceipts.android.sync.BackupProvidersManager;
+import co.smartreceipts.android.sync.errors.MissingFilesException;
 import co.smartreceipts.android.sync.model.RemoteBackupMetadata;
 import co.smartreceipts.android.sync.network.NetworkManager;
 import dagger.android.support.AndroidSupportInjection;
@@ -111,7 +112,7 @@ public class ImportRemoteBackupWorkerProgressDialogFragment extends DialogFragme
                     }
                 }, throwable -> {
                     analytics.record(new ErrorEvent(ImportRemoteBackupWorkerProgressDialogFragment.this, throwable));
-                    if (throwable.getMessage().contains("More than five missing files")) {
+                    if (throwable instanceof MissingFilesException) {
                         Toast.makeText(getActivity(), getString(R.string.IMPORT_MISSING_ERROR), Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(getActivity(), getString(R.string.IMPORT_ERROR), Toast.LENGTH_LONG).show();

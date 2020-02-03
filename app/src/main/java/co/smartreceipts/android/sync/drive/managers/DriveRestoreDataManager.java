@@ -29,6 +29,7 @@ import co.smartreceipts.android.persistence.database.tables.AbstractSqlTable;
 import co.smartreceipts.android.persistence.database.tables.ReceiptsTable;
 import co.smartreceipts.android.persistence.database.tables.TripsTable;
 import co.smartreceipts.android.sync.drive.rx.DriveStreamsManager;
+import co.smartreceipts.android.sync.errors.MissingFilesException;
 import co.smartreceipts.android.sync.manual.ManualBackupTask;
 import co.smartreceipts.android.sync.model.RemoteBackupMetadata;
 import co.smartreceipts.core.sync.model.impl.Identifier;
@@ -180,7 +181,7 @@ public class DriveRestoreDataManager {
                     if (!optionalFile.isPresent()) {
                         missingFileCount.getAndIncrement();
                         if (missingFileCount.get() > ALLOWED_DOWNLOAD_FAILURES) {
-                            return Single.error(new Exception("Aborting import: More than five missing files"));
+                            return Single.error(new MissingFilesException("Aborting import: More than five missing files"));
                         }
                     }
                     return singleOptional;

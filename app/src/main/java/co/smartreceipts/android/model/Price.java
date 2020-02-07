@@ -17,7 +17,7 @@ public interface Price extends Parcelable {
     /**
      * The default decimal precisions for prices (ie two decimal points) like "$2.22" instead of "$2.22222"
      */
-    int DEFAULT_DECIMAL_PRECISION = 2;
+    int DEFAULT_DECIMAL_PRECISION = 3;
 
     /**
      * Defines the default precision rate that we use for rounding off our multiplied values (in

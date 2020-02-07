@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 import co.smartreceipts.android.currency.PriceCurrency;
-import co.smartreceipts.android.model.Distance;
 import co.smartreceipts.android.model.Price;
 import co.smartreceipts.android.model.factory.ExchangeRateBuilderFactory;
 import co.smartreceipts.android.model.gson.ExchangeRate;
@@ -27,7 +26,6 @@ import co.smartreceipts.android.model.utils.ModelUtils;
  */
 public final class ImmutableNetPriceImpl extends AbstractPriceImpl {
 
-    private final static Integer TOTAL_DECIMAL_PRECISION = 2;
     private final PriceCurrency currency;
     private final BigDecimal totalPrice;
     private final BigDecimal possiblyIncorrectTotalPrice;
@@ -62,7 +60,7 @@ public final class ImmutableNetPriceImpl extends AbstractPriceImpl {
 
             } else {
                 // If not, let's just hope for the best with whatever we have to add
-                priceToAdd = price.getPrice().setScale(Distance.RATE_PRECISION, RoundingMode.HALF_UP);
+                priceToAdd = price.getPrice().setScale(DEFAULT_DECIMAL_PRECISION, RoundingMode.HALF_UP);
                 currencyForPriceToAdd = price.getCurrency();
                 areAllExchangeRatesValid = false;
             }

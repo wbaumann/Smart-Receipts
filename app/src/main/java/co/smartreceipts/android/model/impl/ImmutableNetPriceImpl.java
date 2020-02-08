@@ -48,8 +48,7 @@ public final class ImmutableNetPriceImpl extends AbstractPriceImpl {
 
             notExchangedPriceMap.put(price.getCurrency(), notExchangedPriceMap.containsKey(price.getCurrency()) ?
                     notExchangedPriceMap.get(price.getCurrency()).add(price.getPrice()) : price.getPrice());
-
-
+            
             final BigDecimal priceToAdd;
             final PriceCurrency currencyForPriceToAdd;
             if (price.getExchangeRate().supportsExchangeRateFor(baseCurrency)) {

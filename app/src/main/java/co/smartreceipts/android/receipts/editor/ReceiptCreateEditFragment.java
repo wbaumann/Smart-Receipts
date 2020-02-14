@@ -476,7 +476,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
 
         }
 
-        // Configure items that require callbacks (note: Moves these to presenters at some point for testing)
+        // Configure items that require callbacks (note: Move these to presenters at some point for testing)
         categoryTableEventsListener = new StubTableEventsListener<Category>() {
             @Override
             public void onGetSuccess(@NonNull List<Category> list) {
@@ -771,9 +771,8 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     @UiThread
     @Override
     public Consumer<? super Boolean> toggleExchangeRateFieldVisibility() {
-        return (Consumer<Boolean>) isVisible -> {
-            ViewCollections.run(exchangeRateViewsList, ButterKnifeActions.setVisibility(isVisible ? View.VISIBLE : View.GONE));
-        };
+        return (Consumer<Boolean>) isVisible ->
+                ViewCollections.run(exchangeRateViewsList, ButterKnifeActions.setVisibility(isVisible ? View.VISIBLE : View.GONE));
     }
 
     @NonNull

@@ -268,8 +268,8 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
     }
 
     override fun present(uiIndicator: UiIndicator<Int>) {
-        when {
-            uiIndicator.state == UiIndicator.State.Success -> navigationHandler.navigateBack()
+        when (uiIndicator.state) {
+            UiIndicator.State.Success -> navigationHandler.navigateBack()
             else -> if (uiIndicator.state == UiIndicator.State.Error && uiIndicator.data.isPresent) {
                 Toast.makeText(requireContext(), uiIndicator.data.get(), Toast.LENGTH_LONG).show()
             }
@@ -366,9 +366,9 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
         }
     }
 
-    override fun displayAutoCompleteResults(field: AutoCompleteField, autoCompleteResults: List<AutoCompleteResult<Distance>>) {
+    override fun displayAutoCompleteResults(field: AutoCompleteField, results: List<AutoCompleteResult<Distance>>) {
         if (isAdded) {
-            val resultsAdapter = AutoCompleteArrayAdapter(requireContext(), autoCompleteResults)
+            val resultsAdapter = AutoCompleteArrayAdapter(requireContext(), results)
             when (field) {
                 DistanceAutoCompleteField.Location -> {
                     text_distance_location.setAdapter(resultsAdapter)

@@ -31,9 +31,6 @@ import co.smartreceipts.android.model.Trip
 import co.smartreceipts.android.model.factory.DistanceBuilderFactory
 import co.smartreceipts.android.model.utils.ModelUtils
 import co.smartreceipts.android.persistence.DatabaseHelper
-import co.smartreceipts.android.persistence.database.controllers.TableEventsListener
-import co.smartreceipts.android.persistence.database.controllers.impl.PaymentMethodsTableController
-import co.smartreceipts.android.persistence.database.controllers.impl.StubTableEventsListener
 import co.smartreceipts.android.receipts.editor.paymentmethods.PaymentMethodsPresenter
 import co.smartreceipts.android.receipts.editor.paymentmethods.PaymentMethodsView
 import co.smartreceipts.android.utils.SoftKeyboardManager
@@ -72,9 +69,6 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
     @Inject
     lateinit var paymentMethodsPresenter: PaymentMethodsPresenter
 
-    @Inject
-    lateinit var paymentMethodsTableController: PaymentMethodsTableController
-
     @BindViews(R.id.distance_input_guide_image_payment_method, R.id.distance_input_payment_method)
     lateinit var paymentMethodsViewsList: List<@JvmSuppressWildcards View>
 
@@ -97,8 +91,6 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
     private lateinit var snackbar: Snackbar
 
     private lateinit var paymentMethodsAdapter: FooterButtonArrayAdapter<PaymentMethod>
-
-    private lateinit var paymentMethodTableEventsListener: TableEventsListener<PaymentMethod>
 
     override val createDistanceClicks: Observable<Distance>
         get() = _createDistanceClicks
@@ -202,41 +194,11 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
         }
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        paymentMethodTableEventsListener = object : StubTableEventsListener<PaymentMethod>() {
-            override fun onGetSuccess(list: List<PaymentMethod>) {
-                if (isAdded) {
-                    // TODO: Move to payment methods presenter (todo copied from receipt create edit fragment)
-                    val paymentMethods = ArrayList(list)
-                    paymentMethods.add(PaymentMethod.NONE)
-                    paymentMethodsAdapter.update(paymentMethods)
-                    distance_input_payment_method.adapter = paymentMethodsAdapter
-                    if (editableItem != null) {
-                        // Here we manually loop through all payment methods and check for id == id in case the user changed this via "Manage"
-                        val receiptPaymentMethod = editableItem!!.paymentMethod
-                        for (i in 0 until paymentMethodsAdapter.count) {
-                            val paymentMethod = paymentMethodsAdapter.getItem(i)
-                            if (paymentMethod != null && paymentMethod.id == receiptPaymentMethod.id) {
-                                distance_input_payment_method.setSelection(i)
-                                break
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        paymentMethodsTableController.subscribe(paymentMethodTableEventsListener)
-    }
-
     override fun onStart() {
         super.onStart()
         presenter.subscribe()
         currencyListEditorPresenter.subscribe()
         paymentMethodsPresenter.subscribe()
-        paymentMethodsTableController.get()
     }
 
     override fun onStop() {
@@ -286,11 +248,6 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
                 Toast.makeText(requireContext(), uiIndicator.data.get(), Toast.LENGTH_LONG).show()
             }
         }
-    }
-
-    override fun onDestroy() {
-        paymentMethodsTableController.unsubscribe(paymentMethodTableEventsListener)
-        super.onDestroy()
     }
 
     private fun setUpFocusBehavior() {
@@ -370,6 +327,26 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
         }
     }
 
+    override fun displayPaymentMethods(list: List<PaymentMethod>) {
+        if (isAdded) {
+            val paymentMethods = ArrayList(list)
+            paymentMethods.add(PaymentMethod.NONE)
+            paymentMethodsAdapter.update(paymentMethods)
+            distance_input_payment_method.adapter = paymentMethodsAdapter
+            if (editableItem != null) {
+                // Here we manually loop through all payment methods and check for id == id in case the user changed this via "Manage"
+                val distancePaymentMethod = editableItem!!.paymentMethod
+                for (i in 0 until paymentMethodsAdapter.count) {
+                    val paymentMethod = paymentMethodsAdapter.getItem(i)
+                    if (paymentMethod != null && paymentMethod.id == distancePaymentMethod.id) {
+                        distance_input_payment_method.setSelection(i)
+                        break
+                    }
+                }
+            }
+        }
+    }
+
     override fun getTextChangeStream(field: AutoCompleteField): Observable<CharSequence> {
         return when (field) {
             DistanceAutoCompleteField.Location -> text_distance_location.textChanges()
@@ -378,10 +355,10 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
         }
     }
 
-    override fun displayAutoCompleteResults(field: AutoCompleteField, autoCompleteResults: List<AutoCompleteResult<Distance>>) {
+    override fun displayAutoCompleteResults(field: AutoCompleteField, results: List<AutoCompleteResult<Distance>>) {
         if (isAdded) {
             if (!shouldHideResults) {
-                resultsAdapter = AutoCompleteArrayAdapter(requireContext(), autoCompleteResults, this)
+                resultsAdapter = AutoCompleteArrayAdapter(requireContext(), results, this)
                 when (field) {
                     DistanceAutoCompleteField.Location -> {
                         text_distance_location.setAdapter(resultsAdapter)

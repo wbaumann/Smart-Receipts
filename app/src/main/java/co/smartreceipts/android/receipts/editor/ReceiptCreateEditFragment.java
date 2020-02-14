@@ -923,6 +923,27 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
         };
     }
 
+    @Override
+    public void displayPaymentMethods(List<PaymentMethod> list) {
+        if (isAdded()) {
+            List<PaymentMethod> paymentMethods = new ArrayList<>(list);
+            paymentMethods.add(PaymentMethod.Companion.getNONE());
+            paymentMethodsAdapter.update(paymentMethods);
+            paymentMethodsSpinner.setAdapter(paymentMethodsAdapter);
+            if (getEditableItem() != null) {
+                // Here we manually loop through all payment methods and check for id == id in case the user changed this via "Manage"
+                final PaymentMethod receiptPaymentMethod = getEditableItem().getPaymentMethod();
+                for (int i = 0; i < paymentMethodsAdapter.getCount(); i++) {
+                    final PaymentMethod paymentMethod = paymentMethodsAdapter.getItem(i);
+                    if (paymentMethod != null && paymentMethod.getId() == receiptPaymentMethod.getId()) {
+                        paymentMethodsSpinner.setSelection(i);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
     private class SpinnerSelectionListener implements AdapterView.OnItemSelectedListener {
 
         @Override

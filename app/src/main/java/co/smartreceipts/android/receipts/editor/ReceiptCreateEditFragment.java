@@ -84,7 +84,6 @@ import co.smartreceipts.android.ocr.widget.tooltip.ReceiptCreateEditFragmentTool
 import co.smartreceipts.android.persistence.DatabaseHelper;
 import co.smartreceipts.android.persistence.database.controllers.TableEventsListener;
 import co.smartreceipts.android.persistence.database.controllers.impl.CategoriesTableController;
-import co.smartreceipts.android.persistence.database.controllers.impl.PaymentMethodsTableController;
 import co.smartreceipts.android.persistence.database.controllers.impl.StubTableEventsListener;
 import co.smartreceipts.android.receipts.editor.currency.ReceiptCurrencyCodeSupplier;
 import co.smartreceipts.android.receipts.editor.date.ReceiptDateView;
@@ -143,9 +142,6 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
 
     @Inject
     CategoriesTableController categoriesTableController;
-
-    @Inject
-    PaymentMethodsTableController paymentMethodsTableController;
 
     @Inject
     NavigationHandler navigationHandler;
@@ -258,7 +254,6 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
 
     // Database monitor callbacks
     private TableEventsListener<Category> categoryTableEventsListener;
-    private TableEventsListener<PaymentMethod> paymentMethodTableEventsListener;
 
     // Misc
     private ReceiptInputCache receiptInputCache;
@@ -533,31 +528,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
             }
         };
 
-        paymentMethodTableEventsListener = new StubTableEventsListener<PaymentMethod>() {
-            @Override
-            public void onGetSuccess(@NonNull List<PaymentMethod> list) {
-                if (isAdded()) {
-                    // TODO: Move to payment methods presenter
-                    List<PaymentMethod> paymentMethods = new ArrayList<>(list);
-                    paymentMethods.add(PaymentMethod.Companion.getNONE());
-                    paymentMethodsAdapter.update(paymentMethods);
-                    paymentMethodsSpinner.setAdapter(paymentMethodsAdapter);
-                    if (getEditableItem() != null) {
-                        // Here we manually loop through all payment methods and check for id == id in case the user changed this via "Manage"
-                        final PaymentMethod receiptPaymentMethod = getEditableItem().getPaymentMethod();
-                        for (int i = 0; i < paymentMethodsAdapter.getCount(); i++) {
-                            final PaymentMethod paymentMethod = paymentMethodsAdapter.getItem(i);
-                            if (paymentMethod != null && paymentMethod.getId() == receiptPaymentMethod.getId()) {
-                                paymentMethodsSpinner.setSelection(i);
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        };
         categoriesTableController.subscribe(categoryTableEventsListener);
-        paymentMethodsTableController.subscribe(paymentMethodTableEventsListener);
     }
 
     @Override
@@ -573,7 +544,6 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
 
         // Attempt to update our lists in case they were changed in the background
         categoriesTableController.get();
-        paymentMethodsTableController.get();
 
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -665,7 +635,6 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     @Override
     public void onDestroy() {
         categoriesTableController.unsubscribe(categoryTableEventsListener);
-        paymentMethodsTableController.unsubscribe(paymentMethodTableEventsListener);
         super.onDestroy();
     }
 

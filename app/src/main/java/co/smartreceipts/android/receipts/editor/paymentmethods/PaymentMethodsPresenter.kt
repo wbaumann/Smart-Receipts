@@ -10,6 +10,7 @@ import co.smartreceipts.android.utils.rx.RxSchedulers
 import co.smartreceipts.android.widget.mvp.BasePresenter
 import co.smartreceipts.core.di.scopes.FragmentScope
 import io.reactivex.Scheduler
+import java.util.ArrayList
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -25,7 +26,9 @@ class PaymentMethodsPresenter @Inject constructor(view: PaymentMethodsView,
 
     private val paymentMethodTableEventsListener: TableEventsListener<PaymentMethod> = object : StubTableEventsListener<PaymentMethod>() {
         override fun onGetSuccess(list: List<PaymentMethod>) {
-            view.displayPaymentMethods(list)
+            val paymentMethods = ArrayList(list)
+            paymentMethods.add(PaymentMethod.NONE)
+            view.displayPaymentMethods(paymentMethods)
         }
     }
 

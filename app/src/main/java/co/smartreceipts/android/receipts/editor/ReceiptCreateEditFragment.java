@@ -916,9 +916,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     @Override
     public void displayPaymentMethods(List<PaymentMethod> list) {
         if (isAdded()) {
-            List<PaymentMethod> paymentMethods = new ArrayList<>(list);
-            paymentMethods.add(PaymentMethod.Companion.getNONE());
-            paymentMethodsAdapter.update(paymentMethods);
+            paymentMethodsAdapter.update(list);
             paymentMethodsSpinner.setAdapter(paymentMethodsAdapter);
             if (getEditableItem() != null) {
                 // Here we manually loop through all payment methods and check for id == id in case the user changed this via "Manage"

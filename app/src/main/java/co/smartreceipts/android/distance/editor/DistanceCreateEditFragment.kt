@@ -329,9 +329,7 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
 
     override fun displayPaymentMethods(list: List<PaymentMethod>) {
         if (isAdded) {
-            val paymentMethods = ArrayList(list)
-            paymentMethods.add(PaymentMethod.NONE)
-            paymentMethodsAdapter.update(paymentMethods)
+            paymentMethodsAdapter.update(list)
             distance_input_payment_method.adapter = paymentMethodsAdapter
             if (editableItem != null) {
                 // Here we manually loop through all payment methods and check for id == id in case the user changed this via "Manage"

@@ -1,5 +1,6 @@
 package co.smartreceipts.android.receipts.editor.paymentmethods
 
+import co.smartreceipts.android.model.PaymentMethod
 import co.smartreceipts.android.persistence.database.controllers.impl.PaymentMethodsTableController
 import co.smartreceipts.android.settings.UserPreferenceManager
 import co.smartreceipts.android.settings.catalog.UserPreference
@@ -12,7 +13,6 @@ import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
-
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
@@ -35,12 +35,19 @@ class PaymentMethodsPresenterTest  {
 
     private val userPreferenceChangeStream = PublishSubject.create<UserPreference<*>>()
 
+    private val paymentMethod1: PaymentMethod = mock()
+    private val paymentMethod2: PaymentMethod = mock()
+    private val paymentMethod3: PaymentMethod = PaymentMethod.NONE
+    private val mockList = mutableListOf(paymentMethod1, paymentMethod2)
+    private val mockListWithCompanion = mutableListOf(paymentMethod1, paymentMethod2, paymentMethod3)
+
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
         Mockito.doReturn(togglePaymentMethodFieldVisibilityConsumer).whenever(view).togglePaymentMethodFieldVisibility()
         whenever(userPreferenceManager.getSingle(UserPreference.Receipts.UsePaymentMethods)).thenReturn(Single.just(true))
         whenever(userPreferenceManager.userPreferenceChangeStream).thenReturn(userPreferenceChangeStream)
+        whenever(paymentMethodsTableController.get()).thenReturn(Single.just(mockList))
     }
 
     @Test
@@ -49,6 +56,7 @@ class PaymentMethodsPresenterTest  {
         val presenter = PaymentMethodsPresenter(view, userPreferenceManager, Schedulers.trampoline(), Schedulers.trampoline(), paymentMethodsTableController)
         presenter.subscribe()
         Mockito.verify(togglePaymentMethodFieldVisibilityConsumer).accept(true)
+        Mockito.verify(view).displayPaymentMethods(mockListWithCompanion)
     }
 
     @Test

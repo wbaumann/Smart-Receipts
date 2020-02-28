@@ -1,9 +1,7 @@
 package co.smartreceipts.android.receipts.editor.paymentmethods
 
 import co.smartreceipts.android.model.PaymentMethod
-import co.smartreceipts.android.persistence.database.controllers.TableEventsListener
 import co.smartreceipts.android.persistence.database.controllers.impl.PaymentMethodsTableController
-import co.smartreceipts.android.persistence.database.controllers.impl.StubTableEventsListener
 import co.smartreceipts.android.settings.UserPreferenceManager
 import co.smartreceipts.android.settings.catalog.UserPreference
 import co.smartreceipts.android.utils.rx.RxSchedulers
@@ -23,12 +21,6 @@ class PaymentMethodsPresenter @Inject constructor(view: PaymentMethodsView,
                                                   @Named(RxSchedulers.MAIN) private val mainScheduler: Scheduler,
                                                   private val controller: PaymentMethodsTableController) : BasePresenter<PaymentMethodsView>(view) {
 
-    private val paymentMethodTableEventsListener: TableEventsListener<PaymentMethod> = object : StubTableEventsListener<PaymentMethod>() {
-        override fun onGetSuccess(list: List<PaymentMethod>) {
-            view.displayPaymentMethods(list)
-        }
-    }
-
     override fun subscribe() {
         compositeDisposable.add(userPreferenceManager.getSingle(UserPreference.Receipts.UsePaymentMethods)
                 .subscribeOn(ioScheduler)
@@ -42,12 +34,14 @@ class PaymentMethodsPresenter @Inject constructor(view: PaymentMethodsView,
                 .observeOn(mainScheduler)
                 .subscribe(view.togglePaymentMethodFieldVisibility()))
 
-        controller.subscribe(paymentMethodTableEventsListener)
-        controller.get()
+        compositeDisposable.add(controller.get()
+                .subscribeOn(ioScheduler)
+                .observeOn(mainScheduler)
+                .subscribe { t: MutableList<PaymentMethod>? ->
+                    val paymentMethods = ArrayList(t)
+                    paymentMethods.add(PaymentMethod.NONE)
+                    view.displayPaymentMethods(paymentMethods)
+                })
     }
 
-    override fun unsubscribe() {
-        controller.unsubscribe(paymentMethodTableEventsListener)
-        super.unsubscribe()
-    }
 }

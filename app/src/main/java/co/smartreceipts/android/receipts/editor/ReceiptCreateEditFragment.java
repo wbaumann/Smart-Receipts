@@ -919,9 +919,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     @Override
     public void displayPaymentMethods(List<PaymentMethod> list) {
         if (isAdded()) {
-            List<PaymentMethod> paymentMethods = new ArrayList<>(list);
-            paymentMethods.add(PaymentMethod.Companion.getNONE());
-            paymentMethodsAdapter.update(paymentMethods);
+            paymentMethodsAdapter.update(list);
             paymentMethodsSpinner.setAdapter(paymentMethodsAdapter);
             paymentMethodsSpinner.setOnItemSelectedListener(
                     new AdapterView.OnItemSelectedListener() {

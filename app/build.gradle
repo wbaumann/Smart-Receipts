@@ -134,6 +134,8 @@ android {
         implementation project(':wbMiniLibrary')
         implementation project(':aws')
         implementation project(':push')
+        implementation project(':automatic_backups')
+
 
         implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
@@ -152,14 +154,6 @@ android {
         implementation "com.android.support.constraint:constraint-layout:$CONSTRAINT_LAYOUT_VERSION"
 
         implementation "com.google.http-client:google-http-client-gson:$GOOGLE_HTTP_CLIENT_VERSION"
-        implementation("com.google.api-client:google-api-client-android:$GOOGLE_API_CLIENT_VERSION") {
-            exclude group: 'org.apache.httpcomponents'
-        }
-        implementation("com.google.apis:google-api-services-drive:$GOOGLE_API_SERVICES_VERSION") {
-            exclude group: 'org.apache.httpcomponents'
-        }
-        // todo must be moved to notFloss
-        implementation "com.google.android.gms:play-services-auth:$DRIVE_API_VERSION"
 
         implementation "com.squareup.picasso:picasso:$PICASSO_VERSION"
         implementation "com.squareup.okhttp3:okhttp:$OK_HTTP_VERSION"
@@ -206,6 +200,7 @@ android {
         kapt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
         kapt "com.google.dagger:dagger-android-processor:$DAGGER_VERSION"
 
+        // todo remove from FLOSS flavor
         implementation "com.google.android.gms:play-services-oss-licenses:$GOOGLE_OSS_VERSION"
 
         // Unit Tests
@@ -226,11 +221,9 @@ android {
         debugImplementation "com.squareup.leakcanary:leakcanary-support-fragment:$LEAK_CANARY_VERSION"
         releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$LEAK_CANARY_VERSION"
 
-        // todo must be moved to notFloss
         // Special dependencies for free flavor
         freeImplementation "com.google.android.gms:play-services-analytics:$GOOGLE_ANALYTICS_VERSION"
 
-        // todo must be moved to notFloss
         // Free ads
         freeImplementation "com.google.android.gms:play-services-ads:$ADMOB_VERSION"
     }

@@ -38,6 +38,8 @@ import co.smartreceipts.analytics.Analytics;
 import co.smartreceipts.analytics.events.DataPoint;
 import co.smartreceipts.analytics.events.DefaultDataPointEvent;
 import co.smartreceipts.analytics.events.Events;
+import co.smartreceipts.analytics.log.LogConstants;
+import co.smartreceipts.analytics.log.Logger;
 import co.smartreceipts.android.R;
 import co.smartreceipts.android.activities.AppCompatPreferenceActivity;
 import co.smartreceipts.android.activities.SmartReceiptsActivity;
@@ -56,8 +58,6 @@ import co.smartreceipts.android.settings.UserPreferenceManager;
 import co.smartreceipts.android.settings.catalog.UserPreference;
 import co.smartreceipts.android.utils.IntentUtils;
 import co.smartreceipts.android.workers.EmailAssistant;
-import co.smartreceipts.analytics.log.LogConstants;
-import co.smartreceipts.analytics.log.Logger;
 import dagger.android.AndroidInjection;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -475,6 +475,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.smartreceipts.co/privacy")));
             return true;
         } else if (key.equals(getString(R.string.pref_about_oss_key))) {
+            // TODO: 09.03.2020 remove oss dependency from floss flavor
             OssLicensesMenuActivity.setActivityTitle(getString(R.string.pref_about_oss_title));
             startActivity(new Intent(this, OssLicensesMenuActivity.class));
             return true;

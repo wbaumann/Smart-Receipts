@@ -12,8 +12,6 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
-        missingDimensionStrategy 'isFloss', 'notFloss'
     }
     buildTypes {
         release {
@@ -26,6 +24,21 @@ android {
         targetCompatibility = 1.8
     }
     buildToolsVersion = rootProject.ext.buildToolsVersion
+
+
+    /**
+     * Note: core module doesn't have flavor-dependent code but it needs flavors because of transitive analytics module
+     */
+    flavorDimensions "isFloss"
+    productFlavors {
+        floss {
+            dimension "isFloss"
+        }
+
+        notFloss {
+            dimension "isFloss"
+        }
+    }
 
 }
 
@@ -56,6 +69,4 @@ dependencies {
 
     // Logger
     api "org.slf4j:slf4j-api:$SLF4J_VERSION"
-
-
 }

@@ -200,7 +200,6 @@ android {
         kapt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
         kapt "com.google.dagger:dagger-android-processor:$DAGGER_VERSION"
 
-        // todo remove from FLOSS flavor
         implementation "com.google.android.gms:play-services-oss-licenses:$GOOGLE_OSS_VERSION"
 
         // Unit Tests

@@ -21,8 +21,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NavUtils;
 import androidx.core.app.TaskStackBuilder;
 
-import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
-
 import java.io.File;
 import java.sql.Date;
 import java.util.ArrayList;
@@ -47,6 +45,7 @@ import co.smartreceipts.android.currency.widget.CurrencyListEditorPresenter;
 import co.smartreceipts.android.currency.widget.CurrencyListEditorView;
 import co.smartreceipts.android.date.DateFormatter;
 import co.smartreceipts.android.date.DisplayableDate;
+import co.smartreceipts.android.licenses.LicensesNavigator;
 import co.smartreceipts.android.persistence.DatabaseHelper;
 import co.smartreceipts.android.purchases.PurchaseEventsListener;
 import co.smartreceipts.android.purchases.PurchaseManager;
@@ -83,7 +82,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
 
     @Inject
     DatabaseHelper databaseHelper;
-    
+
     @Inject
     UserPreferenceManager userPreferenceManager;
 
@@ -98,6 +97,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
 
     @Inject
     DateFormatter dateFormatter;
+
+    @Inject
+    LicensesNavigator licensesNavigator;
 
     private volatile Set<InAppPurchase> availablePurchases;
     private CompositeDisposable compositeDisposable;
@@ -475,9 +477,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.smartreceipts.co/privacy")));
             return true;
         } else if (key.equals(getString(R.string.pref_about_oss_key))) {
-            // TODO: 09.03.2020 remove oss dependency from floss flavor
-            OssLicensesMenuActivity.setActivityTitle(getString(R.string.pref_about_oss_title));
-            startActivity(new Intent(this, OssLicensesMenuActivity.class));
+            final Intent licensesActivityIntent = licensesNavigator.getLicensesActivityIntent(this);
+            if (licensesActivityIntent != null) {
+                startActivity(licensesActivityIntent);
+            }
             return true;
         } else {
             return false;

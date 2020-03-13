@@ -14,6 +14,7 @@
 #-whyareyoukeeping class com.google.firebase.*
 #-whyareyoukeeping class com.crashlytics.*
 #-whyareyoukeeping class com.google.android.gms**
+#-whyareyoukeeping class com.google.android.gms.oss.licenses.*
 
 
 # Preserve the line number information for debugging stack traces.

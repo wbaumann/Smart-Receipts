@@ -16,6 +16,8 @@ import co.smartreceipts.android.ExtraInitializerFreeImpl;
 import co.smartreceipts.android.R;
 import co.smartreceipts.android.analytics.AnalyticsManager;
 import co.smartreceipts.android.analytics.GoogleAnalytics;
+import co.smartreceipts.android.licenses.LicensesNavigator;
+import co.smartreceipts.android.licenses.LicensesNavigatorImpl;
 import co.smartreceipts.android.ocr.OcrManager;
 import co.smartreceipts.android.ocr.OcrManagerImpl;
 import co.smartreceipts.android.purchases.wallet.DefaultPurchaseWallet;
@@ -80,4 +82,8 @@ public abstract class FlavorModule {
     @Binds
     @ApplicationScope
     public abstract GoogleDriveTableManager provideGoogleDriveTableManager(GoogleDriveTableManagerImpl driveTableManager);
+
+    @Binds
+    @ApplicationScope
+    public abstract LicensesNavigator provideLicensesNavigator(LicensesNavigatorImpl licensesNavigator);
 }

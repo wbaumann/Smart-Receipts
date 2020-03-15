@@ -29,5 +29,9 @@ interface AutoCompleteView<Type> {
     @UiThread
     fun displayAutoCompleteResults(field: AutoCompleteField, results: ArrayList<AutoCompleteResult<Type>>)
 
-    fun showUndoSnackbar(result: AutoCompleteResult<Type>, position: Int, autoCompleteType: AutoCompleteType)
+    val hideAutoCompleteVisibilityClick: Observable<Pair<Type, Type>>
+    val unHideAutoCompleteVisibilityClick: Observable<Pair<Type, Type>>
+
+    fun hideAutoCompleteValue(wasSuccessfullyHidden: Boolean)
+    fun unHideAutoCompleteValue(wasSuccessfullyUnhidden: Boolean)
 }

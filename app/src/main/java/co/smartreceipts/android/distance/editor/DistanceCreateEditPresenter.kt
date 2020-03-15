@@ -26,7 +26,7 @@ class DistanceCreateEditPresenter @Inject constructor(
             .flatMap { interactor.createDistance(it) }
             .map { result ->
                 when {
-                    result.isPresent -> UiIndicator.success<Int>()
+                    result.isPresent -> UiIndicator.success()
                     else -> UiIndicator.error<Int>(R.string.distance_insert_failed)
                 }
             }
@@ -38,7 +38,7 @@ class DistanceCreateEditPresenter @Inject constructor(
             .flatMap { interactor.updateDistance(view.editableItem!!, it) }
             .map { result ->
                 when {
-                    result.isPresent -> UiIndicator.success<Int>()
+                    result.isPresent -> UiIndicator.success()
                     else -> UiIndicator.error<Int>(R.string.distance_update_failed)
                 }
             }

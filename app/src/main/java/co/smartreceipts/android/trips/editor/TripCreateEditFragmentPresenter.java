@@ -3,6 +3,7 @@ package co.smartreceipts.android.trips.editor;
 import androidx.annotation.NonNull;
 
 import com.google.common.base.Preconditions;
+import com.hadisatrio.optional.Optional;
 
 import java.io.File;
 import java.sql.Date;
@@ -14,7 +15,6 @@ import javax.inject.Inject;
 import co.smartreceipts.analytics.Analytics;
 import co.smartreceipts.analytics.events.Events;
 import co.smartreceipts.core.di.scopes.FragmentScope;
-import co.smartreceipts.android.model.AutoCompleteType;
 import co.smartreceipts.android.model.Trip;
 import co.smartreceipts.android.model.factory.TripBuilderFactory;
 import co.smartreceipts.android.persistence.DatabaseHelper;
@@ -23,7 +23,7 @@ import co.smartreceipts.android.persistence.database.controllers.impl.TripTableC
 import co.smartreceipts.android.persistence.database.operations.DatabaseOperationMetadata;
 import co.smartreceipts.android.settings.catalog.UserPreference;
 import co.smartreceipts.android.utils.FileUtils;
-import io.reactivex.Completable;
+import io.reactivex.Observable;
 
 @FragmentScope
 public class TripCreateEditFragmentPresenter {
@@ -142,31 +142,7 @@ public class TripCreateEditFragmentPresenter {
         return persistenceManager.getPreferenceManager().get(UserPreference.General.DateSeparator);
     }
 
-    Completable updateTripAutoCompleteVisibility(Trip trip, boolean isHidden, AutoCompleteType autoCompleteType) {
-        Trip updatedTrip;
-        if (autoCompleteType == AutoCompleteType.Name) {
-            updatedTrip = new TripBuilderFactory(trip)
-                    .setNameHiddenFromAutoComplete(isHidden)
-                    .build();
-        } else if (autoCompleteType == AutoCompleteType.Comment) {
-            updatedTrip = new TripBuilderFactory(trip)
-                    .setCommentHiddenFromAutoComplete(isHidden)
-                    .build();
-        } else if (autoCompleteType == AutoCompleteType.CostCenter) {
-            updatedTrip = new TripBuilderFactory(trip)
-                    .setCostCenterHiddenFromAutoComplete(isHidden)
-                    .build();
-        } else {
-            updatedTrip = new TripBuilderFactory(trip).build();
-        }
-
-        return tripTableController.update(trip, updatedTrip, new DatabaseOperationMetadata())
-                .flatMapCompletable(optional -> {
-                    if (optional.isPresent()) {
-                        return Completable.complete();
-                    } else {
-                        return Completable.error(new Exception("Failed to update trip auto complete visibility"));
-                    }
-                });
+    Observable<Optional<Trip>> updateTrip(Trip oldTrip, Trip newTrip) {
+        return tripTableController.update(oldTrip, newTrip, new DatabaseOperationMetadata());
     }
 }

@@ -1,12 +1,13 @@
 package co.smartreceipts.android.receipts.editor;
 
+import com.hadisatrio.optional.Optional;
+
 import java.sql.Date;
 import java.util.TimeZone;
 
 import javax.inject.Inject;
 
 import co.smartreceipts.core.di.scopes.FragmentScope;
-import co.smartreceipts.android.model.AutoCompleteType;
 import co.smartreceipts.android.model.Category;
 import co.smartreceipts.android.model.PaymentMethod;
 import co.smartreceipts.android.model.Receipt;
@@ -23,7 +24,7 @@ import co.smartreceipts.android.purchases.wallet.PurchaseWallet;
 import co.smartreceipts.android.settings.UserPreferenceManager;
 import co.smartreceipts.android.settings.catalog.UserPreference;
 import co.smartreceipts.analytics.log.Logger;
-import io.reactivex.Completable;
+import io.reactivex.Observable;
 
 @FragmentScope
 public class ReceiptCreateEditFragmentPresenter {
@@ -169,29 +170,8 @@ public class ReceiptCreateEditFragmentPresenter {
         return false;
     }
 
-    Completable updateReceiptAutoCompleteVisibility(Receipt receipt, boolean isHidden, AutoCompleteType autoCompleteType) {
-        Receipt updatedReceipt;
-
-        if (autoCompleteType == AutoCompleteType.Name) {
-            updatedReceipt = new ReceiptBuilderFactory(receipt)
-                    .setNameHiddenFromAutoComplete(isHidden)
-                    .build();
-        } else if (autoCompleteType == AutoCompleteType.Comment) {
-            updatedReceipt = new ReceiptBuilderFactory(receipt)
-                    .setCommentHiddenFromAutoComplete(isHidden)
-                    .build();
-        } else {
-            updatedReceipt = new ReceiptBuilderFactory(receipt).build();
-        }
-
-        return receiptTableController.update(receipt, updatedReceipt, new DatabaseOperationMetadata())
-                .flatMapCompletable(optional -> {
-                    if (optional.isPresent()) {
-                        return Completable.complete();
-                    } else {
-                        return Completable.error(new Exception("Failed to update receipt auto complete visibility"));
-                    }
-                });
+    Observable<Optional<Receipt>> updateReceipt(Receipt oldReceipt, Receipt newReceipt) {
+        return receiptTableController.update(oldReceipt, newReceipt, new DatabaseOperationMetadata());
     }
 
 }

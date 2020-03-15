@@ -56,6 +56,7 @@ import co.smartreceipts.android.editor.Editor;
 import co.smartreceipts.android.fragments.WBFragment;
 import co.smartreceipts.android.model.AutoCompleteType;
 import co.smartreceipts.android.model.Trip;
+import co.smartreceipts.android.model.factory.TripBuilderFactory;
 import co.smartreceipts.android.persistence.DatabaseHelper;
 import co.smartreceipts.android.settings.UserPreferenceManager;
 import co.smartreceipts.android.tooltip.TooltipPresenter;
@@ -70,7 +71,11 @@ import co.smartreceipts.analytics.log.Logger;
 import co.smartreceipts.android.widget.tooltip.Tooltip;
 import dagger.android.support.AndroidSupportInjection;
 import io.reactivex.Observable;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.subjects.PublishSubject;
+import io.reactivex.subjects.Subject;
+import kotlin.Pair;
 import wb.android.flex.Flex;
 
 public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
@@ -149,6 +154,16 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
     private AutoCompleteArrayAdapter<Trip> resultsAdapter;
     private Snackbar snackbar;
     private boolean shouldHideResults;
+    private AutoCompleteResult<Trip> autoCompleteVisibilityItem;
+    private AutoCompleteType autoCompleteType;
+    private int positionToUpdateVisibility;
+
+    private Subject<Pair<Trip, Trip>> _hideAutoCompleteVisibilityClicks =
+            PublishSubject.<Pair<Trip, Trip>>create().toSerialized();
+    private Subject<Pair<Trip, Trip>> _unHideAutoCompleteVisibilityClicks =
+            PublishSubject.<Pair<Trip, Trip>>create().toSerialized();
+
+    private CompositeDisposable compositeDisposable;
 
     public static TripCreateEditFragment newInstance() {
         return new TripCreateEditFragment();
@@ -270,12 +285,29 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
         if (focusedView != null) {
             focusedView.requestFocus(); // Make sure we're focused on the right view
         }
+
+        compositeDisposable = new CompositeDisposable();
+        compositeDisposable.add(getHideAutoCompleteVisibilityClick()
+                .flatMap(tripTripPair ->
+                        presenter.updateTrip(tripTripPair.getFirst(), tripTripPair.getSecond()))
+                .subscribe(tripOptional ->
+                    hideAutoCompleteValue(tripOptional.isPresent())
+                ));
+
+        compositeDisposable.add(getUnHideAutoCompleteVisibilityClick()
+                .flatMap(tripTripPair ->
+                        presenter.updateTrip(tripTripPair.getFirst(), tripTripPair.getSecond()))
+                .subscribe(tripOptional ->
+                        unHideAutoCompleteValue(tripOptional.isPresent())
+                ));
     }
 
     @Override
     public void onPause() {
         // Dismiss the soft keyboard
         SoftKeyboardManager.hideKeyboard(focusedView);
+
+        compositeDisposable.clear();
 
         super.onPause();
     }
@@ -547,64 +579,114 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
 
     @Override
     public void onClick(boolean removeAutoCompleteResult, int position) {
-        final AutoCompleteResult<Trip> selectedItem = resultsAdapter.getItem(position);
-        if (selectedItem != null) {
+        positionToUpdateVisibility = position;
+        autoCompleteVisibilityItem = resultsAdapter.getItem(position);
+        if (autoCompleteVisibilityItem != null) {
             if (!removeAutoCompleteResult) {
                 shouldHideResults = true;
                 if (nameBox.isPopupShowing()) {
-                    nameBox.setText(selectedItem.getDisplayName());
+                    nameBox.setText(autoCompleteVisibilityItem.getDisplayName());
                     nameBox.setSelection(nameBox.getText().length());
                     nameBox.dismissDropDown();
                 } else if (commentBox.isPopupShowing()) {
-                    commentBox.setText(selectedItem.getDisplayName());
+                    commentBox.setText(autoCompleteVisibilityItem.getDisplayName());
                     commentBox.setSelection(commentBox.getText().length());
                     commentBox.dismissDropDown();
                 } else {
-                    costCenterBox.setText(selectedItem.getDisplayName());
+                    costCenterBox.setText(autoCompleteVisibilityItem.getDisplayName());
                     costCenterBox.setSelection(costCenterBox.getText().length());
                     costCenterBox.dismissDropDown();
                 }
                 SoftKeyboardManager.hideKeyboard(focusedView);
             } else {
                 SoftKeyboardManager.hideKeyboard(focusedView);
-                final Trip firstReceipt = selectedItem.getFirstItem();
-
-                AutoCompleteType autoCompleteType;
+                final Trip oldTrip = autoCompleteVisibilityItem.getFirstItem();
+                Trip newTrip;
                 if (nameBox.isPopupShowing()) {
                     autoCompleteType = AutoCompleteType.Name;
+                    newTrip = new TripBuilderFactory(oldTrip)
+                            .setNameHiddenFromAutoComplete(true)
+                            .build();
                 } else if (commentBox.isPopupShowing()) {
                     autoCompleteType = AutoCompleteType.Comment;
+                    newTrip = new TripBuilderFactory(oldTrip)
+                            .setCommentHiddenFromAutoComplete(true)
+                            .build();
                 } else {
                     autoCompleteType = AutoCompleteType.CostCenter;
+                    newTrip = new TripBuilderFactory(oldTrip)
+                            .setCostCenterHiddenFromAutoComplete(true)
+                            .build();
                 }
 
-                presenter.updateTripAutoCompleteVisibility(firstReceipt, true, autoCompleteType)
-                        .subscribe(() ->
-                                getActivity().runOnUiThread(() -> {
-                                    resultsAdapter.remove(selectedItem);
-                                    resultsAdapter.notifyDataSetChanged();
-                                    showUndoSnackbar(selectedItem, position, autoCompleteType);
-                                }), throwable ->
-                                getActivity().runOnUiThread(() ->
-                                        Toast.makeText(getActivity(), R.string.delete_failed, Toast.LENGTH_LONG).show()));
+                _hideAutoCompleteVisibilityClicks.onNext(new Pair(oldTrip, newTrip));
             }
         }
     }
 
     @Override
-    public void showUndoSnackbar(AutoCompleteResult<Trip> result, int position, @NotNull AutoCompleteType autoCompleteType) {
+    public void hideAutoCompleteValue(boolean wasSuccessfullyHidden) {
+        if (wasSuccessfullyHidden) {
+            getActivity().runOnUiThread(() -> {
+                resultsAdapter.remove(autoCompleteVisibilityItem);
+                resultsAdapter.notifyDataSetChanged();
+                showUndoSnackbar(autoCompleteVisibilityItem, autoCompleteType);
+            });
+        } else {
+            getActivity().runOnUiThread(() ->
+                    Toast.makeText(getActivity(), R.string.delete_failed, Toast.LENGTH_LONG).show());
+        }
+    }
+
+    public void showUndoSnackbar(AutoCompleteResult<Trip> result, @NotNull final AutoCompleteType autoCompleteType) {
         View view = getActivity().findViewById(R.id.update_trip_layout);
         snackbar = Snackbar.make(view, getString(
                 R.string.item_removed_from_auto_complete, result.getDisplayName()), Snackbar.LENGTH_LONG);
-        snackbar.setAction(R.string.undo, v -> presenter.updateTripAutoCompleteVisibility(result.getFirstItem(), false, autoCompleteType)
-                .subscribe(() -> getActivity().runOnUiThread(() -> {
-                    resultsAdapter.insert(result, position);
-                    resultsAdapter.notifyDataSetChanged();
-                    Toast.makeText(getContext(), R.string.result_restored, Toast.LENGTH_LONG).show();
-                }), throwable ->
-                        getActivity().runOnUiThread(() ->
-                                Toast.makeText(getContext(), R.string.result_restore_failed, Toast.LENGTH_LONG).show())));
+        snackbar.setAction(R.string.undo, v -> {
+            Trip newTrip;
+            final Trip oldTrip = result.getFirstItem();
+            if (autoCompleteType == AutoCompleteType.Name) {
+                newTrip = new TripBuilderFactory(oldTrip)
+                        .setNameHiddenFromAutoComplete(false)
+                        .build();
+            } else if (autoCompleteType == AutoCompleteType.Comment) {
+                newTrip = new TripBuilderFactory(oldTrip)
+                        .setCommentHiddenFromAutoComplete(false)
+                        .build();
+            } else {
+                newTrip = new TripBuilderFactory(oldTrip)
+                        .setCostCenterHiddenFromAutoComplete(false)
+                        .build();
+            }
+
+            _unHideAutoCompleteVisibilityClicks.onNext(new Pair(oldTrip, newTrip));
+        });
         snackbar.show();
     }
 
+    @Override
+    public void unHideAutoCompleteValue(boolean wasSuccessfullyUnhidden) {
+        if (wasSuccessfullyUnhidden) {
+            getActivity().runOnUiThread(() -> {
+                resultsAdapter.insert(autoCompleteVisibilityItem, positionToUpdateVisibility);
+                resultsAdapter.notifyDataSetChanged();
+                Toast.makeText(getContext(), R.string.result_restored, Toast.LENGTH_LONG).show();
+            });
+        } else {
+            getActivity().runOnUiThread(() ->
+                    Toast.makeText(getContext(), R.string.result_restore_failed, Toast.LENGTH_LONG).show());
+        }
+    }
+
+    @NotNull
+    @Override
+    public Observable<Pair<Trip, Trip>> getHideAutoCompleteVisibilityClick() {
+        return _hideAutoCompleteVisibilityClicks;
+    }
+
+    @NotNull
+    @Override
+    public Observable<Pair<Trip, Trip>> getUnHideAutoCompleteVisibilityClick() {
+        return _unHideAutoCompleteVisibilityClicks;
+    }
 }

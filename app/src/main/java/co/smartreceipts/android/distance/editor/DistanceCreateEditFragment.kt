@@ -93,6 +93,10 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
 
     private lateinit var paymentMethodsAdapter: FooterButtonArrayAdapter<PaymentMethod>
 
+    private var autoCompleteVisibilityItem: AutoCompleteResult<Distance>? = null
+    private var positionToUpdateVisibility: Int = 0
+    private lateinit var autoCompleteType: AutoCompleteType
+
     override val createDistanceClicks: Observable<Distance>
         get() = _createDistanceClicks
 
@@ -102,10 +106,19 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
     override val deleteDistanceClicks: Observable<Distance>
         get() = _deleteDistanceClicks
 
+    override val hideAutoCompleteVisibilityClick: Observable<Pair<Distance, Distance>>
+        get() =_hideAutoCompleteVisibilityClicks
+
+    override val unHideAutoCompleteVisibilityClick: Observable<Pair<Distance, Distance>>
+        get() =_unHideAutoCompleteVisibilityClicks
+
     private val _createDistanceClicks: Subject<Distance> = PublishSubject.create<Distance>().toSerialized()
     private val _updateDistanceClicks: Subject<Distance> = PublishSubject.create<Distance>().toSerialized()
     private val _deleteDistanceClicks: Subject<Distance> = PublishSubject.create<Distance>().toSerialized()
-
+    private val _hideAutoCompleteVisibilityClicks: Subject<Pair<Distance, Distance>> =
+            PublishSubject.create<Pair<Distance, Distance>>().toSerialized()
+    private val _unHideAutoCompleteVisibilityClicks: Subject<Pair<Distance, Distance>> =
+            PublishSubject.create<Pair<Distance, Distance>>().toSerialized()
 
     override fun onAttach(context: Context?) {
         AndroidSupportInjection.inject(this)
@@ -376,52 +389,94 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
     }
 
     override fun onClick(removeAutoCompleteResult: Boolean, position: Int) {
-        val selectedItem = resultsAdapter.getItem(position)
-        if (selectedItem != null) {
+        positionToUpdateVisibility = position
+        autoCompleteVisibilityItem = resultsAdapter.getItem(position)
+        if (autoCompleteVisibilityItem != null) {
             if (!removeAutoCompleteResult) {
                 shouldHideResults = true
                 if (text_distance_location.isPopupShowing) {
-                    text_distance_location.setText(selectedItem.displayName)
+                    text_distance_location.setText(autoCompleteVisibilityItem!!.displayName)
                     text_distance_location.setSelection(text_distance_location.text.length)
                     text_distance_location.dismissDropDown()
                 } else {
-                    text_distance_comment.setText(selectedItem.displayName)
+                    text_distance_comment.setText(autoCompleteVisibilityItem!!.displayName)
                     text_distance_comment.setSelection(text_distance_comment.text.length)
                     text_distance_comment.dismissDropDown()
                 }
                 SoftKeyboardManager.hideKeyboard(focusedView)
             } else {
                 SoftKeyboardManager.hideKeyboard(focusedView)
-                val firstDistance = selectedItem.firstItem
+                val oldDistance = autoCompleteVisibilityItem!!.firstItem
+                val newDistance: Distance
 
-                val autoCompleteType: AutoCompleteType = when(text_distance_location.isPopupShowing) {
-                    true -> AutoCompleteType.Location
-                    false -> AutoCompleteType.Comment
+                when(text_distance_location.isPopupShowing) {
+                    true -> {
+                        autoCompleteType = AutoCompleteType.Location
+                        newDistance = DistanceBuilderFactory(oldDistance)
+                                .setLocationHiddenFromAutoComplete(true)
+                                .build()
+                    }
+                    false -> {
+                        autoCompleteType = AutoCompleteType.Comment
+                        newDistance = DistanceBuilderFactory(oldDistance)
+                                .setCommentHiddenFromAutoComplete(true)
+                                .build()
+                    }
                 }
 
-                presenter.updateDistanceAutoCompleteVisibility(firstDistance, true, autoCompleteType)
-                        ?.subscribe({
-                            activity!!.runOnUiThread {
-                                resultsAdapter.remove(selectedItem)
-                                resultsAdapter.notifyDataSetChanged()
-                                showUndoSnackbar(selectedItem, position, autoCompleteType)
-                            }
-                        }, { activity!!.runOnUiThread { Toast.makeText(activity, R.string.delete_failed, Toast.LENGTH_LONG).show()}})
+                _hideAutoCompleteVisibilityClicks.onNext(Pair(oldDistance, newDistance))
             }
         }
     }
 
-    override fun showUndoSnackbar(result: AutoCompleteResult<Distance>, position: Int, autoCompleteType: AutoCompleteType) {
+    override fun hideAutoCompleteValue(wasSuccessfullyHidden: Boolean) {
+        if (wasSuccessfullyHidden) {
+            activity!!.runOnUiThread {
+                resultsAdapter.remove(autoCompleteVisibilityItem)
+                resultsAdapter.notifyDataSetChanged()
+                showUndoSnackbar(autoCompleteVisibilityItem, autoCompleteType)
+            }
+        } else {
+            activity!!.runOnUiThread {
+                Toast.makeText(activity, R.string.delete_failed, Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun showUndoSnackbar(result: AutoCompleteResult<Distance>?, autoCompleteType: AutoCompleteType) {
         val view = activity!!.findViewById<ConstraintLayout>(R.id.update_distance_layout)
         snackbar = Snackbar.make(view, getString(
-                R.string.item_removed_from_auto_complete, result.displayName), Snackbar.LENGTH_LONG)
-        snackbar.setAction(R.string.undo) { presenter.updateDistanceAutoCompleteVisibility(result.firstItem, false, autoCompleteType)
-                ?.subscribe({activity!!.runOnUiThread {
-                    resultsAdapter.insert(result, position)
-                    resultsAdapter.notifyDataSetChanged()
-                    Toast.makeText(context, R.string.result_restored, Toast.LENGTH_LONG).show()
-                }}, {activity!!.runOnUiThread { Toast.makeText(activity, R.string.result_restore_failed, Toast.LENGTH_LONG).show() }}) }
+                R.string.item_removed_from_auto_complete, result!!.displayName), Snackbar.LENGTH_LONG)
+        snackbar.setAction(R.string.undo) {
+
+            val updatedDistance: Distance = when (autoCompleteType) {
+                AutoCompleteType.Location -> DistanceBuilderFactory(result.firstItem)
+                        .setLocationHiddenFromAutoComplete(false)
+                        .build()
+                AutoCompleteType.Comment -> DistanceBuilderFactory(result.firstItem)
+                        .setCommentHiddenFromAutoComplete(false)
+                        .build()
+                else -> DistanceBuilderFactory(result.firstItem)
+                        .build()
+            }
+
+            _unHideAutoCompleteVisibilityClicks.onNext(Pair(result.firstItem, updatedDistance))
+        }
         snackbar.show()
+    }
+
+    override fun unHideAutoCompleteValue(wasSuccessfullyUnhidden: Boolean) {
+        if (wasSuccessfullyUnhidden) {
+            activity!!.runOnUiThread {
+                resultsAdapter.insert(autoCompleteVisibilityItem, positionToUpdateVisibility)
+                resultsAdapter.notifyDataSetChanged()
+                Toast.makeText(context, R.string.result_restored, Toast.LENGTH_LONG).show()
+            }
+        } else {
+            activity!!.runOnUiThread {
+                Toast.makeText(activity, R.string.result_restore_failed, Toast.LENGTH_LONG).show()
+            }
+        }
     }
 
     companion object {

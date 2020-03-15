@@ -48,6 +48,24 @@ class DistanceCreateEditPresenter @Inject constructor(
             .distinctUntilChanged()
             .doOnNext { interactor.deleteDistance(it) }
             .subscribe { view.present(UiIndicator.success()) })
+
+        compositeDisposable.add(view.hideAutoCompleteVisibilityClick
+                .flatMap { t ->
+                    interactor.updateDistance(t.first, t.second)
+                }
+                .subscribe {
+                    view.hideAutoCompleteValue(it.isPresent)
+                }
+        )
+
+        compositeDisposable.add(view.unHideAutoCompleteVisibilityClick
+                .flatMap { t ->
+                    interactor.updateDistance(t.first, t.second)
+                }
+                .subscribe {
+                    view.unHideAutoCompleteValue(it.isPresent)
+                }
+        )
     }
 
     override fun unsubscribe() {

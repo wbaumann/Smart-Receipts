@@ -91,7 +91,7 @@ class AutoCompleteInteractorTest {
         whenever(resultsChecker.getValue(autoCompleteField, matchingResult2)).thenReturn("Test2")
         interactor.getAutoCompleteResults(autoCompleteField, "T")
                 .test()
-                .assertValues(listOf(AutoCompleteResult("Test", matchingResult1), AutoCompleteResult("Test2", matchingResult2)))
+                .assertValues(arrayListOf(AutoCompleteResult("Test", matchingResult1), AutoCompleteResult("Test2", matchingResult2)))
                 .assertNoErrors()
                 .assertComplete()
     }
@@ -102,7 +102,7 @@ class AutoCompleteInteractorTest {
         whenever(resultsChecker.getValue(autoCompleteField, matchingResult2)).thenReturn("Test")
         interactor.getAutoCompleteResults(autoCompleteField, "T")
                 .test()
-                .assertValues(listOf(AutoCompleteResult("Test", matchingResult1, mutableListOf(matchingResult2))))
+                .assertValues(arrayListOf(AutoCompleteResult("Test", matchingResult1, mutableListOf(matchingResult2))))
                 .assertNoErrors()
                 .assertComplete()
     }

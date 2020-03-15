@@ -1,7 +1,6 @@
 package co.smartreceipts.android.autocomplete
 
 import androidx.annotation.UiThread
-import co.smartreceipts.android.model.AutoCompleteType
 import io.reactivex.Observable
 
 

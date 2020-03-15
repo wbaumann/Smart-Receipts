@@ -27,7 +27,7 @@ interface AutoCompleteView<Type> {
      * @param results a [List] of [AutoCompleteResult] of [Type]
      */
     @UiThread
-    fun displayAutoCompleteResults(field: AutoCompleteField, results: List<AutoCompleteResult<Type>>)
+    fun displayAutoCompleteResults(field: AutoCompleteField, results: ArrayList<AutoCompleteResult<Type>>)
 
     fun showUndoSnackbar(result: AutoCompleteResult<Type>, position: Int, autoCompleteType: AutoCompleteType)
 }

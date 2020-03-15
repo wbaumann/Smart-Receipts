@@ -33,6 +33,8 @@ class DistanceCreateEditPresenterTest {
         whenever(view.createDistanceClicks).thenReturn(Observable.never())
         whenever(view.deleteDistanceClicks).thenReturn(Observable.never())
         whenever(view.updateDistanceClicks).thenReturn(Observable.never())
+        whenever(view.hideAutoCompleteVisibilityClick).thenReturn(Observable.never())
+        whenever(view.unHideAutoCompleteVisibilityClick).thenReturn(Observable.never())
         whenever(view.editableItem).thenReturn((distance))
 
         doNothing().whenever(interactor).deleteDistance(distance)

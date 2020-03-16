@@ -435,10 +435,23 @@ public class EmailAssistant {
 
                     if (!filterOutReceipt(mPreferenceManager, receipt)) {
                         if (receipt.hasImage()) {
+
+                            final List<Column<Receipt>> csvColumns = mDB.getCSVTable().get().blockingGet();
+
+                            StringBuilder userCommentBuilder = new StringBuilder();
+
+                            for (Column<Receipt> col : csvColumns) {
+                                userCommentBuilder.append(reportResourcesManager.getFlexString(col.getHeaderStringResId()));
+                                userCommentBuilder.append(": ");
+                                userCommentBuilder.append(col.getValue(receipt));
+                                userCommentBuilder.append("\n");
+                            }
+                            String userComment = userCommentBuilder.toString();
+
                             try {
                                 Bitmap b = stampImage(trip, receipt, Bitmap.Config.ARGB_8888);
                                 if (b != null) {
-                                    mStorageManager.writeBitmap(dir, b, receipt.getFile().getName(), CompressFormat.JPEG, 85);
+                                    mStorageManager.writeBitmap(dir, b, receipt.getFile().getName(), CompressFormat.JPEG, 85, userComment);
                                     b.recycle();
                                     b = null;
                                 }
@@ -448,7 +461,7 @@ public class EmailAssistant {
                                 try {
                                     Bitmap b = stampImage(trip, receipt, Bitmap.Config.RGB_565);
                                     if (b != null) {
-                                        mStorageManager.writeBitmap(dir, b, receipt.getFile().getName(), CompressFormat.JPEG, 85);
+                                        mStorageManager.writeBitmap(dir, b, receipt.getFile().getName(), CompressFormat.JPEG, 85, userComment);
                                         b.recycle();
                                     }
                                 } catch (OutOfMemoryError e2) {

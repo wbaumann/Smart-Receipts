@@ -332,8 +332,6 @@ public class EmailAssistant {
                     final CsvTableGenerator<Receipt> csvTableGenerator = new CsvTableGenerator<>(reportResourcesManager,
                             csvColumns, true, true, new LegacyReceiptFilter(mPreferenceManager));
 
-                    String data;
-
                     final List<Distance> distances = new ArrayList<>(mDB.getDistanceTable().getBlocking(trip, false));
                     final List<Receipt> receiptsTableList = new ArrayList<>(receipts);
 
@@ -343,7 +341,7 @@ public class EmailAssistant {
                         Collections.sort(receiptsTableList, new ReceiptDateComparator());
                     }
 
-                    data = csvTableGenerator.generate(receiptsTableList);
+                    String data = csvTableGenerator.generate(receiptsTableList);
 
                     // Distance table
                     if (mPreferenceManager.get(UserPreference.Distance.PrintDistanceTableInReports)) {
@@ -508,7 +506,7 @@ public class EmailAssistant {
                     foreHeight = (int) (foreWidth / HW_RATIO);
                 }
 
-                // Set up the paddings
+                // Set up the padding
                 int xPad = (int) (foreWidth / IMG_SCALE_FACTOR);
                 int yPad = (int) (foreHeight / IMG_SCALE_FACTOR);
 
@@ -548,7 +546,6 @@ public class EmailAssistant {
                 canvas.drawText(trip.getName(), xPad / 2, y, brush);
                 y += spacing;
                 canvas.drawText(dateFormatter.getFormattedDate(trip.getStartDisplayableDate()) + " -- " + dateFormatter.getFormattedDate(trip.getEndDisplayableDate()), xPad / 2, y, brush);
-                y += spacing;
                 y = background.getHeight() - yPad / 2 + spacing * 2;
                 canvas.drawText(reportResourcesManager.getFlexString(R.string.RECEIPTMENU_FIELD_NAME) + ": " + receipt.getName(), xPad / 2, y, brush);
                 y += spacing;
@@ -574,7 +571,6 @@ public class EmailAssistant {
                 }
                 if (receipt.hasExtraEditText3()) {
                     canvas.drawText(reportResourcesManager.getFlexString(R.string.RECEIPTMENU_FIELD_EXTRA_EDITTEXT_3) + ": " + receipt.getExtraEditText3(), xPad / 2, y, brush);
-                    y += spacing;
                 }
 
                 // Clear out the dead data here

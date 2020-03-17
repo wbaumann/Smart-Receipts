@@ -1,7 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -26,7 +25,6 @@ android {
     }
     buildToolsVersion = rootProject.ext.buildToolsVersion
 
-
     flavorDimensions "isFloss"
     productFlavors {
         floss {
@@ -41,21 +39,7 @@ android {
 }
 
 dependencies {
+    implementation project(':core')
 
-    // Dagger
-    api "com.google.dagger:dagger-android-support:$DAGGER_VERSION"
-    api "com.google.dagger:dagger:$DAGGER_VERSION"
-    kapt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
-    kapt "com.google.dagger:dagger-android-processor:$DAGGER_VERSION"
-
-    api "com.google.guava:guava:$GUAVA_VERSION"
-
-    // Logger
-    api "org.slf4j:slf4j-api:$SLF4J_VERSION"
-
-    notFlossImplementation "com.google.firebase:firebase-core:$FIREBASE_CORE_VERSION"
-
-    // Crashlytics
-    notFlossImplementation "com.crashlytics.sdk.android:crashlytics:$CRASHLYTICS_VERSION"
-
+    notFlossImplementation "com.google.android.gms:play-services-oss-licenses:$GOOGLE_OSS_VERSION"
 }

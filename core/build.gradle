@@ -43,16 +43,12 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     api project(':analytics')
 
     // Dagger
     kapt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
     kapt "com.google.dagger:dagger-android-processor:$DAGGER_VERSION"
-
-    api "com.google.guava:guava:$GUAVA_VERSION"
 
     //Rx2
     api "io.reactivex.rxjava2:rxjava:$RX2_JAVA_VERSION"
@@ -66,7 +62,4 @@ dependencies {
     testImplementation "androidx.test:core:$ANDROID_TEST_RUNNER_VERSION"
 
     implementation "com.google.http-client:google-http-client-gson:$GOOGLE_HTTP_CLIENT_VERSION"
-
-    // Logger
-    api "org.slf4j:slf4j-api:$SLF4J_VERSION"
 }

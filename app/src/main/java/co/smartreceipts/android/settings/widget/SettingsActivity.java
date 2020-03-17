@@ -45,7 +45,6 @@ import co.smartreceipts.android.currency.widget.CurrencyListEditorPresenter;
 import co.smartreceipts.android.currency.widget.CurrencyListEditorView;
 import co.smartreceipts.android.date.DateFormatter;
 import co.smartreceipts.android.date.DisplayableDate;
-import co.smartreceipts.android.licenses.LicensesNavigator;
 import co.smartreceipts.android.persistence.DatabaseHelper;
 import co.smartreceipts.android.purchases.PurchaseEventsListener;
 import co.smartreceipts.android.purchases.PurchaseManager;
@@ -57,6 +56,7 @@ import co.smartreceipts.android.settings.UserPreferenceManager;
 import co.smartreceipts.android.settings.catalog.UserPreference;
 import co.smartreceipts.android.utils.IntentUtils;
 import co.smartreceipts.android.workers.EmailAssistant;
+import co.smartreceipts.oss_licenses.LicensesNavigator;
 import dagger.android.AndroidInjection;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -477,7 +477,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.smartreceipts.co/privacy")));
             return true;
         } else if (key.equals(getString(R.string.pref_about_oss_key))) {
-            final Intent licensesActivityIntent = licensesNavigator.getLicensesActivityIntent(this);
+            final Intent licensesActivityIntent = licensesNavigator.getLicensesActivityIntent(this, R.string.pref_about_oss_title);
             if (licensesActivityIntent != null) {
                 startActivity(licensesActivityIntent);
             }

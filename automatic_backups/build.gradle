@@ -43,6 +43,8 @@ dependencies {
     implementation project(':core')
     implementation project(':wbMiniLibrary')
 
+    implementation "com.hadisatrio:Optional:$OPTIONAL_VERSION"
+
     notFlossImplementation "com.google.android.gms:play-services-auth:$DRIVE_API_VERSION"
     notFlossImplementation("com.google.apis:google-api-services-drive:$GOOGLE_API_SERVICES_VERSION") {
         exclude group: 'org.apache.httpcomponents'
@@ -53,10 +55,6 @@ dependencies {
     }
 
     notFlossImplementation "com.google.http-client:google-http-client-gson:$GOOGLE_HTTP_CLIENT_VERSION"
-
-    implementation "com.hadisatrio:Optional:$OPTIONAL_VERSION"
-
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // Unit Tests
     testImplementation "org.robolectric:robolectric:$ROBOLECTRIC_VERSION"

@@ -10,11 +10,11 @@
 ##### Our ProGuard configurations #####
 
 # Checkers for floss flavor
--whyareyoukeeping class com.amazonaws.*
--whyareyoukeeping class com.google.firebase.*
--whyareyoukeeping class com.crashlytics.*
--whyareyoukeeping class com.google.api.services.drive.*
--whyareyoukeeping class com.google.android.gms.**
+#-whyareyoukeeping class com.amazonaws.*
+#-whyareyoukeeping class com.google.firebase.*
+#-whyareyoukeeping class com.crashlytics.*
+#-whyareyoukeeping class com.google.api.services.drive.*
+#-whyareyoukeeping class com.google.android.gms.**
 
 
 # Preserve the line number information for debugging stack traces.

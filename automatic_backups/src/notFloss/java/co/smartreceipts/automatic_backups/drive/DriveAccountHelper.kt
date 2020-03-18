@@ -73,7 +73,6 @@ class DriveAccountHelper @Inject constructor() {
         scopes.add(DriveScopes.DRIVE_FILE)
         scopes.add(DriveScopes.DRIVE_APPDATA)
         // Use the authenticated account to sign in to the Drive service.
-        // Use the authenticated account to sign in to the Drive service.
         val credential: GoogleAccountCredential = GoogleAccountCredential.usingOAuth2(context, scopes)
         credential.selectedAccount = signInAccount.account
 

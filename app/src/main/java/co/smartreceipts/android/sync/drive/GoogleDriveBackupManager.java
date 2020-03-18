@@ -79,13 +79,13 @@ public class GoogleDriveBackupManager implements BackupProvider {
     @Inject
     public GoogleDriveBackupManager(@NonNull Context context,
                                     @NonNull DatabaseHelper databaseHelper,
-                                    @NonNull GoogleDriveTableManager googleDriveTableManager, // app, no google dep
+                                    @NonNull GoogleDriveTableManager googleDriveTableManager,
                                     @NonNull NetworkManager networkManager,
                                     @NonNull Analytics analytics,
                                     @NonNull ReceiptTableController receiptTableController,
                                     @NonNull DatabaseRestorer databaseRestorer,
                                     @NonNull NoOpBackupProvider noOpBackupProvider,
-                                    @NonNull DriveAccountHelper driveAccountHelper) { // module
+                                    @NonNull DriveAccountHelper driveAccountHelper) {
 
         this.context = context;
         this.databaseHelper = databaseHelper;
@@ -96,13 +96,11 @@ public class GoogleDriveBackupManager implements BackupProvider {
         this.googleDriveTableManager = googleDriveTableManager;
         this.noOpBackupProvider = noOpBackupProvider;
         this.googleDriveSyncMetadata = new GoogleDriveSyncMetadata(context);
-
         this.driveAccountHelper = driveAccountHelper;
     }
 
     @Override
     public void initialize(@NonNull FragmentActivity activity) {
-
         intentsCompositeDisposable.add(driveAccountHelper.getSignInIntentsSubject()
                 .subscribe(intent -> activity.startActivityForResult(intent, REQUEST_CODE_GOOGLE_SERVICE_AUTH)));
         intentsCompositeDisposable.add(driveAccountHelper.getErrorIntentsSubject()

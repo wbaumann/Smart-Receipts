@@ -21,14 +21,17 @@ class DriveDownloader(private val driveStreamsManager: DriveStreamsManager) {
 
                 for (file: DriveFile in fileList.files) {
                     val filename = file.id + "__" + file.originalFilename
-                    javaFileList.add(driveStreamsManager.download(file.id, File(downloadLocation, filename)).blockingGet())
+                    val optionalFile = driveStreamsManager.download(file.id, File(downloadLocation, filename)).blockingGet()
+                    if (optionalFile.isPresent) {
+                        javaFileList.add(optionalFile.get())
+                    }
                 }
 
                 Single.just(javaFileList)
             }
     }
 
-    fun downloadTmpDatabaseFile(remoteBackupMetadata: RemoteBackupMetadata, downloadLocation: File): Single<File> {
+    fun downloadTmpDatabaseFile(remoteBackupMetadata: RemoteBackupMetadata, downloadLocation: File): Single<Optional<File>> {
         Logger.debug(this, "Fetching receipts database in drive for this folder")
 
         return driveStreamsManager.getFilesInFolder(remoteBackupMetadata.id.id, DatabaseConstants.DATABASE_NAME)
@@ -41,6 +44,5 @@ class DriveDownloader(private val driveStreamsManager: DriveStreamsManager) {
 
     fun downloadFile(fileId: String, downloadLocationFile: File): Single<Optional<File>> {
         return driveStreamsManager.download(fileId, downloadLocationFile)
-            .map { Optional.of(it) }
     }
 }

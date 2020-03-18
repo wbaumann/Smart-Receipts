@@ -13,10 +13,7 @@ import com.hadisatrio.optional.Optional;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import co.smartreceipts.analytics.log.Logger;
@@ -25,6 +22,7 @@ import co.smartreceipts.android.persistence.database.restore.DatabaseRestorer;
 import co.smartreceipts.android.persistence.database.tables.AbstractSqlTable;
 import co.smartreceipts.android.persistence.database.tables.ReceiptsTable;
 import co.smartreceipts.android.persistence.database.tables.TripsTable;
+import co.smartreceipts.android.sync.errors.MissingFilesException;
 import co.smartreceipts.automatic_backups.drive.managers.DriveDatabaseManager;
 import co.smartreceipts.automatic_backups.drive.managers.DriveDownloader;
 import co.smartreceipts.core.persistence.DatabaseConstants;
@@ -103,7 +101,7 @@ public class DriveRestoreDataManager {
                 .flatMapSingle(ignored -> driveDownloader.downloadTmpDatabaseFile(remoteBackupMetadata, downloadLocation))
                 .flatMapObservable(file -> {
                     Logger.debug(DriveRestoreDataManager.this, "Retrieving partial receipts from our temporary drive database");
-                    return getPartialReceipts(file);
+                    return getPartialReceipts(file.get());
                 })
                 .flatMapSingle(partialReceipt -> {
                     Logger.debug(DriveRestoreDataManager.this, "Creating trip folder for partial receipt: {}", partialReceipt.parentTripName);
@@ -120,8 +118,6 @@ public class DriveRestoreDataManager {
                 })
                 .flatMapSingle(partialReceipt -> {
                     Logger.debug(DriveRestoreDataManager.this, "Downloading file for partial receipt: {}", partialReceipt.driveId);
-                    todo
-                    /*
                     Single<Optional<java.io.File>> singleOptional = downloadFileForReceipt(partialReceipt, downloadLocation);
                     Optional<java.io.File> optionalFile = singleOptional.blockingGet();
                     if (!optionalFile.isPresent()) {
@@ -131,8 +127,6 @@ public class DriveRestoreDataManager {
                         }
                     }
                     return singleOptional;
-                    */
-                    return downloadFileForReceipt(partialReceipt, downloadLocation);
                 })
                 .filter(Optional::isPresent)
                 .map(Optional::get)

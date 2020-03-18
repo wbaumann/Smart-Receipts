@@ -13,7 +13,7 @@ class DriveDownloader(private val driveStreamsManager: DriveStreamsManager) {
 
     fun downloadAllFilesInDriveFolder(remoteBackupMetadata: RemoteBackupMetadata, downloadLocation: File): Single<List<File?>?> = Single.never()
 
-    fun downloadTmpDatabaseFile(remoteBackupMetadata: RemoteBackupMetadata, downloadLocation: File): Single<File> = Single.never()
+    fun downloadTmpDatabaseFile(remoteBackupMetadata: RemoteBackupMetadata, downloadLocation: File): Single<Optional<File>> = Single.never()
 
     fun downloadFile(fileId: String, downloadLocationFile: File): Single<Optional<File>> = Single.never()
 }

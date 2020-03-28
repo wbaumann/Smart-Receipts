@@ -113,7 +113,6 @@ import co.smartreceipts.android.widget.tooltip.report.backup.data.BackupReminder
 import dagger.android.support.AndroidSupportInjection;
 import io.reactivex.Observable;
 import io.reactivex.Scheduler;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
@@ -562,6 +561,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
         currencyExchangeRateEditorPresenter.subscribe();
         receiptsEditorToolbarPresenter.subscribe();
         paymentMethodsPresenter.subscribe();
+        presenter.subscribe();
 
         // Attempt to update our lists in case they were changed in the background
         categoriesTableController.get();
@@ -582,21 +582,6 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
         if (focusedView != null) {
             focusedView.requestFocus(); // Make sure we're focused on the right view
         }
-
-        compositeDisposable = new CompositeDisposable();
-        compositeDisposable.add(getHideAutoCompleteVisibilityClick()
-                .flatMap(receiptReceiptPair ->
-                        presenter.updateReceipt(receiptReceiptPair.getFirst(), receiptReceiptPair.getSecond()))
-                .subscribe(receiptOptional ->
-                        hideAutoCompleteValue(receiptOptional.isPresent())
-                ));
-
-        compositeDisposable.add(getUnHideAutoCompleteVisibilityClick()
-                .flatMap(receiptReceiptPair ->
-                        presenter.updateReceipt(receiptReceiptPair.getFirst(), receiptReceiptPair.getSecond()))
-                .subscribe(receiptOptional ->
-                        unHideAutoCompleteValue(receiptOptional.isPresent())
-                ));
     }
 
     @Override
@@ -632,8 +617,6 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
         // Dismiss the soft keyboard
         SoftKeyboardManager.hideKeyboard(focusedView);
 
-        compositeDisposable.clear();
-
         super.onPause();
     }
 
@@ -656,6 +639,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
         currencyExchangeRateEditorPresenter.unsubscribe();
         autoCompletePresenter.unsubscribe();
         samsungDecimalInputPresenter.unsubscribe();
+        presenter.unsubscribe();
         if (snackbar != null && snackbar.isShown()) {
             snackbar.dismiss();
         }
@@ -1070,7 +1054,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
         }
     }
 
-    public void showUndoSnackbar(AutoCompleteResult<Receipt> result, @NotNull AutoCompleteType autoCompleteType) {
+    private void showUndoSnackbar(AutoCompleteResult<Receipt> result, @NotNull AutoCompleteType autoCompleteType) {
         View view = getActivity().findViewById(R.id.update_receipt_layout);
         snackbar = Snackbar.make(view, getString(
                 R.string.item_removed_from_auto_complete, result.getDisplayName()), Snackbar.LENGTH_LONG);

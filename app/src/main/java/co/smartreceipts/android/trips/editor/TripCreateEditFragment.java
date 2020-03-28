@@ -72,7 +72,6 @@ import co.smartreceipts.analytics.log.Logger;
 import co.smartreceipts.android.widget.tooltip.Tooltip;
 import dagger.android.support.AndroidSupportInjection;
 import io.reactivex.Observable;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
@@ -265,6 +264,7 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
         currencyListEditorPresenter.subscribe();
         tripDatesPresenter.subscribe();
         tooltipPresenter.subscribe();
+        presenter.subscribe();
     }
 
     @Override
@@ -283,29 +283,12 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
         if (focusedView != null) {
             focusedView.requestFocus(); // Make sure we're focused on the right view
         }
-
-        compositeDisposable = new CompositeDisposable();
-        compositeDisposable.add(getHideAutoCompleteVisibilityClick()
-                .flatMap(tripTripPair ->
-                        presenter.updateTrip(tripTripPair.getFirst(), tripTripPair.getSecond()))
-                .subscribe(tripOptional ->
-                    hideAutoCompleteValue(tripOptional.isPresent())
-                ));
-
-        compositeDisposable.add(getUnHideAutoCompleteVisibilityClick()
-                .flatMap(tripTripPair ->
-                        presenter.updateTrip(tripTripPair.getFirst(), tripTripPair.getSecond()))
-                .subscribe(tripOptional ->
-                        unHideAutoCompleteValue(tripOptional.isPresent())
-                ));
     }
 
     @Override
     public void onPause() {
         // Dismiss the soft keyboard
         SoftKeyboardManager.hideKeyboard(focusedView);
-
-        compositeDisposable.clear();
 
         super.onPause();
     }
@@ -316,6 +299,7 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
         tripAutoCompletePresenter.unsubscribe();
         currencyListEditorPresenter.unsubscribe();
         tripDatesPresenter.unsubscribe();
+        presenter.unsubscribe();
         if (snackbar != null && snackbar.isShown()) {
             snackbar.dismiss();
         }
@@ -636,7 +620,7 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
         }
     }
 
-    public void showUndoSnackbar(AutoCompleteResult<Trip> result, @NotNull final AutoCompleteType autoCompleteType) {
+    private void showUndoSnackbar(AutoCompleteResult<Trip> result, @NotNull final AutoCompleteType autoCompleteType) {
         View view = getActivity().findViewById(R.id.update_trip_layout);
         snackbar = Snackbar.make(view, getString(
                 R.string.item_removed_from_auto_complete, result.getDisplayName()), Snackbar.LENGTH_LONG);

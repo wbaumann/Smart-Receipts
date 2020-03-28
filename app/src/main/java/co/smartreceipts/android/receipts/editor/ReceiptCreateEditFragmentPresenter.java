@@ -25,6 +25,7 @@ import co.smartreceipts.android.settings.UserPreferenceManager;
 import co.smartreceipts.android.settings.catalog.UserPreference;
 import co.smartreceipts.analytics.log.Logger;
 import io.reactivex.Observable;
+import io.reactivex.disposables.CompositeDisposable;
 
 @FragmentScope
 public class ReceiptCreateEditFragmentPresenter {
@@ -42,8 +43,31 @@ public class ReceiptCreateEditFragmentPresenter {
     @Inject
     OrderingPreferencesManager orderingPreferencesManager;
 
+    private CompositeDisposable compositeDisposable;
+
     @Inject
     ReceiptCreateEditFragmentPresenter() {
+        compositeDisposable = new CompositeDisposable();
+    }
+
+    public void subscribe() {
+        compositeDisposable.add(fragment.getHideAutoCompleteVisibilityClick()
+                .flatMap(receiptReceiptPair ->
+                        updateReceipt(receiptReceiptPair.getFrom(), receiptReceiptPair.getTo()))
+                .subscribe(receiptOptional ->
+                        fragment.hideAutoCompleteValue(receiptOptional.isPresent())
+                ));
+
+        compositeDisposable.add(fragment.getUnHideAutoCompleteVisibilityClick()
+                .flatMap(receiptReceiptPair ->
+                        updateReceipt(receiptReceiptPair.getFrom(), receiptReceiptPair.getTo()))
+                .subscribe(receiptOptional ->
+                        fragment.unHideAutoCompleteValue(receiptOptional.isPresent())
+                ));
+    }
+
+    public void unsubscribe() {
+        compositeDisposable.clear();
     }
 
     boolean isIncludeTaxField() {
@@ -170,7 +194,7 @@ public class ReceiptCreateEditFragmentPresenter {
         return false;
     }
 
-    Observable<Optional<Receipt>> updateReceipt(Receipt oldReceipt, Receipt newReceipt) {
+    private Observable<Optional<Receipt>> updateReceipt(Receipt oldReceipt, Receipt newReceipt) {
         return receiptTableController.update(oldReceipt, newReceipt, new DatabaseOperationMetadata());
     }
 

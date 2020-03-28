@@ -24,6 +24,7 @@ import co.smartreceipts.android.persistence.database.operations.DatabaseOperatio
 import co.smartreceipts.android.settings.catalog.UserPreference;
 import co.smartreceipts.android.utils.FileUtils;
 import io.reactivex.Observable;
+import io.reactivex.disposables.CompositeDisposable;
 
 @FragmentScope
 public class TripCreateEditFragmentPresenter {
@@ -32,6 +33,7 @@ public class TripCreateEditFragmentPresenter {
     private final Analytics analytics;
     private final TripTableController tripTableController;
     private final PersistenceManager persistenceManager;
+    private final CompositeDisposable compositeDisposable;
 
     @Inject
     public TripCreateEditFragmentPresenter(@NonNull TripCreateEditFragment fragment,
@@ -42,6 +44,27 @@ public class TripCreateEditFragmentPresenter {
         this.analytics = Preconditions.checkNotNull(analytics);
         this.tripTableController = Preconditions.checkNotNull(tripTableController);
         this.persistenceManager = Preconditions.checkNotNull(persistenceManager);
+        this.compositeDisposable = new CompositeDisposable();
+    }
+
+    public void subscribe() {
+        compositeDisposable.add(fragment.getHideAutoCompleteVisibilityClick()
+                .flatMap(tripTripPair ->
+                        updateTrip(tripTripPair.getFrom(), tripTripPair.getTo()))
+                .subscribe(tripOptional ->
+                        fragment.hideAutoCompleteValue(tripOptional.isPresent())
+                ));
+
+        compositeDisposable.add(fragment.getUnHideAutoCompleteVisibilityClick()
+                .flatMap(tripTripPair ->
+                        updateTrip(tripTripPair.getFrom(), tripTripPair.getTo()))
+                .subscribe(tripOptional ->
+                        fragment.unHideAutoCompleteValue(tripOptional.isPresent())
+                ));
+    }
+
+    public void unsubscribe() {
+        compositeDisposable.clear();
     }
 
     public boolean checkTrip(String name, String startDateText, Date startDate,
@@ -142,7 +165,7 @@ public class TripCreateEditFragmentPresenter {
         return persistenceManager.getPreferenceManager().get(UserPreference.General.DateSeparator);
     }
 
-    Observable<Optional<Trip>> updateTrip(Trip oldTrip, Trip newTrip) {
+    private Observable<Optional<Trip>> updateTrip(Trip oldTrip, Trip newTrip) {
         return tripTableController.update(oldTrip, newTrip, new DatabaseOperationMetadata());
     }
 }

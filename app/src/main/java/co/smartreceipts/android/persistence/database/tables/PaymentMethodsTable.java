@@ -93,7 +93,7 @@ public final class PaymentMethodsTable extends AbstractSqlTable<PaymentMethod> {
             onUpgradeToAddUUID(db, oldVersion);
         }
 
-        if (oldVersion <= 20) { // v19 => 20 added reimbursable column
+        if (oldVersion <= 21) { // v20 => 21 added reimbursable column
             final String alterPaymentMethods = "ALTER TABLE " + getTableName() + " ADD COLUMN " + COLUMN_REIMBURSABLE + " BOOLEAN DEFAULT 0";
             Logger.debug(this, alterPaymentMethods);
             db.execSQL(alterPaymentMethods);

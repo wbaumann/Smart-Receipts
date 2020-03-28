@@ -72,6 +72,7 @@ import co.smartreceipts.android.fragments.ReceiptInputCache;
 import co.smartreceipts.android.fragments.WBFragment;
 import co.smartreceipts.android.keyboard.decimal.SamsungDecimalInputPresenter;
 import co.smartreceipts.android.keyboard.decimal.SamsungDecimalInputView;
+import co.smartreceipts.android.model.AutoCompleteClickEvent;
 import co.smartreceipts.android.model.AutoCompleteType;
 import co.smartreceipts.android.model.Category;
 import co.smartreceipts.android.model.PaymentMethod;
@@ -116,7 +117,6 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
-import kotlin.Pair;
 import kotlin.Unit;
 import wb.android.flex.Flex;
 
@@ -276,12 +276,10 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     private AutoCompleteType autoCompleteType;
     private int positionToUpdateVisibility;
 
-    private Subject<Pair<Receipt, Receipt>> _hideAutoCompleteVisibilityClicks =
-            PublishSubject.<Pair<Receipt, Receipt>>create().toSerialized();
-    private Subject<Pair<Receipt, Receipt>> _unHideAutoCompleteVisibilityClicks =
-            PublishSubject.<Pair<Receipt, Receipt>>create().toSerialized();
-
-    private CompositeDisposable compositeDisposable;
+    private Subject<AutoCompleteClickEvent<Receipt>> _hideAutoCompleteVisibilityClicks =
+            PublishSubject.<AutoCompleteClickEvent<Receipt>>create().toSerialized();
+    private Subject<AutoCompleteClickEvent<Receipt>> _unHideAutoCompleteVisibilityClicks =
+            PublishSubject.<AutoCompleteClickEvent<Receipt>>create().toSerialized();
 
     @NonNull
     public static ReceiptCreateEditFragment newInstance() {
@@ -1027,7 +1025,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
                             .build();
                 }
 
-                _hideAutoCompleteVisibilityClicks.onNext(new Pair(oldReceipt, newReceipt));
+                _hideAutoCompleteVisibilityClicks.onNext(new AutoCompleteClickEvent(oldReceipt, newReceipt));
             }
         }
     }
@@ -1089,7 +1087,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
                         .build();
             }
 
-            _unHideAutoCompleteVisibilityClicks.onNext(new Pair(oldReceipt, newReceipt));
+            _unHideAutoCompleteVisibilityClicks.onNext(new AutoCompleteClickEvent(oldReceipt, newReceipt));
         });
         snackbar.show();
     }
@@ -1110,13 +1108,13 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
 
     @NotNull
     @Override
-    public Observable<Pair<Receipt, Receipt>> getHideAutoCompleteVisibilityClick() {
+    public Observable<AutoCompleteClickEvent<Receipt>> getHideAutoCompleteVisibilityClick() {
         return _hideAutoCompleteVisibilityClicks;
     }
 
     @NotNull
     @Override
-    public Observable<Pair<Receipt, Receipt>> getUnHideAutoCompleteVisibilityClick() {
+    public Observable<AutoCompleteClickEvent<Receipt>> getUnHideAutoCompleteVisibilityClick() {
         return _unHideAutoCompleteVisibilityClicks;
     }
 

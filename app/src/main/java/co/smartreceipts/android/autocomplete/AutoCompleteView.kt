@@ -1,6 +1,7 @@
 package co.smartreceipts.android.autocomplete
 
 import androidx.annotation.UiThread
+import co.smartreceipts.android.model.AutoCompleteClickEvent
 import io.reactivex.Observable
 
 
@@ -28,8 +29,8 @@ interface AutoCompleteView<Type> {
     @UiThread
     fun displayAutoCompleteResults(field: AutoCompleteField, results: ArrayList<AutoCompleteResult<Type>>)
 
-    val hideAutoCompleteVisibilityClick: Observable<Pair<Type, Type>>
-    val unHideAutoCompleteVisibilityClick: Observable<Pair<Type, Type>>
+    val hideAutoCompleteVisibilityClick: Observable<AutoCompleteClickEvent<Type>>
+    val unHideAutoCompleteVisibilityClick: Observable<AutoCompleteClickEvent<Type>>
 
     fun hideAutoCompleteValue(wasSuccessfullyHidden: Boolean)
     fun unHideAutoCompleteValue(wasSuccessfullyUnhidden: Boolean)

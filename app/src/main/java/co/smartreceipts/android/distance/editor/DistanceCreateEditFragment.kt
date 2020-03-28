@@ -25,10 +25,7 @@ import co.smartreceipts.android.currency.widget.DefaultCurrencyListEditorView
 import co.smartreceipts.android.date.DateFormatter
 import co.smartreceipts.android.distance.editor.currency.DistanceCurrencyCodeSupplier
 import co.smartreceipts.android.fragments.WBFragment
-import co.smartreceipts.android.model.AutoCompleteType
-import co.smartreceipts.android.model.Distance
-import co.smartreceipts.android.model.PaymentMethod
-import co.smartreceipts.android.model.Trip
+import co.smartreceipts.android.model.*
 import co.smartreceipts.android.model.factory.DistanceBuilderFactory
 import co.smartreceipts.android.model.utils.ModelUtils
 import co.smartreceipts.android.persistence.DatabaseHelper
@@ -106,19 +103,19 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
     override val deleteDistanceClicks: Observable<Distance>
         get() = _deleteDistanceClicks
 
-    override val hideAutoCompleteVisibilityClick: Observable<Pair<Distance, Distance>>
+    override val hideAutoCompleteVisibilityClick: Observable<AutoCompleteClickEvent<Distance>>
         get() =_hideAutoCompleteVisibilityClicks
 
-    override val unHideAutoCompleteVisibilityClick: Observable<Pair<Distance, Distance>>
+    override val unHideAutoCompleteVisibilityClick: Observable<AutoCompleteClickEvent<Distance>>
         get() =_unHideAutoCompleteVisibilityClicks
 
     private val _createDistanceClicks: Subject<Distance> = PublishSubject.create<Distance>().toSerialized()
     private val _updateDistanceClicks: Subject<Distance> = PublishSubject.create<Distance>().toSerialized()
     private val _deleteDistanceClicks: Subject<Distance> = PublishSubject.create<Distance>().toSerialized()
-    private val _hideAutoCompleteVisibilityClicks: Subject<Pair<Distance, Distance>> =
-            PublishSubject.create<Pair<Distance, Distance>>().toSerialized()
-    private val _unHideAutoCompleteVisibilityClicks: Subject<Pair<Distance, Distance>> =
-            PublishSubject.create<Pair<Distance, Distance>>().toSerialized()
+    private val _hideAutoCompleteVisibilityClicks: Subject<AutoCompleteClickEvent<Distance>> =
+            PublishSubject.create<AutoCompleteClickEvent<Distance>>().toSerialized()
+    private val _unHideAutoCompleteVisibilityClicks: Subject<AutoCompleteClickEvent<Distance>> =
+            PublishSubject.create<AutoCompleteClickEvent<Distance>>().toSerialized()
 
     override fun onAttach(context: Context?) {
         AndroidSupportInjection.inject(this)
@@ -424,7 +421,7 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
                     }
                 }
 
-                _hideAutoCompleteVisibilityClicks.onNext(Pair(oldDistance, newDistance))
+                _hideAutoCompleteVisibilityClicks.onNext(AutoCompleteClickEvent(oldDistance, newDistance))
             }
         }
     }
@@ -460,7 +457,7 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
                         .build()
             }
 
-            _unHideAutoCompleteVisibilityClicks.onNext(Pair(result.firstItem, updatedDistance))
+            _unHideAutoCompleteVisibilityClicks.onNext(AutoCompleteClickEvent(result.firstItem, updatedDistance))
         }
         snackbar.show()
     }

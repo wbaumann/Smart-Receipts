@@ -54,6 +54,7 @@ import co.smartreceipts.android.date.DateEditText;
 import co.smartreceipts.android.date.DateFormatter;
 import co.smartreceipts.android.editor.Editor;
 import co.smartreceipts.android.fragments.WBFragment;
+import co.smartreceipts.android.model.AutoCompleteClickEvent;
 import co.smartreceipts.android.model.AutoCompleteType;
 import co.smartreceipts.android.model.Trip;
 import co.smartreceipts.android.model.factory.TripBuilderFactory;
@@ -75,7 +76,6 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
-import kotlin.Pair;
 import wb.android.flex.Flex;
 
 public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
@@ -158,12 +158,10 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
     private AutoCompleteType autoCompleteType;
     private int positionToUpdateVisibility;
 
-    private Subject<Pair<Trip, Trip>> _hideAutoCompleteVisibilityClicks =
-            PublishSubject.<Pair<Trip, Trip>>create().toSerialized();
-    private Subject<Pair<Trip, Trip>> _unHideAutoCompleteVisibilityClicks =
-            PublishSubject.<Pair<Trip, Trip>>create().toSerialized();
-
-    private CompositeDisposable compositeDisposable;
+    private Subject<AutoCompleteClickEvent<Trip>> _hideAutoCompleteVisibilityClicks =
+            PublishSubject.<AutoCompleteClickEvent<Trip>>create().toSerialized();
+    private Subject<AutoCompleteClickEvent<Trip>> _unHideAutoCompleteVisibilityClicks =
+            PublishSubject.<AutoCompleteClickEvent<Trip>>create().toSerialized();
 
     public static TripCreateEditFragment newInstance() {
         return new TripCreateEditFragment();
@@ -619,7 +617,7 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
                             .build();
                 }
 
-                _hideAutoCompleteVisibilityClicks.onNext(new Pair(oldTrip, newTrip));
+                _hideAutoCompleteVisibilityClicks.onNext(new AutoCompleteClickEvent(oldTrip, newTrip));
             }
         }
     }
@@ -659,7 +657,7 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
                         .build();
             }
 
-            _unHideAutoCompleteVisibilityClicks.onNext(new Pair(oldTrip, newTrip));
+            _unHideAutoCompleteVisibilityClicks.onNext(new AutoCompleteClickEvent<>(oldTrip, newTrip));
         });
         snackbar.show();
     }
@@ -680,13 +678,13 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
 
     @NotNull
     @Override
-    public Observable<Pair<Trip, Trip>> getHideAutoCompleteVisibilityClick() {
+    public Observable<AutoCompleteClickEvent<Trip>> getHideAutoCompleteVisibilityClick() {
         return _hideAutoCompleteVisibilityClicks;
     }
 
     @NotNull
     @Override
-    public Observable<Pair<Trip, Trip>> getUnHideAutoCompleteVisibilityClick() {
+    public Observable<AutoCompleteClickEvent<Trip>> getUnHideAutoCompleteVisibilityClick() {
         return _unHideAutoCompleteVisibilityClicks;
     }
 }

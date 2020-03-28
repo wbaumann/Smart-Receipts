@@ -49,15 +49,15 @@ public class TripCreateEditFragmentPresenter {
 
     public void subscribe() {
         compositeDisposable.add(fragment.getHideAutoCompleteVisibilityClick()
-                .flatMap(tripTripPair ->
-                        updateTrip(tripTripPair.getFrom(), tripTripPair.getTo()))
+                .flatMap(autoCompleteClickEvent ->
+                        updateTrip(autoCompleteClickEvent.getFrom(), autoCompleteClickEvent.getTo()))
                 .subscribe(tripOptional ->
                         fragment.hideAutoCompleteValue(tripOptional.isPresent())
                 ));
 
         compositeDisposable.add(fragment.getUnHideAutoCompleteVisibilityClick()
-                .flatMap(tripTripPair ->
-                        updateTrip(tripTripPair.getFrom(), tripTripPair.getTo()))
+                .flatMap(autoCompleteClickEvent ->
+                        updateTrip(autoCompleteClickEvent.getFrom(), autoCompleteClickEvent.getTo()))
                 .subscribe(tripOptional ->
                         fragment.unHideAutoCompleteValue(tripOptional.isPresent())
                 ));

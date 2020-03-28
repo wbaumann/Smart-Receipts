@@ -52,15 +52,15 @@ public class ReceiptCreateEditFragmentPresenter {
 
     public void subscribe() {
         compositeDisposable.add(fragment.getHideAutoCompleteVisibilityClick()
-                .flatMap(receiptReceiptPair ->
-                        updateReceipt(receiptReceiptPair.getFrom(), receiptReceiptPair.getTo()))
+                .flatMap(autoCompleteClickEvent ->
+                        updateReceipt(autoCompleteClickEvent.getFrom(), autoCompleteClickEvent.getTo()))
                 .subscribe(receiptOptional ->
                         fragment.hideAutoCompleteValue(receiptOptional.isPresent())
                 ));
 
         compositeDisposable.add(fragment.getUnHideAutoCompleteVisibilityClick()
-                .flatMap(receiptReceiptPair ->
-                        updateReceipt(receiptReceiptPair.getFrom(), receiptReceiptPair.getTo()))
+                .flatMap(autoCompleteClickEvent ->
+                        updateReceipt(autoCompleteClickEvent.getFrom(), autoCompleteClickEvent.getTo()))
                 .subscribe(receiptOptional ->
                         fragment.unHideAutoCompleteValue(receiptOptional.isPresent())
                 ));

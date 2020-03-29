@@ -72,8 +72,7 @@ import co.smartreceipts.android.fragments.ReceiptInputCache;
 import co.smartreceipts.android.fragments.WBFragment;
 import co.smartreceipts.android.keyboard.decimal.SamsungDecimalInputPresenter;
 import co.smartreceipts.android.keyboard.decimal.SamsungDecimalInputView;
-import co.smartreceipts.android.model.AutoCompleteClickEvent;
-import co.smartreceipts.android.model.AutoCompleteType;
+import co.smartreceipts.android.model.AutoCompleteUpdateEvent;
 import co.smartreceipts.android.model.Category;
 import co.smartreceipts.android.model.PaymentMethod;
 import co.smartreceipts.android.model.Price;
@@ -272,13 +271,13 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     private Snackbar snackbar;
     private boolean shouldHideResults;
     private AutoCompleteResult<Receipt> autoCompleteVisibilityItem;
-    private AutoCompleteType autoCompleteType;
+    private AutoCompleteField autoCompleteField;
     private int positionToUpdateVisibility;
 
-    private Subject<AutoCompleteClickEvent<Receipt>> _hideAutoCompleteVisibilityClicks =
-            PublishSubject.<AutoCompleteClickEvent<Receipt>>create().toSerialized();
-    private Subject<AutoCompleteClickEvent<Receipt>> _unHideAutoCompleteVisibilityClicks =
-            PublishSubject.<AutoCompleteClickEvent<Receipt>>create().toSerialized();
+    private Subject<AutoCompleteUpdateEvent<Receipt>> _hideAutoCompleteVisibilityClicks =
+            PublishSubject.<AutoCompleteUpdateEvent<Receipt>>create().toSerialized();
+    private Subject<AutoCompleteUpdateEvent<Receipt>> _unHideAutoCompleteVisibilityClicks =
+            PublishSubject.<AutoCompleteUpdateEvent<Receipt>>create().toSerialized();
 
     @NonNull
     public static ReceiptCreateEditFragment newInstance() {
@@ -889,6 +888,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     @Override
     public void displayAutoCompleteResults(@NotNull AutoCompleteField field, @NotNull List<AutoCompleteResult<Receipt>> autoCompleteResults) {
         if (!shouldHideResults) {
+            autoCompleteField = field;
             resultsAdapter = new AutoCompleteArrayAdapter<>(requireContext(), autoCompleteResults, this);
             if (field == ReceiptAutoCompleteField.Name) {
                 nameBox.setAdapter(resultsAdapter);
@@ -1054,7 +1054,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
         }
     }
 
-    private void showUndoSnackbar(AutoCompleteResult<Receipt> result, @NotNull AutoCompleteType autoCompleteType) {
+    private void showUndoSnackbar(AutoCompleteResult<Receipt> result, @NotNull AutoCompleteField autoCompleteField) {
         View view = getActivity().findViewById(R.id.update_receipt_layout);
         snackbar = Snackbar.make(view, getString(
                 R.string.item_removed_from_auto_complete, result.getDisplayName()), Snackbar.LENGTH_LONG);
@@ -1092,13 +1092,13 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
 
     @NotNull
     @Override
-    public Observable<AutoCompleteClickEvent<Receipt>> getHideAutoCompleteVisibilityClick() {
+    public Observable<AutoCompleteUpdateEvent<Receipt>> getHideAutoCompleteVisibilityClick() {
         return _hideAutoCompleteVisibilityClicks;
     }
 
     @NotNull
     @Override
-    public Observable<AutoCompleteClickEvent<Receipt>> getUnHideAutoCompleteVisibilityClick() {
+    public Observable<AutoCompleteUpdateEvent<Receipt>> getUnHideAutoCompleteVisibilityClick() {
         return _unHideAutoCompleteVisibilityClicks;
     }
 

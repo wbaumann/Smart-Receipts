@@ -53,8 +53,7 @@ import co.smartreceipts.android.date.DateEditText;
 import co.smartreceipts.android.date.DateFormatter;
 import co.smartreceipts.android.editor.Editor;
 import co.smartreceipts.android.fragments.WBFragment;
-import co.smartreceipts.android.model.AutoCompleteClickEvent;
-import co.smartreceipts.android.model.AutoCompleteType;
+import co.smartreceipts.android.model.AutoCompleteUpdateEvent;
 import co.smartreceipts.android.model.Trip;
 import co.smartreceipts.android.model.factory.TripBuilderFactory;
 import co.smartreceipts.android.persistence.DatabaseHelper;
@@ -153,13 +152,13 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
     private Snackbar snackbar;
     private boolean shouldHideResults;
     private AutoCompleteResult<Trip> autoCompleteVisibilityItem;
-    private AutoCompleteType autoCompleteType;
+    private AutoCompleteField autoCompleteField;
     private int positionToUpdateVisibility;
 
-    private Subject<AutoCompleteClickEvent<Trip>> _hideAutoCompleteVisibilityClicks =
-            PublishSubject.<AutoCompleteClickEvent<Trip>>create().toSerialized();
-    private Subject<AutoCompleteClickEvent<Trip>> _unHideAutoCompleteVisibilityClicks =
-            PublishSubject.<AutoCompleteClickEvent<Trip>>create().toSerialized();
+    private Subject<AutoCompleteUpdateEvent<Trip>> _hideAutoCompleteVisibilityClicks =
+            PublishSubject.<AutoCompleteUpdateEvent<Trip>>create().toSerialized();
+    private Subject<AutoCompleteUpdateEvent<Trip>> _unHideAutoCompleteVisibilityClicks =
+            PublishSubject.<AutoCompleteUpdateEvent<Trip>>create().toSerialized();
 
     public static TripCreateEditFragment newInstance() {
         return new TripCreateEditFragment();
@@ -484,6 +483,7 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
     public void displayAutoCompleteResults(@NotNull AutoCompleteField field, @NotNull List<AutoCompleteResult<Trip>> autoCompleteResults) {
         if (!shouldHideResults) {
             resultsAdapter = new AutoCompleteArrayAdapter<>(requireContext(), autoCompleteResults, this);
+            autoCompleteField = field;
             if (field == TripAutoCompleteField.Name) {
                 nameBox.setAdapter(resultsAdapter);
                 nameBox.showDropDown();
@@ -619,7 +619,7 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
         }
     }
 
-    private void showUndoSnackbar(AutoCompleteResult<Trip> result, @NotNull final AutoCompleteType autoCompleteType) {
+    private void showUndoSnackbar(AutoCompleteResult<Trip> result, @NotNull final AutoCompleteField autoCompleteField) {
         View view = getActivity().findViewById(R.id.update_trip_layout);
         snackbar = Snackbar.make(view, getString(
                 R.string.item_removed_from_auto_complete, result.getDisplayName()), Snackbar.LENGTH_LONG);
@@ -661,13 +661,13 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
 
     @NotNull
     @Override
-    public Observable<AutoCompleteClickEvent<Trip>> getHideAutoCompleteVisibilityClick() {
+    public Observable<AutoCompleteUpdateEvent<Trip>> getHideAutoCompleteVisibilityClick() {
         return _hideAutoCompleteVisibilityClicks;
     }
 
     @NotNull
     @Override
-    public Observable<AutoCompleteClickEvent<Trip>> getUnHideAutoCompleteVisibilityClick() {
+    public Observable<AutoCompleteUpdateEvent<Trip>> getUnHideAutoCompleteVisibilityClick() {
         return _unHideAutoCompleteVisibilityClicks;
     }
 }

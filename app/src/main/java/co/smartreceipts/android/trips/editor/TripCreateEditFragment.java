@@ -55,7 +55,6 @@ import co.smartreceipts.android.editor.Editor;
 import co.smartreceipts.android.fragments.WBFragment;
 import co.smartreceipts.android.model.AutoCompleteUpdateEvent;
 import co.smartreceipts.android.model.Trip;
-import co.smartreceipts.android.model.factory.TripBuilderFactory;
 import co.smartreceipts.android.persistence.DatabaseHelper;
 import co.smartreceipts.android.settings.UserPreferenceManager;
 import co.smartreceipts.android.tooltip.TooltipPresenter;
@@ -80,8 +79,7 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
         TooltipView,
         CurrencyListEditorView,
         TripDateView,
-        AutoCompleteView<Trip>,
-        AutoCompleteArrayAdapter.ClickListener {
+        AutoCompleteView<Trip> {
 
     public static final String ARG_EXISTING_TRIPS = "arg_existing_trips";
 
@@ -559,104 +557,78 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
     }
 
     @Override
-    public void onClick(boolean removeAutoCompleteResult, int position) {
-        positionToUpdateVisibility = position;
-        autoCompleteVisibilityItem = resultsAdapter.getItem(position);
-        if (autoCompleteVisibilityItem != null) {
-            if (!removeAutoCompleteResult) {
-                shouldHideResults = true;
-                if (nameBox.isPopupShowing()) {
-                    nameBox.setText(autoCompleteVisibilityItem.getDisplayName());
-                    nameBox.setSelection(nameBox.getText().length());
-                    nameBox.dismissDropDown();
-                } else if (commentBox.isPopupShowing()) {
-                    commentBox.setText(autoCompleteVisibilityItem.getDisplayName());
-                    commentBox.setSelection(commentBox.getText().length());
-                    commentBox.dismissDropDown();
-                } else {
-                    costCenterBox.setText(autoCompleteVisibilityItem.getDisplayName());
-                    costCenterBox.setSelection(costCenterBox.getText().length());
-                    costCenterBox.dismissDropDown();
-                }
-                SoftKeyboardManager.hideKeyboard(focusedView);
+    public void fillValueField(int position) {
+        AutoCompleteResult<Trip> item = resultsAdapter.getItem(position);
+        if (item != null) {
+            shouldHideResults = true;
+            if (nameBox.isPopupShowing()) {
+                nameBox.setText(autoCompleteVisibilityItem.getDisplayName());
+                nameBox.setSelection(nameBox.getText().length());
+                nameBox.dismissDropDown();
+            } else if (commentBox.isPopupShowing()) {
+                commentBox.setText(autoCompleteVisibilityItem.getDisplayName());
+                commentBox.setSelection(commentBox.getText().length());
+                commentBox.dismissDropDown();
             } else {
-                SoftKeyboardManager.hideKeyboard(focusedView);
-                final Trip oldTrip = autoCompleteVisibilityItem.getFirstItem();
-                Trip newTrip;
-                if (nameBox.isPopupShowing()) {
-                    autoCompleteType = AutoCompleteType.Name;
-                    newTrip = new TripBuilderFactory(oldTrip)
-                            .setNameHiddenFromAutoComplete(true)
-                            .build();
-                } else if (commentBox.isPopupShowing()) {
-                    autoCompleteType = AutoCompleteType.Comment;
-                    newTrip = new TripBuilderFactory(oldTrip)
-                            .setCommentHiddenFromAutoComplete(true)
-                            .build();
-                } else {
-                    autoCompleteType = AutoCompleteType.CostCenter;
-                    newTrip = new TripBuilderFactory(oldTrip)
-                            .setCostCenterHiddenFromAutoComplete(true)
-                            .build();
-                }
+                costCenterBox.setText(autoCompleteVisibilityItem.getDisplayName());
+                costCenterBox.setSelection(costCenterBox.getText().length());
+                costCenterBox.dismissDropDown();
+            }
+            SoftKeyboardManager.hideKeyboard(focusedView);
+        }
+    }
 
-                _hideAutoCompleteVisibilityClicks.onNext(new AutoCompleteClickEvent(oldTrip, newTrip));
+    @Override
+    public void deleteAutoCompleteValueFromDB(int position) {
+        SoftKeyboardManager.hideKeyboard(focusedView);
+        positionToUpdateVisibility = position;
+        autoCompleteVisibilityItem = resultsAdapter.getItem(positionToUpdateVisibility);
+        if (autoCompleteVisibilityItem != null) {
+            final Trip oldTrip = autoCompleteVisibilityItem.getFirstItem();
+            if (nameBox.isPopupShowing()) {
+                _hideAutoCompleteVisibilityClicks.onNext(
+                        new AutoCompleteUpdateEvent(oldTrip, TripAutoCompleteField.Name));
+            } else if (commentBox.isPopupShowing()) {
+                _hideAutoCompleteVisibilityClicks.onNext(
+                        new AutoCompleteUpdateEvent(oldTrip, TripAutoCompleteField.Comment));
+            } else {
+                _hideAutoCompleteVisibilityClicks.onNext(
+                        new AutoCompleteUpdateEvent(oldTrip, TripAutoCompleteField.CostCenter));
             }
         }
     }
 
     @Override
-    public void hideAutoCompleteValue(boolean wasSuccessfullyHidden) {
-        if (wasSuccessfullyHidden) {
-            getActivity().runOnUiThread(() -> {
-                resultsAdapter.remove(autoCompleteVisibilityItem);
-                resultsAdapter.notifyDataSetChanged();
-                showUndoSnackbar(autoCompleteVisibilityItem, autoCompleteType);
-            });
-        } else {
-            getActivity().runOnUiThread(() ->
-                    Toast.makeText(getActivity(), R.string.delete_failed, Toast.LENGTH_LONG).show());
-        }
+    public void hideAutoCompleteValue() {
+        getActivity().runOnUiThread(() -> {
+            resultsAdapter.remove(autoCompleteVisibilityItem);
+            resultsAdapter.notifyDataSetChanged();
+            showUndoSnackbar(autoCompleteVisibilityItem, autoCompleteField);
+        });
     }
 
     private void showUndoSnackbar(AutoCompleteResult<Trip> result, @NotNull final AutoCompleteField autoCompleteField) {
         View view = getActivity().findViewById(R.id.update_trip_layout);
         snackbar = Snackbar.make(view, getString(
                 R.string.item_removed_from_auto_complete, result.getDisplayName()), Snackbar.LENGTH_LONG);
-        snackbar.setAction(R.string.undo, v -> {
-            Trip newTrip;
-            final Trip oldTrip = result.getFirstItem();
-            if (autoCompleteType == AutoCompleteType.Name) {
-                newTrip = new TripBuilderFactory(oldTrip)
-                        .setNameHiddenFromAutoComplete(false)
-                        .build();
-            } else if (autoCompleteType == AutoCompleteType.Comment) {
-                newTrip = new TripBuilderFactory(oldTrip)
-                        .setCommentHiddenFromAutoComplete(false)
-                        .build();
-            } else {
-                newTrip = new TripBuilderFactory(oldTrip)
-                        .setCostCenterHiddenFromAutoComplete(false)
-                        .build();
-            }
-
-            _unHideAutoCompleteVisibilityClicks.onNext(new AutoCompleteClickEvent<>(oldTrip, newTrip));
-        });
+        snackbar.setAction(R.string.undo, v ->
+                _unHideAutoCompleteVisibilityClicks.onNext(new AutoCompleteUpdateEvent(result.getFirstItem(), autoCompleteField)));
         snackbar.show();
     }
 
     @Override
-    public void unHideAutoCompleteValue(boolean wasSuccessfullyUnhidden) {
-        if (wasSuccessfullyUnhidden) {
-            getActivity().runOnUiThread(() -> {
-                resultsAdapter.insert(autoCompleteVisibilityItem, positionToUpdateVisibility);
-                resultsAdapter.notifyDataSetChanged();
-                Toast.makeText(getContext(), R.string.result_restored, Toast.LENGTH_LONG).show();
-            });
-        } else {
-            getActivity().runOnUiThread(() ->
-                    Toast.makeText(getContext(), R.string.result_restore_failed, Toast.LENGTH_LONG).show());
-        }
+    public void unHideAutoCompleteValue() {
+        getActivity().runOnUiThread(() -> {
+            resultsAdapter.insert(autoCompleteVisibilityItem, positionToUpdateVisibility);
+            resultsAdapter.notifyDataSetChanged();
+            Toast.makeText(getContext(), R.string.result_restored, Toast.LENGTH_LONG).show();
+        });
+    }
+
+    @Override
+    public void displayAutoCompleteError() {
+        getActivity().runOnUiThread(() ->
+                Toast.makeText(getContext(), R.string.result_restore_failed, Toast.LENGTH_LONG).show());
     }
 
     @NotNull

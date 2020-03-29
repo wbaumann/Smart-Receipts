@@ -14,6 +14,7 @@ import javax.inject.Inject;
 
 import co.smartreceipts.analytics.Analytics;
 import co.smartreceipts.analytics.events.Events;
+import co.smartreceipts.android.autocomplete.trip.TripAutoCompleteField;
 import co.smartreceipts.core.di.scopes.FragmentScope;
 import co.smartreceipts.android.model.Trip;
 import co.smartreceipts.android.model.factory.TripBuilderFactory;
@@ -49,18 +50,61 @@ public class TripCreateEditFragmentPresenter {
 
     public void subscribe() {
         compositeDisposable.add(fragment.getHideAutoCompleteVisibilityClick()
-                .flatMap(autoCompleteClickEvent ->
-                        updateTrip(autoCompleteClickEvent.getFrom(), autoCompleteClickEvent.getTo()))
-                .subscribe(tripOptional ->
-                        fragment.hideAutoCompleteValue(tripOptional.isPresent())
+                .flatMap(autoCompleteClickUpdate -> {
+                    if (autoCompleteClickUpdate.getType() == TripAutoCompleteField.Name) {
+                        return updateTrip(autoCompleteClickUpdate.getItem(),
+                                new TripBuilderFactory(autoCompleteClickUpdate.getItem())
+                                        .setNameHiddenFromAutoComplete(true)
+                                        .build());
+                    } else if (autoCompleteClickUpdate.getType() == TripAutoCompleteField.Comment) {
+                        return updateTrip(autoCompleteClickUpdate.getItem(),
+                                new TripBuilderFactory(autoCompleteClickUpdate.getItem())
+                                        .setCommentHiddenFromAutoComplete(true)
+                                        .build());
+                    } else if (autoCompleteClickUpdate.getType() == TripAutoCompleteField.CostCenter) {
+                        return updateTrip(autoCompleteClickUpdate.getItem(),
+                                new TripBuilderFactory(autoCompleteClickUpdate.getItem())
+                                        .setCostCenterHiddenFromAutoComplete(true)
+                                        .build());
+                    } else {
+                        return updateTrip(autoCompleteClickUpdate.getItem(), autoCompleteClickUpdate.getItem());
+                    }
+                })
+                .subscribe(tripOptional -> {
+                            if (tripOptional.isPresent()) {
+                                fragment.hideAutoCompleteValue();
+                            }
+                        }
                 ));
 
         compositeDisposable.add(fragment.getUnHideAutoCompleteVisibilityClick()
-                .flatMap(autoCompleteClickEvent ->
-                        updateTrip(autoCompleteClickEvent.getFrom(), autoCompleteClickEvent.getTo()))
-                .subscribe(tripOptional ->
-                        fragment.unHideAutoCompleteValue(tripOptional.isPresent())
-                ));
+                .flatMap(autoCompleteClickEvent -> {
+                    if (autoCompleteClickEvent.getType() == TripAutoCompleteField.Name) {
+                        return updateTrip(autoCompleteClickEvent.getItem(),
+                                new TripBuilderFactory(autoCompleteClickEvent.getItem())
+                                        .setNameHiddenFromAutoComplete(false)
+                                        .build());
+                    } else if (autoCompleteClickEvent.getType() == TripAutoCompleteField.Comment) {
+                        return updateTrip(autoCompleteClickEvent.getItem(),
+                                new TripBuilderFactory(autoCompleteClickEvent.getItem())
+                                        .setCommentHiddenFromAutoComplete(false)
+                                        .build());
+                    } else if (autoCompleteClickEvent.getType() == TripAutoCompleteField.CostCenter) {
+                        return updateTrip(autoCompleteClickEvent.getItem(),
+                                new TripBuilderFactory(autoCompleteClickEvent.getItem())
+                                        .setCostCenterHiddenFromAutoComplete(false)
+                                        .build());
+                    } else {
+                        return updateTrip(autoCompleteClickEvent.getItem(), autoCompleteClickEvent.getItem());
+                    }
+                })
+                .subscribe(tripOptional -> {
+                    if (tripOptional.isPresent()) {
+                        fragment.unHideAutoCompleteValue();
+                    } else {
+                        fragment.displayAutoCompleteError();
+                    }
+                }));
     }
 
     public void unsubscribe() {

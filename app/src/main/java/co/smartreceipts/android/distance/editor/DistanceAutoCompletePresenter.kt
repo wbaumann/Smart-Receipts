@@ -1,5 +1,7 @@
 package co.smartreceipts.android.distance.editor
 
+import co.smartreceipts.android.autocomplete.distance.DistanceAutoCompleteField
+import co.smartreceipts.android.model.factory.DistanceBuilderFactory
 import co.smartreceipts.android.widget.viper.BaseViperPresenter
 import co.smartreceipts.core.di.scopes.FragmentScope
 import javax.inject.Inject
@@ -14,19 +16,41 @@ class DistanceAutoCompletePresenter @Inject constructor(
 
         compositeDisposable.add(view.hideAutoCompleteVisibilityClick
                 .flatMap { t ->
-                    interactor.updateDistance(t.from, t.to)
+                    when (t.type) {
+                        DistanceAutoCompleteField.Location -> interactor.updateDistance(t.item, DistanceBuilderFactory(t.item)
+                                .setLocationHiddenFromAutoComplete(true)
+                                .build())
+                        DistanceAutoCompleteField.Comment -> interactor.updateDistance(t.item, DistanceBuilderFactory(t.item)
+                                .setCommentHiddenFromAutoComplete(true)
+                                .build())
+                        else -> interactor.updateDistance(t.item, t.item)
+                    }
                 }
                 .subscribe {
-                    view.hideAutoCompleteValue(it.isPresent)
+                    if (it.isPresent) {
+                        view.hideAutoCompleteValue()
+                    }
                 }
         )
 
         compositeDisposable.add(view.unHideAutoCompleteVisibilityClick
                 .flatMap { t ->
-                    interactor.updateDistance(t.from, t.to)
+                    when (t.type) {
+                        DistanceAutoCompleteField.Location -> interactor.updateDistance(t.item, DistanceBuilderFactory(t.item)
+                                .setLocationHiddenFromAutoComplete(false)
+                                .build())
+                        DistanceAutoCompleteField.Comment -> interactor.updateDistance(t.item, DistanceBuilderFactory(t.item)
+                                .setCommentHiddenFromAutoComplete(false)
+                                .build())
+                        else -> interactor.updateDistance(t.item, t.item)
+                    }
                 }
                 .subscribe {
-                    view.unHideAutoCompleteValue(it.isPresent)
+                    if (it.isPresent) {
+                        view.unHideAutoCompleteValue()
+                    } else {
+                        view.displayAutoCompleteError()
+                    }
                 }
         )
     }

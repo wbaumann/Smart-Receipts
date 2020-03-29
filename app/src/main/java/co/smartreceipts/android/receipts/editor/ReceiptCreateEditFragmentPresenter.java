@@ -7,6 +7,7 @@ import java.util.TimeZone;
 
 import javax.inject.Inject;
 
+import co.smartreceipts.android.autocomplete.receipt.ReceiptAutoCompleteField;
 import co.smartreceipts.core.di.scopes.FragmentScope;
 import co.smartreceipts.android.model.Category;
 import co.smartreceipts.android.model.PaymentMethod;
@@ -52,18 +53,50 @@ public class ReceiptCreateEditFragmentPresenter {
 
     public void subscribe() {
         compositeDisposable.add(fragment.getHideAutoCompleteVisibilityClick()
-                .flatMap(autoCompleteClickEvent ->
-                        updateReceipt(autoCompleteClickEvent.getFrom(), autoCompleteClickEvent.getTo()))
-                .subscribe(receiptOptional ->
-                        fragment.hideAutoCompleteValue(receiptOptional.isPresent())
-                ));
+                .flatMap(autoCompleteClickEvent -> {
+                    if (autoCompleteClickEvent.getType() == ReceiptAutoCompleteField.Name) {
+                        return updateReceipt(autoCompleteClickEvent.getItem(),
+                                new ReceiptBuilderFactory(autoCompleteClickEvent.getItem())
+                                        .setNameHiddenFromAutoComplete(true)
+                                        .build());
+                    } else if (autoCompleteClickEvent.getType() == ReceiptAutoCompleteField.Comment) {
+                        return updateReceipt(autoCompleteClickEvent.getItem(),
+                                new ReceiptBuilderFactory(autoCompleteClickEvent.getItem())
+                                        .setCommentHiddenFromAutoComplete(true)
+                                        .build());
+                    } else {
+                        return updateReceipt(autoCompleteClickEvent.getItem(), autoCompleteClickEvent.getItem());
+                    }
+                })
+                .subscribe(receiptOptional -> {
+                    if (receiptOptional.isPresent()) {
+                        fragment.hideAutoCompleteValue();
+                    }
+                }));
 
         compositeDisposable.add(fragment.getUnHideAutoCompleteVisibilityClick()
-                .flatMap(autoCompleteClickEvent ->
-                        updateReceipt(autoCompleteClickEvent.getFrom(), autoCompleteClickEvent.getTo()))
-                .subscribe(receiptOptional ->
-                        fragment.unHideAutoCompleteValue(receiptOptional.isPresent())
-                ));
+                .flatMap(autoCompleteClickEvent -> {
+                    if (autoCompleteClickEvent.getType() == ReceiptAutoCompleteField.Name) {
+                        return updateReceipt(autoCompleteClickEvent.getItem(),
+                                new ReceiptBuilderFactory(autoCompleteClickEvent.getItem())
+                                        .setNameHiddenFromAutoComplete(false)
+                                        .build());
+                    } else if (autoCompleteClickEvent.getType() == ReceiptAutoCompleteField.Comment) {
+                        return updateReceipt(autoCompleteClickEvent.getItem(),
+                                new ReceiptBuilderFactory(autoCompleteClickEvent.getItem())
+                                        .setCommentHiddenFromAutoComplete(false)
+                                        .build());
+                    } else {
+                        return updateReceipt(autoCompleteClickEvent.getItem(), autoCompleteClickEvent.getItem());
+                    }
+                })
+                .subscribe(receiptOptional -> {
+                    if (receiptOptional.isPresent()) {
+                        fragment.unHideAutoCompleteValue();
+                    } else {
+                        fragment.displayAutoCompleteError();
+                    }
+                }));
     }
 
     public void unsubscribe() {

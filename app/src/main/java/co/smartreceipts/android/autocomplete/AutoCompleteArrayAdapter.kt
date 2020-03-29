@@ -19,10 +19,6 @@ class AutoCompleteArrayAdapter<Type>(context: Context,
                                      private val view: AutoCompleteView<Type>)
     : ArrayAdapter<AutoCompleteResult<Type>>(context, R.layout.auto_complete_view, autoCompleteResults) {
 
-    interface ClickListener {
-        fun onClick(removeAutoCompleteResult: Boolean, position: Int)
-    }
-
     /**
      * Note: We override the default ArrayAdapter$ArrayFilter logic here, since this filter object's
      * [Filter.publishResults] method call will invalidate this adapter if our count is ever 0. This
@@ -47,12 +43,12 @@ class AutoCompleteArrayAdapter<Type>(context: Context,
         val name = listItem.findViewById(R.id.auto_complete_name) as TextView
         name.text = result!!.displayName
         name.setOnClickListener {
-            listener.onClick(false, position)
+            view.fillValueField(position)
         }
 
         val image = listItem.findViewById(R.id.imgAutoCompleteDelete) as ImageView
         image.setOnClickListener {
-            listener.onClick(true, position)
+            view.deleteAutoCompleteValueFromDB(position)
         }
         return listItem
     }

@@ -27,7 +27,7 @@ interface AutoCompleteView<Type> {
      * @param results a [List] of [AutoCompleteResult] of [Type]
      */
     @UiThread
-    fun displayAutoCompleteResults(field: AutoCompleteField, results: ArrayList<AutoCompleteResult<Type>>)
+    fun displayAutoCompleteResults(field: AutoCompleteField, results: MutableList<AutoCompleteResult<Type>>)
 
     val hideAutoCompleteVisibilityClick: Observable<AutoCompleteClickEvent<Type>>
     val unHideAutoCompleteVisibilityClick: Observable<AutoCompleteClickEvent<Type>>

@@ -42,7 +42,7 @@ class AutoCompleteInteractor<Type> constructor(private val provider: AutoComplet
      *
      * @return a [Maybe], which will emit an [ArrayList] of [AutoCompleteResult] of [Type] (or nothing)
      */
-    fun getAutoCompleteResults(field: AutoCompleteField, input: CharSequence) : Maybe<ArrayList<AutoCompleteResult<Type>>> {
+    fun getAutoCompleteResults(field: AutoCompleteField, input: CharSequence) : Maybe<MutableList<AutoCompleteResult<Type>>> {
         // Confirm that the user has this setting enable
         if (userPreferenceManager[UserPreference.Receipts.EnableAutoCompleteSuggestions]) {
             // And that we've typed this exact amount of characters (as the adapters manage filtering afterwards)
@@ -88,10 +88,10 @@ class AutoCompleteInteractor<Type> constructor(private val provider: AutoComplet
                                     }
                                 }
                             }
-                            Maybe.just(ArrayList(results))
+                            Maybe.just(results)
                         }
                         .onErrorReturn {
-                            arrayListOf<AutoCompleteResult<Type>>()
+                            mutableListOf()
                         }
                         .doOnSuccess {
                             Logger.info(this, "Adding {} auto-completion results to {}.", it.size, field)

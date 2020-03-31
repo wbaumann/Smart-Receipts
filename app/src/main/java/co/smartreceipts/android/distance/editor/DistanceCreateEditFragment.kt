@@ -93,9 +93,9 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
 
     private lateinit var paymentMethodsAdapter: FooterButtonArrayAdapter<PaymentMethod>
 
-    private var autoCompleteVisibilityItem: AutoCompleteResult<Distance>? = null
     private var positionToUpdateVisibility: Int = 0
     private lateinit var autoCompleteField: AutoCompleteField
+    private lateinit var autoCompleteVisibilityItem: AutoCompleteResult<Distance>
 
     override val createDistanceClicks: Observable<Distance>
         get() = _createDistanceClicks

@@ -37,7 +37,6 @@ class AutoCompleteArrayAdapter<Type>(context: Context,
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val listItem = convertView ?: LayoutInflater.from(context).inflate(R.layout.auto_complete_view, parent, false)
-
         val result = getItem(position)
 
         val name = listItem.findViewById(R.id.auto_complete_name) as TextView

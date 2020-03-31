@@ -420,21 +420,17 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
         activity!!.runOnUiThread {
             resultsAdapter.remove(autoCompleteVisibilityItem)
             resultsAdapter.notifyDataSetChanged()
-            showUndoSnackbar(autoCompleteVisibilityItem, autoCompleteField)
+            val view = activity!!.findViewById<ConstraintLayout>(R.id.update_distance_layout)
+            snackbar = Snackbar.make(view, getString(
+                    R.string.item_removed_from_auto_complete, autoCompleteVisibilityItem!!.displayName), Snackbar.LENGTH_LONG)
+            snackbar.setAction(R.string.undo) {
+                _unHideAutoCompleteVisibilityClicks.onNext(AutoCompleteUpdateEvent(autoCompleteVisibilityItem!!.firstItem, autoCompleteField))
+            }
+            snackbar.show()
         }
     }
 
-    private fun showUndoSnackbar(result: AutoCompleteResult<Distance>?, autoCompleteField: AutoCompleteField) {
-        val view = activity!!.findViewById<ConstraintLayout>(R.id.update_distance_layout)
-        snackbar = Snackbar.make(view, getString(
-                R.string.item_removed_from_auto_complete, result!!.displayName), Snackbar.LENGTH_LONG)
-        snackbar.setAction(R.string.undo) {
-            _unHideAutoCompleteVisibilityClicks.onNext(AutoCompleteUpdateEvent(result.firstItem, autoCompleteField))
-        }
-        snackbar.show()
-    }
-
-    override fun unHideAutoCompleteValue() {
+    override fun unHideAutoCompleteClick() {
         activity!!.runOnUiThread {
             resultsAdapter.insert(autoCompleteVisibilityItem, positionToUpdateVisibility)
             resultsAdapter.notifyDataSetChanged()

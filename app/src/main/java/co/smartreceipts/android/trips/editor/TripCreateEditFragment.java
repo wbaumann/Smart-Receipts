@@ -598,17 +598,13 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
         getActivity().runOnUiThread(() -> {
             resultsAdapter.remove(autoCompleteVisibilityItem);
             resultsAdapter.notifyDataSetChanged();
-            showUndoSnackbar(autoCompleteVisibilityItem, autoCompleteField);
+            View view = getActivity().findViewById(R.id.update_trip_layout);
+            snackbar = Snackbar.make(view, getString(
+                    R.string.item_removed_from_auto_complete, autoCompleteVisibilityItem.getDisplayName()), Snackbar.LENGTH_LONG);
+            snackbar.setAction(R.string.undo, v ->
+                    _unHideAutoCompleteVisibilityClicks.onNext(new AutoCompleteUpdateEvent(autoCompleteVisibilityItem.getFirstItem(), autoCompleteField)));
+            snackbar.show();
         });
-    }
-
-    private void showUndoSnackbar(AutoCompleteResult<Trip> result, @NotNull final AutoCompleteField autoCompleteField) {
-        View view = getActivity().findViewById(R.id.update_trip_layout);
-        snackbar = Snackbar.make(view, getString(
-                R.string.item_removed_from_auto_complete, result.getDisplayName()), Snackbar.LENGTH_LONG);
-        snackbar.setAction(R.string.undo, v ->
-                _unHideAutoCompleteVisibilityClicks.onNext(new AutoCompleteUpdateEvent(result.getFirstItem(), autoCompleteField)));
-        snackbar.show();
     }
 
     @Override

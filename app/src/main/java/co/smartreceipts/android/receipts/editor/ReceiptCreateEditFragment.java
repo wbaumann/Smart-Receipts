@@ -1009,18 +1009,14 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
         getActivity().runOnUiThread(() -> {
             resultsAdapter.remove(autoCompleteVisibilityItem);
             resultsAdapter.notifyDataSetChanged();
-            showUndoSnackbar(autoCompleteVisibilityItem, autoCompleteField);
+            View view = getActivity().findViewById(R.id.update_receipt_layout);
+            snackbar = Snackbar.make(view, getString(
+                    R.string.item_removed_from_auto_complete, autoCompleteVisibilityItem.getDisplayName()), Snackbar.LENGTH_LONG);
+            snackbar.setAction(R.string.undo, v ->
+                    _unHideAutoCompleteVisibilityClicks.onNext(
+                            new AutoCompleteUpdateEvent(autoCompleteVisibilityItem.getFirstItem(), autoCompleteField)));
+            snackbar.show();
         });
-    }
-
-    private void showUndoSnackbar(AutoCompleteResult<Receipt> result, @NotNull AutoCompleteField autoCompleteField) {
-        View view = getActivity().findViewById(R.id.update_receipt_layout);
-        snackbar = Snackbar.make(view, getString(
-                R.string.item_removed_from_auto_complete, result.getDisplayName()), Snackbar.LENGTH_LONG);
-        snackbar.setAction(R.string.undo, v ->
-                _unHideAutoCompleteVisibilityClicks.onNext(
-                        new AutoCompleteUpdateEvent(result.getFirstItem(), autoCompleteField)));
-        snackbar.show();
     }
 
     @Override

@@ -961,56 +961,51 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     }
 
     @Override
-    public void fillValueField(int position) {
-        AutoCompleteResult<Receipt> item = resultsAdapter.getItem(position);
-        if (item != null) {
-            final Receipt firstReceipt = item.getFirstItem();
-            shouldHideResults = true;
-            if (nameBox.isPopupShowing()) {
-                // Whenever we select an old item, attempt to map our price and category to the same
-                // Only update the price if: no text is set AND the next item price == the first
-                if (priceBox.getText().length() == 0) {
-                    final Receipt secondReceipt = item.getSecondItem();
-                    if (secondReceipt != null && firstReceipt.getPrice().getDecimalFormattedPrice().equals(secondReceipt.getPrice().getDecimalFormattedPrice())) {
-                        priceBox.setText(firstReceipt.getPrice().getDecimalFormattedPrice());
-                    }
+    public void fillValueField(@NotNull AutoCompleteResult<Receipt> autoCompleteResult) {
+        final Receipt firstReceipt = autoCompleteResult.getFirstItem();
+        shouldHideResults = true;
+        if (nameBox.isPopupShowing()) {
+            // Whenever we select an old item, attempt to map our price and category to the same
+            // Only update the price if: no text is set AND the next item price == the first
+            if (priceBox.getText().length() == 0) {
+                final Receipt secondReceipt = autoCompleteResult.getSecondItem();
+                if (secondReceipt != null && firstReceipt.getPrice().getDecimalFormattedPrice().equals(secondReceipt.getPrice().getDecimalFormattedPrice())) {
+                    priceBox.setText(firstReceipt.getPrice().getDecimalFormattedPrice());
                 }
-
-                final int categoryIndex = categoriesList.indexOf(firstReceipt.getCategory());
-                if (categoryIndex > 0) {
-                    categoriesSpinner.setSelection(categoryIndex);
-                }
-                nameBox.setText(item.getDisplayName());
-                nameBox.setSelection(nameBox.getText().length());
-                nameBox.dismissDropDown();
-            } else {
-                commentBox.setText(item.getDisplayName());
-                commentBox.setSelection(commentBox.getText().length());
-                commentBox.dismissDropDown();
             }
-            SoftKeyboardManager.hideKeyboard(focusedView);
-        }
-    }
 
-    @Override
-    public void deleteAutoCompleteValueFromDB(int position) {
+            final int categoryIndex = categoriesList.indexOf(firstReceipt.getCategory());
+            if (categoryIndex > 0) {
+                categoriesSpinner.setSelection(categoryIndex);
+            }
+            nameBox.setText(autoCompleteResult.getDisplayName());
+            nameBox.setSelection(nameBox.getText().length());
+            nameBox.dismissDropDown();
+        } else {
+            commentBox.setText(autoCompleteResult.getDisplayName());
+            commentBox.setSelection(commentBox.getText().length());
+            commentBox.dismissDropDown();
+        }
         SoftKeyboardManager.hideKeyboard(focusedView);
-        positionToUpdateVisibility = position;
-        autoCompleteVisibilityItem = resultsAdapter.getItem(positionToUpdateVisibility);
-        if (autoCompleteVisibilityItem != null) {
-            final Receipt oldReceipt = autoCompleteVisibilityItem.getFirstItem();
-            if (nameBox.isPopupShowing()) {
-                _hideAutoCompleteVisibilityClicks.onNext(
-                        new AutoCompleteUpdateEvent(oldReceipt, ReceiptAutoCompleteField.Name));
-            } else {
-                _hideAutoCompleteVisibilityClicks.onNext(
-                        new AutoCompleteUpdateEvent(oldReceipt, ReceiptAutoCompleteField.Comment));
-            }
+    }
+
+    @Override
+    public void hideAutoCompleteClick(@NotNull AutoCompleteResult<Receipt> autoCompleteResult) {
+        SoftKeyboardManager.hideKeyboard(focusedView);
+        autoCompleteVisibilityItem = autoCompleteResult;
+        positionToUpdateVisibility = resultsAdapter.getPosition(autoCompleteResult);
+        final Receipt oldReceipt = autoCompleteResult.getFirstItem();
+        if (nameBox.isPopupShowing()) {
+            _hideAutoCompleteVisibilityClicks.onNext(
+                    new AutoCompleteUpdateEvent(oldReceipt, ReceiptAutoCompleteField.Name));
+        } else {
+            _hideAutoCompleteVisibilityClicks.onNext(
+                    new AutoCompleteUpdateEvent(oldReceipt, ReceiptAutoCompleteField.Comment));
         }
     }
 
     @Override
-    public void hideAutoCompleteValue() {
+    public void removeValueFromDropDown() {
         getActivity().runOnUiThread(() -> {
             resultsAdapter.remove(autoCompleteVisibilityItem);
             resultsAdapter.notifyDataSetChanged();
@@ -1029,7 +1024,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     }
 
     @Override
-    public void unHideAutoCompleteValue() {
+    public void unHideAutoCompleteClick() {
         getActivity().runOnUiThread(() -> {
             resultsAdapter.insert(autoCompleteVisibilityItem, positionToUpdateVisibility);
             resultsAdapter.notifyDataSetChanged();

@@ -71,11 +71,10 @@ public class TripCreateEditFragmentPresenter {
                     }
                 })
                 .subscribe(tripOptional -> {
-                            if (tripOptional.isPresent()) {
-                                fragment.hideAutoCompleteValue();
-                            }
-                        }
-                ));
+                    if (tripOptional.isPresent()) {
+                        fragment.removeValueFromDropDown();
+                    }
+                }));
 
         compositeDisposable.add(fragment.getUnHideAutoCompleteVisibilityClick()
                 .flatMap(autoCompleteClickEvent -> {
@@ -100,7 +99,7 @@ public class TripCreateEditFragmentPresenter {
                 })
                 .subscribe(tripOptional -> {
                     if (tripOptional.isPresent()) {
-                        fragment.unHideAutoCompleteValue();
+                        fragment.unHideAutoCompleteClick();
                     } else {
                         fragment.displayAutoCompleteError();
                     }

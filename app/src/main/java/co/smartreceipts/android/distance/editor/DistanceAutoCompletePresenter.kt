@@ -28,7 +28,7 @@ class DistanceAutoCompletePresenter @Inject constructor(
                 }
                 .subscribe {
                     if (it.isPresent) {
-                        view.hideAutoCompleteValue()
+                        view.removeValueFromDropDown()
                     }
                 }
         )
@@ -47,7 +47,7 @@ class DistanceAutoCompletePresenter @Inject constructor(
                 }
                 .subscribe {
                     if (it.isPresent) {
-                        view.unHideAutoCompleteValue()
+                        view.unHideAutoCompleteClick()
                     } else {
                         view.displayAutoCompleteError()
                     }

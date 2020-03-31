@@ -389,29 +389,25 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
         }
     }
 
-    override fun fillValueField(position: Int) {
-        val item = resultsAdapter.getItem(position)
-        if (item != null) {
-            shouldHideResults = true
-            if (text_distance_location.isPopupShowing) {
-                text_distance_location.setText(autoCompleteVisibilityItem!!.displayName)
-                text_distance_location.setSelection(text_distance_location.text.length)
-                text_distance_location.dismissDropDown()
-            } else {
-                text_distance_comment.setText(autoCompleteVisibilityItem!!.displayName)
-                text_distance_comment.setSelection(text_distance_comment.text.length)
-                text_distance_comment.dismissDropDown()
-            }
-            SoftKeyboardManager.hideKeyboard(focusedView)
+    override fun fillValueField(autoCompleteResult: AutoCompleteResult<Distance>) {
+        shouldHideResults = true
+        if (text_distance_location.isPopupShowing) {
+            text_distance_location.setText(autoCompleteResult.displayName)
+            text_distance_location.setSelection(text_distance_location.text.length)
+            text_distance_location.dismissDropDown()
+        } else {
+            text_distance_comment.setText(autoCompleteResult.displayName)
+            text_distance_comment.setSelection(text_distance_comment.text.length)
+            text_distance_comment.dismissDropDown()
         }
+        SoftKeyboardManager.hideKeyboard(focusedView)
     }
 
-    override fun deleteAutoCompleteValueFromDB(position: Int) {
+    override fun hideAutoCompleteClick(autoCompleteResult: AutoCompleteResult<Distance>) {
         SoftKeyboardManager.hideKeyboard(focusedView)
-        positionToUpdateVisibility = position
-        autoCompleteVisibilityItem = resultsAdapter.getItem(positionToUpdateVisibility)
-        val oldDistance = autoCompleteVisibilityItem!!.firstItem
-
+        autoCompleteVisibilityItem = autoCompleteResult
+        positionToUpdateVisibility = resultsAdapter.getPosition(autoCompleteResult)
+        val oldDistance = autoCompleteResult.firstItem
         when(text_distance_location.isPopupShowing) {
             true ->
                 _hideAutoCompleteVisibilityClicks.onNext(AutoCompleteUpdateEvent(oldDistance, autoCompleteField))
@@ -420,7 +416,7 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
         }
     }
 
-    override fun hideAutoCompleteValue() {
+    override fun removeValueFromDropDown() {
         activity!!.runOnUiThread {
             resultsAdapter.remove(autoCompleteVisibilityItem)
             resultsAdapter.notifyDataSetChanged()

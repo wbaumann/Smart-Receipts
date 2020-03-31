@@ -43,12 +43,12 @@ class AutoCompleteArrayAdapter<Type>(context: Context,
         val name = listItem.findViewById(R.id.auto_complete_name) as TextView
         name.text = result!!.displayName
         name.setOnClickListener {
-            view.fillValueField(position)
+            view.fillValueField(result)
         }
 
         val image = listItem.findViewById(R.id.imgAutoCompleteDelete) as ImageView
         image.setOnClickListener {
-            view.deleteAutoCompleteValueFromDB(position)
+            view.hideAutoCompleteClick(result)
         }
         return listItem
     }

@@ -557,49 +557,44 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
     }
 
     @Override
-    public void fillValueField(int position) {
-        AutoCompleteResult<Trip> item = resultsAdapter.getItem(position);
-        if (item != null) {
-            shouldHideResults = true;
-            if (nameBox.isPopupShowing()) {
-                nameBox.setText(autoCompleteVisibilityItem.getDisplayName());
-                nameBox.setSelection(nameBox.getText().length());
-                nameBox.dismissDropDown();
-            } else if (commentBox.isPopupShowing()) {
-                commentBox.setText(autoCompleteVisibilityItem.getDisplayName());
-                commentBox.setSelection(commentBox.getText().length());
-                commentBox.dismissDropDown();
-            } else {
-                costCenterBox.setText(autoCompleteVisibilityItem.getDisplayName());
-                costCenterBox.setSelection(costCenterBox.getText().length());
-                costCenterBox.dismissDropDown();
-            }
-            SoftKeyboardManager.hideKeyboard(focusedView);
+    public void fillValueField(@NotNull AutoCompleteResult<Trip> autoCompleteResult) {
+        shouldHideResults = true;
+        if (nameBox.isPopupShowing()) {
+            nameBox.setText(autoCompleteResult.getDisplayName());
+            nameBox.setSelection(nameBox.getText().length());
+            nameBox.dismissDropDown();
+        } else if (commentBox.isPopupShowing()) {
+            commentBox.setText(autoCompleteResult.getDisplayName());
+            commentBox.setSelection(commentBox.getText().length());
+            commentBox.dismissDropDown();
+        } else {
+            costCenterBox.setText(autoCompleteResult.getDisplayName());
+            costCenterBox.setSelection(costCenterBox.getText().length());
+            costCenterBox.dismissDropDown();
         }
-    }
-
-    @Override
-    public void deleteAutoCompleteValueFromDB(int position) {
         SoftKeyboardManager.hideKeyboard(focusedView);
-        positionToUpdateVisibility = position;
-        autoCompleteVisibilityItem = resultsAdapter.getItem(positionToUpdateVisibility);
-        if (autoCompleteVisibilityItem != null) {
-            final Trip oldTrip = autoCompleteVisibilityItem.getFirstItem();
-            if (nameBox.isPopupShowing()) {
-                _hideAutoCompleteVisibilityClicks.onNext(
-                        new AutoCompleteUpdateEvent(oldTrip, TripAutoCompleteField.Name));
-            } else if (commentBox.isPopupShowing()) {
-                _hideAutoCompleteVisibilityClicks.onNext(
-                        new AutoCompleteUpdateEvent(oldTrip, TripAutoCompleteField.Comment));
-            } else {
-                _hideAutoCompleteVisibilityClicks.onNext(
-                        new AutoCompleteUpdateEvent(oldTrip, TripAutoCompleteField.CostCenter));
-            }
+    }
+
+    @Override
+    public void hideAutoCompleteClick(@NotNull AutoCompleteResult<Trip> autoCompleteResult) {
+        SoftKeyboardManager.hideKeyboard(focusedView);
+        autoCompleteVisibilityItem = autoCompleteResult;
+        positionToUpdateVisibility = resultsAdapter.getPosition(autoCompleteResult);
+        final Trip oldTrip = autoCompleteResult.getFirstItem();
+        if (nameBox.isPopupShowing()) {
+            _hideAutoCompleteVisibilityClicks.onNext(
+                    new AutoCompleteUpdateEvent(oldTrip, TripAutoCompleteField.Name));
+        } else if (commentBox.isPopupShowing()) {
+            _hideAutoCompleteVisibilityClicks.onNext(
+                    new AutoCompleteUpdateEvent(oldTrip, TripAutoCompleteField.Comment));
+        } else {
+            _hideAutoCompleteVisibilityClicks.onNext(
+                    new AutoCompleteUpdateEvent(oldTrip, TripAutoCompleteField.CostCenter));
         }
     }
 
     @Override
-    public void hideAutoCompleteValue() {
+    public void removeValueFromDropDown() {
         getActivity().runOnUiThread(() -> {
             resultsAdapter.remove(autoCompleteVisibilityItem);
             resultsAdapter.notifyDataSetChanged();
@@ -617,7 +612,7 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
     }
 
     @Override
-    public void unHideAutoCompleteValue() {
+    public void unHideAutoCompleteClick() {
         getActivity().runOnUiThread(() -> {
             resultsAdapter.insert(autoCompleteVisibilityItem, positionToUpdateVisibility);
             resultsAdapter.notifyDataSetChanged();

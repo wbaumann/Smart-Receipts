@@ -65,7 +65,7 @@ public class ReceiptCreateEditFragmentPresenter {
                                         .setCommentHiddenFromAutoComplete(true)
                                         .build());
                     } else {
-                        return updateReceipt(autoCompleteClickEvent.getItem(), autoCompleteClickEvent.getItem());
+                        throw new UnsupportedOperationException();
                     }
                 })
                 .subscribe(receiptOptional -> {
@@ -87,7 +87,7 @@ public class ReceiptCreateEditFragmentPresenter {
                                         .setCommentHiddenFromAutoComplete(false)
                                         .build());
                     } else {
-                        return updateReceipt(autoCompleteClickEvent.getItem(), autoCompleteClickEvent.getItem());
+                        throw new UnsupportedOperationException();
                     }
                 })
                 .subscribe(receiptOptional -> {

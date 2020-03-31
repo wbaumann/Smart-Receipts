@@ -67,7 +67,7 @@ public class TripCreateEditFragmentPresenter {
                                         .setCostCenterHiddenFromAutoComplete(true)
                                         .build());
                     } else {
-                        return updateTrip(autoCompleteClickUpdate.getItem(), autoCompleteClickUpdate.getItem());
+                        throw new UnsupportedOperationException();
                     }
                 })
                 .subscribe(tripOptional -> {
@@ -94,7 +94,7 @@ public class TripCreateEditFragmentPresenter {
                                         .setCostCenterHiddenFromAutoComplete(false)
                                         .build());
                     } else {
-                        return updateTrip(autoCompleteClickEvent.getItem(), autoCompleteClickEvent.getItem());
+                        throw new UnsupportedOperationException();
                     }
                 })
                 .subscribe(tripOptional -> {

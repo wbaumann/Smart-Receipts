@@ -23,7 +23,7 @@ class DistanceAutoCompletePresenter @Inject constructor(
                         DistanceAutoCompleteField.Comment -> interactor.updateDistance(t.item, DistanceBuilderFactory(t.item)
                                 .setCommentHiddenFromAutoComplete(true)
                                 .build())
-                        else -> interactor.updateDistance(t.item, t.item)
+                        else -> throw UnsupportedOperationException()
                     }
                 }
                 .subscribe {
@@ -42,7 +42,7 @@ class DistanceAutoCompletePresenter @Inject constructor(
                         DistanceAutoCompleteField.Comment -> interactor.updateDistance(t.item, DistanceBuilderFactory(t.item)
                                 .setCommentHiddenFromAutoComplete(false)
                                 .build())
-                        else -> interactor.updateDistance(t.item, t.item)
+                        else -> throw UnsupportedOperationException()
                     }
                 }
                 .subscribe {

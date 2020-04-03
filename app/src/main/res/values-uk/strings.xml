@@ -78,7 +78,7 @@
     <string name="report_header_receipts_total_tax">Податок, загалом: %s</string>
     <string name="report_header_receipts_total_no_tax">Загалом за чеками (без податку): %s</string>
     <string name="report_header_receipts_total_with_tax">Загалом за чеками  (з податком): %s</string>
-    <string name="report_header_distance_total">Відстань, загалом: %s</string>
+    <string name="report_header_distance_total">Відстань Ціна загальна: %s</string>
     <string name="report_header_receipts_total_reimbursable">Загалом (що відшкодовуються): %s</string>
     <string name="report_header_grand_total">Загалом: %s</string>
     <string name="report_header_cost_center">Центр витрат: %s</string>
@@ -185,6 +185,7 @@
     <string name="DURATION_ERROR">Помилка: Дата початку має передувати даті закінчення</string>
     <string name="EXPORT_ERROR">Помилка: Не вдалося правильно експортувати ваші дані.</string>
     <string name="IMPORT_ERROR">Помилка: Не вдалося розпізнати файл як імпортуємий</string>
+    <string name="IMPORT_MISSING_ERROR">Помилка: для імпортування забагато файлів відсутнє</string>
     <string name="MOVE_ERROR">Помилка: Не вдається перемістити чек</string>
     <string name="COPY_ERROR">Помилка: Не вдається скопіювати чек</string>
     <string name="toast_warning_reset_exchange_rate">Увага: зміна валюти скине ВСЕ курси валют</string>

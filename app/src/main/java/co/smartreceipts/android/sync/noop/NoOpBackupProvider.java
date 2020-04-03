@@ -15,9 +15,9 @@ import javax.inject.Inject;
 import co.smartreceipts.core.di.scopes.ApplicationScope;
 import co.smartreceipts.android.sync.BackupProvider;
 import co.smartreceipts.android.sync.BackupProvidersManager;
-import co.smartreceipts.android.sync.errors.CriticalSyncError;
-import co.smartreceipts.android.sync.errors.SyncErrorType;
-import co.smartreceipts.android.sync.model.RemoteBackupMetadata;
+import co.smartreceipts.core.sync.errors.CriticalSyncError;
+import co.smartreceipts.core.sync.errors.SyncErrorType;
+import co.smartreceipts.core.sync.model.RemoteBackupMetadata;
 import co.smartreceipts.core.sync.model.impl.Identifier;
 import io.reactivex.Observable;
 import io.reactivex.Single;
@@ -52,7 +52,7 @@ public class NoOpBackupProvider implements BackupProvider {
     @NonNull
     @Override
     public Single<List<RemoteBackupMetadata>> getRemoteBackups() {
-        return Single.just(Collections.<RemoteBackupMetadata>emptyList());
+        return Single.just(Collections.emptyList());
     }
 
     @Nullable
@@ -87,13 +87,13 @@ public class NoOpBackupProvider implements BackupProvider {
     @NonNull
     @Override
     public Single<List<File>> downloadAllData(@NonNull RemoteBackupMetadata remoteBackupMetadata, @NonNull File downloadLocation) {
-        return Single.just(Collections.<File>emptyList());
+        return Single.just(Collections.emptyList());
     }
 
     @NonNull
     @Override
     public Single<List<File>> debugDownloadAllData(@NonNull RemoteBackupMetadata remoteBackupMetadata, @NonNull File downloadLocation) {
-        return Single.just(Collections.<File>emptyList());
+        return Single.just(Collections.emptyList());
     }
 
     @NonNull

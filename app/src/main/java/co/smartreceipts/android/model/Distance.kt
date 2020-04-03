@@ -3,8 +3,8 @@ package co.smartreceipts.android.model
 import android.os.Parcelable
 import co.smartreceipts.android.date.DisplayableDate
 import co.smartreceipts.android.model.utils.ModelUtils
-import co.smartreceipts.android.sync.model.SyncState
-import co.smartreceipts.android.sync.model.Syncable
+import co.smartreceipts.core.sync.model.SyncState
+import co.smartreceipts.core.sync.model.Syncable
 import kotlinx.android.parcel.Parcelize
 import java.math.BigDecimal
 import java.sql.Date
@@ -76,7 +76,7 @@ class Distance(
      */
     val currencyFormattedRate: String
         get() {
-            val precision = if (decimalFormattedRate.endsWith("0")) Price.DEFAULT_DECIMAL_PRECISION else RATE_PRECISION
+            val precision = if (decimalFormattedRate.endsWith("0")) Price.TOTAL_DECIMAL_PRECISION else RATE_PRECISION
             return ModelUtils.getCurrencyFormattedValue(rate, price.currency, precision)
         }
 

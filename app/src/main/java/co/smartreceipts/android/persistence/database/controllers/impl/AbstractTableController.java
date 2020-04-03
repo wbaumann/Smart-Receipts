@@ -25,7 +25,7 @@ import co.smartreceipts.android.persistence.database.controllers.results.InsertR
 import co.smartreceipts.android.persistence.database.controllers.results.UpdateResult;
 import co.smartreceipts.android.persistence.database.operations.DatabaseOperationMetadata;
 import co.smartreceipts.android.persistence.database.tables.Table;
-import co.smartreceipts.android.sync.model.Syncable;
+import co.smartreceipts.core.sync.model.Syncable;
 import co.smartreceipts.android.utils.PreFixedThreadFactory;
 import co.smartreceipts.analytics.log.Logger;
 import io.reactivex.Observable;
@@ -87,7 +87,7 @@ abstract class AbstractTableController<ModelType extends Keyed & Syncable> imple
 
     @Override
     public synchronized void subscribe(@NonNull TableEventsListener<ModelType> tableEventsListener) {
-        final BridgingTableEventsListener<ModelType> bridge = new BridgingTableEventsListener<ModelType>(this, tableEventsListener, mObserveOnScheduler);
+        final BridgingTableEventsListener<ModelType> bridge = new BridgingTableEventsListener<>(this, tableEventsListener, mObserveOnScheduler);
         mBridgingTableEventsListeners.put(tableEventsListener, bridge);
         mTableEventsListeners.add(tableEventsListener);
         bridge.subscribe();

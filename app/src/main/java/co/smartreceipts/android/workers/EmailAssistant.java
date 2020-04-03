@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
@@ -51,7 +50,7 @@ import co.smartreceipts.android.settings.UserPreferenceManager;
 import co.smartreceipts.android.settings.catalog.UserPreference;
 import co.smartreceipts.android.utils.ImageUtils;
 import co.smartreceipts.android.utils.IntentUtils;
-import co.smartreceipts.android.utils.UriUtils;
+import co.smartreceipts.core.utils.UriUtils;
 import co.smartreceipts.analytics.log.Logger;
 import co.smartreceipts.android.workers.reports.Report;
 import co.smartreceipts.android.workers.reports.ReportGenerationException;
@@ -238,7 +237,7 @@ public class EmailAssistant {
         private final WeakReference<ProgressDialog> mProgressDialog;
         private final File[] mFiles;
         private final EnumSet<EmailOptions> mOptions;
-        private boolean memoryErrorOccurred = false;
+        private boolean memoryErrorOccurred;
 
         public EmailAttachmentWriter(PersistenceManager persistenceManager,
                                      ProgressDialog dialog,
@@ -326,14 +325,13 @@ public class EmailAssistant {
             }
 
             if (mOptions.contains(EmailOptions.CSV)) {
+                boolean printFooters = mPreferenceManager.get(UserPreference.ReportOutput.ShowTotalOnCSV);
                 try {
                     mStorageManager.delete(dir, dir.getName() + ".csv");
 
                     final List<Column<Receipt>> csvColumns = mDB.getCSVTable().get().blockingGet();
-                    final CsvTableGenerator<Receipt> csvTableGenerator = new CsvTableGenerator<Receipt>(reportResourcesManager,
-                            csvColumns, true, true, new LegacyReceiptFilter(mPreferenceManager));
-
-                    String data;
+                    final CsvTableGenerator<Receipt> csvTableGenerator = new CsvTableGenerator<>(reportResourcesManager,
+                            csvColumns, true, printFooters, new LegacyReceiptFilter(mPreferenceManager));
 
                     final List<Distance> distances = new ArrayList<>(mDB.getDistanceTable().getBlocking(trip, false));
                     final List<Receipt> receiptsTableList = new ArrayList<>(receipts);
@@ -344,7 +342,7 @@ public class EmailAssistant {
                         Collections.sort(receiptsTableList, new ReceiptDateComparator());
                     }
 
-                    data = csvTableGenerator.generate(receiptsTableList);
+                    String data = csvTableGenerator.generate(receiptsTableList);
 
                     // Distance table
                     if (mPreferenceManager.get(UserPreference.Distance.PrintDistanceTableInReports)) {
@@ -356,7 +354,7 @@ public class EmailAssistant {
                             final List<Column<Distance>> distanceColumns = distanceColumnDefinitions.getAllColumns();
                             data += "\n\n";
                             data += new CsvTableGenerator<>(reportResourcesManager, distanceColumns,
-                                    true, true).generate(distances);
+                                    true, printFooters).generate(distances);
                         }
                     }
 
@@ -379,7 +377,7 @@ public class EmailAssistant {
 
                         data += "\n\n";
                         data += new CsvTableGenerator<>(reportResourcesManager, categoryColumns,
-                                true, true).generate(sumCategoryGroupingResults);
+                                true, printFooters).generate(sumCategoryGroupingResults);
                     }
 
                     // Separated tables for each category
@@ -393,7 +391,7 @@ public class EmailAssistant {
                             data += "\n\n";
                             data += groupingResult.getCategory().getName() + "\n";
                             data += new CsvTableGenerator<>(reportResourcesManager, csvColumns,
-                                    true, true)
+                                    true, printFooters)
                                     .generate(groupingResult.getReceipts());
                         }
                     }
@@ -438,10 +436,23 @@ public class EmailAssistant {
 
                     if (!filterOutReceipt(mPreferenceManager, receipt)) {
                         if (receipt.hasImage()) {
+
+                            final List<Column<Receipt>> csvColumns = mDB.getCSVTable().get().blockingGet();
+
+                            StringBuilder userCommentBuilder = new StringBuilder();
+
+                            for (Column<Receipt> col : csvColumns) {
+                                userCommentBuilder.append(reportResourcesManager.getFlexString(col.getHeaderStringResId()));
+                                userCommentBuilder.append(": ");
+                                userCommentBuilder.append(col.getValue(receipt));
+                                userCommentBuilder.append("\n");
+                            }
+                            String userComment = userCommentBuilder.toString();
+
                             try {
                                 Bitmap b = stampImage(trip, receipt, Bitmap.Config.ARGB_8888);
                                 if (b != null) {
-                                    mStorageManager.writeBitmap(dir, b, receipt.getFile().getName(), CompressFormat.JPEG, 85);
+                                    mStorageManager.writeBitmap(dir, b, receipt.getFile().getName(), CompressFormat.JPEG, 85, userComment);
                                     b.recycle();
                                     b = null;
                                 }
@@ -451,7 +462,7 @@ public class EmailAssistant {
                                 try {
                                     Bitmap b = stampImage(trip, receipt, Bitmap.Config.RGB_565);
                                     if (b != null) {
-                                        mStorageManager.writeBitmap(dir, b, receipt.getFile().getName(), CompressFormat.JPEG, 85);
+                                        mStorageManager.writeBitmap(dir, b, receipt.getFile().getName(), CompressFormat.JPEG, 85, userComment);
                                         b.recycle();
                                     }
                                 } catch (OutOfMemoryError e2) {
@@ -488,11 +499,7 @@ public class EmailAssistant {
         private boolean filterOutReceipt(UserPreferenceManager preferences, Receipt receipt) {
             if (preferences.get(UserPreference.Receipts.OnlyIncludeReimbursable) && !receipt.isReimbursable()) {
                 return true;
-            } else if (receipt.getPrice().getPriceAsFloat() < preferences.get(UserPreference.Receipts.MinimumReceiptPrice)) {
-                return true;
-            } else {
-                return false;
-            }
+            } else return receipt.getPrice().getPriceAsFloat() < preferences.get(UserPreference.Receipts.MinimumReceiptPrice);
         }
 
         private static final float IMG_SCALE_FACTOR = 2.1f;
@@ -513,7 +520,7 @@ public class EmailAssistant {
                     foreHeight = (int) (foreWidth / HW_RATIO);
                 }
 
-                // Set up the paddings
+                // Set up the padding
                 int xPad = (int) (foreWidth / IMG_SCALE_FACTOR);
                 int yPad = (int) (foreHeight / IMG_SCALE_FACTOR);
 
@@ -553,7 +560,6 @@ public class EmailAssistant {
                 canvas.drawText(trip.getName(), xPad / 2, y, brush);
                 y += spacing;
                 canvas.drawText(dateFormatter.getFormattedDate(trip.getStartDisplayableDate()) + " -- " + dateFormatter.getFormattedDate(trip.getEndDisplayableDate()), xPad / 2, y, brush);
-                y += spacing;
                 y = background.getHeight() - yPad / 2 + spacing * 2;
                 canvas.drawText(reportResourcesManager.getFlexString(R.string.RECEIPTMENU_FIELD_NAME) + ": " + receipt.getName(), xPad / 2, y, brush);
                 y += spacing;
@@ -579,7 +585,6 @@ public class EmailAssistant {
                 }
                 if (receipt.hasExtraEditText3()) {
                     canvas.drawText(reportResourcesManager.getFlexString(R.string.RECEIPTMENU_FIELD_EXTRA_EDITTEXT_3) + ": " + receipt.getExtraEditText3(), xPad / 2, y, brush);
-                    y += spacing;
                 }
 
                 // Clear out the dead data here
@@ -620,12 +625,9 @@ public class EmailAssistant {
                                     mPreferenceManager.get(UserPreference.ReportOutput.PrintReceiptsTableInLandscape)
                                             ? context.getString(R.string.report_pdf_error_too_many_columns_message)
                                             : context.getString(R.string.report_pdf_error_too_many_columns_message_landscape))
-                            .setPositiveButton(R.string.report_pdf_error_go_to_settings, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                    navigationHandler.navigateToSettingsScrollToReportSection();
-                                }
+                            .setPositiveButton(R.string.report_pdf_error_go_to_settings, (dialog1, id) -> {
+                                dialog1.cancel();
+                                navigationHandler.navigateToSettingsScrollToReportSection();
                             })
                             .setNegativeButton(android.R.string.cancel, null)
                             .show();

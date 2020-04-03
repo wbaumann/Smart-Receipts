@@ -78,7 +78,7 @@
     <string name="report_header_receipts_total_tax">Total de impuesto: %s</string>
     <string name="report_header_receipts_total_no_tax">Total de recibos (sin impuesto): %s</string>
     <string name="report_header_receipts_total_with_tax">Total de recibos (con impuesto): %s</string>
-    <string name="report_header_distance_total">Distancia total: %s</string>
+    <string name="report_header_distance_total">Distancia precio total: %s</string>
     <string name="report_header_receipts_total_reimbursable">Gran total (reembolsable): %s</string>
     <string name="report_header_grand_total">Gran total: %s</string>
     <string name="report_header_cost_center">Centro de costos: %s</string>
@@ -183,6 +183,7 @@
     <string name="DURATION_ERROR">Error: La fecha inicial debe ser antes de la fecha final</string>
     <string name="EXPORT_ERROR">Error: No se pudo exportar correctamente tu información.</string>
     <string name="IMPORT_ERROR">Error: No se pudo reconocer el archivo como importable</string>
+    <string name="IMPORT_MISSING_ERROR">Error: faltan demasiados archivos para importar</string>
     <string name="MOVE_ERROR">Error: No se pudo mover el recibo</string>
     <string name="COPY_ERROR">Error: No se pudo copiar el recibo</string>
     <string name="toast_warning_reset_exchange_rate">Advertencia: Cambiar la moneda restablecerá TODAS las tasas de cambio</string>

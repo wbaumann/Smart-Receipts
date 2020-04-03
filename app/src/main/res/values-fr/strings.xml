@@ -78,7 +78,7 @@
     <string name="report_header_receipts_total_tax">Total des taxes : %s</string>
     <string name="report_header_receipts_total_no_tax">Total des reçus (Hors taxe) : %s</string>
     <string name="report_header_receipts_total_with_tax">Total des reçus (Compris taxe): %s</string>
-    <string name="report_header_distance_total">Distance totale : %s</string>
+    <string name="report_header_distance_total">Distance prix totale : %s</string>
     <string name="report_header_receipts_total_reimbursable">Total (Remboursable) : %s</string>
     <string name="report_header_grand_total">Total : %s</string>
     <string name="report_header_cost_center">Centre de coûts : %s</string>
@@ -183,6 +183,7 @@
     <string name="DURATION_ERROR">Erreur : La date de début doit être avant la date de fin</string>
     <string name="EXPORT_ERROR">Erreur : Impossible d\'exporter correctement vos données.</string>
     <string name="IMPORT_ERROR">Erreur : Impossible de reconnaître le fichier comme importable</string>
+    <string name="IMPORT_MISSING_ERROR">Erreur: trop de fichiers manquants pour être importés</string>
     <string name="MOVE_ERROR">Erreur : Impossible de déplacer le reçu</string>
     <string name="COPY_ERROR">Erreur : Impossible de copier le reçu</string>
     <string name="toast_warning_reset_exchange_rate">Attention : Changer la devise réinitialisera TOUS les taux de change</string>

@@ -30,12 +30,12 @@ import co.smartreceipts.android.persistence.database.tables.ordering.OrderByOrde
 import co.smartreceipts.android.persistence.database.tables.ordering.OrderingPreferencesManager;
 import co.smartreceipts.android.settings.UserPreferenceManager;
 import co.smartreceipts.android.settings.catalog.UserPreference;
-import co.smartreceipts.android.sync.model.SyncState;
-import co.smartreceipts.android.sync.model.impl.DefaultSyncState;
-import co.smartreceipts.android.sync.model.impl.IdentifierMap;
-import co.smartreceipts.android.sync.model.impl.MarkedForDeletionMap;
-import co.smartreceipts.android.sync.model.impl.SyncStatusMap;
-import co.smartreceipts.android.sync.provider.SyncProvider;
+import co.smartreceipts.core.sync.model.SyncState;
+import co.smartreceipts.core.sync.model.impl.DefaultSyncState;
+import co.smartreceipts.core.sync.model.impl.IdentifierMap;
+import co.smartreceipts.core.sync.model.impl.MarkedForDeletionMap;
+import co.smartreceipts.core.sync.model.impl.SyncStatusMap;
+import co.smartreceipts.core.sync.provider.SyncProvider;
 import wb.android.storage.StorageManager;
 
 /**
@@ -347,7 +347,7 @@ public class ReceiptsTable extends TripForeignKeyAbstractSqlTable<Receipt> {
             onUpgradeToAddUUID(db, oldVersion);
         }
 
-        if (oldVersion <= 19) { // Added a timezone column to the receipts table
+        if (oldVersion <= 19) {
             final String alterReceipts = "ALTER TABLE " + ReceiptsTable.TABLE_NAME + " ADD " + ReceiptsTable.COLUMN_NAME_HIDDEN_AUTO_COMPLETE + " BOOLEAN DEFAULT 0";
             final String alterReceipts2 = "ALTER TABLE " + ReceiptsTable.TABLE_NAME + " ADD " + ReceiptsTable.COLUMN_COMMENT_HIDDEN_AUTO_COMPLETE + " BOOLEAN DEFAULT 0";
 

@@ -23,7 +23,7 @@ import co.smartreceipts.analytics.events.DefaultDataPointEvent;
 import co.smartreceipts.analytics.events.Events;
 import co.smartreceipts.android.imports.intents.model.FileType;
 import co.smartreceipts.android.imports.intents.model.IntentImportResult;
-import co.smartreceipts.android.utils.UriUtils;
+import co.smartreceipts.core.utils.UriUtils;
 import co.smartreceipts.core.di.scopes.ApplicationScope;
 import co.smartreceipts.analytics.log.Logger;
 import io.reactivex.Maybe;
@@ -36,7 +36,7 @@ import io.reactivex.subjects.Subject;
 public class IntentImportProcessor {
 
     private static final String INTENT_CONSUMED = "co.smartreceipts.android.INTENT_CONSUMED";
-    private static final Set<String> SUPPORTED_SMR_MIME_TYPES = new HashSet<>(Arrays.asList("application/octet-stream", "application/zip", "application/x-zip"));
+    private static final Set<String> SUPPORTED_SMR_MIME_TYPES = new HashSet<>(Arrays.asList("application/octet-stream", "application/zip", "application/x-zip", "application/binary"));
 
     private final Context context;
     private final Analytics analytics;

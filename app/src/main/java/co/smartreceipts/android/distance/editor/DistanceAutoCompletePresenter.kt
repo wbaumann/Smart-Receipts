@@ -23,7 +23,7 @@ class DistanceAutoCompletePresenter @Inject constructor(
                         DistanceAutoCompleteField.Comment -> interactor.updateDistance(t.item, DistanceBuilderFactory(t.item)
                                 .setCommentHiddenFromAutoComplete(true)
                                 .build())
-                        else -> throw UnsupportedOperationException()
+                        else -> throw UnsupportedOperationException("Unknown type: " + t.type)
                     }
                 }
                 .subscribe {
@@ -42,7 +42,7 @@ class DistanceAutoCompletePresenter @Inject constructor(
                         DistanceAutoCompleteField.Comment -> interactor.updateDistance(t.item, DistanceBuilderFactory(t.item)
                                 .setCommentHiddenFromAutoComplete(false)
                                 .build())
-                        else -> throw UnsupportedOperationException()
+                        else -> throw UnsupportedOperationException("Unknown type: " + t.type)
                     }
                 }
                 .subscribe {

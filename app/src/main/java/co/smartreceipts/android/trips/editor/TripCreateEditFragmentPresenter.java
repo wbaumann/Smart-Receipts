@@ -67,7 +67,7 @@ public class TripCreateEditFragmentPresenter {
                                         .setCostCenterHiddenFromAutoComplete(true)
                                         .build());
                     } else {
-                        throw new UnsupportedOperationException();
+                        throw new UnsupportedOperationException("Unknown type: " + autoCompleteClickEvent.getType());
                     }
                 })
                 .subscribe(tripOptional -> {
@@ -94,7 +94,7 @@ public class TripCreateEditFragmentPresenter {
                                         .setCostCenterHiddenFromAutoComplete(false)
                                         .build());
                     } else {
-                        throw new UnsupportedOperationException();
+                        throw new UnsupportedOperationException("Unknown type: " + autoCompleteClickEvent.getType());
                     }
                 })
                 .subscribe(tripOptional -> {

@@ -65,7 +65,7 @@ public class ReceiptCreateEditFragmentPresenter {
                                         .setCommentHiddenFromAutoComplete(true)
                                         .build());
                     } else {
-                        throw new UnsupportedOperationException();
+                        throw new UnsupportedOperationException("Unknown type: " + autoCompleteClickEvent.getType());
                     }
                 })
                 .subscribe(receiptOptional -> {
@@ -87,7 +87,7 @@ public class ReceiptCreateEditFragmentPresenter {
                                         .setCommentHiddenFromAutoComplete(false)
                                         .build());
                     } else {
-                        throw new UnsupportedOperationException();
+                        throw new UnsupportedOperationException("Unknown type: " + autoCompleteClickEvent.getType());
                     }
                 })
                 .subscribe(receiptOptional -> {

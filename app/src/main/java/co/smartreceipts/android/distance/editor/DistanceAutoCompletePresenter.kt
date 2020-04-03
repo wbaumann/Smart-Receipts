@@ -47,7 +47,7 @@ class DistanceAutoCompletePresenter @Inject constructor(
                 }
                 .subscribe {
                     if (it.isPresent) {
-                        view.unHideAutoCompleteClick()
+                        view.sendAutoCompleteUnHideEvent()
                     } else {
                         view.displayAutoCompleteError()
                     }

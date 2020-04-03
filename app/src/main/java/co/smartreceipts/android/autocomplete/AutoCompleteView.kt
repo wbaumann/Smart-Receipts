@@ -33,8 +33,8 @@ interface AutoCompleteView<Type> {
     val unHideAutoCompleteVisibilityClick: Observable<AutoCompleteUpdateEvent<Type>>
 
     fun fillValueField(autoCompleteResult: AutoCompleteResult<Type>)
-    fun hideAutoCompleteClick(autoCompleteResult: AutoCompleteResult<Type>)
-    fun removeValueFromDropDown()
-    fun unHideAutoCompleteClick()
+    fun sendAutoCompleteHideEvent(autoCompleteResult: AutoCompleteResult<Type>)
+    fun removeValueFromAutoComplete()
+    fun sendAutoCompleteUnHideEvent()
     fun displayAutoCompleteError()
 }

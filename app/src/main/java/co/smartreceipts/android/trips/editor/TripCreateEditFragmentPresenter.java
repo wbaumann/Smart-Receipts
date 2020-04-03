@@ -72,7 +72,7 @@ public class TripCreateEditFragmentPresenter {
                 })
                 .subscribe(tripOptional -> {
                     if (tripOptional.isPresent()) {
-                        fragment.removeValueFromDropDown();
+                        fragment.removeValueFromAutoComplete();
                     }
                 }));
 
@@ -99,7 +99,7 @@ public class TripCreateEditFragmentPresenter {
                 })
                 .subscribe(tripOptional -> {
                     if (tripOptional.isPresent()) {
-                        fragment.unHideAutoCompleteClick();
+                        fragment.sendAutoCompleteUnHideEvent();
                     } else {
                         fragment.displayAutoCompleteError();
                     }

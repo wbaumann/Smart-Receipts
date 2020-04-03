@@ -990,7 +990,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     }
 
     @Override
-    public void hideAutoCompleteClick(@NotNull AutoCompleteResult<Receipt> autoCompleteResult) {
+    public void sendAutoCompleteHideEvent(@NotNull AutoCompleteResult<Receipt> autoCompleteResult) {
         SoftKeyboardManager.hideKeyboard(focusedView);
         autoCompleteVisibilityItem = autoCompleteResult;
         positionToUpdateVisibility = resultsAdapter.getPosition(autoCompleteResult);
@@ -1005,7 +1005,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     }
 
     @Override
-    public void removeValueFromDropDown() {
+    public void removeValueFromAutoComplete() {
         getActivity().runOnUiThread(() -> {
             resultsAdapter.remove(autoCompleteVisibilityItem);
             resultsAdapter.notifyDataSetChanged();
@@ -1020,7 +1020,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     }
 
     @Override
-    public void unHideAutoCompleteClick() {
+    public void sendAutoCompleteUnHideEvent() {
         getActivity().runOnUiThread(() -> {
             resultsAdapter.insert(autoCompleteVisibilityItem, positionToUpdateVisibility);
             resultsAdapter.notifyDataSetChanged();

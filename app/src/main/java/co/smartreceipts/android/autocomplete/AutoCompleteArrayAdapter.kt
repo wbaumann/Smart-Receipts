@@ -47,7 +47,7 @@ class AutoCompleteArrayAdapter<Type>(context: Context,
 
         val image = listItem.findViewById(R.id.imgAutoCompleteDelete) as ImageView
         image.setOnClickListener {
-            view.hideAutoCompleteClick(result)
+            view.sendAutoCompleteHideEvent(result)
         }
         return listItem
     }

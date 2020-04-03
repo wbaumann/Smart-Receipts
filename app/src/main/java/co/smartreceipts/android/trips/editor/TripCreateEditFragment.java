@@ -576,7 +576,7 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
     }
 
     @Override
-    public void hideAutoCompleteClick(@NotNull AutoCompleteResult<Trip> autoCompleteResult) {
+    public void sendAutoCompleteHideEvent(@NotNull AutoCompleteResult<Trip> autoCompleteResult) {
         SoftKeyboardManager.hideKeyboard(focusedView);
         autoCompleteVisibilityItem = autoCompleteResult;
         positionToUpdateVisibility = resultsAdapter.getPosition(autoCompleteResult);
@@ -594,7 +594,7 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
     }
 
     @Override
-    public void removeValueFromDropDown() {
+    public void removeValueFromAutoComplete() {
         getActivity().runOnUiThread(() -> {
             resultsAdapter.remove(autoCompleteVisibilityItem);
             resultsAdapter.notifyDataSetChanged();
@@ -608,7 +608,7 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
     }
 
     @Override
-    public void unHideAutoCompleteClick() {
+    public void sendAutoCompleteUnHideEvent() {
         getActivity().runOnUiThread(() -> {
             resultsAdapter.insert(autoCompleteVisibilityItem, positionToUpdateVisibility);
             resultsAdapter.notifyDataSetChanged();

@@ -403,7 +403,7 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
         SoftKeyboardManager.hideKeyboard(focusedView)
     }
 
-    override fun hideAutoCompleteClick(autoCompleteResult: AutoCompleteResult<Distance>) {
+    override fun sendAutoCompleteHideEvent(autoCompleteResult: AutoCompleteResult<Distance>) {
         SoftKeyboardManager.hideKeyboard(focusedView)
         autoCompleteVisibilityItem = autoCompleteResult
         positionToUpdateVisibility = resultsAdapter.getPosition(autoCompleteResult)
@@ -416,7 +416,7 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
         }
     }
 
-    override fun removeValueFromDropDown() {
+    override fun removeValueFromAutoComplete() {
         activity!!.runOnUiThread {
             resultsAdapter.remove(autoCompleteVisibilityItem)
             resultsAdapter.notifyDataSetChanged()
@@ -430,7 +430,7 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
         }
     }
 
-    override fun unHideAutoCompleteClick() {
+    override fun sendAutoCompleteUnHideEvent() {
         activity!!.runOnUiThread {
             resultsAdapter.insert(autoCompleteVisibilityItem, positionToUpdateVisibility)
             resultsAdapter.notifyDataSetChanged()

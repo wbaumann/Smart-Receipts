@@ -70,7 +70,7 @@ public class ReceiptCreateEditFragmentPresenter {
                 })
                 .subscribe(receiptOptional -> {
                     if (receiptOptional.isPresent()) {
-                        fragment.removeValueFromDropDown();
+                        fragment.removeValueFromAutoComplete();
                     }
                 }));
 
@@ -92,7 +92,7 @@ public class ReceiptCreateEditFragmentPresenter {
                 })
                 .subscribe(receiptOptional -> {
                     if (receiptOptional.isPresent()) {
-                        fragment.unHideAutoCompleteClick();
+                        fragment.sendAutoCompleteUnHideEvent();
                     } else {
                         fragment.displayAutoCompleteError();
                     }

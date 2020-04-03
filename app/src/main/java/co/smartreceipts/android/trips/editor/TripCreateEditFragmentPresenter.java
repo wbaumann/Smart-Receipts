@@ -50,20 +50,20 @@ public class TripCreateEditFragmentPresenter {
 
     public void subscribe() {
         compositeDisposable.add(fragment.getHideAutoCompleteVisibilityClick()
-                .flatMap(autoCompleteClickUpdate -> {
-                    if (autoCompleteClickUpdate.getType() == TripAutoCompleteField.Name) {
-                        return updateTrip(autoCompleteClickUpdate.getItem(),
-                                new TripBuilderFactory(autoCompleteClickUpdate.getItem())
+                .flatMap(autoCompleteClickEvent -> {
+                    if (autoCompleteClickEvent.getType() == TripAutoCompleteField.Name) {
+                        return updateTrip(autoCompleteClickEvent.getItem(),
+                                new TripBuilderFactory(autoCompleteClickEvent.getItem())
                                         .setNameHiddenFromAutoComplete(true)
                                         .build());
-                    } else if (autoCompleteClickUpdate.getType() == TripAutoCompleteField.Comment) {
-                        return updateTrip(autoCompleteClickUpdate.getItem(),
-                                new TripBuilderFactory(autoCompleteClickUpdate.getItem())
+                    } else if (autoCompleteClickEvent.getType() == TripAutoCompleteField.Comment) {
+                        return updateTrip(autoCompleteClickEvent.getItem(),
+                                new TripBuilderFactory(autoCompleteClickEvent.getItem())
                                         .setCommentHiddenFromAutoComplete(true)
                                         .build());
-                    } else if (autoCompleteClickUpdate.getType() == TripAutoCompleteField.CostCenter) {
-                        return updateTrip(autoCompleteClickUpdate.getItem(),
-                                new TripBuilderFactory(autoCompleteClickUpdate.getItem())
+                    } else if (autoCompleteClickEvent.getType() == TripAutoCompleteField.CostCenter) {
+                        return updateTrip(autoCompleteClickEvent.getItem(),
+                                new TripBuilderFactory(autoCompleteClickEvent.getItem())
                                         .setCostCenterHiddenFromAutoComplete(true)
                                         .build());
                     } else {

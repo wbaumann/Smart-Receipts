@@ -31,8 +31,7 @@ android {
         testInstrumentationRunner "co.smartreceipts.android.test.runner.ApplicationAwareAndroidJUnitRunner"
         testInstrumentationRunnerArguments clearPackageData: 'true'
     }
-
-
+    
     signingConfigs {
         debug {
             storeFile file("../keystore/debug.keystore")

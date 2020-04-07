@@ -208,7 +208,7 @@ public class TripCreateEditFragmentPresenter {
         return persistenceManager.getPreferenceManager().get(UserPreference.General.DateSeparator);
     }
 
-    private Observable<Optional<Trip>> updateTrip(Trip oldTrip, Trip newTrip) {
+    public Observable<Optional<Trip>> updateTrip(Trip oldTrip, Trip newTrip) {
         return tripTableController.update(oldTrip, newTrip, new DatabaseOperationMetadata());
     }
 }

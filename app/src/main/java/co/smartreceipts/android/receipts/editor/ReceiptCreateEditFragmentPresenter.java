@@ -1,5 +1,7 @@
 package co.smartreceipts.android.receipts.editor;
 
+import androidx.annotation.NonNull;
+
 import com.hadisatrio.optional.Optional;
 
 import java.sql.Date;
@@ -17,7 +19,6 @@ import co.smartreceipts.android.model.factory.ExchangeRateBuilderFactory;
 import co.smartreceipts.android.model.factory.ReceiptBuilderFactory;
 import co.smartreceipts.android.persistence.database.controllers.impl.ReceiptTableController;
 import co.smartreceipts.android.persistence.database.operations.DatabaseOperationMetadata;
-import co.smartreceipts.android.persistence.database.tables.ordering.OrderingPreferencesManager;
 import co.smartreceipts.android.purchases.PurchaseManager;
 import co.smartreceipts.android.purchases.model.InAppPurchase;
 import co.smartreceipts.android.purchases.source.PurchaseSource;
@@ -25,29 +26,31 @@ import co.smartreceipts.android.purchases.wallet.PurchaseWallet;
 import co.smartreceipts.android.settings.UserPreferenceManager;
 import co.smartreceipts.android.settings.catalog.UserPreference;
 import co.smartreceipts.analytics.log.Logger;
+import dagger.internal.Preconditions;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 
 @FragmentScope
 public class ReceiptCreateEditFragmentPresenter {
 
-    @Inject
-    ReceiptCreateEditFragment fragment;
-    @Inject
-    UserPreferenceManager preferenceManager;
-    @Inject
-    PurchaseManager purchaseManager;
-    @Inject
-    PurchaseWallet purchaseWallet;
-    @Inject
-    ReceiptTableController receiptTableController;
-    @Inject
-    OrderingPreferencesManager orderingPreferencesManager;
-
-    private CompositeDisposable compositeDisposable;
+    private final ReceiptCreateEditFragment fragment;
+    private final UserPreferenceManager preferenceManager;
+    private final PurchaseManager purchaseManager;
+    private final PurchaseWallet purchaseWallet;
+    private final ReceiptTableController receiptTableController;
+    private final CompositeDisposable compositeDisposable;
 
     @Inject
-    ReceiptCreateEditFragmentPresenter() {
+    ReceiptCreateEditFragmentPresenter(@NonNull ReceiptCreateEditFragment fragment,
+                                       @NonNull UserPreferenceManager preferenceManager,
+                                       @NonNull PurchaseManager purchaseManager,
+                                       @NonNull PurchaseWallet purchaseWallet,
+                                       @NonNull ReceiptTableController receiptTableController) {
+        this.fragment = Preconditions.checkNotNull(fragment);
+        this.preferenceManager = Preconditions.checkNotNull(preferenceManager);
+        this.purchaseManager = Preconditions.checkNotNull(purchaseManager);
+        this.purchaseWallet = Preconditions.checkNotNull(purchaseWallet);
+        this.receiptTableController = Preconditions.checkNotNull(receiptTableController);
         compositeDisposable = new CompositeDisposable();
     }
 
@@ -227,7 +230,7 @@ public class ReceiptCreateEditFragmentPresenter {
         return false;
     }
 
-    private Observable<Optional<Receipt>> updateReceipt(Receipt oldReceipt, Receipt newReceipt) {
+    public Observable<Optional<Receipt>> updateReceipt(Receipt oldReceipt, Receipt newReceipt) {
         return receiptTableController.update(oldReceipt, newReceipt, new DatabaseOperationMetadata());
     }
 

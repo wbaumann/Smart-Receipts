@@ -422,9 +422,9 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
             resultsAdapter.notifyDataSetChanged()
             val view = activity!!.findViewById<ConstraintLayout>(R.id.update_distance_layout)
             snackbar = Snackbar.make(view, getString(
-                    R.string.item_removed_from_auto_complete, autoCompleteVisibilityItem!!.displayName), Snackbar.LENGTH_LONG)
+                    R.string.item_removed_from_auto_complete, autoCompleteVisibilityItem.displayName), Snackbar.LENGTH_LONG)
             snackbar.setAction(R.string.undo) {
-                _unHideAutoCompleteVisibilityClicks.onNext(AutoCompleteUpdateEvent(autoCompleteVisibilityItem!!.firstItem, autoCompleteField))
+                _unHideAutoCompleteVisibilityClicks.onNext(AutoCompleteUpdateEvent(autoCompleteVisibilityItem.firstItem, autoCompleteField))
             }
             snackbar.show()
         }

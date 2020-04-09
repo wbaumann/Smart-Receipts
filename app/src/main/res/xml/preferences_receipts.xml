@@ -60,6 +60,11 @@
 	        android:title="@string/pref_receipt_include_tax_field_title"
 	        android:summary="@string/pref_receipt_include_tax_field_summary"
             android:defaultValue="@bool/pref_receipt_include_tax_field_defaultValue"/>
+		<CheckBoxPreference
+			android:key="@string/pref_receipt_include_tax2_field_key"
+			android:title="@string/pref_receipt_include_tax2_field_title"
+			android:summary="@string/pref_receipt_include_tax2_field_summary"
+			android:defaultValue="@bool/pref_receipt_include_tax2_field_defaultValue"/>
 	    <co.smartreceipts.android.settings.widget.DefaultTaxPercentagePreference
             android:key="@string/pref_receipt_tax_percent_key"
             android:title="@string/pref_receipt_tax_percent_title"

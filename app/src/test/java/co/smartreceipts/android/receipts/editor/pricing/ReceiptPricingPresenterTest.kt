@@ -57,7 +57,7 @@ class ReceiptPricingPresenterTest {
     fun setUp() {
         MockitoAnnotations.initMocks(this)
         doReturn(displayReceiptPriceConsumer).whenever(view).displayReceiptPrice()
-        doReturn(displayReceiptTaxConsumer).whenever(view).displayReceiptTax()
+        doReturn(displayReceiptTaxConsumer).whenever(view).displayReceiptTax1()
         doReturn(toggleReceiptTaxFieldVisibilityConsumer).whenever(view).toggleReceiptTaxFieldVisibility()
         whenever(userPreferenceManager.getSingle(UserPreference.Receipts.IncludeTaxField)).thenReturn(Single.just(true))
         whenever(userPreferenceManager.userPreferenceChangeStream).thenReturn(userPreferenceChangeStream)

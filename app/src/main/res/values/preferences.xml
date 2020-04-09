@@ -75,6 +75,9 @@
     <string name="pref_receipt_include_tax_field_key" translatable="false">IncludeTaxField</string>
     <string name="pref_receipt_include_tax_field_title">Include Tax Field</string>
     <string name="pref_receipt_include_tax_field_summary">Adds a line item for taxes</string>
+    <string name="pref_receipt_include_tax2_field_key" translatable="false">IncludeTax2Field</string>
+    <string name="pref_receipt_include_tax2_field_title">Include Second Tax Field</string>
+    <string name="pref_receipt_include_tax2_field_summary">Adds a line item for second tax</string>
     <string name="pref_receipt_tax_percent_key" translatable="false">TaxPercentage</string>
     <string name="pref_receipt_tax_percent_title">Default Tax Percentage</string>
     <string name="pref_receipt_pre_tax_key" translatable="false">PreTax</string>

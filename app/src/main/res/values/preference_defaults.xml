@@ -16,6 +16,7 @@
     <bool name="pref_receipt_reimbursable_only_defaultValue">false</bool>
     <bool name="pref_receipt_reimbursable_default_defaultValue">true</bool>
     <bool name="pref_receipt_include_tax_field_defaultValue">false</bool>
+    <bool name="pref_receipt_include_tax2_field_defaultValue">false</bool>
     <item name="pref_receipt_tax_percent_defaultValue" format="float" type="dimen">0.0</item>
     <bool name="pref_receipt_pre_tax_defaultValue">true</bool>
     <bool name="pref_receipt_enable_autocomplete_defaultValue">true</bool>

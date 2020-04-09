@@ -189,7 +189,8 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     private Toolbar toolbar;
     private AutoCompleteTextView nameBox;
     private EditText priceBox;
-    private AutoCompleteTextView taxBox;
+    private AutoCompleteTextView taxBox1;
+    private AutoCompleteTextView taxBox2;
     private Spinner currencySpinner;
     private NetworkRequestAwareEditText exchangeRateBox;
     private EditText exchangedPriceInBaseCurrencyBox;
@@ -201,10 +202,12 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     private CheckBox reimbursableCheckbox;
     private CheckBox fullPageCheckbox;
     private Button decimalSeparatorButton;
-    private View taxInputWrapper;
+    private View taxInputWrapper1;
+    private View taxInputWrapper2;
 
     private List<View> paymentMethodsViewsList;
     private List<View> exchangeRateViewsList;
+    private List<View> taxViewsList;
 
     // Flex fields (ie for white-label projects)
     EditText extraEditText1;
@@ -298,7 +301,8 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
         toolbar = binding.toolbar.toolbar;
         nameBox = binding.DIALOGRECEIPTMENUNAME;
         priceBox = binding.DIALOGRECEIPTMENUPRICE;
-        taxBox = binding.DIALOGRECEIPTMENUTAX;
+        taxBox1 = binding.DIALOGRECEIPTMENUTAX1;
+        taxBox1 = binding.DIALOGRECEIPTMENUTAX2;
         currencySpinner = binding.DIALOGRECEIPTMENUCURRENCY;
         exchangeRateBox = binding.receiptInputExchangeRate;
         exchangedPriceInBaseCurrencyBox = binding.receiptInputExchangedResult;
@@ -310,7 +314,8 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
         reimbursableCheckbox = binding.DIALOGRECEIPTMENUEXPENSABLE;
         fullPageCheckbox = binding.DIALOGRECEIPTMENUFULLPAGE;
         decimalSeparatorButton = binding.decimalSeparatorButton;
-        taxInputWrapper = binding.receiptInputTaxWrapper;
+        taxInputWrapper1 = binding.receiptInputTaxWrapper1;
+        taxInputWrapper2 = binding.receiptInputTaxWrapper2;
 
         paymentMethodsViewsList = new ArrayList<>();
         paymentMethodsViewsList.add(binding.receiptInputGuideImagePaymentMethod);
@@ -322,6 +327,8 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
         exchangeRateViewsList.add(exchangedPriceInBaseCurrencyBox);
         exchangeRateViewsList.add(receiptInputExchangeRateBaseCurrencyTextView);
 
+// todo add taxViewsList {R.id.receipt_input_guide_image_tax, R.id.DIALOG_RECEIPTMENU_TAX1, R.id.DIALOG_RECEIPTMENU_TAX2}
+        
         return binding.getRoot();
     }
 
@@ -339,7 +346,8 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
         // Apply white-label settings via our 'Flex' mechanism to update defaults
         flex.applyCustomSettings(nameBox);
         flex.applyCustomSettings(priceBox);
-        flex.applyCustomSettings(taxBox);
+        flex.applyCustomSettings(taxBox1);
+        flex.applyCustomSettings(taxBox2);
         flex.applyCustomSettings(currencySpinner);
         flex.applyCustomSettings(exchangeRateBox);
         flex.applyCustomSettings(dateBox);
@@ -364,7 +372,8 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
         // Set each focus listener, so we can track the focus view across resume -> pauses
         this.nameBox.setOnFocusChangeListener(this);
         this.priceBox.setOnFocusChangeListener(this);
-        this.taxBox.setOnFocusChangeListener(this);
+        this.taxBox1.setOnFocusChangeListener(this);
+        this.taxBox2.setOnFocusChangeListener(this);
         this.currencySpinner.setOnFocusChangeListener(this);
         this.dateBox.setOnFocusChangeListener(this);
         this.commentBox.setOnFocusChangeListener(this);
@@ -384,12 +393,21 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
 
         // Set-up tax adapter
         if (presenter.isIncludeTaxField()) {
-            taxBox.setAdapter(new TaxAutoCompleteAdapter(getActivity(),
+            taxBox1.setAdapter(new TaxAutoCompleteAdapter(getActivity(),
                     priceBox,
-                    taxBox,
+                    taxBox1,
                     presenter.isUsePreTaxPrice(),
                     presenter.getDefaultTaxPercentage(),
                     isNewReceipt()));
+
+            if (presenter.isIncludeTax2Field()) {
+                taxBox2.setAdapter(new TaxAutoCompleteAdapter(getActivity(),
+                        priceBox,
+                        taxBox2,
+                        presenter.isUsePreTaxPrice(),
+                        presenter.getDefaultTaxPercentage(),
+                        isNewReceipt()));
+            }
         }
 
         // Outline date defaults
@@ -434,7 +452,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
                     }
 
                     if (presenter.isIncludeTaxField() && ocrResponseParser.getTaxAmount() != null) {
-                        taxBox.setText(ocrResponseParser.getTaxAmount());
+                        taxBox1.setText(ocrResponseParser.getTaxAmount());
                         if (ocrResponseParser.getTotalAmount() != null) {
                             if (presenter.isUsePreTaxPrice()) {
                                 // If we're in pre-tax mode, let's calculate the price as (total - tax = pre-tax-price)
@@ -663,7 +681,8 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
             final Category category = categoriesAdapter.getItem(categoriesSpinner.getSelectedItemPosition());
             final String currency = currencySpinner.getSelectedItem().toString();
             final String price = priceBox.getText().toString();
-            final String tax = taxBox.getText().toString();
+            final String tax = taxBox1.getText().toString();
+            final String tax2 = taxBox2.getText().toString();
             final String exchangeRate = exchangeRateBox.getText() != null ? exchangeRateBox.getText().toString() : "";
             final String comment = commentBox.getText().toString();
             final PaymentMethod paymentMethod = (PaymentMethod) (presenter.isUsePaymentMethods() ? paymentMethodsSpinner.getSelectedItem() : null);
@@ -684,7 +703,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
             receiptInputCache.setCachedCategory(category);
             receiptInputCache.setCachedCurrency(currency);
 
-            presenter.saveReceipt(receiptDate, timeZone, price, tax, exchangeRate, comment,
+            presenter.saveReceipt(receiptDate, timeZone, price, tax, tax2, exchangeRate, comment,
                     paymentMethod, reimbursableCheckbox.isChecked(), fullPageCheckbox.isChecked(), name, category, currency,
                     extraText1, extraText2, extraText3);
 
@@ -714,15 +733,33 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     @NonNull
     @UiThread
     @Override
-    public Consumer<? super Price> displayReceiptTax() {
-        return RxTextViewExtensions.price(taxBox);
+    public Consumer<? super Price> displayReceiptTax1() {
+        return RxTextViewExtensions.price(taxBox1);
+    }
+
+    @NonNull
+    @UiThread
+    @Override
+    public Consumer<? super Price> displayReceiptTax2() {
+        return RxTextViewExtensions.price(taxBox2);
     }
 
     @NonNull
     @UiThread
     @Override
     public Consumer<? super Boolean> toggleReceiptTaxFieldVisibility() {
-        return RxView.visibility(taxInputWrapper);
+        return (Consumer<Boolean>) isVisible -> {
+            for (View v : taxViewsList) {
+                v.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+            }
+        };
+    }
+
+    @NonNull
+    @UiThread
+    @Override
+    public Consumer<? super Boolean> toggleReceiptTax2FieldVisibility() {
+        return RxView.visibility(taxInputWrapper2);
     }
 
     @NonNull
@@ -736,7 +773,8 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     @UiThread
     @Override
     public Observable<CharSequence> getReceiptTaxChanges() {
-        return RxTextView.textChanges(taxBox);
+        return RxTextView.textChanges(taxBox1);
+        // todo add tax2 changes
     }
 
     @NonNull

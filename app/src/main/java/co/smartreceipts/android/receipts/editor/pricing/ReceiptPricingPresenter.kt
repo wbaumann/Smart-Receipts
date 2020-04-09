@@ -25,12 +25,24 @@ class ReceiptPricingPresenter(view: ReceiptPricingView,
                 .observeOn(mainScheduler)
                 .subscribe(view.toggleReceiptTaxFieldVisibility()))
 
+        compositeDisposable.add(userPreferenceManager.getSingle(UserPreference.Receipts.IncludeTax2Field)
+            .subscribeOn(ioScheduler)
+            .observeOn(mainScheduler)
+            .subscribe(view.toggleReceiptTax2FieldVisibility()))
+
         compositeDisposable.add(userPreferenceManager.userPreferenceChangeStream
                 .subscribeOn(ioScheduler)
                 .filter { it == UserPreference.Receipts.IncludeTaxField }
                 .flatMapSingle { _ -> userPreferenceManager.getSingle(UserPreference.Receipts.IncludeTaxField) }
                 .observeOn(mainScheduler)
                 .subscribe(view.toggleReceiptTaxFieldVisibility()))
+
+        compositeDisposable.add(userPreferenceManager.userPreferenceChangeStream
+            .subscribeOn(ioScheduler)
+            .filter { it == UserPreference.Receipts.IncludeTax2Field }
+            .flatMapSingle { _ -> userPreferenceManager.getSingle(UserPreference.Receipts.IncludeTax2Field) }
+            .observeOn(mainScheduler)
+            .subscribe(view.toggleReceiptTax2FieldVisibility()))
 
         compositeDisposable.add(Observable.just(Optional.ofNullable<Receipt>(editableReceipt))
                 .filter { it.isPresent }
@@ -42,6 +54,6 @@ class ReceiptPricingPresenter(view: ReceiptPricingView,
                 .filter { it.isPresent }
                 .filter { _ -> savedInstanceState == null }
                 .map { receipt -> receipt.get().tax }
-                .subscribe(view.displayReceiptTax()))
+                .subscribe(view.displayReceiptTax1()))
     }
 }

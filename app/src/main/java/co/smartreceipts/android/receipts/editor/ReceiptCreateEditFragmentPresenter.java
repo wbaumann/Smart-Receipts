@@ -200,6 +200,7 @@ public class ReceiptCreateEditFragmentPresenter {
                 .setTimeZone(timeZone)
                 .setPrice(price)
                 .setTax(tax)
+                .setTax2(tax2)
                 .setExchangeRate(new ExchangeRateBuilderFactory().setBaseCurrency(currency)
                         .setRate(parentTrip.getTripCurrency(), exchangeRate)
                         .build())

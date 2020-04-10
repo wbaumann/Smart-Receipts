@@ -52,6 +52,7 @@ public class ReceiptsTable extends TripForeignKeyAbstractSqlTable<Receipt> {
     public static final String COLUMN_CATEGORY_ID = "categoryKey";
     public static final String COLUMN_PRICE = "price";
     public static final String COLUMN_TAX = "tax";
+    public static final String COLUMN_TAX2 = "tax2";
     public static final String COLUMN_EXCHANGE_RATE = "exchange_rate";
     public static final String COLUMN_DATE = "rcpt_date";
     public static final String COLUMN_TIMEZONE = "timezone";
@@ -356,6 +357,14 @@ public class ReceiptsTable extends TripForeignKeyAbstractSqlTable<Receipt> {
 
             db.execSQL(alterReceipts);
             db.execSQL(alterReceipts2);
+        }
+
+        if (oldVersion <= 20) { // add Tax2 column
+            final String addTax2Column = "ALTER TABLE " + ReceiptsTable.TABLE_NAME + " ADD " + ReceiptsTable.COLUMN_TAX2 + " DECIMAL(10, 2) DEFAULT 0.00";
+
+            Logger.debug(this, addTax2Column);
+
+            db.execSQL(addTax2Column);
         }
 
     }

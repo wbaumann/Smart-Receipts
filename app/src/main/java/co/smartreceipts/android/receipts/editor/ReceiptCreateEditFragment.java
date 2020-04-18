@@ -238,12 +238,12 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
         ocrResponse = (OcrResponse) getArguments().getSerializable(ARG_OCR);
         receiptInputCache = new ReceiptInputCache(requireFragmentManager());
         categoriesList = emptyList();
-        categoriesAdapter = new FooterButtonArrayAdapter<>(requireActivity(), new ArrayList<Category>(),
+        categoriesAdapter = new FooterButtonArrayAdapter<>(requireActivity(), new ArrayList<>(),
                 R.string.manage_categories, v -> {
             analytics.record(Events.Informational.ClickedManageCategories);
             navigationHandler.navigateToCategoriesEditor();
         });
-        paymentMethodsAdapter = new FooterButtonArrayAdapter<>(requireActivity(), new ArrayList<PaymentMethod>(),
+        paymentMethodsAdapter = new FooterButtonArrayAdapter<>(requireActivity(), new ArrayList<>(),
                 R.string.manage_payment_methods, v -> {
             analytics.record(Events.Informational.ClickedManagePaymentMethods);
             navigationHandler.navigateToPaymentMethodsEditor();

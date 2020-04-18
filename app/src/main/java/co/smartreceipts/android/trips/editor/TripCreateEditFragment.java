@@ -121,7 +121,6 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
     // Misc Views
     private View focusedView;
 
-
     public static TripCreateEditFragment newInstance() {
         return new TripCreateEditFragment();
     }

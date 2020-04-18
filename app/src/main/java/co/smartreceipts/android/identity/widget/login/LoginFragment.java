@@ -38,7 +38,6 @@ import dagger.android.support.AndroidSupportInjection;
 import io.reactivex.Observable;
 import kotlin.Unit;
 
-
 public class LoginFragment extends Fragment implements LoginView {
 
     @Inject
@@ -89,7 +88,7 @@ public class LoginFragment extends Fragment implements LoginView {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         this.emailInput.requestFocus();
         SoftKeyboardManager.showKeyboard(this.emailInput);
@@ -98,7 +97,7 @@ public class LoginFragment extends Fragment implements LoginView {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        final Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        final Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
     }
 

@@ -262,7 +262,6 @@ public class ReceiptsListFragment extends ReceiptsFragment implements ReceiptsLi
         return actionBarSubtitleUpdatesListener;
     }
 
-
     @Override
     public void present(@NotNull UiIndicator<Integer> indicator) {
         if (loadingProgress != null) {
@@ -294,7 +293,7 @@ public class ReceiptsListFragment extends ReceiptsFragment implements ReceiptsLi
     }
 
     @Override
-    public void navigateToCropActivity(File file, int requestCode) {
+    public void navigateToCropActivity(@NonNull File file, int requestCode) {
         navigationHandler.navigateToCropActivity(this, file, requestCode);
     }
 

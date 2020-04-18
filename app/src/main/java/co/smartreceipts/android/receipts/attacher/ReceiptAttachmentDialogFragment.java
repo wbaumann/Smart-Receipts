@@ -23,7 +23,6 @@ import co.smartreceipts.android.databinding.DialogReceiptAttachmentBinding;
 import co.smartreceipts.android.model.Receipt;
 import dagger.android.support.AndroidSupportInjection;
 
-
 public class ReceiptAttachmentDialogFragment extends DialogFragment {
 
     @Inject
@@ -66,7 +65,7 @@ public class ReceiptAttachmentDialogFragment extends DialogFragment {
 
         final Fragment parentFragment = getParentFragment();
 
-        if (parentFragment == null || !(parentFragment instanceof Listener)) {
+        if (!(parentFragment instanceof Listener)) {
             throw new IllegalStateException("Parent fragment must implement ReceiptAttachmentDialogFragment.Listener interface");
         }
 
@@ -99,7 +98,6 @@ public class ReceiptAttachmentDialogFragment extends DialogFragment {
         });
 
         return dialog;
-
     }
 
     public interface Listener {

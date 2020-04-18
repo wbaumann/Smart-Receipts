@@ -226,7 +226,7 @@ public class BackupsFragment extends WBFragment implements BackupProviderChangeL
         updateViewsForProvider(newProvider);
     }
 
-    public void updateViewsForProvider(@NonNull SyncProvider syncProvider) {
+    void updateViewsForProvider(@NonNull SyncProvider syncProvider) {
         if (isResumed()) {
             if (syncProvider == SyncProvider.None) {
                 warningTextView.setText(R.string.auto_backup_warning_none);

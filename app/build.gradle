@@ -178,9 +178,6 @@ android {
         implementation "commons-io:commons-io:$IO_UTILS_VERSION"
         implementation "com.hadisatrio:Optional:$OPTIONAL_VERSION"
 
-        implementation "com.jakewharton:butterknife:$BUTTERKNIFE_VERSION"
-        kapt "com.jakewharton:butterknife-compiler:$BUTTERKNIFE_VERSION"
-
         implementation "com.tapadoo.android:alerter:$ALERTER_VERSION"
         implementation "com.github.clans:fab:$FAB_MENU_VERSION"
 

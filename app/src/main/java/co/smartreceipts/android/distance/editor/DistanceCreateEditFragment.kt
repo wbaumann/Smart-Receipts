@@ -7,9 +7,6 @@ import android.view.*
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
-import butterknife.BindViews
-import butterknife.ButterKnife
-import butterknife.ViewCollections
 import co.smartreceipts.analytics.Analytics
 import co.smartreceipts.analytics.events.Events
 import co.smartreceipts.android.R

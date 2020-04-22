@@ -25,6 +25,14 @@
 
 
 # Keep all of our classes as they are
+-keep class co.smartreceipts.** { *; }
+-dontwarn co.smartreceipts.**
+-keep class wb.android.** { *; }
+-dontwarn wb.android.**
+-keep class wb.receipts.** { *; }
+-dontwarn wb.receipts.**
+-keep class wb.receiptspro.** { *; }
+-dontwarn wb.receiptspro.**
 -dontobfuscate
 
 # Keep native classes
@@ -55,20 +63,6 @@
 -keepclassmembers class kotlin.Metadata {
     public <methods>;
 }
-
-
-
-##### ButterKnife ProGuard configurations #####
-
-# Retain generated class which implement Unbinder.
--keep public class * implements butterknife.Unbinder { public <init>(**, android.view.View); }
-
-# Prevent obfuscation of types which use ButterKnife annotations since the simple name
-# is used to reflectively look up the generated ViewBinding.
--keep class butterknife.*
--keepclasseswithmembernames class * { @butterknife.* <methods>; }
--keepclasseswithmembernames class * { @butterknife.* <fields>; }
-
 
 
 ##### Retrofit ProGuard configurations #####

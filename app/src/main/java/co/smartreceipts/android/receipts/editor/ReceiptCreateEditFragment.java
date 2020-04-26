@@ -98,6 +98,7 @@ import co.smartreceipts.android.receipts.editor.pricing.ReceiptPricingPresenter;
 import co.smartreceipts.android.receipts.editor.toolbar.ReceiptsEditorToolbarPresenter;
 import co.smartreceipts.android.receipts.editor.toolbar.ReceiptsEditorToolbarView;
 import co.smartreceipts.android.settings.UserPreferenceManager;
+import co.smartreceipts.android.settings.catalog.UserPreference;
 import co.smartreceipts.android.utils.SoftKeyboardManager;
 import co.smartreceipts.android.utils.StrictModeConfiguration;
 import co.smartreceipts.analytics.log.Logger;
@@ -405,9 +406,15 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
                         priceBox,
                         taxBox2,
                         presenter.isUsePreTaxPrice(),
-                        presenter.getDefaultTaxPercentage(),
+                        presenter.getDefaultTax2Percentage(),
                         isNewReceipt()));
             }
+        }
+
+        // Set custom tax names if tax2 is enabled
+        if (userPreferenceManager.get(UserPreference.Receipts.IncludeTaxField) && userPreferenceManager.get(UserPreference.Receipts.IncludeTax2Field)) {
+            taxInputWrapper1.setHint(userPreferenceManager.get(UserPreference.Receipts.Tax1Name));
+            taxInputWrapper2.setHint(userPreferenceManager.get(UserPreference.Receipts.Tax2Name));
         }
 
         // Outline date defaults
@@ -733,7 +740,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     @NonNull
     @UiThread
     @Override
-    public Consumer<? super Price> displayReceiptTax1() {
+    public Consumer<? super Price> displayReceiptTax() {
         return RxTextViewExtensions.price(taxBox1);
     }
 

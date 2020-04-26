@@ -63,7 +63,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import wb.android.flex.Flex;
-import wb.android.preferences.PlusCheckBoxPreference;
+import wb.android.preferences.FloatSummaryEditTextPreference;
+import wb.android.preferences.DeactivatableCheckBoxPreference;
 import wb.android.preferences.SummaryEditTextPreference;
 
 public class SettingsActivity extends AppCompatPreferenceActivity implements
@@ -325,14 +326,19 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
         // Set on Preference Click Listeners for all that require it
         universal.findPreference(R.string.pref_receipt_customize_categories_key).setOnPreferenceClickListener(this);
         universal.findPreference(R.string.pref_receipt_payment_methods_key).setOnPreferenceClickListener(this);
+        universal.findPreference(R.string.pref_receipt_include_tax2_field_key).setOnPreferenceClickListener(this);
+        universal.findPreference(R.string.pref_receipt_include_tax_field_key).setOnPreferenceClickListener(this);
 
         // Here we restore our current values (easier than getting the FloatEditText stuff to work)
         UserPreferenceManager preferences = userPreferenceManager;
         DefaultTaxPercentagePreference taxPercentagePreference = (DefaultTaxPercentagePreference) universal.findPreference(R.string.pref_receipt_tax_percent_key);
         taxPercentagePreference.setText(Float.toString(preferences.get(UserPreference.Receipts.DefaultTaxPercentage)));
+        DefaultTaxPercentagePreference tax2PercentagePreference = (DefaultTaxPercentagePreference) universal.findPreference(R.string.pref_receipt_tax2_percent_key);
+        tax2PercentagePreference.setText(Float.toString(preferences.get(UserPreference.Receipts.DefaultTax2Percentage)));
         MinimumPriceEditTextPreference minimumPriceEditTextPreference = (MinimumPriceEditTextPreference) universal.findPreference(R.string.pref_receipt_minimum_receipts_price_key);
         minimumPriceEditTextPreference.setText(Float.toString(preferences.get(UserPreference.Receipts.MinimumReceiptPrice)));
 
+        updateTaxesSettings();
     }
 
     public void configurePreferencesOutput(UniversalPreferences universal) {
@@ -392,15 +398,15 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
         pdfFooterPreference.setAppearsEnabled(hasProSubscription);
         pdfFooterPreference.setOnPreferenceClickListener(this);
 
-        final PlusCheckBoxPreference separateByCategoryPreference = (PlusCheckBoxPreference) universal.findPreference(R.string.pref_pro_separate_by_category_key);
+        final DeactivatableCheckBoxPreference separateByCategoryPreference = (DeactivatableCheckBoxPreference) universal.findPreference(R.string.pref_pro_separate_by_category_key);
         separateByCategoryPreference.setAppearsEnabled(hasProSubscription);
         separateByCategoryPreference.setOnPreferenceClickListener(this);
 
-        final PlusCheckBoxPreference categoricalSummationPreference = (PlusCheckBoxPreference) universal.findPreference(R.string.pref_pro_categorical_summation_key);
+        final DeactivatableCheckBoxPreference categoricalSummationPreference = (DeactivatableCheckBoxPreference) universal.findPreference(R.string.pref_pro_categorical_summation_key);
         categoricalSummationPreference.setAppearsEnabled(hasProSubscription);
         categoricalSummationPreference.setOnPreferenceClickListener(this);
 
-        final PlusCheckBoxPreference omitDefaultTablePreference = (PlusCheckBoxPreference) universal.findPreference(R.string.pref_pro_omit_default_table_key);
+        final DeactivatableCheckBoxPreference omitDefaultTablePreference = (DeactivatableCheckBoxPreference) universal.findPreference(R.string.pref_pro_omit_default_table_key);
         omitDefaultTablePreference.setAppearsEnabled(hasProSubscription);
         omitDefaultTablePreference.setOnPreferenceClickListener(this);
     }
@@ -482,6 +488,12 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
                 startActivity(licensesActivityIntent);
             }
             return true;
+        } else if (key.equals(getString(R.string.pref_receipt_include_tax_field_key))) {
+           updateTaxesSettings();
+            return true;
+        } else if (key.equals(getString(R.string.pref_receipt_include_tax2_field_key))) {
+            updateTax2SettingsAppearance();
+            return true;
         } else {
             return false;
         }
@@ -543,6 +555,33 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
                 Toast.makeText(SettingsActivity.this, R.string.purchase_unavailable, Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private void updateTax1SettingsAppearance() {
+        final boolean isTaxIncluded = userPreferenceManager.get(UserPreference.Receipts.IncludeTaxField);
+
+        ((SummaryEditTextPreference)this.findPreference(R.string.pref_receipt_tax1_name_key)).setAppearsEnabled(isTaxIncluded);
+        ((FloatSummaryEditTextPreference) this.findPreference(R.string.pref_receipt_tax_percent_key)).setAppearsEnabled(isTaxIncluded);
+
+        final DeactivatableCheckBoxPreference includeTax2Preference = (DeactivatableCheckBoxPreference) this.findPreference(R.string.pref_receipt_include_tax2_field_key);
+        includeTax2Preference.setAppearsEnabled(isTaxIncluded);
+
+        if (!isTaxIncluded) { // turning off tax2 if tax1 was turned off
+            userPreferenceManager.set(UserPreference.Receipts.IncludeTax2Field, false);
+            includeTax2Preference.setChecked(false);
+        }
+    }
+
+    private void updateTax2SettingsAppearance() {
+        final boolean isTax2Included = userPreferenceManager.get(UserPreference.Receipts.IncludeTax2Field);
+
+        ((SummaryEditTextPreference)this.findPreference(R.string.pref_receipt_tax2_name_key)).setAppearsEnabled(isTax2Included);
+        ((FloatSummaryEditTextPreference) this.findPreference(R.string.pref_receipt_tax2_percent_key)).setAppearsEnabled(isTax2Included);
+    }
+
+    private void updateTaxesSettings() {
+        updateTax1SettingsAppearance();
+        updateTax2SettingsAppearance();
     }
 
     @NonNull

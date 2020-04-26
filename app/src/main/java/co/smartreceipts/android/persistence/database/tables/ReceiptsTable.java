@@ -102,6 +102,7 @@ public class ReceiptsTable extends TripForeignKeyAbstractSqlTable<Receipt> {
                 + ReceiptsTable.COLUMN_ISO4217 + " TEXT NOT NULL, "
                 + ReceiptsTable.COLUMN_PRICE + " DECIMAL(10, 2) DEFAULT 0.00, "
                 + ReceiptsTable.COLUMN_TAX + " DECIMAL(10, 2) DEFAULT 0.00, "
+                + ReceiptsTable.COLUMN_TAX2 + " DECIMAL(10, 2) DEFAULT 0.00, "
                 + ReceiptsTable.COLUMN_EXCHANGE_RATE + " DECIMAL(10, 10) DEFAULT -1.00, "
                 + ReceiptsTable.COLUMN_PAYMENT_METHOD_ID + " INTEGER REFERENCES " + PaymentMethodsTable.TABLE_NAME + " ON DELETE NO ACTION, "
                 + ReceiptsTable.COLUMN_REIMBURSABLE + " BOOLEAN DEFAULT 1, "

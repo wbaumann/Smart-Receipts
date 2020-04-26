@@ -119,6 +119,10 @@ public class ReceiptCreateEditFragmentPresenter {
         return preferenceManager.get(UserPreference.Receipts.DefaultTaxPercentage);
     }
 
+    float getDefaultTax2Percentage() {
+        return preferenceManager.get(UserPreference.Receipts.DefaultTax2Percentage);
+    }
+
     boolean isReceiptDateDefaultsToReportStartDate() {
         return preferenceManager.get(UserPreference.Receipts.ReceiptDateDefaultsToReportStartDate);
     }

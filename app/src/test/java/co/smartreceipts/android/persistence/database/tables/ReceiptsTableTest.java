@@ -214,6 +214,7 @@ public class ReceiptsTableTest {
         assertTrue(creatingTable.contains("categoryKey INTEGER"));
         assertTrue(creatingTable.contains("price DECIMAL(10, 2)"));
         assertTrue(creatingTable.contains("tax DECIMAL(10, 2)"));
+        assertTrue(creatingTable.contains("tax2 DECIMAL(10, 2)"));
         assertTrue(creatingTable.contains("exchange_rate DECIMAL(10, 10)"));
         assertTrue(creatingTable.contains("rcpt_date DATE"));
         assertTrue(creatingTable.contains("timezone TEXT"));

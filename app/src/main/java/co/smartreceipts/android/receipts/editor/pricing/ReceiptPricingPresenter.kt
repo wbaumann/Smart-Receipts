@@ -54,7 +54,7 @@ class ReceiptPricingPresenter(view: ReceiptPricingView,
                 .filter { it.isPresent }
                 .filter { _ -> savedInstanceState == null }
                 .map { receipt -> receipt.get().tax }
-                .subscribe(view.displayReceiptTax1()))
+                .subscribe(view.displayReceiptTax()))
 
         compositeDisposable.add(Observable.just(Optional.ofNullable<Receipt>(editableReceipt))
             .filter { it.isPresent }

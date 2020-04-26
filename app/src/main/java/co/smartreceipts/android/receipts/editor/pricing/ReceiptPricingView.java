@@ -24,7 +24,7 @@ public interface ReceiptPricingView {
      */
     @NonNull
     @UiThread
-    Consumer<? super Price> displayReceiptTax1();
+    Consumer<? super Price> displayReceiptTax();
 
     /**
      * @return a {@link Consumer} that will display the tax2 {@link Price} for the current {@link Receipt}

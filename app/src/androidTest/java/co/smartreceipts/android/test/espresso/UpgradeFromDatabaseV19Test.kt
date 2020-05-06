@@ -16,7 +16,7 @@ class UpgradeFromDatabaseV19Test : UpgradeFromKnownDatabaseValidator() {
         @JvmStatic
         @BeforeApplicationOnCreate
         fun setUpBeforeApplicationOnCreate() {
-            UpgradeFromKnownDatabaseValidator.setUpBeforeApplicationOnCreate(TestResourceReader.V19_DATABASE)
+            setUpBeforeApplicationOnCreate(TestResourceReader.V19_DATABASE)
         }
 
     }

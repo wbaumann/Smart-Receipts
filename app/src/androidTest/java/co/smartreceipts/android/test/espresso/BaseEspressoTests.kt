@@ -28,14 +28,14 @@ class BaseEspressoTests {
         // Click on the "new report" button
         onView(withId(R.id.trip_action_new)).perform(click())
 
-        // Verify that all the relevant views our displayed
+        // Verify that all the relevant views are displayed
         onView(withId(R.id.action_save)).check(matches(isDisplayed()))
         onView(withId(R.id.dialog_tripmenu_name)).check(matches(isDisplayed()))
         onView(withId(R.id.dialog_tripmenu_start)).check(matches(isDisplayed()))
         onView(withId(R.id.dialog_tripmenu_end)).check(matches(isDisplayed()))
         onView(withId(R.id.dialog_tripmenu_currency)).check(matches(isDisplayed()))
         onView(withId(R.id.dialog_tripmenu_comment)).check(matches(isDisplayed()))
-        onView(withId(R.id.dialog_tripmenu_cost_center)).check(matches(not<View>(isDisplayed())))
+        onView(withId(R.id.dialog_tripmenu_cost_center)).check(matches(not(isDisplayed())))
     }
 
     @Test
@@ -55,7 +55,7 @@ class BaseEspressoTests {
         onView(withId(R.id.dialog_tripmenu_name)).perform(replaceText("Test"), closeSoftKeyboard())
         onView(withId(R.id.action_save)).perform(click())
 
-        Thread.sleep(TimeUnit.SECONDS.toMillis(1)) // Wait a seconds to ensure that everything loaded
+        Thread.sleep(TimeUnit.SECONDS.toMillis(1)) // Wait a second to ensure that everything loaded
 
         // Up Button Navigation
         onView(withContentDescription(R.string.abc_action_bar_up_description)).perform(click())

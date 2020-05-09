@@ -172,7 +172,7 @@ public class TripCreateEditFragmentPresenter {
                     .setDirectory(file)
                     .setStartDate(startDate)
                     .setEndDate(endDate)
-                    // TODO: Update trip timezones iff date was changed
+                    // TODO: Update trip timezones if date was changed
                     .setComment(comment)
                     .setCostCenter(costCenter)
                     .setDefaultCurrency(defaultCurrency)

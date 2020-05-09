@@ -611,7 +611,6 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
         super.onPause();
     }
 
-
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);

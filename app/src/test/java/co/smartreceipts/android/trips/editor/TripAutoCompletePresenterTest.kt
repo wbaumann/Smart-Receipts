@@ -1,6 +1,7 @@
 package co.smartreceipts.android.trips.editor
 
 import co.smartreceipts.analytics.Analytics
+import co.smartreceipts.android.autocomplete.AutoCompleteResult
 import co.smartreceipts.android.autocomplete.trip.TripAutoCompleteField
 import co.smartreceipts.android.model.AutoCompleteUpdateEvent
 import co.smartreceipts.android.model.Trip
@@ -25,6 +26,7 @@ class TripAutoCompletePresenterTest {
 
     private lateinit var trip:Trip
     private lateinit var autoCompleteUpdateEventName:AutoCompleteUpdateEvent<Trip>
+    private lateinit var autoCompleteResult: AutoCompleteResult<Trip>
 
     private val analytics = mock<Analytics>()
     private val tripTableController = mock<TripTableController>()
@@ -36,7 +38,8 @@ class TripAutoCompletePresenterTest {
     @Before
     fun setUp() {
         trip = TripBuilderFactory().build()
-        autoCompleteUpdateEventName = AutoCompleteUpdateEvent(trip, TripAutoCompleteField.Name)
+        autoCompleteResult = AutoCompleteResult(trip.name, trip)
+        autoCompleteUpdateEventName = AutoCompleteUpdateEvent(autoCompleteResult, TripAutoCompleteField.Name, 0)
 
         presenter = TripCreateEditFragmentPresenter(view, analytics, tripTableController, persistenceManager)
 
@@ -53,7 +56,7 @@ class TripAutoCompletePresenterTest {
 
         presenter.subscribe()
 
-        verify(view).removeValueFromAutoComplete()
+        verify(view).removeValueFromAutoComplete(autoCompleteUpdateEventName.position)
     }
 
     @Test
@@ -65,7 +68,7 @@ class TripAutoCompletePresenterTest {
 
         presenter.subscribe()
 
-        verify(view).sendAutoCompleteUnHideEvent()
+        verify(view).sendAutoCompleteUnHideEvent(autoCompleteUpdateEventName.position)
     }
 
     @Test

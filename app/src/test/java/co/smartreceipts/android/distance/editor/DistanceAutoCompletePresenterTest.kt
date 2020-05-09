@@ -1,6 +1,7 @@
 package co.smartreceipts.android.distance.editor
 
 import co.smartreceipts.android.DefaultObjects
+import co.smartreceipts.android.autocomplete.AutoCompleteResult
 import co.smartreceipts.android.autocomplete.distance.DistanceAutoCompleteField
 import co.smartreceipts.android.currency.PriceCurrency
 import co.smartreceipts.android.model.AutoCompleteUpdateEvent
@@ -24,6 +25,7 @@ class DistanceAutoCompletePresenterTest {
 
     private lateinit var distance:Distance
     private lateinit var autoCompleteUpdateEventLocation:AutoCompleteUpdateEvent<Distance>
+    private lateinit var autoCompleteResult: AutoCompleteResult<Distance>
 
     private val view = mock<DistanceCreateEditView>()
     private val interactor = mock<DistanceCreateEditInteractor>()
@@ -33,7 +35,8 @@ class DistanceAutoCompletePresenterTest {
     fun setUp() {
         distance = DistanceBuilderFactory().setCurrency(PriceCurrency.getInstance("USD"))
                 .setTrip(DefaultObjects.newDefaultTrip()).build()
-        autoCompleteUpdateEventLocation = AutoCompleteUpdateEvent(distance, DistanceAutoCompleteField.Location)
+        autoCompleteResult = AutoCompleteResult(distance.location, distance)
+        autoCompleteUpdateEventLocation = AutoCompleteUpdateEvent(autoCompleteResult, DistanceAutoCompleteField.Location, 0)
 
         presenter = DistanceAutoCompletePresenter(view, interactor)
 
@@ -50,7 +53,7 @@ class DistanceAutoCompletePresenterTest {
 
         presenter.subscribe()
 
-        verify(view).removeValueFromAutoComplete()
+        verify(view).removeValueFromAutoComplete(autoCompleteUpdateEventLocation.position)
     }
 
     @Test
@@ -62,7 +65,7 @@ class DistanceAutoCompletePresenterTest {
 
         presenter.subscribe()
 
-        verify(view).sendAutoCompleteUnHideEvent()
+        verify(view).sendAutoCompleteUnHideEvent(autoCompleteUpdateEventLocation.position)
     }
 
     @Test

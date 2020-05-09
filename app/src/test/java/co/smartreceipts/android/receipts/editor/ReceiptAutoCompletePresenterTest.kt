@@ -1,6 +1,7 @@
 package co.smartreceipts.android.receipts.editor
 
 import co.smartreceipts.android.DefaultObjects
+import co.smartreceipts.android.autocomplete.AutoCompleteResult
 import co.smartreceipts.android.autocomplete.receipt.ReceiptAutoCompleteField
 import co.smartreceipts.android.model.AutoCompleteUpdateEvent
 import co.smartreceipts.android.model.Receipt
@@ -27,6 +28,7 @@ class ReceiptAutoCompletePresenterTest {
 
     private lateinit var receipt:Receipt
     private lateinit var autoCompleteUpdateEventName:AutoCompleteUpdateEvent<Receipt>
+    private lateinit var autoCompleteResult: AutoCompleteResult<Receipt>
 
     private val userPreferenceManager = mock<UserPreferenceManager>()
     private val receiptTableController = mock<ReceiptTableController>()
@@ -39,7 +41,8 @@ class ReceiptAutoCompletePresenterTest {
     @Before
     fun setUp() {
         receipt = ReceiptBuilderFactory().setTrip(DefaultObjects.newDefaultTrip()).build()
-        autoCompleteUpdateEventName = AutoCompleteUpdateEvent(receipt, ReceiptAutoCompleteField.Name)
+        autoCompleteResult = AutoCompleteResult(receipt.name, receipt)
+        autoCompleteUpdateEventName = AutoCompleteUpdateEvent(autoCompleteResult, ReceiptAutoCompleteField.Name, 0)
 
         presenter = ReceiptCreateEditFragmentPresenter(view, userPreferenceManager, purchaseManager, purchaseWallet, receiptTableController)
 
@@ -56,7 +59,7 @@ class ReceiptAutoCompletePresenterTest {
 
         presenter.subscribe()
 
-        verify(view).removeValueFromAutoComplete()
+        verify(view).removeValueFromAutoComplete(autoCompleteUpdateEventName.position)
     }
 
     @Test
@@ -68,7 +71,7 @@ class ReceiptAutoCompletePresenterTest {
 
         presenter.subscribe()
 
-        verify(view).sendAutoCompleteUnHideEvent()
+        verify(view).sendAutoCompleteUnHideEvent(autoCompleteUpdateEventName.position)
     }
 
     @Test

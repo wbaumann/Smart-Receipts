@@ -34,7 +34,7 @@ interface AutoCompleteView<Type> {
 
     fun fillValueField(autoCompleteResult: AutoCompleteResult<Type>)
     fun sendAutoCompleteHideEvent(autoCompleteResult: AutoCompleteResult<Type>)
-    fun removeValueFromAutoComplete()
-    fun sendAutoCompleteUnHideEvent()
+    fun removeValueFromAutoComplete(position: Int)
+    fun sendAutoCompleteUnHideEvent(position: Int)
     fun displayAutoCompleteError()
 }

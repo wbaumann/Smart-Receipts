@@ -7,10 +7,7 @@ import com.hadisatrio.optional.Optional;
 import java.sql.Date;
 import java.util.TimeZone;
 
-import javax.inject.Inject;
-
 import co.smartreceipts.android.autocomplete.receipt.ReceiptAutoCompleteField;
-import co.smartreceipts.core.di.scopes.FragmentScope;
 import co.smartreceipts.android.model.Category;
 import co.smartreceipts.android.model.PaymentMethod;
 import co.smartreceipts.android.model.Receipt;
@@ -30,7 +27,6 @@ import dagger.internal.Preconditions;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 
-@FragmentScope
 public class ReceiptCreateEditFragmentPresenter {
 
     private final ReceiptCreateEditFragment fragment;
@@ -39,8 +35,8 @@ public class ReceiptCreateEditFragmentPresenter {
     private final PurchaseWallet purchaseWallet;
     private final ReceiptTableController receiptTableController;
     private final CompositeDisposable compositeDisposable;
+    private int positionToRemoveOrAdd;
 
-    @Inject
     ReceiptCreateEditFragmentPresenter(@NonNull ReceiptCreateEditFragment fragment,
                                        @NonNull UserPreferenceManager preferenceManager,
                                        @NonNull PurchaseManager purchaseManager,
@@ -51,20 +47,21 @@ public class ReceiptCreateEditFragmentPresenter {
         this.purchaseManager = Preconditions.checkNotNull(purchaseManager);
         this.purchaseWallet = Preconditions.checkNotNull(purchaseWallet);
         this.receiptTableController = Preconditions.checkNotNull(receiptTableController);
-        compositeDisposable = new CompositeDisposable();
+        this.compositeDisposable = new CompositeDisposable();
     }
 
     public void subscribe() {
         compositeDisposable.add(fragment.getHideAutoCompleteVisibilityClick()
                 .flatMap(autoCompleteClickEvent -> {
+                    positionToRemoveOrAdd = autoCompleteClickEvent.getPosition();
                     if (autoCompleteClickEvent.getType() == ReceiptAutoCompleteField.Name) {
-                        return updateReceipt(autoCompleteClickEvent.getItem(),
-                                new ReceiptBuilderFactory(autoCompleteClickEvent.getItem())
+                        return updateReceipt(autoCompleteClickEvent.getItem().getFirstItem(),
+                                new ReceiptBuilderFactory(autoCompleteClickEvent.getItem().getFirstItem())
                                         .setNameHiddenFromAutoComplete(true)
                                         .build());
                     } else if (autoCompleteClickEvent.getType() == ReceiptAutoCompleteField.Comment) {
-                        return updateReceipt(autoCompleteClickEvent.getItem(),
-                                new ReceiptBuilderFactory(autoCompleteClickEvent.getItem())
+                        return updateReceipt(autoCompleteClickEvent.getItem().getFirstItem(),
+                                new ReceiptBuilderFactory(autoCompleteClickEvent.getItem().getFirstItem())
                                         .setCommentHiddenFromAutoComplete(true)
                                         .build());
                     } else {
@@ -73,20 +70,20 @@ public class ReceiptCreateEditFragmentPresenter {
                 })
                 .subscribe(receiptOptional -> {
                     if (receiptOptional.isPresent()) {
-                        fragment.removeValueFromAutoComplete();
+                        fragment.removeValueFromAutoComplete(positionToRemoveOrAdd);
                     }
                 }));
 
         compositeDisposable.add(fragment.getUnHideAutoCompleteVisibilityClick()
                 .flatMap(autoCompleteClickEvent -> {
                     if (autoCompleteClickEvent.getType() == ReceiptAutoCompleteField.Name) {
-                        return updateReceipt(autoCompleteClickEvent.getItem(),
-                                new ReceiptBuilderFactory(autoCompleteClickEvent.getItem())
+                        return updateReceipt(autoCompleteClickEvent.getItem().getFirstItem(),
+                                new ReceiptBuilderFactory(autoCompleteClickEvent.getItem().getFirstItem())
                                         .setNameHiddenFromAutoComplete(false)
                                         .build());
                     } else if (autoCompleteClickEvent.getType() == ReceiptAutoCompleteField.Comment) {
-                        return updateReceipt(autoCompleteClickEvent.getItem(),
-                                new ReceiptBuilderFactory(autoCompleteClickEvent.getItem())
+                        return updateReceipt(autoCompleteClickEvent.getItem().getFirstItem(),
+                                new ReceiptBuilderFactory(autoCompleteClickEvent.getItem().getFirstItem())
                                         .setCommentHiddenFromAutoComplete(false)
                                         .build());
                     } else {
@@ -95,7 +92,7 @@ public class ReceiptCreateEditFragmentPresenter {
                 })
                 .subscribe(receiptOptional -> {
                     if (receiptOptional.isPresent()) {
-                        fragment.sendAutoCompleteUnHideEvent();
+                        fragment.sendAutoCompleteUnHideEvent(positionToRemoveOrAdd);
                     } else {
                         fragment.displayAutoCompleteError();
                     }

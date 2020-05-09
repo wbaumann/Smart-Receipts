@@ -82,7 +82,10 @@ import co.smartreceipts.android.ocr.widget.tooltip.ReceiptCreateEditFragmentTool
 import co.smartreceipts.android.persistence.DatabaseHelper;
 import co.smartreceipts.android.persistence.database.controllers.TableEventsListener;
 import co.smartreceipts.android.persistence.database.controllers.impl.CategoriesTableController;
+import co.smartreceipts.android.persistence.database.controllers.impl.ReceiptTableController;
 import co.smartreceipts.android.persistence.database.controllers.impl.StubTableEventsListener;
+import co.smartreceipts.android.purchases.PurchaseManager;
+import co.smartreceipts.android.purchases.wallet.PurchaseWallet;
 import co.smartreceipts.android.receipts.editor.currency.ReceiptCurrencyCodeSupplier;
 import co.smartreceipts.android.receipts.editor.date.ReceiptDateView;
 import co.smartreceipts.android.receipts.editor.exchange.CurrencyExchangeRateEditorPresenter;
@@ -137,10 +140,19 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     ExchangeRateServiceManager exchangeRateServiceManager;
 
     @Inject
+    PurchaseManager purchaseManager;
+
+    @Inject
+    PurchaseWallet purchaseWallet;
+
+    @Inject
     Analytics analytics;
 
     @Inject
     CategoriesTableController categoriesTableController;
+
+    @Inject
+    ReceiptTableController receiptTableController;
 
     @Inject
     NavigationHandler navigationHandler;
@@ -153,9 +165,6 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
 
     @Inject
     DateFormatter dateFormatter;
-
-    @Inject
-    ReceiptCreateEditFragmentPresenter presenter;
 
     @Inject
     SamsungDecimalInputPresenter samsungDecimalInputPresenter;
@@ -213,6 +222,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     private CurrencyListEditorPresenter currencyListEditorPresenter;
     private ReceiptPricingPresenter receiptPricingPresenter;
     private CurrencyExchangeRateEditorPresenter currencyExchangeRateEditorPresenter;
+    private ReceiptCreateEditFragmentPresenter presenter;
 
     // Database monitor callbacks
     private TableEventsListener<Category> categoryTableEventsListener;
@@ -225,9 +235,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     private AutoCompleteArrayAdapter<Receipt> resultsAdapter;
     private Snackbar snackbar;
     private boolean shouldHideResults;
-    private AutoCompleteResult<Receipt> autoCompleteVisibilityItem;
-    private AutoCompleteField autoCompleteField;
-    private int positionToUpdateVisibility;
+    private AutoCompleteResult<Receipt> itemToRemoveOrReAdd;
 
     private Subject<AutoCompleteUpdateEvent<Receipt>> _hideAutoCompleteVisibilityClicks =
             PublishSubject.<AutoCompleteUpdateEvent<Receipt>>create().toSerialized();
@@ -271,6 +279,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
         currencyListEditorPresenter = new CurrencyListEditorPresenter(defaultCurrencyListEditorView, database, currencyCodeSupplier, savedInstanceState);
         receiptPricingPresenter = new ReceiptPricingPresenter(this, userPreferenceManager, getEditableItem(), savedInstanceState, ioScheduler, mainScheduler);
         currencyExchangeRateEditorPresenter = new CurrencyExchangeRateEditorPresenter(this, this, defaultCurrencyListEditorView, this, exchangeRateServiceManager, database, getParentTrip(), getEditableItem(), savedInstanceState);
+        presenter = new ReceiptCreateEditFragmentPresenter(this, userPreferenceManager, purchaseManager, purchaseWallet, receiptTableController);
     }
 
     Trip getParentTrip() {
@@ -984,37 +993,41 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     @Override
     public void sendAutoCompleteHideEvent(@NotNull AutoCompleteResult<Receipt> autoCompleteResult) {
         SoftKeyboardManager.hideKeyboard(focusedView);
-        autoCompleteVisibilityItem = autoCompleteResult;
-        positionToUpdateVisibility = resultsAdapter.getPosition(autoCompleteResult);
-        final Receipt oldReceipt = autoCompleteResult.getFirstItem();
         if (nameBox.isPopupShowing()) {
             _hideAutoCompleteVisibilityClicks.onNext(
-                    new AutoCompleteUpdateEvent(oldReceipt, ReceiptAutoCompleteField.Name));
+                    new AutoCompleteUpdateEvent(autoCompleteResult, ReceiptAutoCompleteField.Name, resultsAdapter.getPosition(autoCompleteResult)));
         } else {
             _hideAutoCompleteVisibilityClicks.onNext(
-                    new AutoCompleteUpdateEvent(oldReceipt, ReceiptAutoCompleteField.Comment));
+                    new AutoCompleteUpdateEvent(autoCompleteResult, ReceiptAutoCompleteField.Comment, resultsAdapter.getPosition(autoCompleteResult)));
         }
     }
 
     @Override
-    public void removeValueFromAutoComplete() {
+    public void removeValueFromAutoComplete(int position) {
         getActivity().runOnUiThread(() -> {
-            resultsAdapter.remove(autoCompleteVisibilityItem);
+            itemToRemoveOrReAdd = resultsAdapter.getItem(position);
+            resultsAdapter.remove(itemToRemoveOrReAdd);
             resultsAdapter.notifyDataSetChanged();
             View view = getActivity().findViewById(R.id.update_receipt_layout);
             snackbar = Snackbar.make(view, getString(
-                    R.string.item_removed_from_auto_complete, autoCompleteVisibilityItem.getDisplayName()), Snackbar.LENGTH_LONG);
-            snackbar.setAction(R.string.undo, v ->
+                    R.string.item_removed_from_auto_complete, itemToRemoveOrReAdd.getDisplayName()), Snackbar.LENGTH_LONG);
+            snackbar.setAction(R.string.undo, v -> {
+                if (nameBox.hasFocus()) {
                     _unHideAutoCompleteVisibilityClicks.onNext(
-                            new AutoCompleteUpdateEvent(autoCompleteVisibilityItem.getFirstItem(), autoCompleteField)));
+                            new AutoCompleteUpdateEvent(itemToRemoveOrReAdd, ReceiptAutoCompleteField.Name, position));
+                } else {
+                    _unHideAutoCompleteVisibilityClicks.onNext(
+                            new AutoCompleteUpdateEvent(itemToRemoveOrReAdd, ReceiptAutoCompleteField.Comment, position));
+                }
+            });
             snackbar.show();
         });
     }
 
     @Override
-    public void sendAutoCompleteUnHideEvent() {
+    public void sendAutoCompleteUnHideEvent(int position) {
         getActivity().runOnUiThread(() -> {
-            resultsAdapter.insert(autoCompleteVisibilityItem, positionToUpdateVisibility);
+            resultsAdapter.insert(itemToRemoveOrReAdd, position);
             resultsAdapter.notifyDataSetChanged();
             Toast.makeText(getContext(), R.string.result_restored, Toast.LENGTH_LONG).show();
         });

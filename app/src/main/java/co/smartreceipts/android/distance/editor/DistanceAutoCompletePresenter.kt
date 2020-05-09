@@ -12,15 +12,18 @@ class DistanceAutoCompletePresenter @Inject constructor(
 ) :
     BaseViperPresenter<DistanceCreateEditView, DistanceCreateEditInteractor>(view, interactor) {
 
+    private var positionToRemoveOrAdd: Int = 0
+
     override fun subscribe() {
 
         compositeDisposable.add(view.hideAutoCompleteVisibilityClick
                 .flatMap { t ->
+                    positionToRemoveOrAdd = t.position
                     when (t.type) {
-                        DistanceAutoCompleteField.Location -> interactor.updateDistance(t.item, DistanceBuilderFactory(t.item)
+                        DistanceAutoCompleteField.Location -> interactor.updateDistance(t.item.firstItem, DistanceBuilderFactory(t.item.firstItem)
                                 .setLocationHiddenFromAutoComplete(true)
                                 .build())
-                        DistanceAutoCompleteField.Comment -> interactor.updateDistance(t.item, DistanceBuilderFactory(t.item)
+                        DistanceAutoCompleteField.Comment -> interactor.updateDistance(t.item.firstItem, DistanceBuilderFactory(t.item.firstItem)
                                 .setCommentHiddenFromAutoComplete(true)
                                 .build())
                         else -> throw UnsupportedOperationException("Unknown type: " + t.type)
@@ -28,7 +31,7 @@ class DistanceAutoCompletePresenter @Inject constructor(
                 }
                 .subscribe {
                     if (it.isPresent) {
-                        view.removeValueFromAutoComplete()
+                        view.removeValueFromAutoComplete(positionToRemoveOrAdd)
                     }
                 }
         )
@@ -36,10 +39,10 @@ class DistanceAutoCompletePresenter @Inject constructor(
         compositeDisposable.add(view.unHideAutoCompleteVisibilityClick
                 .flatMap { t ->
                     when (t.type) {
-                        DistanceAutoCompleteField.Location -> interactor.updateDistance(t.item, DistanceBuilderFactory(t.item)
+                        DistanceAutoCompleteField.Location -> interactor.updateDistance(t.item.firstItem, DistanceBuilderFactory(t.item.firstItem)
                                 .setLocationHiddenFromAutoComplete(false)
                                 .build())
-                        DistanceAutoCompleteField.Comment -> interactor.updateDistance(t.item, DistanceBuilderFactory(t.item)
+                        DistanceAutoCompleteField.Comment -> interactor.updateDistance(t.item.firstItem, DistanceBuilderFactory(t.item.firstItem)
                                 .setCommentHiddenFromAutoComplete(false)
                                 .build())
                         else -> throw UnsupportedOperationException("Unknown type: " + t.type)
@@ -47,7 +50,7 @@ class DistanceAutoCompletePresenter @Inject constructor(
                 }
                 .subscribe {
                     if (it.isPresent) {
-                        view.sendAutoCompleteUnHideEvent()
+                        view.sendAutoCompleteUnHideEvent(positionToRemoveOrAdd)
                     } else {
                         view.displayAutoCompleteError()
                     }

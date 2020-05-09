@@ -35,6 +35,7 @@ public class TripCreateEditFragmentPresenter {
     private final TripTableController tripTableController;
     private final PersistenceManager persistenceManager;
     private final CompositeDisposable compositeDisposable;
+    private int positionToRemoveOrAdd;
 
     @Inject
     public TripCreateEditFragmentPresenter(@NonNull TripCreateEditFragment fragment,
@@ -51,19 +52,20 @@ public class TripCreateEditFragmentPresenter {
     public void subscribe() {
         compositeDisposable.add(fragment.getHideAutoCompleteVisibilityClick()
                 .flatMap(autoCompleteClickEvent -> {
+                    positionToRemoveOrAdd = autoCompleteClickEvent.getPosition();
                     if (autoCompleteClickEvent.getType() == TripAutoCompleteField.Name) {
-                        return updateTrip(autoCompleteClickEvent.getItem(),
-                                new TripBuilderFactory(autoCompleteClickEvent.getItem())
+                        return updateTrip(autoCompleteClickEvent.getItem().getFirstItem(),
+                                new TripBuilderFactory(autoCompleteClickEvent.getItem().getFirstItem())
                                         .setNameHiddenFromAutoComplete(true)
                                         .build());
                     } else if (autoCompleteClickEvent.getType() == TripAutoCompleteField.Comment) {
-                        return updateTrip(autoCompleteClickEvent.getItem(),
-                                new TripBuilderFactory(autoCompleteClickEvent.getItem())
+                        return updateTrip(autoCompleteClickEvent.getItem().getFirstItem(),
+                                new TripBuilderFactory(autoCompleteClickEvent.getItem().getFirstItem())
                                         .setCommentHiddenFromAutoComplete(true)
                                         .build());
                     } else if (autoCompleteClickEvent.getType() == TripAutoCompleteField.CostCenter) {
-                        return updateTrip(autoCompleteClickEvent.getItem(),
-                                new TripBuilderFactory(autoCompleteClickEvent.getItem())
+                        return updateTrip(autoCompleteClickEvent.getItem().getFirstItem(),
+                                new TripBuilderFactory(autoCompleteClickEvent.getItem().getFirstItem())
                                         .setCostCenterHiddenFromAutoComplete(true)
                                         .build());
                     } else {
@@ -72,25 +74,25 @@ public class TripCreateEditFragmentPresenter {
                 })
                 .subscribe(tripOptional -> {
                     if (tripOptional.isPresent()) {
-                        fragment.removeValueFromAutoComplete();
+                        fragment.removeValueFromAutoComplete(positionToRemoveOrAdd);
                     }
                 }));
 
         compositeDisposable.add(fragment.getUnHideAutoCompleteVisibilityClick()
                 .flatMap(autoCompleteClickEvent -> {
                     if (autoCompleteClickEvent.getType() == TripAutoCompleteField.Name) {
-                        return updateTrip(autoCompleteClickEvent.getItem(),
-                                new TripBuilderFactory(autoCompleteClickEvent.getItem())
+                        return updateTrip(autoCompleteClickEvent.getItem().getFirstItem(),
+                                new TripBuilderFactory(autoCompleteClickEvent.getItem().getFirstItem())
                                         .setNameHiddenFromAutoComplete(false)
                                         .build());
                     } else if (autoCompleteClickEvent.getType() == TripAutoCompleteField.Comment) {
-                        return updateTrip(autoCompleteClickEvent.getItem(),
-                                new TripBuilderFactory(autoCompleteClickEvent.getItem())
+                        return updateTrip(autoCompleteClickEvent.getItem().getFirstItem(),
+                                new TripBuilderFactory(autoCompleteClickEvent.getItem().getFirstItem())
                                         .setCommentHiddenFromAutoComplete(false)
                                         .build());
                     } else if (autoCompleteClickEvent.getType() == TripAutoCompleteField.CostCenter) {
-                        return updateTrip(autoCompleteClickEvent.getItem(),
-                                new TripBuilderFactory(autoCompleteClickEvent.getItem())
+                        return updateTrip(autoCompleteClickEvent.getItem().getFirstItem(),
+                                new TripBuilderFactory(autoCompleteClickEvent.getItem().getFirstItem())
                                         .setCostCenterHiddenFromAutoComplete(false)
                                         .build());
                     } else {
@@ -99,7 +101,7 @@ public class TripCreateEditFragmentPresenter {
                 })
                 .subscribe(tripOptional -> {
                     if (tripOptional.isPresent()) {
-                        fragment.sendAutoCompleteUnHideEvent();
+                        fragment.sendAutoCompleteUnHideEvent(positionToRemoveOrAdd);
                     } else {
                         fragment.displayAutoCompleteError();
                     }

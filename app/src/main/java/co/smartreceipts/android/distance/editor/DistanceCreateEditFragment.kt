@@ -89,9 +89,7 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
 
     private lateinit var paymentMethodsAdapter: FooterButtonArrayAdapter<PaymentMethod>
 
-    private var positionToUpdateVisibility: Int = 0
-    private lateinit var autoCompleteField: AutoCompleteField
-    private lateinit var autoCompleteVisibilityItem: AutoCompleteResult<Distance>
+    private lateinit var itemToRemoveOrReAdd: AutoCompleteResult<Distance>
 
     private var _binding: UpdateDistanceBinding? = null
     private val binding get() = _binding!!
@@ -380,7 +378,6 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
                     snackbar.dismiss()
                 }
                 resultsAdapter = AutoCompleteArrayAdapter(requireContext(), results, this)
-                autoCompleteField = field
                 when (field) {
                     DistanceAutoCompleteField.Location -> {
                         text_distance_location.setAdapter(resultsAdapter)
@@ -418,34 +415,39 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
 
     override fun sendAutoCompleteHideEvent(autoCompleteResult: AutoCompleteResult<Distance>) {
         SoftKeyboardManager.hideKeyboard(focusedView)
-        autoCompleteVisibilityItem = autoCompleteResult
-        positionToUpdateVisibility = resultsAdapter.getPosition(autoCompleteResult)
-        val oldDistance = autoCompleteResult.firstItem
+        itemToRemoveOrReAdd = autoCompleteResult
         when(text_distance_location.isPopupShowing) {
-            true ->
-                _hideAutoCompleteVisibilityClicks.onNext(AutoCompleteUpdateEvent(oldDistance, autoCompleteField))
-            false ->
-                _hideAutoCompleteVisibilityClicks.onNext(AutoCompleteUpdateEvent(oldDistance, autoCompleteField))
+            true -> _hideAutoCompleteVisibilityClicks.onNext(
+                        AutoCompleteUpdateEvent(autoCompleteResult, DistanceAutoCompleteField.Location, resultsAdapter.getPosition(autoCompleteResult)))
+            false -> _hideAutoCompleteVisibilityClicks.onNext(
+                        AutoCompleteUpdateEvent(autoCompleteResult, DistanceAutoCompleteField.Comment, resultsAdapter.getPosition(autoCompleteResult)))
         }
     }
 
-    override fun removeValueFromAutoComplete() {
+    override fun removeValueFromAutoComplete(position: Int) {
         activity!!.runOnUiThread {
-            resultsAdapter.remove(autoCompleteVisibilityItem)
+            itemToRemoveOrReAdd = resultsAdapter.getItem(position)
+            resultsAdapter.remove(itemToRemoveOrReAdd)
             resultsAdapter.notifyDataSetChanged()
             val view = activity!!.findViewById<ConstraintLayout>(R.id.update_distance_layout)
             snackbar = Snackbar.make(view, getString(
-                    R.string.item_removed_from_auto_complete, autoCompleteVisibilityItem.displayName), Snackbar.LENGTH_LONG)
+                    R.string.item_removed_from_auto_complete, itemToRemoveOrReAdd.displayName), Snackbar.LENGTH_LONG)
             snackbar.setAction(R.string.undo) {
-                _unHideAutoCompleteVisibilityClicks.onNext(AutoCompleteUpdateEvent(autoCompleteVisibilityItem.firstItem, autoCompleteField))
+                if (text_distance_location.hasFocus()) {
+                    _unHideAutoCompleteVisibilityClicks.onNext(
+                            AutoCompleteUpdateEvent(itemToRemoveOrReAdd, DistanceAutoCompleteField.Location, position))
+                } else {
+                    _unHideAutoCompleteVisibilityClicks.onNext(
+                            AutoCompleteUpdateEvent(itemToRemoveOrReAdd, DistanceAutoCompleteField.Comment, position))
+                }
             }
             snackbar.show()
         }
     }
 
-    override fun sendAutoCompleteUnHideEvent() {
+    override fun sendAutoCompleteUnHideEvent(position: Int) {
         activity!!.runOnUiThread {
-            resultsAdapter.insert(autoCompleteVisibilityItem, positionToUpdateVisibility)
+            resultsAdapter.insert(itemToRemoveOrReAdd, position)
             resultsAdapter.notifyDataSetChanged()
             Toast.makeText(context, R.string.result_restored, Toast.LENGTH_LONG).show()
         }

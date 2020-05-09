@@ -63,8 +63,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import wb.android.flex.Flex;
-import wb.android.preferences.FloatSummaryEditTextPreference;
 import wb.android.preferences.DeactivatableCheckBoxPreference;
+import wb.android.preferences.FloatSummaryEditTextPreference;
 import wb.android.preferences.SummaryEditTextPreference;
 
 public class SettingsActivity extends AppCompatPreferenceActivity implements
@@ -110,6 +110,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
     private CurrencyListEditorPresenter currencyListEditorPresenter;
     private Bundle savedInstanceState;
     private ListPreference currencyPreference;
+
+    private UniversalPreferences receiptPreferences = null;
 
     /**
      * Ugly hack to determine if a fragment header is currently showing or not. See if I can replace by counting the
@@ -323,6 +325,11 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
     }
 
     public void configurePreferencesReceipts(UniversalPreferences universal) {
+
+        if (!this.equals(universal)) {
+            receiptPreferences = universal;
+        }
+
         // Set on Preference Click Listeners for all that require it
         universal.findPreference(R.string.pref_receipt_customize_categories_key).setOnPreferenceClickListener(this);
         universal.findPreference(R.string.pref_receipt_payment_methods_key).setOnPreferenceClickListener(this);
@@ -338,7 +345,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
         MinimumPriceEditTextPreference minimumPriceEditTextPreference = (MinimumPriceEditTextPreference) universal.findPreference(R.string.pref_receipt_minimum_receipts_price_key);
         minimumPriceEditTextPreference.setText(Float.toString(preferences.get(UserPreference.Receipts.MinimumReceiptPrice)));
 
-        updateTaxesSettings();
+        updateAllTaxesSettings(universal);
     }
 
     public void configurePreferencesOutput(UniversalPreferences universal) {
@@ -489,10 +496,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
             }
             return true;
         } else if (key.equals(getString(R.string.pref_receipt_include_tax_field_key))) {
-           updateTaxesSettings();
+           updateAllTaxesSettings(receiptPreferences == null ? this : receiptPreferences);
             return true;
         } else if (key.equals(getString(R.string.pref_receipt_include_tax2_field_key))) {
-            updateTax2SettingsAppearance();
+            updateTax2SettingsAppearance(receiptPreferences == null ? this : receiptPreferences);
             return true;
         } else {
             return false;
@@ -557,13 +564,13 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
         }
     }
 
-    private void updateTax1SettingsAppearance() {
+    private void updateTax1SettingsAppearance(UniversalPreferences universal) {
         final boolean isTaxIncluded = userPreferenceManager.get(UserPreference.Receipts.IncludeTaxField);
 
-        ((SummaryEditTextPreference)this.findPreference(R.string.pref_receipt_tax1_name_key)).setAppearsEnabled(isTaxIncluded);
-        ((FloatSummaryEditTextPreference) this.findPreference(R.string.pref_receipt_tax_percent_key)).setAppearsEnabled(isTaxIncluded);
+        ((SummaryEditTextPreference)universal.findPreference(R.string.pref_receipt_tax1_name_key)).setAppearsEnabled(isTaxIncluded);
+        ((FloatSummaryEditTextPreference) universal.findPreference(R.string.pref_receipt_tax_percent_key)).setAppearsEnabled(isTaxIncluded);
 
-        final DeactivatableCheckBoxPreference includeTax2Preference = (DeactivatableCheckBoxPreference) this.findPreference(R.string.pref_receipt_include_tax2_field_key);
+        final DeactivatableCheckBoxPreference includeTax2Preference = (DeactivatableCheckBoxPreference) universal.findPreference(R.string.pref_receipt_include_tax2_field_key);
         includeTax2Preference.setAppearsEnabled(isTaxIncluded);
 
         if (!isTaxIncluded) { // turning off tax2 if tax1 was turned off
@@ -572,16 +579,16 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
         }
     }
 
-    private void updateTax2SettingsAppearance() {
+    private void updateTax2SettingsAppearance(UniversalPreferences universal) {
         final boolean isTax2Included = userPreferenceManager.get(UserPreference.Receipts.IncludeTax2Field);
 
-        ((SummaryEditTextPreference)this.findPreference(R.string.pref_receipt_tax2_name_key)).setAppearsEnabled(isTax2Included);
-        ((FloatSummaryEditTextPreference) this.findPreference(R.string.pref_receipt_tax2_percent_key)).setAppearsEnabled(isTax2Included);
+        ((SummaryEditTextPreference)universal.findPreference(R.string.pref_receipt_tax2_name_key)).setAppearsEnabled(isTax2Included);
+        ((FloatSummaryEditTextPreference) universal.findPreference(R.string.pref_receipt_tax2_percent_key)).setAppearsEnabled(isTax2Included);
     }
 
-    private void updateTaxesSettings() {
-        updateTax1SettingsAppearance();
-        updateTax2SettingsAppearance();
+    private void updateAllTaxesSettings(UniversalPreferences universal) {
+        updateTax1SettingsAppearance(universal);
+        updateTax2SettingsAppearance(universal);
     }
 
     @NonNull

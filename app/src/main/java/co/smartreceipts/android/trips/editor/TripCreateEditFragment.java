@@ -470,6 +470,9 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
     @Override
     public void displayAutoCompleteResults(@NotNull AutoCompleteField field, @NotNull List<AutoCompleteResult<Trip>> autoCompleteResults) {
         if (!shouldHideResults) {
+            if (snackbar != null && snackbar.isShown()) {
+                snackbar.dismiss();
+            }
             resultsAdapter = new AutoCompleteArrayAdapter<>(requireContext(), autoCompleteResults, this);
             autoCompleteField = field;
             if (field == TripAutoCompleteField.Name) {

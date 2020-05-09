@@ -376,6 +376,9 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
     override fun displayAutoCompleteResults(field: AutoCompleteField, results: MutableList<AutoCompleteResult<Distance>>) {
         if (isAdded) {
             if (!shouldHideResults) {
+                if (::snackbar.isInitialized && snackbar.isShown) {
+                    snackbar.dismiss()
+                }
                 resultsAdapter = AutoCompleteArrayAdapter(requireContext(), results, this)
                 autoCompleteField = field
                 when (field) {

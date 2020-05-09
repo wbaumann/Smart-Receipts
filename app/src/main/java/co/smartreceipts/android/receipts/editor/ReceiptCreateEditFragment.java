@@ -874,7 +874,9 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     @Override
     public void displayAutoCompleteResults(@NotNull AutoCompleteField field, @NotNull List<AutoCompleteResult<Receipt>> autoCompleteResults) {
         if (!shouldHideResults) {
-            autoCompleteField = field;
+            if (snackbar != null && snackbar.isShown()) {
+                snackbar.dismiss();
+            }
             resultsAdapter = new AutoCompleteArrayAdapter<>(requireContext(), autoCompleteResults, this);
             if (field == ReceiptAutoCompleteField.Name) {
                 nameBox.setAdapter(resultsAdapter);

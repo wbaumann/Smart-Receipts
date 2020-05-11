@@ -71,7 +71,6 @@ public class ReportInfoFragment extends WBFragment implements GenerateNavigator,
     private ActionBarTitleUpdatesListener actionBarTitleUpdatesListener;
 
     private ViewPager viewPager;
-    private TabLayout tabLayout;
     private ReportInfoViewPagerBinding binding;
 
     @NonNull
@@ -118,11 +117,11 @@ public class ReportInfoFragment extends WBFragment implements GenerateNavigator,
 
         viewPager = binding.pager;
         viewPager.setOffscreenPageLimit(3); // Set this to 3, since we have 4 tabs
-        tabLayout = binding.tabs;
+        TabLayout tabLayout = binding.tabs;
 
         viewPager.setAdapter(fragmentPagerAdapter);
         viewPager.setCurrentItem(fragmentPagerAdapter.getReceiptsTabPosition());
-        
+
         tabLayout.setupWithViewPager(viewPager);
     }
 

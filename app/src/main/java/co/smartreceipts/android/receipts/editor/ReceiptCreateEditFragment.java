@@ -27,6 +27,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
 import com.hadisatrio.optional.Optional;
 import com.jakewharton.rxbinding2.widget.RxDateEditText;
 import com.jakewharton.rxbinding3.view.RxView;
@@ -203,8 +204,8 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     private CheckBox reimbursableCheckbox;
     private CheckBox fullPageCheckbox;
     private Button decimalSeparatorButton;
-    private View taxInputWrapper1;
-    private View taxInputWrapper2;
+    private TextInputLayout taxInputWrapper1;
+    private TextInputLayout taxInputWrapper2;
 
     private List<View> paymentMethodsViewsList;
     private List<View> exchangeRateViewsList;
@@ -303,7 +304,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
         nameBox = binding.DIALOGRECEIPTMENUNAME;
         priceBox = binding.DIALOGRECEIPTMENUPRICE;
         taxBox1 = binding.DIALOGRECEIPTMENUTAX1;
-        taxBox1 = binding.DIALOGRECEIPTMENUTAX2;
+        taxBox2 = binding.DIALOGRECEIPTMENUTAX2;
         currencySpinner = binding.DIALOGRECEIPTMENUCURRENCY;
         exchangeRateBox = binding.receiptInputExchangeRate;
         exchangedPriceInBaseCurrencyBox = binding.receiptInputExchangedResult;
@@ -315,8 +316,8 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
         reimbursableCheckbox = binding.DIALOGRECEIPTMENUEXPENSABLE;
         fullPageCheckbox = binding.DIALOGRECEIPTMENUFULLPAGE;
         decimalSeparatorButton = binding.decimalSeparatorButton;
-        taxInputWrapper1 = binding.receiptInputTaxWrapper1;
-        taxInputWrapper2 = binding.receiptInputTaxWrapper2;
+        taxInputWrapper1 = binding.receiptInputTax1Wrapper;
+        taxInputWrapper2 = binding.receiptInputTax2Wrapper;
 
         paymentMethodsViewsList = new ArrayList<>();
         paymentMethodsViewsList.add(binding.receiptInputGuideImagePaymentMethod);
@@ -328,8 +329,10 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
         exchangeRateViewsList.add(exchangedPriceInBaseCurrencyBox);
         exchangeRateViewsList.add(receiptInputExchangeRateBaseCurrencyTextView);
 
-// todo add taxViewsList {R.id.receipt_input_guide_image_tax, R.id.DIALOG_RECEIPTMENU_TAX1, R.id.DIALOG_RECEIPTMENU_TAX2}
-        
+        taxViewsList = new ArrayList<>();
+        taxViewsList.add(taxInputWrapper1);
+        taxViewsList.add(binding.receiptInputGuideImageTax);
+
         return binding.getRoot();
     }
 
@@ -780,8 +783,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     @UiThread
     @Override
     public Observable<CharSequence> getReceiptTaxChanges() {
-        return RxTextView.textChanges(taxBox1);
-        // todo add tax2 changes
+        return Observable.merge(RxTextView.textChanges(taxBox1), RxTextView.textChanges(taxBox2));
     }
 
     @NonNull
@@ -1120,5 +1122,4 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     private String getFlexString(int id) {
         return getFlexString(flex, id);
     }
-
 }

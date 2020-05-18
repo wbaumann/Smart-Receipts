@@ -3,6 +3,7 @@ package co.smartreceipts.android.trips.editor;
 import androidx.annotation.NonNull;
 
 import com.google.common.base.Preconditions;
+import com.hadisatrio.optional.Optional;
 
 import java.io.File;
 import java.sql.Date;
@@ -13,9 +14,9 @@ import javax.inject.Inject;
 
 import co.smartreceipts.analytics.Analytics;
 import co.smartreceipts.analytics.events.Events;
+import co.smartreceipts.android.autocomplete.trip.TripAutoCompleteField;
 import co.smartreceipts.core.di.scopes.FragmentScope;
 import co.smartreceipts.android.model.Trip;
-import co.smartreceipts.android.model.factory.ReceiptBuilderFactory;
 import co.smartreceipts.android.model.factory.TripBuilderFactory;
 import co.smartreceipts.android.persistence.DatabaseHelper;
 import co.smartreceipts.android.persistence.PersistenceManager;
@@ -23,7 +24,8 @@ import co.smartreceipts.android.persistence.database.controllers.impl.TripTableC
 import co.smartreceipts.android.persistence.database.operations.DatabaseOperationMetadata;
 import co.smartreceipts.android.settings.catalog.UserPreference;
 import co.smartreceipts.android.utils.FileUtils;
-import io.reactivex.Completable;
+import io.reactivex.Observable;
+import io.reactivex.disposables.CompositeDisposable;
 
 @FragmentScope
 public class TripCreateEditFragmentPresenter {
@@ -32,6 +34,8 @@ public class TripCreateEditFragmentPresenter {
     private final Analytics analytics;
     private final TripTableController tripTableController;
     private final PersistenceManager persistenceManager;
+    private final CompositeDisposable compositeDisposable;
+    private int positionToRemoveOrAdd;
 
     @Inject
     public TripCreateEditFragmentPresenter(@NonNull TripCreateEditFragment fragment,
@@ -42,6 +46,70 @@ public class TripCreateEditFragmentPresenter {
         this.analytics = Preconditions.checkNotNull(analytics);
         this.tripTableController = Preconditions.checkNotNull(tripTableController);
         this.persistenceManager = Preconditions.checkNotNull(persistenceManager);
+        this.compositeDisposable = new CompositeDisposable();
+    }
+
+    public void subscribe() {
+        compositeDisposable.add(fragment.getHideAutoCompleteVisibilityClick()
+                .flatMap(autoCompleteClickEvent -> {
+                    positionToRemoveOrAdd = autoCompleteClickEvent.getPosition();
+                    if (autoCompleteClickEvent.getType() == TripAutoCompleteField.Name) {
+                        return updateTrip(autoCompleteClickEvent.getItem().getFirstItem(),
+                                new TripBuilderFactory(autoCompleteClickEvent.getItem().getFirstItem())
+                                        .setNameHiddenFromAutoComplete(true)
+                                        .build());
+                    } else if (autoCompleteClickEvent.getType() == TripAutoCompleteField.Comment) {
+                        return updateTrip(autoCompleteClickEvent.getItem().getFirstItem(),
+                                new TripBuilderFactory(autoCompleteClickEvent.getItem().getFirstItem())
+                                        .setCommentHiddenFromAutoComplete(true)
+                                        .build());
+                    } else if (autoCompleteClickEvent.getType() == TripAutoCompleteField.CostCenter) {
+                        return updateTrip(autoCompleteClickEvent.getItem().getFirstItem(),
+                                new TripBuilderFactory(autoCompleteClickEvent.getItem().getFirstItem())
+                                        .setCostCenterHiddenFromAutoComplete(true)
+                                        .build());
+                    } else {
+                        throw new UnsupportedOperationException("Unknown type: " + autoCompleteClickEvent.getType());
+                    }
+                })
+                .subscribe(tripOptional -> {
+                    if (tripOptional.isPresent()) {
+                        fragment.removeValueFromAutoComplete(positionToRemoveOrAdd);
+                    }
+                }));
+
+        compositeDisposable.add(fragment.getUnHideAutoCompleteVisibilityClick()
+                .flatMap(autoCompleteClickEvent -> {
+                    if (autoCompleteClickEvent.getType() == TripAutoCompleteField.Name) {
+                        return updateTrip(autoCompleteClickEvent.getItem().getFirstItem(),
+                                new TripBuilderFactory(autoCompleteClickEvent.getItem().getFirstItem())
+                                        .setNameHiddenFromAutoComplete(false)
+                                        .build());
+                    } else if (autoCompleteClickEvent.getType() == TripAutoCompleteField.Comment) {
+                        return updateTrip(autoCompleteClickEvent.getItem().getFirstItem(),
+                                new TripBuilderFactory(autoCompleteClickEvent.getItem().getFirstItem())
+                                        .setCommentHiddenFromAutoComplete(false)
+                                        .build());
+                    } else if (autoCompleteClickEvent.getType() == TripAutoCompleteField.CostCenter) {
+                        return updateTrip(autoCompleteClickEvent.getItem().getFirstItem(),
+                                new TripBuilderFactory(autoCompleteClickEvent.getItem().getFirstItem())
+                                        .setCostCenterHiddenFromAutoComplete(false)
+                                        .build());
+                    } else {
+                        throw new UnsupportedOperationException("Unknown type: " + autoCompleteClickEvent.getType());
+                    }
+                })
+                .subscribe(tripOptional -> {
+                    if (tripOptional.isPresent()) {
+                        fragment.sendAutoCompleteUnHideEvent(positionToRemoveOrAdd);
+                    } else {
+                        fragment.displayAutoCompleteError();
+                    }
+                }));
+    }
+
+    public void unsubscribe() {
+        compositeDisposable.clear();
     }
 
     public boolean checkTrip(String name, String startDateText, Date startDate,
@@ -104,7 +172,7 @@ public class TripCreateEditFragmentPresenter {
                     .setDirectory(file)
                     .setStartDate(startDate)
                     .setEndDate(endDate)
-                    // TODO: Update trip timezones iff date was changed
+                    // TODO: Update trip timezones if date was changed
                     .setComment(comment)
                     .setCostCenter(costCenter)
                     .setDefaultCurrency(defaultCurrency)
@@ -142,48 +210,7 @@ public class TripCreateEditFragmentPresenter {
         return persistenceManager.getPreferenceManager().get(UserPreference.General.DateSeparator);
     }
 
-    Completable updateTripNameAutoCompleteVisibility(Trip trip, boolean isHidden) {
-        Trip updatedReceipt = new TripBuilderFactory(trip)
-                .setNameHiddenFromAutoComplete(isHidden)
-                .build();
-
-        return tripTableController.update(trip, updatedReceipt, new DatabaseOperationMetadata())
-                .flatMapCompletable(optional -> {
-                    if (optional.isPresent()) {
-                        return Completable.complete();
-                    } else {
-                        return Completable.error(new Exception("Failed to update trip auto complete visibility"));
-                    }
-                });
-    }
-
-    Completable updateTripCommentAutoCompleteVisibility(Trip trip, boolean isHidden) {
-        Trip updatedReceipt = new TripBuilderFactory(trip)
-                .setCommentHiddenFromAutoComplete(isHidden)
-                .build();
-
-        return tripTableController.update(trip, updatedReceipt, new DatabaseOperationMetadata())
-                .flatMapCompletable(optional -> {
-                    if (optional.isPresent()) {
-                        return Completable.complete();
-                    } else {
-                        return Completable.error(new Exception("Failed to update trip auto complete visibility"));
-                    }
-                });
-    }
-
-    Completable updateTripCostCenterAutoCompleteVisibility(Trip trip, boolean isHidden) {
-        Trip updatedReceipt = new TripBuilderFactory(trip)
-                .setCostCenterHiddenFromAutoComplete(isHidden)
-                .build();
-
-        return tripTableController.update(trip, updatedReceipt, new DatabaseOperationMetadata())
-                .flatMapCompletable(optional -> {
-                    if (optional.isPresent()) {
-                        return Completable.complete();
-                    } else {
-                        return Completable.error(new Exception("Failed to update trip auto complete visibility"));
-                    }
-                });
+    public Observable<Optional<Trip>> updateTrip(Trip oldTrip, Trip newTrip) {
+        return tripTableController.update(oldTrip, newTrip, new DatabaseOperationMetadata());
     }
 }

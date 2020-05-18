@@ -26,9 +26,9 @@ class AutoCompleteInteractor<Type> constructor(private val provider: AutoComplet
                 userPreferenceManager: UserPreferenceManager) : this(provider, resultsChecker, userPreferenceManager, Schedulers.io())
 
     /**
-     * Fetches a list of auto-completion results for a specific [field], given the user's current
-     * [input] for that field. We return a [List] to maintain a consistent ordering and allow
-     * removal and additions to the adapter, but it's expected that all [AutoCompleteResult] instances
+     * Fetches a mutable list of auto-completion results for a specific [field], given the user's current
+     * [input] for that field. We return a [MutableList] to maintain a consistent ordering and allow
+     * removal and additions to the adapter, but it is expected that all [AutoCompleteResult] instances
      * will have a unique [AutoCompleteResult.displayName].
      *
      * We return a [Maybe] from this, since we except to either have a valid list of nothing,
@@ -40,9 +40,9 @@ class AutoCompleteInteractor<Type> constructor(private val provider: AutoComplet
      * @param field the [AutoCompleteField] to use
      * @param input the current user input [CharSequence]
      *
-     * @return a [Maybe], which will emit a [List] of [AutoCompleteResult] of [Type] (or nothing)
+     * @return a [Maybe], which will emit a [MutableList] of [AutoCompleteResult] of [Type] (or nothing)
      */
-    fun getAutoCompleteResults(field: AutoCompleteField, input: CharSequence) : Maybe<List<AutoCompleteResult<Type>>> {
+    fun getAutoCompleteResults(field: AutoCompleteField, input: CharSequence) : Maybe<MutableList<AutoCompleteResult<Type>>> {
         // Confirm that the user has this setting enable
         if (userPreferenceManager[UserPreference.Receipts.EnableAutoCompleteSuggestions]) {
             // And that we've typed this exact amount of characters (as the adapters manage filtering afterwards)
@@ -88,17 +88,17 @@ class AutoCompleteInteractor<Type> constructor(private val provider: AutoComplet
                                     }
                                 }
                             }
-                            Maybe.just(results.toList())
+                            Maybe.just(results)
                         }
                         .onErrorReturn {
-                            emptyList()
+                            mutableListOf()
                         }
                         .doOnSuccess {
                             Logger.info(this, "Adding {} auto-completion results to {}.", it.size, field)
                         }
             }
         }
-        return Maybe.empty<List<AutoCompleteResult<Type>>>()
+        return Maybe.empty()
     }
 
     /**

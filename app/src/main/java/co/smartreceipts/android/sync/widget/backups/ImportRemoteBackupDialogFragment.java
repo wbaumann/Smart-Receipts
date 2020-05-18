@@ -6,11 +6,14 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CheckBox;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import android.view.View;
-import android.widget.CheckBox;
 
 import com.google.common.base.Preconditions;
 
@@ -18,7 +21,8 @@ import javax.inject.Inject;
 
 import co.smartreceipts.android.R;
 import co.smartreceipts.android.activities.NavigationHandler;
-import co.smartreceipts.android.sync.model.RemoteBackupMetadata;
+import co.smartreceipts.android.databinding.DialogImportBackupBinding;
+import co.smartreceipts.core.sync.model.RemoteBackupMetadata;
 import dagger.android.support.AndroidSupportInjection;
 
 public class ImportRemoteBackupDialogFragment extends DialogFragment implements DialogInterface.OnClickListener {
@@ -31,6 +35,8 @@ public class ImportRemoteBackupDialogFragment extends DialogFragment implements 
     private RemoteBackupMetadata mBackupMetadata;
 
     private CheckBox mOverwriteCheckBox;
+    private ViewGroup container;
+    private DialogImportBackupBinding binding;
 
     public static ImportRemoteBackupDialogFragment newInstance(@NonNull RemoteBackupMetadata remoteBackupMetadata) {
         final ImportRemoteBackupDialogFragment fragment = new ImportRemoteBackupDialogFragment();
@@ -53,15 +59,22 @@ public class ImportRemoteBackupDialogFragment extends DialogFragment implements 
         Preconditions.checkNotNull(mBackupMetadata, "This class requires that a RemoteBackupMetadata instance be provided");
     }
 
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        this.container = container;
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
     @SuppressLint("InflateParams")
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final View dialogView = getActivity().getLayoutInflater().inflate(R.layout.dialog_import_backup, null);
-        mOverwriteCheckBox = (CheckBox) dialogView.findViewById(R.id.dialog_import_overwrite);
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        binding = DialogImportBackupBinding.inflate(inflater, container, false);
+        mOverwriteCheckBox = binding.dialogImportOverwrite;
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setView(dialogView);
+        builder.setView(binding.getRoot());
         builder.setTitle(getString(R.string.import_string_item, mBackupMetadata.getSyncDeviceName()));
         builder.setCancelable(true);
         builder.setPositiveButton(R.string.dialog_import_positive, this);
@@ -75,5 +88,11 @@ public class ImportRemoteBackupDialogFragment extends DialogFragment implements 
             navigationHandler.showDialog(ImportRemoteBackupWorkerProgressDialogFragment.newInstance(mBackupMetadata, mOverwriteCheckBox.isChecked()));
         }
         dismiss();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

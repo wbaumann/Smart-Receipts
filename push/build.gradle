@@ -27,6 +27,11 @@ android {
     buildToolsVersion = rootProject.ext.buildToolsVersion
 
     flavorDimensions "isFloss"
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+    }
+
     productFlavors {
         floss {
             dimension "isFloss"
@@ -40,9 +45,6 @@ android {
 
 dependencies {
     implementation project(':core')
-
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // Dagger
     kapt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"

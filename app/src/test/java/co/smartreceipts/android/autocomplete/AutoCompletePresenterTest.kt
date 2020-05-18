@@ -17,8 +17,8 @@ import org.robolectric.RobolectricTestRunner
 class AutoCompletePresenterTest {
 
     companion object {
-        private val FIELD_1_RESULTS = listOf(AutoCompleteResult("1a", Any()), AutoCompleteResult("1b", Any()))
-        private val FIELD_2_RESULTS = listOf(AutoCompleteResult("2a", Any()), AutoCompleteResult("2b", Any()))
+        private val FIELD_1_RESULTS = mutableListOf(AutoCompleteResult("1a", Any()), AutoCompleteResult("1b", Any()))
+        private val FIELD_2_RESULTS = mutableListOf(AutoCompleteResult("2a", Any()), AutoCompleteResult("2b", Any()))
     }
 
     // Class under test
@@ -51,15 +51,17 @@ class AutoCompletePresenterTest {
         whenever(view.getTextChangeStream(field2)).thenReturn(field2TextChanges)
         whenever(interactor.getAutoCompleteResults(eq(field1), any())).thenReturn(Maybe.just(FIELD_1_RESULTS))
         whenever(interactor.getAutoCompleteResults(eq(field2), any())).thenReturn(Maybe.just(FIELD_2_RESULTS))
-        presenter = AutoCompletePresenter(view, editor, interactor, Schedulers.trampoline())
+        presenter = AutoCompletePresenter(view, interactor, Schedulers.trampoline())
     }
 
     @Test
     fun subscribeWhenEditing() {
         whenever(editor.editableItem).thenReturn(Any())
         presenter.subscribe()
-        verify(view, never()).displayAutoCompleteResults(any(), any())
-        verifyZeroInteractions(interactor)
+        field1TextChanges.onNext("1")
+        verify(view).displayAutoCompleteResults(field1, FIELD_1_RESULTS)
+        field2TextChanges.onNext("2")
+        verify(view).displayAutoCompleteResults(field2, FIELD_2_RESULTS)
     }
 
     @Test

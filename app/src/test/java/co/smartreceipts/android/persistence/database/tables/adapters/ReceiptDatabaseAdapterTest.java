@@ -31,7 +31,7 @@ import co.smartreceipts.android.persistence.database.operations.DatabaseOperatio
 import co.smartreceipts.android.persistence.database.operations.OperationFamilyType;
 import co.smartreceipts.android.persistence.database.tables.ReceiptsTable;
 import co.smartreceipts.android.persistence.database.tables.Table;
-import co.smartreceipts.android.sync.model.SyncState;
+import co.smartreceipts.core.sync.model.SyncState;
 import io.reactivex.Single;
 import wb.android.storage.StorageManager;
 
@@ -71,7 +71,7 @@ public class ReceiptDatabaseAdapterTest {
     private static final int DESCENDING_INDEX = 3;
     private static final int ASCENDING_INDEX = 2;
     private static final int CURSOR_COUNT = 4;
-    private static final PaymentMethod PAYMENT_METHOD = new PaymentMethod(PAYMENT_METHOD_ID, PAYMENT_METHOD_UUID, "method");
+    private static final PaymentMethod PAYMENT_METHOD = new PaymentMethod(PAYMENT_METHOD_ID, PAYMENT_METHOD_UUID, "method", false);
     private static final boolean FULL_PAGE = true;
     private static final boolean NAME_HIDDEN_FROM_AUTO_COMPLETE = false;
     private static final boolean COMMENT_HIDDEN_FROM_AUTO_COMPLETE = false;

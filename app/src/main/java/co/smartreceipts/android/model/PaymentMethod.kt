@@ -3,9 +3,9 @@ package co.smartreceipts.android.model
 import android.content.res.Resources
 import android.os.Parcelable
 import co.smartreceipts.android.model.factory.PaymentMethodBuilderFactory
-import co.smartreceipts.android.sync.model.SyncState
-import co.smartreceipts.android.sync.model.Syncable
-import co.smartreceipts.android.sync.model.impl.DefaultSyncState
+import co.smartreceipts.core.sync.model.SyncState
+import co.smartreceipts.core.sync.model.Syncable
+import co.smartreceipts.core.sync.model.impl.DefaultSyncState
 import kotlinx.android.parcel.Parcelize
 import java.util.*
 
@@ -19,6 +19,7 @@ class PaymentMethod @JvmOverloads constructor (
     override val id: Int,
     override val uuid: UUID,
     val method: String, // The actual payment method that the user specified
+    val isReimbursable: Boolean,
     override val syncState: SyncState = DefaultSyncState(),
     override val customOrderId: Long = 0
 
@@ -34,6 +35,7 @@ class PaymentMethod @JvmOverloads constructor (
 
         if (id != that!!.id) return false
         if (uuid != that.uuid) return false
+        if (isReimbursable != that.isReimbursable) return false
         return if (customOrderId != that.customOrderId) false else method == that.method
     }
 
@@ -41,6 +43,7 @@ class PaymentMethod @JvmOverloads constructor (
         var result = id
         result = 31 * result + uuid.hashCode()
         result = 31 * result + method.hashCode()
+        result = 31 * result + isReimbursable.hashCode()
         result = 31 * result + (customOrderId xor customOrderId.ushr(32)).toInt()
         return result
     }

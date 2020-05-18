@@ -1,5 +1,15 @@
 
 
+##### Our Personal Classes #####
+-keep class co.smartreceipts.** { *; }
+-dontwarn co.smartreceipts.**
+-keep class wb.android.** { *; }
+-dontwarn wb.android.**
+-keep class wb.receipts.** { *; }
+-dontwarn wb.receipts.**
+-keep class wb.receiptspro.** { *; }
+-dontwarn wb.receiptspro.**
+
 ##### AWS ProGuard configurations #####
 
 # Class names are needed in reflection
@@ -18,6 +28,10 @@
 # The SDK has several references of Apache HTTP client
 -dontwarn com.amazonaws.http.**
 -dontwarn com.amazonaws.metrics.**
+
+### Fabric
+-keep class com.crashlytics.** { *; }
+-dontwarn com.crashlytics.**
 
 
 ##### FireBase ProGuard configurations #####

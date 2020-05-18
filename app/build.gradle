@@ -22,8 +22,8 @@ android {
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 2201
-        versionName "4.20.2.2201"
+        versionCode 2261
+        versionName "4.21.0.2261"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
 
@@ -128,12 +128,19 @@ android {
         execution 'ANDROIDX_TEST_ORCHESTRATOR'
     }
 
+    viewBinding {
+        enabled = true
+    }
+
     dependencies {
         implementation fileTree(dir: 'libs', include: '*.jar')
         implementation project(':core')
         implementation project(':wbMiniLibrary')
         implementation project(':aws')
         implementation project(':push')
+        implementation project(':automatic_backups')
+        implementation project(':oss_licenses')
+
 
         implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
@@ -152,13 +159,6 @@ android {
         implementation "com.android.support.constraint:constraint-layout:$CONSTRAINT_LAYOUT_VERSION"
 
         implementation "com.google.http-client:google-http-client-gson:$GOOGLE_HTTP_CLIENT_VERSION"
-        implementation("com.google.api-client:google-api-client-android:$GOOGLE_API_CLIENT_VERSION") {
-            exclude group: 'org.apache.httpcomponents'
-        }
-        implementation("com.google.apis:google-api-services-drive:$GOOGLE_API_SERVICES_VERSION") {
-            exclude group: 'org.apache.httpcomponents'
-        }
-        implementation "com.google.android.gms:play-services-auth:$DRIVE_API_VERSION"
 
         implementation "com.squareup.picasso:picasso:$PICASSO_VERSION"
         implementation "com.squareup.okhttp3:okhttp:$OK_HTTP_VERSION"
@@ -177,9 +177,6 @@ android {
 
         implementation "commons-io:commons-io:$IO_UTILS_VERSION"
         implementation "com.hadisatrio:Optional:$OPTIONAL_VERSION"
-
-        implementation "com.jakewharton:butterknife:$BUTTERKNIFE_VERSION"
-        kapt "com.jakewharton:butterknife-compiler:$BUTTERKNIFE_VERSION"
 
         implementation "com.tapadoo.android:alerter:$ALERTER_VERSION"
         implementation "com.github.clans:fab:$FAB_MENU_VERSION"
@@ -205,11 +202,6 @@ android {
         kapt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
         kapt "com.google.dagger:dagger-android-processor:$DAGGER_VERSION"
 
-        // Crashlytics
-        implementation "com.crashlytics.sdk.android:crashlytics:$CRASHLYTICS_VERSION"
-
-        implementation "com.google.android.gms:play-services-oss-licenses:$GOOGLE_OSS_VERSION"
-
         // Unit Tests
         testImplementation "org.robolectric:robolectric:$ROBOLECTRIC_VERSION"
         testImplementation "junit:junit:$JUNIT_VERSION"
@@ -219,6 +211,7 @@ android {
 
         // Espresso Tests
         androidTestImplementation "androidx.test.espresso:espresso-core:$ESPRESSO_VERSION"
+        androidTestImplementation "androidx.test.ext:junit:$JUNIT_EXT_VERSION"
         androidTestImplementation "androidx.test:runner:$ANDROID_TEST_RUNNER_VERSION"
         androidTestImplementation "androidx.test:rules:$ANDROID_TEST_RUNNER_VERSION"
         androidTestUtil "androidx.test:orchestrator:$ANDROID_TEST_RUNNER_VERSION"

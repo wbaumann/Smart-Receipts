@@ -44,11 +44,6 @@ import java.util.TimeZone;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import butterknife.BindView;
-import butterknife.BindViews;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
-import butterknife.ViewCollections;
 import co.smartreceipts.android.R;
 import co.smartreceipts.android.activities.NavigationHandler;
 import co.smartreceipts.android.adapters.FooterButtonArrayAdapter;
@@ -64,6 +59,7 @@ import co.smartreceipts.android.autocomplete.receipt.ReceiptAutoCompleteField;
 import co.smartreceipts.android.currency.PriceCurrency;
 import co.smartreceipts.android.currency.widget.CurrencyListEditorPresenter;
 import co.smartreceipts.android.currency.widget.DefaultCurrencyListEditorView;
+import co.smartreceipts.android.databinding.UpdateReceiptBinding;
 import co.smartreceipts.android.date.DateEditText;
 import co.smartreceipts.android.date.DateFormatter;
 import co.smartreceipts.android.editor.Editor;
@@ -72,6 +68,7 @@ import co.smartreceipts.android.fragments.ReceiptInputCache;
 import co.smartreceipts.android.fragments.WBFragment;
 import co.smartreceipts.android.keyboard.decimal.SamsungDecimalInputPresenter;
 import co.smartreceipts.android.keyboard.decimal.SamsungDecimalInputView;
+import co.smartreceipts.android.model.AutoCompleteUpdateEvent;
 import co.smartreceipts.android.model.Category;
 import co.smartreceipts.android.model.PaymentMethod;
 import co.smartreceipts.android.model.Price;
@@ -85,7 +82,10 @@ import co.smartreceipts.android.ocr.widget.tooltip.ReceiptCreateEditFragmentTool
 import co.smartreceipts.android.persistence.DatabaseHelper;
 import co.smartreceipts.android.persistence.database.controllers.TableEventsListener;
 import co.smartreceipts.android.persistence.database.controllers.impl.CategoriesTableController;
+import co.smartreceipts.android.persistence.database.controllers.impl.ReceiptTableController;
 import co.smartreceipts.android.persistence.database.controllers.impl.StubTableEventsListener;
+import co.smartreceipts.android.purchases.PurchaseManager;
+import co.smartreceipts.android.purchases.wallet.PurchaseWallet;
 import co.smartreceipts.android.receipts.editor.currency.ReceiptCurrencyCodeSupplier;
 import co.smartreceipts.android.receipts.editor.date.ReceiptDateView;
 import co.smartreceipts.android.receipts.editor.exchange.CurrencyExchangeRateEditorPresenter;
@@ -100,7 +100,6 @@ import co.smartreceipts.android.receipts.editor.toolbar.ReceiptsEditorToolbarVie
 import co.smartreceipts.android.settings.UserPreferenceManager;
 import co.smartreceipts.android.utils.SoftKeyboardManager;
 import co.smartreceipts.android.utils.StrictModeConfiguration;
-import co.smartreceipts.android.utils.butterknife.ButterKnifeActions;
 import co.smartreceipts.analytics.log.Logger;
 import co.smartreceipts.android.utils.rx.RxSchedulers;
 import co.smartreceipts.android.widget.NetworkRequestAwareEditText;
@@ -111,6 +110,8 @@ import dagger.android.support.AndroidSupportInjection;
 import io.reactivex.Observable;
 import io.reactivex.Scheduler;
 import io.reactivex.functions.Consumer;
+import io.reactivex.subjects.PublishSubject;
+import io.reactivex.subjects.Subject;
 import kotlin.Unit;
 import wb.android.flex.Flex;
 
@@ -124,8 +125,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
         SamsungDecimalInputView,
         AutoCompleteView<Receipt>,
         ReceiptsEditorToolbarView,
-        PaymentMethodsView,
-        AutoCompleteArrayAdapter.ClickListener {
+        PaymentMethodsView {
 
     public static final String ARG_FILE = "arg_file";
     public static final String ARG_OCR = "arg_ocr";
@@ -140,10 +140,19 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     ExchangeRateServiceManager exchangeRateServiceManager;
 
     @Inject
+    PurchaseManager purchaseManager;
+
+    @Inject
+    PurchaseWallet purchaseWallet;
+
+    @Inject
     Analytics analytics;
 
     @Inject
     CategoriesTableController categoriesTableController;
+
+    @Inject
+    ReceiptTableController receiptTableController;
 
     @Inject
     NavigationHandler navigationHandler;
@@ -156,9 +165,6 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
 
     @Inject
     DateFormatter dateFormatter;
-
-    @Inject
-    ReceiptCreateEditFragmentPresenter presenter;
 
     @Inject
     SamsungDecimalInputPresenter samsungDecimalInputPresenter;
@@ -180,60 +186,25 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     @Named(RxSchedulers.MAIN)
     Scheduler mainScheduler;
 
-    // Butterknife Fields
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
+    private Toolbar toolbar;
+    private AutoCompleteTextView nameBox;
+    private EditText priceBox;
+    private AutoCompleteTextView taxBox;
+    private Spinner currencySpinner;
+    private NetworkRequestAwareEditText exchangeRateBox;
+    private EditText exchangedPriceInBaseCurrencyBox;
+    private TextView receiptInputExchangeRateBaseCurrencyTextView;
+    private DateEditText dateBox;
+    private Spinner categoriesSpinner;
+    private AutoCompleteTextView commentBox;
+    private Spinner paymentMethodsSpinner;
+    private CheckBox reimbursableCheckbox;
+    private CheckBox fullPageCheckbox;
+    private Button decimalSeparatorButton;
+    private View taxInputWrapper;
 
-    @BindView(R.id.DIALOG_RECEIPTMENU_NAME)
-    AutoCompleteTextView nameBox;
-
-    @BindView(R.id.DIALOG_RECEIPTMENU_PRICE)
-    EditText priceBox;
-
-    @BindView(R.id.DIALOG_RECEIPTMENU_TAX)
-    AutoCompleteTextView taxBox;
-
-    @BindView(R.id.DIALOG_RECEIPTMENU_CURRENCY)
-    Spinner currencySpinner;
-
-    @BindView(R.id.receipt_input_exchange_rate)
-    NetworkRequestAwareEditText exchangeRateBox;
-
-    @BindView(R.id.receipt_input_exchanged_result)
-    EditText exchangedPriceInBaseCurrencyBox;
-
-    @BindView(R.id.receipt_input_exchange_rate_base_currency)
-    TextView receiptInputExchangeRateBaseCurrencyTextView;
-
-    @BindView(R.id.DIALOG_RECEIPTMENU_DATE)
-    DateEditText dateBox;
-
-    @BindView(R.id.DIALOG_RECEIPTMENU_CATEGORY)
-    Spinner categoriesSpinner;
-
-    @BindView(R.id.DIALOG_RECEIPTMENU_COMMENT)
-    AutoCompleteTextView commentBox;
-
-    @BindView(R.id.receipt_input_payment_method)
-    Spinner paymentMethodsSpinner;
-
-    @BindView(R.id.DIALOG_RECEIPTMENU_EXPENSABLE)
-    CheckBox reimbursableCheckbox;
-
-    @BindView(R.id.DIALOG_RECEIPTMENU_FULLPAGE)
-    CheckBox fullPageCheckbox;
-
-    @BindView(R.id.decimalSeparatorButton)
-    Button decimalSeparatorButton;
-
-    @BindView(R.id.receipt_input_tax_wrapper)
-    View taxInputWrapper;
-
-    @BindViews({R.id.receipt_input_guide_image_payment_method, R.id.receipt_input_payment_method})
-    List<View> paymentMethodsViewsList;
-
-    @BindViews({R.id.receipt_input_guide_image_exchange_rate, R.id.receipt_input_exchange_rate, R.id.receipt_input_exchanged_result, R.id.receipt_input_exchange_rate_base_currency})
-    List<View> exchangeRateViewsList;
+    private List<View> paymentMethodsViewsList;
+    private List<View> exchangeRateViewsList;
 
     // Flex fields (ie for white-label projects)
     EditText extraEditText1;
@@ -241,10 +212,8 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     EditText extraEditText3;
 
     // Misc views
-    View focusedView;
-
-    // Butterknife unbinding
-    private Unbinder unbinder;
+    private View focusedView;
+    private UpdateReceiptBinding binding;
 
     // Metadata
     private OcrResponse ocrResponse;
@@ -253,6 +222,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     private CurrencyListEditorPresenter currencyListEditorPresenter;
     private ReceiptPricingPresenter receiptPricingPresenter;
     private CurrencyExchangeRateEditorPresenter currencyExchangeRateEditorPresenter;
+    private ReceiptCreateEditFragmentPresenter presenter;
 
     // Database monitor callbacks
     private TableEventsListener<Category> categoryTableEventsListener;
@@ -265,6 +235,12 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     private AutoCompleteArrayAdapter<Receipt> resultsAdapter;
     private Snackbar snackbar;
     private boolean shouldHideResults;
+    private AutoCompleteResult<Receipt> itemToRemoveOrReAdd;
+
+    private Subject<AutoCompleteUpdateEvent<Receipt>> _hideAutoCompleteVisibilityClicks =
+            PublishSubject.<AutoCompleteUpdateEvent<Receipt>>create().toSerialized();
+    private Subject<AutoCompleteUpdateEvent<Receipt>> _unHideAutoCompleteVisibilityClicks =
+            PublishSubject.<AutoCompleteUpdateEvent<Receipt>>create().toSerialized();
 
     @NonNull
     public static ReceiptCreateEditFragment newInstance() {
@@ -303,6 +279,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
         currencyListEditorPresenter = new CurrencyListEditorPresenter(defaultCurrencyListEditorView, database, currencyCodeSupplier, savedInstanceState);
         receiptPricingPresenter = new ReceiptPricingPresenter(this, userPreferenceManager, getEditableItem(), savedInstanceState, ioScheduler, mainScheduler);
         currencyExchangeRateEditorPresenter = new CurrencyExchangeRateEditorPresenter(this, this, defaultCurrencyListEditorView, this, exchangeRateServiceManager, database, getParentTrip(), getEditableItem(), savedInstanceState);
+        presenter = new ReceiptCreateEditFragmentPresenter(this, userPreferenceManager, purchaseManager, purchaseWallet, receiptTableController);
     }
 
     Trip getParentTrip() {
@@ -316,17 +293,46 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.update_receipt, container, false);
+        binding = UpdateReceiptBinding.inflate(inflater, container, false);
+
+        toolbar = binding.toolbar.toolbar;
+        nameBox = binding.DIALOGRECEIPTMENUNAME;
+        priceBox = binding.DIALOGRECEIPTMENUPRICE;
+        taxBox = binding.DIALOGRECEIPTMENUTAX;
+        currencySpinner = binding.DIALOGRECEIPTMENUCURRENCY;
+        exchangeRateBox = binding.receiptInputExchangeRate;
+        exchangedPriceInBaseCurrencyBox = binding.receiptInputExchangedResult;
+        receiptInputExchangeRateBaseCurrencyTextView = binding.receiptInputExchangeRateBaseCurrency;
+        dateBox = binding.DIALOGRECEIPTMENUDATE;
+        categoriesSpinner = binding.DIALOGRECEIPTMENUCATEGORY;
+        commentBox = binding.DIALOGRECEIPTMENUCOMMENT;
+        paymentMethodsSpinner = binding.receiptInputPaymentMethod;
+        reimbursableCheckbox = binding.DIALOGRECEIPTMENUEXPENSABLE;
+        fullPageCheckbox = binding.DIALOGRECEIPTMENUFULLPAGE;
+        decimalSeparatorButton = binding.decimalSeparatorButton;
+        taxInputWrapper = binding.receiptInputTaxWrapper;
+
+        paymentMethodsViewsList = new ArrayList<>();
+        paymentMethodsViewsList.add(binding.receiptInputGuideImagePaymentMethod);
+        paymentMethodsViewsList.add(paymentMethodsSpinner);
+
+        exchangeRateViewsList = new ArrayList<>();
+        exchangeRateViewsList.add(binding.receiptInputGuideImageExchangeRate);
+        exchangeRateViewsList.add(exchangeRateBox);
+        exchangeRateViewsList.add(exchangedPriceInBaseCurrencyBox);
+        exchangeRateViewsList.add(receiptInputExchangeRateBaseCurrencyTextView);
+
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        this.unbinder = ButterKnife.bind(this, view);
 
         if (savedInstanceState == null) {
             if (isNewReceipt()) {
-                new ChildFragmentNavigationHandler(this).addChild(new ReceiptCreateEditFragmentTooltipFragment(), R.id.update_receipt_tooltip);
+                new ChildFragmentNavigationHandler(this).addChild(
+                        new ReceiptCreateEditFragmentTooltipFragment(), R.id.update_receipt_tooltip);
             }
         }
 
@@ -546,6 +552,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
         currencyExchangeRateEditorPresenter.subscribe();
         receiptsEditorToolbarPresenter.subscribe();
         paymentMethodsPresenter.subscribe();
+        presenter.subscribe();
 
         // Attempt to update our lists in case they were changed in the background
         categoriesTableController.get();
@@ -604,7 +611,6 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
         super.onPause();
     }
 
-
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -623,6 +629,7 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
         currencyExchangeRateEditorPresenter.unsubscribe();
         autoCompletePresenter.unsubscribe();
         samsungDecimalInputPresenter.unsubscribe();
+        presenter.unsubscribe();
         if (snackbar != null && snackbar.isShown()) {
             snackbar.dismiss();
         }
@@ -636,8 +643,8 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
         extraEditText2 = null;
         extraEditText3 = null;
         focusedView = null;
-        unbinder.unbind();
         super.onDestroyView();
+        binding = null;
     }
 
     @Override
@@ -748,8 +755,11 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     @UiThread
     @Override
     public Consumer<? super Boolean> toggleExchangeRateFieldVisibility() {
-        return (Consumer<Boolean>) isVisible ->
-                ViewCollections.run(exchangeRateViewsList, ButterKnifeActions.setVisibility(isVisible ? View.VISIBLE : View.GONE));
+        return (Consumer<Boolean>) isVisible -> {
+            for (View v : exchangeRateViewsList) {
+                v.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+            }
+        };
     }
 
     @NonNull
@@ -872,13 +882,20 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     @Override
     public void displayAutoCompleteResults(@NotNull AutoCompleteField field, @NotNull List<AutoCompleteResult<Receipt>> autoCompleteResults) {
         if (!shouldHideResults) {
+            if (snackbar != null && snackbar.isShown()) {
+                snackbar.dismiss();
+            }
             resultsAdapter = new AutoCompleteArrayAdapter<>(requireContext(), autoCompleteResults, this);
             if (field == ReceiptAutoCompleteField.Name) {
                 nameBox.setAdapter(resultsAdapter);
-                nameBox.showDropDown();
+                if (nameBox.hasFocus()) {
+                    nameBox.showDropDown();
+                }
             } else if (field == ReceiptAutoCompleteField.Comment) {
                 commentBox.setAdapter(resultsAdapter);
-                commentBox.showDropDown();
+                if (commentBox.hasFocus()) {
+                    commentBox.showDropDown();
+                }
             } else {
                 throw new IllegalArgumentException("Unsupported field type: " + field);
             }
@@ -905,10 +922,8 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     @Override
     public Consumer<? super Boolean> togglePaymentMethodFieldVisibility() {
         return isVisible -> {
-            if (isVisible) {
-                ViewCollections.run(paymentMethodsViewsList, ButterKnifeActions.setVisibility(View.VISIBLE));
-            } else {
-                ViewCollections.run(paymentMethodsViewsList, ButterKnifeActions.setVisibility(View.GONE));
+            for (View v : paymentMethodsViewsList) {
+                v.setVisibility(isVisible ? View.VISIBLE : View.GONE);
             }
         };
     }
@@ -918,6 +933,19 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
         if (isAdded()) {
             paymentMethodsAdapter.update(list);
             paymentMethodsSpinner.setAdapter(paymentMethodsAdapter);
+            paymentMethodsSpinner.setOnItemSelectedListener(
+                    new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                            final PaymentMethod paymentMethod = paymentMethodsAdapter.getItem(i);
+                            reimbursableCheckbox.setChecked(paymentMethod.isReimbursable());
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> adapterView) {
+
+                        }
+                    });
             if (getEditableItem() != null) {
                 // Here we manually loop through all payment methods and check for id == id in case the user changed this via "Manage"
                 final PaymentMethod receiptPaymentMethod = getEditableItem().getPaymentMethod();
@@ -933,59 +961,93 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
     }
 
     @Override
-    public void onClick(boolean removeAutoCompleteResult, int position) {
-        final AutoCompleteResult<Receipt> selectedItem = resultsAdapter.getItem(position);
-        if (selectedItem != null) {
-            final Receipt firstReceipt = selectedItem.getFirstItem();
-            if (!removeAutoCompleteResult) {
-                shouldHideResults = true;
-                if (nameBox.isPopupShowing()) {
-                    // Whenever we select an old item, attempt to map our price and category to the same
-                    // Only update the price if: no text is set AND the next item price == the first
-                    if (priceBox.getText().length() == 0) {
-                        final Receipt secondReceipt = selectedItem.getSecondItem();
-                        if (secondReceipt != null && firstReceipt.getPrice().getDecimalFormattedPrice().equals(secondReceipt.getPrice().getDecimalFormattedPrice())) {
-                            priceBox.setText(firstReceipt.getPrice().getDecimalFormattedPrice());
-                        }
-                    }
-
-                    final int categoryIndex = categoriesList.indexOf(firstReceipt.getCategory());
-                    if (categoryIndex > 0) {
-                        categoriesSpinner.setSelection(categoryIndex);
-                    }
-                    nameBox.setText(selectedItem.getDisplayName());
-                    nameBox.setSelection(nameBox.getText().length());
-                    nameBox.dismissDropDown();
-                } else {
-                    commentBox.setText(selectedItem.getDisplayName());
-                    commentBox.setSelection(commentBox.getText().length());
-                    commentBox.dismissDropDown();
-                }
-                SoftKeyboardManager.hideKeyboard(focusedView);
-            } else {
-                SoftKeyboardManager.hideKeyboard(focusedView);
-                final Consumer<Throwable> throwableConsumer = throwable ->
-                        getActivity().runOnUiThread(() ->
-                                Toast.makeText(getActivity(), R.string.delete_failed, Toast.LENGTH_LONG).show());
-                if (nameBox.isPopupShowing()) {
-                    presenter.updateReceiptNameAutoCompleteVisibility(firstReceipt, true)
-                            .subscribe(() ->
-                                    getActivity().runOnUiThread(() -> {
-                                        resultsAdapter.remove(selectedItem);
-                                        resultsAdapter.notifyDataSetChanged();
-                                        showUndoSnackbar(selectedItem, position, true);
-                                    }), throwableConsumer);
-                } else {
-                    presenter.updateReceiptCommentAutoCompleteVisibility(firstReceipt, true)
-                            .subscribe(() ->
-                                    getActivity().runOnUiThread(() -> {
-                                        resultsAdapter.remove(selectedItem);
-                                        resultsAdapter.notifyDataSetChanged();
-                                        showUndoSnackbar(selectedItem, position, false);
-                                    }), throwableConsumer);
+    public void fillValueField(@NotNull AutoCompleteResult<Receipt> autoCompleteResult) {
+        final Receipt firstReceipt = autoCompleteResult.getFirstItem();
+        shouldHideResults = true;
+        if (nameBox.isPopupShowing()) {
+            // Whenever we select an old item, attempt to map our price and category to the same
+            // Only update the price if: no text is set AND the next item price == the first
+            if (priceBox.getText().length() == 0) {
+                final Receipt secondReceipt = autoCompleteResult.getSecondItem();
+                if (secondReceipt != null && firstReceipt.getPrice().getDecimalFormattedPrice().equals(secondReceipt.getPrice().getDecimalFormattedPrice())) {
+                    priceBox.setText(firstReceipt.getPrice().getDecimalFormattedPrice());
                 }
             }
+
+            final int categoryIndex = categoriesList.indexOf(firstReceipt.getCategory());
+            if (categoryIndex > 0) {
+                categoriesSpinner.setSelection(categoryIndex);
+            }
+            nameBox.setText(autoCompleteResult.getDisplayName());
+            nameBox.setSelection(nameBox.getText().length());
+            nameBox.dismissDropDown();
+        } else {
+            commentBox.setText(autoCompleteResult.getDisplayName());
+            commentBox.setSelection(commentBox.getText().length());
+            commentBox.dismissDropDown();
         }
+        SoftKeyboardManager.hideKeyboard(focusedView);
+    }
+
+    @Override
+    public void sendAutoCompleteHideEvent(@NotNull AutoCompleteResult<Receipt> autoCompleteResult) {
+        SoftKeyboardManager.hideKeyboard(focusedView);
+        if (nameBox.isPopupShowing()) {
+            _hideAutoCompleteVisibilityClicks.onNext(
+                    new AutoCompleteUpdateEvent(autoCompleteResult, ReceiptAutoCompleteField.Name, resultsAdapter.getPosition(autoCompleteResult)));
+        } else {
+            _hideAutoCompleteVisibilityClicks.onNext(
+                    new AutoCompleteUpdateEvent(autoCompleteResult, ReceiptAutoCompleteField.Comment, resultsAdapter.getPosition(autoCompleteResult)));
+        }
+    }
+
+    @Override
+    public void removeValueFromAutoComplete(int position) {
+        getActivity().runOnUiThread(() -> {
+            itemToRemoveOrReAdd = resultsAdapter.getItem(position);
+            resultsAdapter.remove(itemToRemoveOrReAdd);
+            resultsAdapter.notifyDataSetChanged();
+            View view = getActivity().findViewById(R.id.update_receipt_layout);
+            snackbar = Snackbar.make(view, getString(
+                    R.string.item_removed_from_auto_complete, itemToRemoveOrReAdd.getDisplayName()), Snackbar.LENGTH_LONG);
+            snackbar.setAction(R.string.undo, v -> {
+                if (nameBox.hasFocus()) {
+                    _unHideAutoCompleteVisibilityClicks.onNext(
+                            new AutoCompleteUpdateEvent(itemToRemoveOrReAdd, ReceiptAutoCompleteField.Name, position));
+                } else {
+                    _unHideAutoCompleteVisibilityClicks.onNext(
+                            new AutoCompleteUpdateEvent(itemToRemoveOrReAdd, ReceiptAutoCompleteField.Comment, position));
+                }
+            });
+            snackbar.show();
+        });
+    }
+
+    @Override
+    public void sendAutoCompleteUnHideEvent(int position) {
+        getActivity().runOnUiThread(() -> {
+            resultsAdapter.insert(itemToRemoveOrReAdd, position);
+            resultsAdapter.notifyDataSetChanged();
+            Toast.makeText(getContext(), R.string.result_restored, Toast.LENGTH_LONG).show();
+        });
+    }
+
+    @Override
+    public void displayAutoCompleteError() {
+        getActivity().runOnUiThread(() ->
+                Toast.makeText(getContext(), R.string.result_restore_failed, Toast.LENGTH_LONG).show());
+    }
+
+    @NotNull
+    @Override
+    public Observable<AutoCompleteUpdateEvent<Receipt>> getHideAutoCompleteVisibilityClick() {
+        return _hideAutoCompleteVisibilityClicks;
+    }
+
+    @NotNull
+    @Override
+    public Observable<AutoCompleteUpdateEvent<Receipt>> getUnHideAutoCompleteVisibilityClick() {
+        return _unHideAutoCompleteVisibilityClicks;
     }
 
     private class SpinnerSelectionListener implements AdapterView.OnItemSelectedListener {
@@ -1012,37 +1074,6 @@ public class ReceiptCreateEditFragment extends WBFragment implements Editor<Rece
 
     private String getFlexString(int id) {
         return getFlexString(flex, id);
-    }
-
-    private void showUndoSnackbar(AutoCompleteResult<Receipt> result, int position, boolean useNameBox) {
-        View view = getActivity().findViewById(R.id.update_receipt_layout);
-        snackbar = Snackbar.make(view, getString(
-                R.string.item_removed_from_auto_complete, result.getDisplayName()), Snackbar.LENGTH_LONG);
-        snackbar.setAction(R.string.undo, v -> undoDelete(result, position, useNameBox));
-        snackbar.show();
-    }
-
-    private void undoDelete(AutoCompleteResult<Receipt> result, int position, boolean useNameBox) {
-        final Consumer<Throwable> throwableConsumer = throwable ->
-                getActivity().runOnUiThread(() ->
-                        Toast.makeText(getContext(), R.string.result_restore_failed, Toast.LENGTH_LONG).show());
-        if (useNameBox) {
-            presenter.updateReceiptNameAutoCompleteVisibility(result.getFirstItem(), false)
-                    .subscribe(() ->
-                            getActivity().runOnUiThread(() -> {
-                                resultsAdapter.insert(result, position);
-                                resultsAdapter.notifyDataSetChanged();
-                                Toast.makeText(getContext(), R.string.result_restored, Toast.LENGTH_LONG).show();
-                            }), throwableConsumer);
-        } else {
-            presenter.updateReceiptCommentAutoCompleteVisibility(result.getFirstItem(), false)
-                    .subscribe(() ->
-                            getActivity().runOnUiThread(() -> {
-                                resultsAdapter.insert(result, position);
-                                resultsAdapter.notifyDataSetChanged();
-                                Toast.makeText(getContext(), R.string.result_restored, Toast.LENGTH_LONG).show();
-                            }), throwableConsumer);
-        }
     }
 
 }

@@ -15,13 +15,9 @@ import android.widget.ImageView
  * Modifies the core [ArrayAdapter] contract to address a bug that is specific to auto-completion
  */
 class AutoCompleteArrayAdapter<Type>(context: Context,
-                                     autoCompleteResults: List<AutoCompleteResult<Type>>,
-                                     private val listener: ClickListener)
+                                     autoCompleteResults: MutableList<AutoCompleteResult<Type>>,
+                                     private val view: AutoCompleteView<Type>)
     : ArrayAdapter<AutoCompleteResult<Type>>(context, R.layout.auto_complete_view, autoCompleteResults) {
-
-    interface ClickListener {
-        fun onClick(removeAutoCompleteResult: Boolean, position: Int)
-    }
 
     /**
      * Note: We override the default ArrayAdapter$ArrayFilter logic here, since this filter object's
@@ -41,18 +37,17 @@ class AutoCompleteArrayAdapter<Type>(context: Context,
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val listItem = convertView ?: LayoutInflater.from(context).inflate(R.layout.auto_complete_view, parent, false)
-
         val result = getItem(position)
 
         val name = listItem.findViewById(R.id.auto_complete_name) as TextView
-        name.text = result.displayName
+        name.text = result!!.displayName
         name.setOnClickListener {
-            listener.onClick(false, position)
+            view.fillValueField(result)
         }
 
         val image = listItem.findViewById(R.id.imgAutoCompleteDelete) as ImageView
         image.setOnClickListener {
-            listener.onClick(true, position)
+            view.sendAutoCompleteHideEvent(result)
         }
         return listItem
     }

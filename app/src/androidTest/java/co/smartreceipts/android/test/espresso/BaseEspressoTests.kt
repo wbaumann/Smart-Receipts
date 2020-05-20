@@ -55,7 +55,8 @@ class BaseEspressoTests {
         onView(withId(R.id.dialog_tripmenu_name)).perform(replaceText("Test2"), closeSoftKeyboard())
         onView(withId(R.id.action_save)).perform(click())
 
-        Thread.sleep(TimeUnit.SECONDS.toMillis(1)) // Wait a second to ensure that everything loaded
+        // Wait a second to ensure that everything loaded
+        Thread.sleep(TimeUnit.SECONDS.toMillis(1))
 
         // Up Button Navigation
         onView(withContentDescription(R.string.abc_action_bar_up_description)).perform(click())
@@ -73,7 +74,8 @@ class BaseEspressoTests {
         onView(withId(R.id.dialog_tripmenu_name)).perform(replaceText("Test3"), closeSoftKeyboard())
         onView(withId(R.id.action_save)).perform(click())
 
-        Thread.sleep(TimeUnit.SECONDS.toMillis(1)) // Wait a second to ensure that everything loaded
+        // Wait a second to ensure that everything loaded
+        Thread.sleep(TimeUnit.SECONDS.toMillis(1))
 
         // Open the fab menu (specific to our clans fab library)
         onView(allOf(withParent(withId(R.id.fab_menu)), withClassName(endsWith("ImageView")), isDisplayed())).perform(click())

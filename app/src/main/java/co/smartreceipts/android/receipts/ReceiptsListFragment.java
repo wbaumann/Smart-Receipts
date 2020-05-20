@@ -2,6 +2,7 @@ package co.smartreceipts.android.receipts;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -26,6 +27,8 @@ import com.tapadoo.alerter.Alerter;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -64,6 +67,8 @@ import co.smartreceipts.android.settings.catalog.UserPreference;
 import co.smartreceipts.android.sync.BackupProvidersManager;
 import co.smartreceipts.android.utils.ConfigurableResourceFeature;
 import co.smartreceipts.analytics.log.Logger;
+import co.smartreceipts.android.utils.StrictModeConfiguration;
+import co.smartreceipts.android.utils.cache.SmartReceiptsTemporaryFileCache;
 import co.smartreceipts.android.widget.model.UiIndicator;
 import co.smartreceipts.android.widget.rxbinding2.RxFloatingActionMenu;
 import dagger.android.support.AndroidSupportInjection;
@@ -136,7 +141,6 @@ public class ReceiptsListFragment extends ReceiptsFragment implements ReceiptsLi
 
     private Receipt highlightedReceipt = null;
 
-
     @Override
     public void onAttach(Context context) {
         AndroidSupportInjection.inject(this);
@@ -193,7 +197,6 @@ public class ReceiptsListFragment extends ReceiptsFragment implements ReceiptsLi
         if (showDateHeaders) {
             recyclerView.addItemDecoration(headerItemDecoration);
         }
-
     }
 
     @Override
@@ -353,7 +356,23 @@ public class ReceiptsListFragment extends ReceiptsFragment implements ReceiptsLi
 
         loadingProgress.setVisibility(View.VISIBLE);
 
-        presenter.handleActivityResult(requestCode, resultCode, data, cachedImageSaveLocation);
+        if (!data.hasExtra("instrumented_test")) {
+            presenter.handleActivityResult(requestCode, resultCode, data, cachedImageSaveLocation);
+        } else {
+            Bitmap bitmap = data.getParcelableExtra("instrumented_test");
+            File f = StrictModeConfiguration.permitDiskReads(() -> new SmartReceiptsTemporaryFileCache(getContext())
+                    .getInternalCacheFile(System.currentTimeMillis() + "x.jpg"));
+            if (StrictModeConfiguration.permitDiskWrites(() -> {
+                try (FileOutputStream fOut = new FileOutputStream(f)) {
+                    return bitmap.compress(Bitmap.CompressFormat.PNG, 90, fOut);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+            })) {
+                navigateToCreateReceipt(f, null);
+            }
+        }
     }
 
     @Override

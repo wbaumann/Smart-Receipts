@@ -91,7 +91,7 @@ class BaseEspressoTests {
         onView(withId(R.id.DIALOG_RECEIPTMENU_FULLPAGE)).check(matches(isDisplayed()))
         onView(withId(R.id.DIALOG_RECEIPTMENU_CURRENCY)).check(matches(isDisplayed()))
         onView(withId(R.id.DIALOG_RECEIPTMENU_CATEGORY)).check(matches(isDisplayed()))
-        onView(withId(R.id.DIALOG_RECEIPTMENU_TAX)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.DIALOG_RECEIPTMENU_TAX1)).check(matches(not(isDisplayed())))
         onView(withId(R.id.receipt_input_exchange_rate)).check(matches(not(isDisplayed())))
         onView(withId(R.id.receipt_input_exchanged_result)).check(matches(not(isDisplayed())))
         //todo following view doesn't apply to fire department variant, find a way to test variants

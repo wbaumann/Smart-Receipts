@@ -51,8 +51,8 @@ class BaseEspressoTests {
     fun launchTripEditorAndCreateTestTripAndNavigateBackToTheTripPage() {
         launchTripEditor()
 
-        // Create a trip, entitled "Test"
-        onView(withId(R.id.dialog_tripmenu_name)).perform(replaceText("Test"), closeSoftKeyboard())
+        // Create a trip, entitled "Test2"
+        onView(withId(R.id.dialog_tripmenu_name)).perform(replaceText("Test2"), closeSoftKeyboard())
         onView(withId(R.id.action_save)).perform(click())
 
         Thread.sleep(TimeUnit.SECONDS.toMillis(1)) // Wait a second to ensure that everything loaded
@@ -61,16 +61,16 @@ class BaseEspressoTests {
         onView(withContentDescription(R.string.abc_action_bar_up_description)).perform(click())
 //        onView(allOf(instanceOf(ImageButton::class.java), withParent(withId(R.id.toolbar)))).perform(click())
 
-        // Verify that we have a list item with test
-        onView(withId(R.id.title)).check(matches(withText("Test")))
+        // Verify that we have a list item with Test2
+        onView(withId(R.id.title)).check(matches(withText("Test2")))
     }
 
     @Test
     fun launchTripEditorCreateTripAddTextOnlyReceipt() {
         launchTripEditor()
 
-        // Create a trip, entitled "Test"
-        onView(withId(R.id.dialog_tripmenu_name)).perform(replaceText("Test"), closeSoftKeyboard())
+        // Create a trip, entitled "Test3"
+        onView(withId(R.id.dialog_tripmenu_name)).perform(replaceText("Test3"), closeSoftKeyboard())
         onView(withId(R.id.action_save)).perform(click())
 
         Thread.sleep(TimeUnit.SECONDS.toMillis(1)) // Wait a second to ensure that everything loaded

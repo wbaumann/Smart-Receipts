@@ -60,7 +60,6 @@ class BaseEspressoTests {
 
         // Up Button Navigation
         onView(withContentDescription(R.string.abc_action_bar_up_description)).perform(click())
-//        onView(allOf(instanceOf(ImageButton::class.java), withParent(withId(R.id.toolbar)))).perform(click())
 
         // Verify that we have a list item with Test2
         onView(withId(R.id.title)).check(matches(withText("Test2")))

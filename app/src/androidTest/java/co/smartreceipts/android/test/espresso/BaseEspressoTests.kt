@@ -98,9 +98,15 @@ class BaseEspressoTests {
 //        onView(withId(R.id.receipt_input_payment_method)).check(matches(not(isDisplayed())))
 
         // Create a receipt, entitled "Test" priced at $12.34
-        onView(withId(R.id.DIALOG_RECEIPTMENU_NAME)).perform(replaceText("Test"))
+        onView(withId(R.id.DIALOG_RECEIPTMENU_NAME)).perform(replaceText("Test Receipt"))
         onView(withId(R.id.DIALOG_RECEIPTMENU_PRICE)).perform(replaceText("12.34"), closeSoftKeyboard())
         onView(withId(R.id.action_save)).perform(click())
+
+        // Wait a second to ensure that everything loaded
+        Thread.sleep(TimeUnit.SECONDS.toMillis(1))
+
+        // Verify that we have a list item with Test Receipt
+        onView(withId(R.id.title)).check(matches(withText("Test Receipt")))
     }
 
 }

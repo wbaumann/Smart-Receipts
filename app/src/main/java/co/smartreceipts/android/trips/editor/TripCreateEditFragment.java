@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.jakewharton.rxbinding2.widget.RxDateEditText;
 import com.jakewharton.rxbinding3.widget.RxTextView;
 
@@ -33,9 +34,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import co.smartreceipts.android.R;
 import co.smartreceipts.android.activities.NavigationHandler;
 import co.smartreceipts.android.autocomplete.AutoCompleteArrayAdapter;
@@ -48,10 +46,12 @@ import co.smartreceipts.android.currency.PriceCurrency;
 import co.smartreceipts.android.currency.widget.CurrencyListEditorPresenter;
 import co.smartreceipts.android.currency.widget.CurrencyListEditorView;
 import co.smartreceipts.android.currency.widget.DefaultCurrencyListEditorView;
+import co.smartreceipts.android.databinding.UpdateTripBinding;
 import co.smartreceipts.android.date.DateEditText;
 import co.smartreceipts.android.date.DateFormatter;
 import co.smartreceipts.android.editor.Editor;
 import co.smartreceipts.android.fragments.WBFragment;
+import co.smartreceipts.android.model.AutoCompleteUpdateEvent;
 import co.smartreceipts.android.model.Trip;
 import co.smartreceipts.android.persistence.DatabaseHelper;
 import co.smartreceipts.android.settings.UserPreferenceManager;
@@ -68,6 +68,8 @@ import co.smartreceipts.android.widget.tooltip.Tooltip;
 import dagger.android.support.AndroidSupportInjection;
 import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.subjects.PublishSubject;
+import io.reactivex.subjects.Subject;
 import wb.android.flex.Flex;
 
 public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
@@ -108,40 +110,30 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
     private CurrencyListEditorPresenter currencyListEditorPresenter;
     private DefaultCurrencyListEditorView defaultCurrencyListEditorView;
 
-    // Butterknife Fields
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
+    private Toolbar toolbar;
+    private Tooltip tooltipView;
+    private AutoCompleteTextView nameBox;
+    private DateEditText startDateBox;
+    private DateEditText endDateBox;
+    private  Spinner currencySpinner;
+    private AutoCompleteTextView commentBox;
+    private AutoCompleteTextView costCenterBox;
+    private View costCenterBoxLayout;
 
-    @BindView(R.id.tooltip)
-    Tooltip tooltipView;
-
-    @BindView(R.id.dialog_tripmenu_name)
-    AutoCompleteTextView nameBox;
-
-    @BindView(R.id.dialog_tripmenu_start)
-    DateEditText startDateBox;
-
-    @BindView(R.id.dialog_tripmenu_end)
-    DateEditText endDateBox;
-
-    @BindView(R.id.dialog_tripmenu_currency)
-    Spinner currencySpinner;
-
-    @BindView(R.id.dialog_tripmenu_comment)
-    AutoCompleteTextView commentBox;
-
-    @BindView(R.id.dialog_tripmenu_cost_center)
-    AutoCompleteTextView costCenterBox;
-
-    @BindView(R.id.dialog_tripmenu_cost_center_layout)
-    View costCenterBoxLayout;
-
-    // Butterknife unbinding
-    private Unbinder unbinder;
+    private UpdateTripBinding binding;
 
     // Misc Views
     private View focusedView;
 
+    private AutoCompleteArrayAdapter<Trip> resultsAdapter;
+    private Snackbar snackbar;
+    private boolean shouldHideResults;
+    private AutoCompleteResult<Trip> itemToRemoveOrReAdd;
+
+    private Subject<AutoCompleteUpdateEvent<Trip>> _hideAutoCompleteVisibilityClicks =
+            PublishSubject.<AutoCompleteUpdateEvent<Trip>>create().toSerialized();
+    private Subject<AutoCompleteUpdateEvent<Trip>> _unHideAutoCompleteVisibilityClicks =
+            PublishSubject.<AutoCompleteUpdateEvent<Trip>>create().toSerialized();
 
     public static TripCreateEditFragment newInstance() {
         return new TripCreateEditFragment();
@@ -177,13 +169,24 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.update_trip, container, false);
+        binding = UpdateTripBinding.inflate(inflater, container, false);
+
+        toolbar = binding.toolbar.toolbar;
+        tooltipView = binding.tooltip;
+        nameBox = binding.dialogTripmenuName;
+        startDateBox = binding.dialogTripmenuStart;
+        endDateBox = binding.dialogTripmenuEnd;
+        currencySpinner = binding.dialogTripmenuCurrency;
+        commentBox = binding.dialogTripmenuComment;
+        costCenterBox = binding.dialogTripmenuCostCenter;
+        costCenterBoxLayout = binding.dialogTripmenuCostCenterLayout;
+
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        this.unbinder = ButterKnife.bind(this, view);
 
         // Apply white-label settings via our 'Flex' mechanism to update defaults
         flex.applyCustomSettings(nameBox);
@@ -245,6 +248,7 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
         currencyListEditorPresenter.subscribe();
         tripDatesPresenter.subscribe();
         tooltipPresenter.subscribe();
+        presenter.subscribe();
     }
 
     @Override
@@ -279,6 +283,10 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
         tripAutoCompletePresenter.unsubscribe();
         currencyListEditorPresenter.unsubscribe();
         tripDatesPresenter.unsubscribe();
+        presenter.unsubscribe();
+        if (snackbar != null && snackbar.isShown()) {
+            snackbar.dismiss();
+        }
         super.onStop();
     }
 
@@ -286,8 +294,8 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
     public void onDestroyView() {
         Logger.debug(this, "onDestroyView");
         focusedView = null;
-        unbinder.unbind();
         super.onDestroyView();
+        binding = null;
     }
 
     @Override
@@ -337,15 +345,12 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
         costCenterBox.setOnFocusChangeListener(this);
 
         // Set click listeners
-        View.OnTouchListener hideSoftKeyboardOnTouchListener = new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                    SoftKeyboardManager.hideKeyboard(view);
-                }
-                view.performClick();
-                return false;
+        View.OnTouchListener hideSoftKeyboardOnTouchListener = (view, motionEvent) -> {
+            if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                SoftKeyboardManager.hideKeyboard(view);
             }
+            view.performClick();
+            return false;
         };
         startDateBox.setOnTouchListener(hideSoftKeyboardOnTouchListener);
         endDateBox.setOnTouchListener(hideSoftKeyboardOnTouchListener);
@@ -462,18 +467,31 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
 
     @Override
     public void displayAutoCompleteResults(@NotNull AutoCompleteField field, @NotNull List<AutoCompleteResult<Trip>> autoCompleteResults) {
-        final AutoCompleteArrayAdapter<Trip> resultsAdapter = new AutoCompleteArrayAdapter<>(requireContext(), autoCompleteResults);
-        if (field == TripAutoCompleteField.Name) {
-            nameBox.setAdapter(resultsAdapter);
-            nameBox.showDropDown();
-        } else if (field == TripAutoCompleteField.Comment) {
-            commentBox.setAdapter(resultsAdapter);
-            commentBox.showDropDown();
-        } else if (field == TripAutoCompleteField.CostCenter) {
-            costCenterBox.setAdapter(resultsAdapter);
-            costCenterBox.showDropDown();
+        if (!shouldHideResults) {
+            if (snackbar != null && snackbar.isShown()) {
+                snackbar.dismiss();
+            }
+            resultsAdapter = new AutoCompleteArrayAdapter<>(requireContext(), autoCompleteResults, this);
+            if (field == TripAutoCompleteField.Name) {
+                nameBox.setAdapter(resultsAdapter);
+                if (nameBox.hasFocus()) {
+                    nameBox.showDropDown();
+                }
+            } else if (field == TripAutoCompleteField.Comment) {
+                commentBox.setAdapter(resultsAdapter);
+                if (commentBox.hasFocus()) {
+                    commentBox.showDropDown();
+                }
+            } else if (field == TripAutoCompleteField.CostCenter) {
+                costCenterBox.setAdapter(resultsAdapter);
+                if (costCenterBox.hasFocus()) {
+                    costCenterBox.showDropDown();
+                }
+            } else {
+                throw new IllegalArgumentException("Unsupported field type: " + field);
+            }
         } else {
-            throw new IllegalArgumentException("Unsupported field type: " + field);
+            shouldHideResults = false;
         }
     }
 
@@ -532,5 +550,88 @@ public class TripCreateEditFragment extends WBFragment implements Editor<Trip>,
     @Override
     public Observable<Object> getCloseIconClickStream() {
         return tooltipView.getCloseIconClickStream();
+    }
+
+    @Override
+    public void fillValueField(@NotNull AutoCompleteResult<Trip> autoCompleteResult) {
+        shouldHideResults = true;
+        if (nameBox.isPopupShowing()) {
+            nameBox.setText(autoCompleteResult.getDisplayName());
+            nameBox.setSelection(nameBox.getText().length());
+            nameBox.dismissDropDown();
+        } else if (commentBox.isPopupShowing()) {
+            commentBox.setText(autoCompleteResult.getDisplayName());
+            commentBox.setSelection(commentBox.getText().length());
+            commentBox.dismissDropDown();
+        } else {
+            costCenterBox.setText(autoCompleteResult.getDisplayName());
+            costCenterBox.setSelection(costCenterBox.getText().length());
+            costCenterBox.dismissDropDown();
+        }
+        SoftKeyboardManager.hideKeyboard(focusedView);
+    }
+
+    @Override
+    public void sendAutoCompleteHideEvent(@NotNull AutoCompleteResult<Trip> autoCompleteResult) {
+        SoftKeyboardManager.hideKeyboard(focusedView);
+        if (nameBox.isPopupShowing()) {
+            _hideAutoCompleteVisibilityClicks.onNext(
+                    new AutoCompleteUpdateEvent(autoCompleteResult, TripAutoCompleteField.Name, resultsAdapter.getPosition(autoCompleteResult)));
+        } else if (commentBox.isPopupShowing()) {
+            _hideAutoCompleteVisibilityClicks.onNext(
+                    new AutoCompleteUpdateEvent(autoCompleteResult, TripAutoCompleteField.Comment, resultsAdapter.getPosition(autoCompleteResult)));
+        } else {
+            _hideAutoCompleteVisibilityClicks.onNext(
+                    new AutoCompleteUpdateEvent(autoCompleteResult, TripAutoCompleteField.CostCenter, resultsAdapter.getPosition(autoCompleteResult)));
+        }
+    }
+
+    @Override
+    public void removeValueFromAutoComplete(int position) {
+        getActivity().runOnUiThread(() -> {
+            itemToRemoveOrReAdd = resultsAdapter.getItem(position);
+            resultsAdapter.remove(itemToRemoveOrReAdd);
+            resultsAdapter.notifyDataSetChanged();
+            View view = getActivity().findViewById(R.id.update_trip_layout);
+            snackbar = Snackbar.make(view, getString(
+                    R.string.item_removed_from_auto_complete, itemToRemoveOrReAdd.getDisplayName()), Snackbar.LENGTH_LONG);
+            snackbar.setAction(R.string.undo, v -> {
+                if (nameBox.hasFocus()) {
+                    _unHideAutoCompleteVisibilityClicks.onNext(new AutoCompleteUpdateEvent(itemToRemoveOrReAdd, TripAutoCompleteField.Name, position));
+                } else if (commentBox.hasFocus()) {
+                    _unHideAutoCompleteVisibilityClicks.onNext(new AutoCompleteUpdateEvent(itemToRemoveOrReAdd, TripAutoCompleteField.Comment, position));
+                } else {
+                    _unHideAutoCompleteVisibilityClicks.onNext(new AutoCompleteUpdateEvent(itemToRemoveOrReAdd, TripAutoCompleteField.CostCenter, position));
+                }
+            });
+            snackbar.show();
+        });
+    }
+
+    @Override
+    public void sendAutoCompleteUnHideEvent(int position) {
+        getActivity().runOnUiThread(() -> {
+            resultsAdapter.insert(itemToRemoveOrReAdd, position);
+            resultsAdapter.notifyDataSetChanged();
+            Toast.makeText(getContext(), R.string.result_restored, Toast.LENGTH_LONG).show();
+        });
+    }
+
+    @Override
+    public void displayAutoCompleteError() {
+        getActivity().runOnUiThread(() ->
+                Toast.makeText(getContext(), R.string.result_restore_failed, Toast.LENGTH_LONG).show());
+    }
+
+    @NotNull
+    @Override
+    public Observable<AutoCompleteUpdateEvent<Trip>> getHideAutoCompleteVisibilityClick() {
+        return _hideAutoCompleteVisibilityClicks;
+    }
+
+    @NotNull
+    @Override
+    public Observable<AutoCompleteUpdateEvent<Trip>> getUnHideAutoCompleteVisibilityClick() {
+        return _unHideAutoCompleteVisibilityClicks;
     }
 }

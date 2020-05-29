@@ -13,6 +13,7 @@ import java.util.UUID;
 
 import co.smartreceipts.android.currency.PriceCurrency;
 import co.smartreceipts.android.date.DisplayableDate;
+import co.smartreceipts.android.model.AutoCompleteMetadata;
 import co.smartreceipts.android.model.Category;
 import co.smartreceipts.android.model.Keyed;
 import co.smartreceipts.android.model.PaymentMethod;
@@ -40,7 +41,7 @@ public class ReceiptBuilderFactory implements BuilderFactory<Receipt> {
     private String extraEditText1;
     private String extraEditText2;
     private String extraEditText3;
-    private final PriceBuilderFactory priceBuilderFactory, taxBuilderFactory;
+    private final PriceBuilderFactory priceBuilderFactory, taxBuilderFactory, tax2BuilderFactory;
     private Date date;
     private TimeZone timeZone;
     private int id;
@@ -49,6 +50,7 @@ public class ReceiptBuilderFactory implements BuilderFactory<Receipt> {
     private SyncState syncState;
     private long orderId;
     private UUID uuid;
+    private AutoCompleteMetadata autoCompleteMetadata;
 
     public ReceiptBuilderFactory() {
         this(Keyed.MISSING_ID);
@@ -60,12 +62,14 @@ public class ReceiptBuilderFactory implements BuilderFactory<Receipt> {
         comment = "";
         priceBuilderFactory = new PriceBuilderFactory();
         taxBuilderFactory = new PriceBuilderFactory();
+        tax2BuilderFactory = new PriceBuilderFactory();
         date = new Date(System.currentTimeMillis());
         timeZone = TimeZone.getDefault();
         index = -1;
         syncState = new DefaultSyncState();
         orderId = ReceiptsOrderer.Companion.getDefaultCustomOrderId(date);
         uuid = Keyed.Companion.getMISSING_UUID();
+        autoCompleteMetadata = new AutoCompleteMetadata(false, false, false, false);
     }
 
     public ReceiptBuilderFactory(@NonNull Receipt receipt) {
@@ -75,6 +79,7 @@ public class ReceiptBuilderFactory implements BuilderFactory<Receipt> {
         file = receipt.getFile();
         priceBuilderFactory = new PriceBuilderFactory().setPrice(receipt.getPrice());
         taxBuilderFactory = new PriceBuilderFactory().setPrice(receipt.getTax());
+        tax2BuilderFactory = new PriceBuilderFactory().setPrice(receipt.getTax2());
         date = (Date) receipt.getDate().clone();
         timeZone = receipt.getTimeZone();
         category = receipt.getCategory();
@@ -90,6 +95,7 @@ public class ReceiptBuilderFactory implements BuilderFactory<Receipt> {
         syncState = receipt.getSyncState();
         orderId = receipt.getCustomOrderId();
         uuid = receipt.getUuid();
+        autoCompleteMetadata = receipt.getAutoCompleteMetadata();
     }
 
     public ReceiptBuilderFactory(int id, @NonNull Receipt receipt) {
@@ -156,6 +162,7 @@ public class ReceiptBuilderFactory implements BuilderFactory<Receipt> {
     public ReceiptBuilderFactory setExchangeRate(ExchangeRate exchangeRate) {
         priceBuilderFactory.setExchangeRate(exchangeRate);
         taxBuilderFactory.setExchangeRate(exchangeRate);
+        tax2BuilderFactory.setExchangeRate(exchangeRate);
         return this;
     }
 
@@ -177,6 +184,21 @@ public class ReceiptBuilderFactory implements BuilderFactory<Receipt> {
 
     public ReceiptBuilderFactory setTax(Price tax) {
         taxBuilderFactory.setPrice(tax);
+        return this;
+    }
+
+    public ReceiptBuilderFactory setTax2(String tax2) {
+        tax2BuilderFactory.setPrice(tax2);
+        return this;
+    }
+
+    public ReceiptBuilderFactory setTax2(double tax2) {
+        tax2BuilderFactory.setPrice(tax2);
+        return this;
+    }
+
+    public ReceiptBuilderFactory setTax2(Price tax2) {
+        tax2BuilderFactory.setPrice(tax2);
         return this;
     }
 
@@ -225,12 +247,14 @@ public class ReceiptBuilderFactory implements BuilderFactory<Receipt> {
     public ReceiptBuilderFactory setCurrency(PriceCurrency currency) {
         priceBuilderFactory.setCurrency(currency);
         taxBuilderFactory.setCurrency(currency);
+        tax2BuilderFactory.setCurrency(currency);
         return this;
     }
 
     public ReceiptBuilderFactory setCurrency(String currencyCode) {
         priceBuilderFactory.setCurrency(currencyCode);
         taxBuilderFactory.setCurrency(currencyCode);
+        tax2BuilderFactory.setCurrency(currencyCode);
         return this;
     }
 
@@ -276,6 +300,16 @@ public class ReceiptBuilderFactory implements BuilderFactory<Receipt> {
         return this;
     }
 
+    public ReceiptBuilderFactory setNameHiddenFromAutoComplete(boolean isHiddenFromAutoComplete) {
+        this.autoCompleteMetadata.setNameHiddenFromAutoComplete(isHiddenFromAutoComplete);
+        return this;
+    }
+
+    public ReceiptBuilderFactory setCommentHiddenFromAutoComplete(boolean isHiddenFromAutoComplete) {
+        this.autoCompleteMetadata.setCommentHiddenFromAutoComplete(isHiddenFromAutoComplete);
+        return this;
+    }
+
     @Override
     @NonNull
     public Receipt build() {
@@ -283,8 +317,8 @@ public class ReceiptBuilderFactory implements BuilderFactory<Receipt> {
         return new Receipt(id, uuid, index, trip, file,
                 paymentMethod == null ? PaymentMethod.Companion.getNONE() : paymentMethod, name,
                 category == null ? new CategoryBuilderFactory().build() : category, comment,
-                priceBuilderFactory.build(), taxBuilderFactory.build(), displayableDate, isReimbursable,
-                isFullPage, isSelected, extraEditText1, extraEditText2, extraEditText3, syncState, orderId);
+                priceBuilderFactory.build(), taxBuilderFactory.build(), tax2BuilderFactory.build(), displayableDate,
+                isReimbursable, isFullPage, isSelected, extraEditText1, extraEditText2, extraEditText3, syncState, orderId, autoCompleteMetadata);
     }
 
 }

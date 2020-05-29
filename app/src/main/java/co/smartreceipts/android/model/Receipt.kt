@@ -55,6 +55,10 @@ class Receipt constructor(
      */
     val tax: Price,
     /**
+     * The [Price] second (optional) tax associated with this receipt
+     */
+    val tax2: Price,
+    /**
      * The [DisplayableDate] during which this receipt occurred
      */
     val displayableDate: DisplayableDate,
@@ -83,7 +87,8 @@ class Receipt constructor(
      */
     val extraEditText3: String?,
     override val syncState: SyncState,
-    override val customOrderId: Long
+    override val customOrderId: Long,
+    val autoCompleteMetadata: AutoCompleteMetadata
 ) : Keyed, Parcelable, Priceable, Draggable<Receipt>, Syncable, Searchable {
 
     /**
@@ -155,6 +160,7 @@ class Receipt constructor(
                 ", timeZone=" + timeZone.id +
                 ", isReimbursable=" + isReimbursable +
                 ", isFullPage=" + isFullPage +
+                ", autoCompleteMetadata=" + autoCompleteMetadata +
                 ", extraEditText1='" + extraEditText1 + '\''.toString() +
                 ", extraEditText2='" + extraEditText2 + '\''.toString() +
                 ", extraEditText3='" + extraEditText3 + '\''.toString() +
@@ -182,7 +188,9 @@ class Receipt constructor(
         if (category != that.category) return false
         if (price != that.price) return false
         if (tax != that.tax) return false
+        if (tax2 != that.tax2) return false
         if (displayableDate != that.displayableDate) return false
+        if (autoCompleteMetadata != that.autoCompleteMetadata) return false
         if (if (extraEditText1 != null) extraEditText1 != that.extraEditText1 else that.extraEditText1 != null)
             return false
         if (if (extraEditText2 != null) extraEditText2 != that.extraEditText2 else that.extraEditText2 != null)
@@ -206,9 +214,11 @@ class Receipt constructor(
         result = 31 * result + category.hashCode()
         result = 31 * result + price.hashCode()
         result = 31 * result + tax.hashCode()
+        result = 31 * result + tax2.hashCode()
         result = 31 * result + displayableDate.hashCode()
         result = 31 * result + if (isReimbursable) 1 else 0
         result = 31 * result + if (isFullPage) 1 else 0
+        result = 31 * result + autoCompleteMetadata.hashCode()
         result = 31 * result + (extraEditText1?.hashCode() ?: 0)
         result = 31 * result + (extraEditText2?.hashCode() ?: 0)
         result = 31 * result + (extraEditText3?.hashCode() ?: 0)

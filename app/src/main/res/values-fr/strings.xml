@@ -55,6 +55,11 @@
     <string name="reports_title">Rapports</string>
     <string name="search_empty">Aucun résultat trouvé</string>
     <string name="search_hint">Vous pouvez rechercher des rapports ou des reçus par nom, commentaire, prix ou catégorie</string>
+    <string name="item_removed_from_auto_complete">%s retiré des résultats de complétion automatique</string>
+    <string name="delete_failed">La fin automatique du résultat n\'a pas pu être supprimée</string>
+    <string name="result_restored">Résultat auto terminé restauré</string>
+    <string name="result_restore_failed">La fin automatique du résultat n\'a pas pu être restaurée</string>
+    <string name="undo">annuler</string>
 
     <!-- =============== Subscriptions ================ -->
     <string name="pro_subscription">Smart Receipts Plus</string>
@@ -496,6 +501,7 @@
     <string name="tooltip_review_privacy">Appuyez pour examiner vos paramètres de confidentialité</string>
     <string name="tooltip_automatic_backups_recovery_hint">Avez-vous déjà configuré des sauvegardes automatiques? Appuyez ici pour restaurer</string>
     <string name="tooltip_first_report_hint">Bienvenue! Créons votre premier dossier de rapport. Nommez-le après ce mois, cette année, votre voyage d\'affaires actuel ou tout ce que vous souhaitez. Cliquez ensuite sur la coche pour le sauvegarder et commencez à ajouter vos premiers reçus!</string>
+    <string name="tooltip_include_second_tax_hint">Appuyez pour configurer le deuxième champ de taxe</string>
 
     <!-- ================== Graph titles ==================== -->
     <string name="graphs_no_data">Ajoutez vos premiers reçus pour voir les graphiques.</string>

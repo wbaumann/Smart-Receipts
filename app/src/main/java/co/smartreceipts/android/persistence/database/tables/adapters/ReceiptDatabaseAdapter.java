@@ -73,6 +73,7 @@ public final class ReceiptDatabaseAdapter implements SelectionBackedDatabaseAdap
         final int categoryIdIndex = cursor.getColumnIndex(ReceiptsTable.COLUMN_CATEGORY_ID);
         final int priceIndex = cursor.getColumnIndex(ReceiptsTable.COLUMN_PRICE);
         final int taxIndex = cursor.getColumnIndex(ReceiptsTable.COLUMN_TAX);
+        final int tax2Index = cursor.getColumnIndex(ReceiptsTable.COLUMN_TAX2);
         final int exchangeRateIndex = cursor.getColumnIndex(ReceiptsTable.COLUMN_EXCHANGE_RATE);
         final int dateIndex = cursor.getColumnIndex(ReceiptsTable.COLUMN_DATE);
         final int timeZoneIndex = cursor.getColumnIndex(ReceiptsTable.COLUMN_TIMEZONE);
@@ -96,9 +97,11 @@ public final class ReceiptDatabaseAdapter implements SelectionBackedDatabaseAdap
         final int categoryId = cursor.getInt(categoryIdIndex);
         final double priceDouble = cursor.getDouble(priceIndex);
         final double taxDouble = cursor.getDouble(taxIndex);
+        final double tax2Double = cursor.getDouble(tax2Index);
         final double exchangeRateDouble = cursor.getDouble(exchangeRateIndex);
         final String priceString = cursor.getString(priceIndex);
         final String taxString = cursor.getString(taxIndex);
+        final String tax2String = cursor.getString(tax2Index);
         final String exchangeRateString = cursor.getString(exchangeRateIndex);
         final long date = cursor.getLong(dateIndex);
         final String timezone = (timeZoneIndex > 0) ? cursor.getString(timeZoneIndex) : null;
@@ -150,6 +153,8 @@ public final class ReceiptDatabaseAdapter implements SelectionBackedDatabaseAdap
                 .setCurrency(currency)
                 .setIsFullPage(fullPage)
                 .setIndex(index)
+                .setNameHiddenFromAutoComplete(isNameHiddenFromAutoComplete)
+                .setCommentHiddenFromAutoComplete(isCommentHiddenFromAutoComplete)
                 .setExtraEditText1(extra_editText_1)
                 .setExtraEditText2(extra_editText_2)
                 .setExtraEditText3(extra_editText_3)
@@ -184,6 +189,11 @@ public final class ReceiptDatabaseAdapter implements SelectionBackedDatabaseAdap
         } else {
             builder.setTax(taxDouble);
         }
+        if (!TextUtils.isEmpty(tax2String) && tax2String.contains(",")) {
+            builder.setTax2(tax2String);
+        } else {
+            builder.setTax2(tax2Double);
+        }
         final ExchangeRateBuilderFactory exchangeRateBuilder = new ExchangeRateBuilderFactory().setBaseCurrency(currency);
         if (!TextUtils.isEmpty(exchangeRateString) && exchangeRateString.contains(",")) {
             exchangeRateBuilder.setRate(trip.getTripCurrency(), exchangeRateString);
@@ -211,6 +221,8 @@ public final class ReceiptDatabaseAdapter implements SelectionBackedDatabaseAdap
         values.put(ReceiptsTable.COLUMN_REIMBURSABLE, receipt.isReimbursable());
         values.put(ReceiptsTable.COLUMN_NOTFULLPAGEIMAGE, !receipt.isFullPage());
         values.put(ReceiptsTable.COLUMN_UUID, receipt.getUuid().toString());
+        values.put(ReceiptsTable.COLUMN_NAME_HIDDEN_AUTO_COMPLETE, receipt.getAutoCompleteMetadata().isNameHiddenFromAutoComplete());
+        values.put(ReceiptsTable.COLUMN_COMMENT_HIDDEN_AUTO_COMPLETE, receipt.getAutoCompleteMetadata().isCommentHiddenFromAutoComplete());
 
         // Add file
         final File file = receipt.getFile();
@@ -228,6 +240,7 @@ public final class ReceiptDatabaseAdapter implements SelectionBackedDatabaseAdap
         // TODO: Ensure this logic works for prices like "1,234.56"
         values.put(ReceiptsTable.COLUMN_PRICE, receipt.getPrice().getPrice().doubleValue());
         values.put(ReceiptsTable.COLUMN_TAX, receipt.getTax().getPrice().doubleValue());
+        values.put(ReceiptsTable.COLUMN_TAX2, receipt.getTax2().getPrice().doubleValue());
         final BigDecimal exchangeRate = receipt.getPrice().getExchangeRate().getExchangeRate(receipt.getTrip().getDefaultCurrencyCode());
         if (exchangeRate != null) {
             values.put(ReceiptsTable.COLUMN_EXCHANGE_RATE, exchangeRate.doubleValue());

@@ -56,6 +56,11 @@
     <string name="reports_title">Reports</string>
     <string name="search_empty">No Results Found</string>
     <string name="search_hint">You can search for Reports or Receipts by name, comment, price or category</string>
+    <string name="item_removed_from_auto_complete">%s removed from auto complete results</string>
+    <string name="delete_failed">Auto Complete Result Failed to Delete</string>
+    <string name="result_restored">Auto Complete Result Restored</string>
+    <string name="result_restore_failed">Auto Complete Result Failed to Restore</string>
+    <string name="undo">Undo</string>
 
     <!-- =============== Subscriptions ================ -->
     <string name="pro_subscription">Smart Receipts Plus</string>
@@ -514,6 +519,7 @@
     <string name="tooltip_review_privacy">Tap to review your privacy settings</string>
     <string name="tooltip_automatic_backups_recovery_hint">Did you previously configure automatic backups? Tap to restore</string>
     <string name="tooltip_first_report_hint">Welcome! Let\'s create your first report folder. Name it after this month, this year, your current business trip, or anything you wish. Then click the check mark to save it and begin adding your first receipts!</string>
+    <string name="tooltip_include_second_tax_hint">Tap to configure the second tax field</string>
 
     <!-- ================== Graph titles ==================== -->
     <string name="graphs_no_data">Add your first receipts to see graphs.</string>

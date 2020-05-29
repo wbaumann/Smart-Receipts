@@ -55,6 +55,11 @@
     <string name="reports_title">Berichte</string>
     <string name="search_empty">Keine Ergebnisse gefunden</string>
     <string name="search_hint">Sie können nach Berichten oder Belegen nach Name, Kommentar, Preis oder Kategorie suchen</string>
+    <string name="item_removed_from_auto_complete">%s aus den Ergebnissen der automatischen Vervollständigung entfernt</string>
+    <string name="delete_failed">Ergebnis der automatischen Vervollständigung konnte nicht gelöscht werden</string>
+    <string name="result_restored">Automatisch vervollständigtes Ergebnis wiederhergestellt</string>
+    <string name="result_restore_failed">Ergebnis der automatischen Vervollständigung konnte nicht wiederhergestellt werden</string>
+    <string name="undo">Rückgängig machen</string>
 
     <!-- =============== Subscriptions ================ -->
     <string name="pro_subscription">Smart-Plus-Receipts</string>
@@ -496,6 +501,7 @@
     <string name="tooltip_review_privacy">Tippen Sie hier, um Ihre Datenschutzeinstellungen zu überprüfen</string>
     <string name="tooltip_automatic_backups_recovery_hint">Haben Sie zuvor automatische backups konfiguriert? Zum Wiederherstellen hier tippen</string>
     <string name="tooltip_first_report_hint">Willkommen! Lassen Sie uns Ihren ersten Berichtsordner erstellen. Nennen Sie es nach diesem Monat, diesem Jahr, Ihrer aktuellen Geschäftsreise oder nach allem, was Sie wünschen. Klicken Sie dann auf das Häkchen, um es zu speichern und fügen Sie Ihre ersten Quittungen hinzu!</string>
+    <string name="tooltip_include_second_tax_hint">Tippen Sie hier, um das zweite Steuerfeld zu konfigurieren</string>
 
     <!-- ================== Graph titles ==================== -->
     <string name="graphs_no_data">Fügen Sie Ihre ersten Quittungen hinzu, um Grafiken zu sehen.</string>

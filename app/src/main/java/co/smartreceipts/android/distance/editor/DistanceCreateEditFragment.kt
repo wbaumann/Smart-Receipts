@@ -6,9 +6,7 @@ import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
-import butterknife.BindViews
-import butterknife.ButterKnife
-import butterknife.ViewCollections
+import androidx.constraintlayout.widget.ConstraintLayout
 import co.smartreceipts.analytics.Analytics
 import co.smartreceipts.analytics.events.Events
 import co.smartreceipts.android.R
@@ -21,9 +19,11 @@ import co.smartreceipts.android.autocomplete.AutoCompleteResult
 import co.smartreceipts.android.autocomplete.distance.DistanceAutoCompleteField
 import co.smartreceipts.android.currency.widget.CurrencyListEditorPresenter
 import co.smartreceipts.android.currency.widget.DefaultCurrencyListEditorView
+import co.smartreceipts.android.databinding.UpdateDistanceBinding
 import co.smartreceipts.android.date.DateFormatter
 import co.smartreceipts.android.distance.editor.currency.DistanceCurrencyCodeSupplier
 import co.smartreceipts.android.fragments.WBFragment
+import co.smartreceipts.android.model.AutoCompleteUpdateEvent
 import co.smartreceipts.android.model.Distance
 import co.smartreceipts.android.model.PaymentMethod
 import co.smartreceipts.android.model.Trip
@@ -33,8 +33,8 @@ import co.smartreceipts.android.persistence.DatabaseHelper
 import co.smartreceipts.android.receipts.editor.paymentmethods.PaymentMethodsPresenter
 import co.smartreceipts.android.receipts.editor.paymentmethods.PaymentMethodsView
 import co.smartreceipts.android.utils.SoftKeyboardManager
-import co.smartreceipts.android.utils.butterknife.ButterKnifeActions
 import co.smartreceipts.android.widget.model.UiIndicator
+import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxbinding3.widget.textChanges
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.Observable
@@ -47,7 +47,8 @@ import java.sql.Date
 import java.util.*
 import javax.inject.Inject
 
-class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.OnFocusChangeListener, PaymentMethodsView {
+class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.OnFocusChangeListener,
+        PaymentMethodsView {
     @Inject
     lateinit var presenter: DistanceCreateEditPresenter
 
@@ -66,8 +67,7 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
     @Inject
     lateinit var paymentMethodsPresenter: PaymentMethodsPresenter
 
-    @BindViews(R.id.distance_input_guide_image_payment_method, R.id.distance_input_payment_method)
-    lateinit var paymentMethodsViewsList: List<@JvmSuppressWildcards View>
+    private lateinit var paymentMethodsViewsList: List<@JvmSuppressWildcards View>
 
     override val editableItem: Distance?
         get() = arguments?.getParcelable(Distance.PARCEL_KEY)
@@ -79,9 +79,20 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
 
     private lateinit var currencyListEditorPresenter: CurrencyListEditorPresenter
 
+    private lateinit var resultsAdapter: AutoCompleteArrayAdapter<Distance>
+
+    private var shouldHideResults: Boolean = false
+
     private var focusedView: View? = null
 
+    private lateinit var snackbar: Snackbar
+
     private lateinit var paymentMethodsAdapter: FooterButtonArrayAdapter<PaymentMethod>
+
+    private lateinit var itemToRemoveOrReAdd: AutoCompleteResult<Distance>
+
+    private var _binding: UpdateDistanceBinding? = null
+    private val binding get() = _binding!!
 
     override val createDistanceClicks: Observable<Distance>
         get() = _createDistanceClicks
@@ -92,10 +103,19 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
     override val deleteDistanceClicks: Observable<Distance>
         get() = _deleteDistanceClicks
 
+    override val hideAutoCompleteVisibilityClick: Observable<AutoCompleteUpdateEvent<Distance>>
+        get() =_hideAutoCompleteVisibilityClicks
+
+    override val unHideAutoCompleteVisibilityClick: Observable<AutoCompleteUpdateEvent<Distance>>
+        get() =_unHideAutoCompleteVisibilityClicks
+
     private val _createDistanceClicks: Subject<Distance> = PublishSubject.create<Distance>().toSerialized()
     private val _updateDistanceClicks: Subject<Distance> = PublishSubject.create<Distance>().toSerialized()
     private val _deleteDistanceClicks: Subject<Distance> = PublishSubject.create<Distance>().toSerialized()
-
+    private val _hideAutoCompleteVisibilityClicks: Subject<AutoCompleteUpdateEvent<Distance>> =
+            PublishSubject.create<AutoCompleteUpdateEvent<Distance>>().toSerialized()
+    private val _unHideAutoCompleteVisibilityClicks: Subject<AutoCompleteUpdateEvent<Distance>> =
+            PublishSubject.create<AutoCompleteUpdateEvent<Distance>>().toSerialized()
 
     override fun onAttach(context: Context?) {
         AndroidSupportInjection.inject(this)
@@ -145,9 +165,11 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val ourView: View = inflater.inflate(R.layout.update_distance, container, false)
-        ButterKnife.bind(this, ourView)
-        return ourView
+        _binding = UpdateDistanceBinding.inflate(inflater, container, false)
+
+        paymentMethodsViewsList = listOf(binding.distanceInputGuideImagePaymentMethod, binding.distanceInputPaymentMethod)
+
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -196,6 +218,9 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
         presenter.unsubscribe()
         currencyListEditorPresenter.unsubscribe()
         paymentMethodsPresenter.unsubscribe()
+        if (::snackbar.isInitialized && snackbar.isShown) {
+            snackbar.dismiss()
+        }
         super.onStop()
     }
 
@@ -227,6 +252,11 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
             }
             else -> return super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun present(uiIndicator: UiIndicator<Int>) {
@@ -307,10 +337,10 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
 
     override fun togglePaymentMethodFieldVisibility(): Consumer<in Boolean> {
         return Consumer { isVisible ->
-            if (isVisible) {
-                ViewCollections.run(paymentMethodsViewsList, ButterKnifeActions.setVisibility(View.VISIBLE))
-            } else {
-                ViewCollections.run(paymentMethodsViewsList, ButterKnifeActions.setVisibility(View.GONE))
+            run {
+                for (v in paymentMethodsViewsList) {
+                    v.visibility = if (isVisible) View.VISIBLE else View.GONE
+                }
             }
         }
     }
@@ -341,23 +371,93 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
         }
     }
 
-    override fun displayAutoCompleteResults(field: AutoCompleteField, results: List<AutoCompleteResult<Distance>>) {
+    override fun displayAutoCompleteResults(field: AutoCompleteField, results: MutableList<AutoCompleteResult<Distance>>) {
         if (isAdded) {
-            val resultsAdapter = AutoCompleteArrayAdapter(requireContext(), results)
-            when (field) {
-                DistanceAutoCompleteField.Location -> {
-                    text_distance_location.setAdapter(resultsAdapter)
-                    text_distance_location.showDropDown()
+            if (!shouldHideResults) {
+                if (::snackbar.isInitialized && snackbar.isShown) {
+                    snackbar.dismiss()
                 }
-                DistanceAutoCompleteField.Comment -> {
-                    text_distance_comment.setAdapter(resultsAdapter)
-                    text_distance_comment.showDropDown()
+                resultsAdapter = AutoCompleteArrayAdapter(requireContext(), results, this)
+                when (field) {
+                    DistanceAutoCompleteField.Location -> {
+                        text_distance_location.setAdapter(resultsAdapter)
+                        if (text_distance_location.hasFocus()) {
+                            text_distance_location.showDropDown()
+                        }
+                    }
+                    DistanceAutoCompleteField.Comment -> {
+                        text_distance_comment.setAdapter(resultsAdapter)
+                        if (text_distance_comment.hasFocus()) {
+                            text_distance_comment.showDropDown()
+                        }
+                    }
+                    else -> throw IllegalArgumentException("Unsupported field type: $field")
                 }
-                else -> throw IllegalArgumentException("Unsupported field type: $field")
+            } else {
+                shouldHideResults = false
             }
         }
     }
 
+    override fun fillValueField(autoCompleteResult: AutoCompleteResult<Distance>) {
+        shouldHideResults = true
+        if (text_distance_location.isPopupShowing) {
+            text_distance_location.setText(autoCompleteResult.displayName)
+            text_distance_location.setSelection(text_distance_location.text.length)
+            text_distance_location.dismissDropDown()
+        } else {
+            text_distance_comment.setText(autoCompleteResult.displayName)
+            text_distance_comment.setSelection(text_distance_comment.text.length)
+            text_distance_comment.dismissDropDown()
+        }
+        SoftKeyboardManager.hideKeyboard(focusedView)
+    }
+
+    override fun sendAutoCompleteHideEvent(autoCompleteResult: AutoCompleteResult<Distance>) {
+        SoftKeyboardManager.hideKeyboard(focusedView)
+        itemToRemoveOrReAdd = autoCompleteResult
+        when(text_distance_location.isPopupShowing) {
+            true -> _hideAutoCompleteVisibilityClicks.onNext(
+                        AutoCompleteUpdateEvent(autoCompleteResult, DistanceAutoCompleteField.Location, resultsAdapter.getPosition(autoCompleteResult)))
+            false -> _hideAutoCompleteVisibilityClicks.onNext(
+                        AutoCompleteUpdateEvent(autoCompleteResult, DistanceAutoCompleteField.Comment, resultsAdapter.getPosition(autoCompleteResult)))
+        }
+    }
+
+    override fun removeValueFromAutoComplete(position: Int) {
+        activity!!.runOnUiThread {
+            itemToRemoveOrReAdd = resultsAdapter.getItem(position)
+            resultsAdapter.remove(itemToRemoveOrReAdd)
+            resultsAdapter.notifyDataSetChanged()
+            val view = activity!!.findViewById<ConstraintLayout>(R.id.update_distance_layout)
+            snackbar = Snackbar.make(view, getString(
+                    R.string.item_removed_from_auto_complete, itemToRemoveOrReAdd.displayName), Snackbar.LENGTH_LONG)
+            snackbar.setAction(R.string.undo) {
+                if (text_distance_location.hasFocus()) {
+                    _unHideAutoCompleteVisibilityClicks.onNext(
+                            AutoCompleteUpdateEvent(itemToRemoveOrReAdd, DistanceAutoCompleteField.Location, position))
+                } else {
+                    _unHideAutoCompleteVisibilityClicks.onNext(
+                            AutoCompleteUpdateEvent(itemToRemoveOrReAdd, DistanceAutoCompleteField.Comment, position))
+                }
+            }
+            snackbar.show()
+        }
+    }
+
+    override fun sendAutoCompleteUnHideEvent(position: Int) {
+        activity!!.runOnUiThread {
+            resultsAdapter.insert(itemToRemoveOrReAdd, position)
+            resultsAdapter.notifyDataSetChanged()
+            Toast.makeText(context, R.string.result_restored, Toast.LENGTH_LONG).show()
+        }
+    }
+
+    override fun displayAutoCompleteError() {
+        activity!!.runOnUiThread {
+            Toast.makeText(activity, R.string.result_restore_failed, Toast.LENGTH_LONG).show()
+        }
+    }
 
     companion object {
         @JvmStatic

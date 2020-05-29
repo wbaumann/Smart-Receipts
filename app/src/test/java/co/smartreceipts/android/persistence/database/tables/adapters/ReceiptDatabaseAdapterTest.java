@@ -19,6 +19,7 @@ import java.util.TimeZone;
 import java.util.UUID;
 
 import co.smartreceipts.android.currency.PriceCurrency;
+import co.smartreceipts.android.model.AutoCompleteMetadata;
 import co.smartreceipts.android.model.Category;
 import co.smartreceipts.android.model.PaymentMethod;
 import co.smartreceipts.android.model.Price;
@@ -57,6 +58,7 @@ public class ReceiptDatabaseAdapterTest {
     private static final Category CATEGORY = new Category(CATEGORY_ID, CATEGORY_UUID, CATEGORY_NAME, "code");
     private static final double PRICE = 12.55d;
     private static final double TAX = 2.50d;
+    private static final double TAX2 = 2.80d;
     private static final String CURRENCY_CODE = "USD";
     private static final double EXCHANGE_RATE_FOR_USD = 1.00d;
     private static final ExchangeRate EXCHANGE_RATE = new ExchangeRate(CURRENCY_CODE, Collections.singletonMap(CURRENCY_CODE, EXCHANGE_RATE_FOR_USD));
@@ -70,8 +72,10 @@ public class ReceiptDatabaseAdapterTest {
     private static final int DESCENDING_INDEX = 3;
     private static final int ASCENDING_INDEX = 2;
     private static final int CURSOR_COUNT = 4;
-    private static final PaymentMethod PAYMENT_METHOD = new PaymentMethod(PAYMENT_METHOD_ID, PAYMENT_METHOD_UUID, "method");
+    private static final PaymentMethod PAYMENT_METHOD = new PaymentMethod(PAYMENT_METHOD_ID, PAYMENT_METHOD_UUID, "method", false);
     private static final boolean FULL_PAGE = true;
+    private static final boolean NAME_HIDDEN_FROM_AUTO_COMPLETE = false;
+    private static final boolean COMMENT_HIDDEN_FROM_AUTO_COMPLETE = false;
     private static final String EXTRA1 = "extra1";
     private static final String EXTRA2 = "extra2";
     private static final String EXTRA3 = "extra3";
@@ -102,13 +106,16 @@ public class ReceiptDatabaseAdapterTest {
     Receipt mReceipt;
 
     @Mock
-    Price mPrice, mTax;
+    Price mPrice, mTax, mTax2;
 
     @Mock
     SyncStateAdapter mSyncStateAdapter;
 
     @Mock
     SyncState mSyncState, mGetSyncState;
+
+    @Mock
+    AutoCompleteMetadata mAutoCompleteMetadata;
 
     @Before
     public void setUp() throws Exception {
@@ -137,6 +144,9 @@ public class ReceiptDatabaseAdapterTest {
         final int extraEditText3Index = 19;
         final int customOrderIdIndex = 20;
         final int uuidIndex = 21;
+        final int nameHiddenFromAutoCompleteIndex = 22;
+        final int commentHiddenFromAutoCompleteIndex = 23;
+        final int tax2Index = 24;
 
         when(mCursor.getColumnIndex(ReceiptsTable.COLUMN_ID)).thenReturn(idIndex);
         when(mCursor.getColumnIndex(ReceiptsTable.COLUMN_PATH)).thenReturn(pathIndex);
@@ -145,6 +155,7 @@ public class ReceiptDatabaseAdapterTest {
         when(mCursor.getColumnIndex(ReceiptsTable.COLUMN_CATEGORY_ID)).thenReturn(categoryIdIndex);
         when(mCursor.getColumnIndex(ReceiptsTable.COLUMN_PRICE)).thenReturn(priceIndex);
         when(mCursor.getColumnIndex(ReceiptsTable.COLUMN_TAX)).thenReturn(taxIndex);
+        when(mCursor.getColumnIndex(ReceiptsTable.COLUMN_TAX2)).thenReturn(tax2Index);
         when(mCursor.getColumnIndex(ReceiptsTable.COLUMN_EXCHANGE_RATE)).thenReturn(exchangeRateIndex);
         when(mCursor.getColumnIndex(ReceiptsTable.COLUMN_DATE)).thenReturn(dateIndex);
         when(mCursor.getColumnIndex(ReceiptsTable.COLUMN_TIMEZONE)).thenReturn(timezoneIndex);
@@ -158,6 +169,8 @@ public class ReceiptDatabaseAdapterTest {
         when(mCursor.getColumnIndex(ReceiptsTable.COLUMN_EXTRA_EDITTEXT_3)).thenReturn(extraEditText3Index);
         when(mCursor.getColumnIndex(ReceiptsTable.COLUMN_CUSTOM_ORDER_ID)).thenReturn(customOrderIdIndex);
         when(mCursor.getColumnIndex(ReceiptsTable.COLUMN_UUID)).thenReturn(uuidIndex);
+        when(mCursor.getColumnIndex(ReceiptsTable.COLUMN_NAME_HIDDEN_AUTO_COMPLETE)).thenReturn(nameHiddenFromAutoCompleteIndex);
+        when(mCursor.getColumnIndex(ReceiptsTable.COLUMN_COMMENT_HIDDEN_AUTO_COMPLETE)).thenReturn(commentHiddenFromAutoCompleteIndex);
 
         when(mCursor.getInt(idIndex)).thenReturn(ID);
         when(mCursor.getString(pathIndex)).thenReturn(RECEIPT_FILE.getName());
@@ -166,6 +179,7 @@ public class ReceiptDatabaseAdapterTest {
         when(mCursor.getInt(categoryIdIndex)).thenReturn(CATEGORY_ID);
         when(mCursor.getDouble(priceIndex)).thenReturn(PRICE);
         when(mCursor.getDouble(taxIndex)).thenReturn(TAX);
+        when(mCursor.getDouble(tax2Index)).thenReturn(TAX2);
         when(mCursor.getDouble(exchangeRateIndex)).thenReturn(EXCHANGE_RATE_FOR_USD);
         when(mCursor.getLong(dateIndex)).thenReturn(DATE);
         when(mCursor.getString(timezoneIndex)).thenReturn(TIMEZONE);
@@ -181,6 +195,8 @@ public class ReceiptDatabaseAdapterTest {
         when(mCursor.getCount()).thenReturn(CURSOR_COUNT);
         when(mCursor.getPosition()).thenReturn(ASCENDING_INDEX - 1);
         when(mCursor.getString(uuidIndex)).thenReturn(RECEIPT_UUID.toString());
+        when(mCursor.getInt(nameHiddenFromAutoCompleteIndex)).thenReturn(NAME_HIDDEN_FROM_AUTO_COMPLETE ? 1 : 0);
+        when(mCursor.getInt(commentHiddenFromAutoCompleteIndex)).thenReturn(COMMENT_HIDDEN_FROM_AUTO_COMPLETE ? 1 : 0);
 
         when(mReceipt.getId()).thenReturn(ID);
         when(mReceipt.getFile()).thenReturn(RECEIPT_FILE);
@@ -189,6 +205,7 @@ public class ReceiptDatabaseAdapterTest {
         when(mReceipt.getCategory()).thenReturn(CATEGORY);
         when(mReceipt.getPrice()).thenReturn(mPrice);
         when(mReceipt.getTax()).thenReturn(mTax);
+        when(mReceipt.getTax2()).thenReturn(mTax2);
         when(mReceipt.getDate()).thenReturn(new Date(DATE));
         when(mReceipt.getCustomOrderId()).thenReturn(CUSTOM_ORDER_ID);
         when(mReceipt.getTimeZone()).thenReturn(TimeZone.getTimeZone(TIMEZONE));
@@ -202,6 +219,9 @@ public class ReceiptDatabaseAdapterTest {
         when(mReceipt.getIndex()).thenReturn(DESCENDING_INDEX);
         when(mReceipt.getSyncState()).thenReturn(mSyncState);
         when(mReceipt.getUuid()).thenReturn(RECEIPT_UUID);
+        when(mReceipt.getAutoCompleteMetadata()).thenReturn(mAutoCompleteMetadata);
+        when(mReceipt.getAutoCompleteMetadata().isNameHiddenFromAutoComplete()).thenReturn(NAME_HIDDEN_FROM_AUTO_COMPLETE);
+        when(mReceipt.getAutoCompleteMetadata().isCommentHiddenFromAutoComplete()).thenReturn(COMMENT_HIDDEN_FROM_AUTO_COMPLETE);
 
         when(mTrip.getId()).thenReturn(PARENT_TRIP_ID);
         when(mTrip.getName()).thenReturn(PARENT_DIR.getName());
@@ -217,6 +237,10 @@ public class ReceiptDatabaseAdapterTest {
         when(mTax.getCurrencyCode()).thenReturn(CURRENCY_CODE);
         when(mTax.getCurrency()).thenReturn(PriceCurrency.getInstance(CURRENCY_CODE));
         when(mTax.getExchangeRate()).thenReturn(EXCHANGE_RATE);
+        when(mTax2.getPrice()).thenReturn(new BigDecimal(TAX2));
+        when(mTax2.getCurrencyCode()).thenReturn(CURRENCY_CODE);
+        when(mTax2.getCurrency()).thenReturn(PriceCurrency.getInstance(CURRENCY_CODE));
+        when(mTax2.getExchangeRate()).thenReturn(EXCHANGE_RATE);
 
         when(mTripsTable.findByPrimaryKey(PARENT_TRIP_ID)).thenReturn(Single.just(mTrip));
         when(mPaymentMethodsTable.findByPrimaryKey(PAYMENT_METHOD_ID)).thenReturn(Single.just(PAYMENT_METHOD));
@@ -245,6 +269,7 @@ public class ReceiptDatabaseAdapterTest {
                 .setName(NAME)
                 .setPrice(PRICE)
                 .setTax(TAX)
+                .setTax2(TAX2)
                 .setExchangeRate(EXCHANGE_RATE)
                 .setCategory(CATEGORY)
                 .setFile(RECEIPT_FILE)
@@ -257,6 +282,8 @@ public class ReceiptDatabaseAdapterTest {
                 .setIsFullPage(!FULL_PAGE)
                 .setIndex(DESCENDING_INDEX)
                 .setPaymentMethod(PAYMENT_METHOD)
+                .setNameHiddenFromAutoComplete(NAME_HIDDEN_FROM_AUTO_COMPLETE)
+                .setCommentHiddenFromAutoComplete(COMMENT_HIDDEN_FROM_AUTO_COMPLETE)
                 .setExtraEditText1(EXTRA1)
                 .setExtraEditText2(EXTRA2)
                 .setExtraEditText3(EXTRA3)
@@ -277,6 +304,7 @@ public class ReceiptDatabaseAdapterTest {
                 .setName(NAME)
                 .setPrice(PRICE)
                 .setTax(TAX)
+                .setTax2(TAX2)
                 .setExchangeRate(EXCHANGE_RATE)
                 .setCategory(CATEGORY)
                 .setFile(null)
@@ -289,6 +317,8 @@ public class ReceiptDatabaseAdapterTest {
                 .setIsFullPage(!FULL_PAGE)
                 .setIndex(DESCENDING_INDEX)
                 .setPaymentMethod(PAYMENT_METHOD)
+                .setNameHiddenFromAutoComplete(NAME_HIDDEN_FROM_AUTO_COMPLETE)
+                .setCommentHiddenFromAutoComplete(COMMENT_HIDDEN_FROM_AUTO_COMPLETE)
                 .setExtraEditText1(EXTRA1)
                 .setExtraEditText2(EXTRA2)
                 .setExtraEditText3(EXTRA3)
@@ -306,6 +336,7 @@ public class ReceiptDatabaseAdapterTest {
                 .setName(NAME)
                 .setPrice(PRICE)
                 .setTax(TAX)
+                .setTax2(TAX2)
                 .setExchangeRate(EXCHANGE_RATE)
                 .setCategory(CATEGORY)
                 .setFile(RECEIPT_FILE)
@@ -318,6 +349,8 @@ public class ReceiptDatabaseAdapterTest {
                 .setIsFullPage(!FULL_PAGE)
                 .setIndex(DESCENDING_INDEX)
                 .setPaymentMethod(PAYMENT_METHOD)
+                .setNameHiddenFromAutoComplete(NAME_HIDDEN_FROM_AUTO_COMPLETE)
+                .setCommentHiddenFromAutoComplete(COMMENT_HIDDEN_FROM_AUTO_COMPLETE)
                 .setExtraEditText1(EXTRA1)
                 .setExtraEditText2(EXTRA2)
                 .setExtraEditText3(EXTRA3)
@@ -335,6 +368,7 @@ public class ReceiptDatabaseAdapterTest {
                 .setName(NAME)
                 .setPrice(PRICE)
                 .setTax(TAX)
+                .setTax2(TAX2)
                 .setExchangeRate(EXCHANGE_RATE)
                 .setCategory(CATEGORY)
                 .setFile(RECEIPT_FILE)
@@ -347,6 +381,8 @@ public class ReceiptDatabaseAdapterTest {
                 .setIsFullPage(!FULL_PAGE)
                 .setIndex(ASCENDING_INDEX)
                 .setPaymentMethod(PAYMENT_METHOD)
+                .setNameHiddenFromAutoComplete(NAME_HIDDEN_FROM_AUTO_COMPLETE)
+                .setCommentHiddenFromAutoComplete(COMMENT_HIDDEN_FROM_AUTO_COMPLETE)
                 .setExtraEditText1(EXTRA1)
                 .setExtraEditText2(EXTRA2)
                 .setExtraEditText3(EXTRA3)
@@ -366,6 +402,7 @@ public class ReceiptDatabaseAdapterTest {
                 .setName(NAME)
                 .setPrice(PRICE)
                 .setTax(TAX)
+                .setTax2(TAX2)
                 .setExchangeRate(EXCHANGE_RATE)
                 .setFile(RECEIPT_FILE)
                 .setDate(DATE)
@@ -378,6 +415,8 @@ public class ReceiptDatabaseAdapterTest {
                 .setIsFullPage(!FULL_PAGE)
                 .setIndex(DESCENDING_INDEX)
                 .setPaymentMethod(PAYMENT_METHOD)
+                .setNameHiddenFromAutoComplete(NAME_HIDDEN_FROM_AUTO_COMPLETE)
+                .setCommentHiddenFromAutoComplete(COMMENT_HIDDEN_FROM_AUTO_COMPLETE)
                 .setExtraEditText1(EXTRA1)
                 .setExtraEditText2(EXTRA2)
                 .setExtraEditText3(EXTRA3)
@@ -397,6 +436,7 @@ public class ReceiptDatabaseAdapterTest {
                 .setName(NAME)
                 .setPrice(PRICE)
                 .setTax(TAX)
+                .setTax2(TAX2)
                 .setExchangeRate(EXCHANGE_RATE)
                 .setCategory(CATEGORY)
                 .setFile(RECEIPT_FILE)
@@ -408,6 +448,8 @@ public class ReceiptDatabaseAdapterTest {
                 .setCurrency(CURRENCY_CODE)
                 .setIsFullPage(!FULL_PAGE)
                 .setIndex(DESCENDING_INDEX)
+                .setNameHiddenFromAutoComplete(NAME_HIDDEN_FROM_AUTO_COMPLETE)
+                .setCommentHiddenFromAutoComplete(COMMENT_HIDDEN_FROM_AUTO_COMPLETE)
                 .setExtraEditText1(EXTRA1)
                 .setExtraEditText2(EXTRA2)
                 .setExtraEditText3(EXTRA3)
@@ -429,6 +471,7 @@ public class ReceiptDatabaseAdapterTest {
                 .setName(NAME)
                 .setPrice(PRICE)
                 .setTax(TAX)
+                .setTax2(TAX2)
                 .setExchangeRate(EXCHANGE_RATE)
                 .setCategory(CATEGORY)
                 .setFile(RECEIPT_FILE)
@@ -441,6 +484,8 @@ public class ReceiptDatabaseAdapterTest {
                 .setIsFullPage(!FULL_PAGE)
                 .setIndex(DESCENDING_INDEX)
                 .setPaymentMethod(PAYMENT_METHOD)
+                .setNameHiddenFromAutoComplete(NAME_HIDDEN_FROM_AUTO_COMPLETE)
+                .setCommentHiddenFromAutoComplete(COMMENT_HIDDEN_FROM_AUTO_COMPLETE)
                 .setExtraEditText1(EXTRA1)
                 .setExtraEditText2(EXTRA2)
                 .setExtraEditText3(EXTRA3)
@@ -465,6 +510,7 @@ public class ReceiptDatabaseAdapterTest {
         assertEquals(CATEGORY_ID, (int) contentValues.getAsInteger(ReceiptsTable.COLUMN_CATEGORY_ID));
         assertEquals(PRICE, contentValues.getAsDouble(ReceiptsTable.COLUMN_PRICE), 0.0001d);
         assertEquals(TAX, contentValues.getAsDouble(ReceiptsTable.COLUMN_TAX), 0.0001d);
+        assertEquals(TAX2, contentValues.getAsDouble(ReceiptsTable.COLUMN_TAX2), 0.0001d);
         assertEquals(EXCHANGE_RATE_FOR_USD, contentValues.getAsDouble(ReceiptsTable.COLUMN_EXCHANGE_RATE), 0.0001d);
         assertEquals(DATE, (long) contentValues.getAsLong(ReceiptsTable.COLUMN_DATE));
         assertEquals(TIMEZONE, contentValues.getAsString(ReceiptsTable.COLUMN_TIMEZONE));
@@ -473,6 +519,8 @@ public class ReceiptDatabaseAdapterTest {
         assertEquals(CURRENCY_CODE, contentValues.getAsString(ReceiptsTable.COLUMN_ISO4217));
         assertEquals(PAYMENT_METHOD_ID, (int) contentValues.getAsInteger(ReceiptsTable.COLUMN_PAYMENT_METHOD_ID));
         assertEquals(!FULL_PAGE, contentValues.getAsBoolean(ReceiptsTable.COLUMN_NOTFULLPAGEIMAGE));
+        assertEquals(NAME_HIDDEN_FROM_AUTO_COMPLETE, contentValues.getAsBoolean(ReceiptsTable.COLUMN_NAME_HIDDEN_AUTO_COMPLETE));
+        assertEquals(COMMENT_HIDDEN_FROM_AUTO_COMPLETE, contentValues.getAsBoolean(ReceiptsTable.COLUMN_COMMENT_HIDDEN_AUTO_COMPLETE));
         assertEquals(EXTRA1, contentValues.getAsString(ReceiptsTable.COLUMN_EXTRA_EDITTEXT_1));
         assertEquals(EXTRA2, contentValues.getAsString(ReceiptsTable.COLUMN_EXTRA_EDITTEXT_2));
         assertEquals(EXTRA3, contentValues.getAsString(ReceiptsTable.COLUMN_EXTRA_EDITTEXT_3));
@@ -498,6 +546,7 @@ public class ReceiptDatabaseAdapterTest {
         assertEquals(CATEGORY_ID, (int) contentValues.getAsInteger(ReceiptsTable.COLUMN_CATEGORY_ID));
         assertEquals(PRICE, contentValues.getAsDouble(ReceiptsTable.COLUMN_PRICE), 0.0001d);
         assertEquals(TAX, contentValues.getAsDouble(ReceiptsTable.COLUMN_TAX), 0.0001d);
+        assertEquals(TAX2, contentValues.getAsDouble(ReceiptsTable.COLUMN_TAX2), 0.0001d);
         assertEquals(EXCHANGE_RATE_FOR_USD, contentValues.getAsDouble(ReceiptsTable.COLUMN_EXCHANGE_RATE), 0.0001d);
         assertEquals(DATE, (long) contentValues.getAsLong(ReceiptsTable.COLUMN_DATE));
         assertEquals(TIMEZONE, contentValues.getAsString(ReceiptsTable.COLUMN_TIMEZONE));
@@ -506,6 +555,8 @@ public class ReceiptDatabaseAdapterTest {
         assertEquals(CURRENCY_CODE, contentValues.getAsString(ReceiptsTable.COLUMN_ISO4217));
         assertEquals(PAYMENT_METHOD_ID, (int) contentValues.getAsInteger(ReceiptsTable.COLUMN_PAYMENT_METHOD_ID));
         assertEquals(!FULL_PAGE, contentValues.getAsBoolean(ReceiptsTable.COLUMN_NOTFULLPAGEIMAGE));
+        assertEquals(NAME_HIDDEN_FROM_AUTO_COMPLETE, contentValues.getAsBoolean(ReceiptsTable.COLUMN_NAME_HIDDEN_AUTO_COMPLETE));
+        assertEquals(COMMENT_HIDDEN_FROM_AUTO_COMPLETE, contentValues.getAsBoolean(ReceiptsTable.COLUMN_COMMENT_HIDDEN_AUTO_COMPLETE));
         assertEquals(EXTRA1, contentValues.getAsString(ReceiptsTable.COLUMN_EXTRA_EDITTEXT_1));
         assertEquals(EXTRA2, contentValues.getAsString(ReceiptsTable.COLUMN_EXTRA_EDITTEXT_2));
         assertEquals(EXTRA3, contentValues.getAsString(ReceiptsTable.COLUMN_EXTRA_EDITTEXT_3));
@@ -523,6 +574,7 @@ public class ReceiptDatabaseAdapterTest {
                 .setName(NAME)
                 .setPrice(PRICE)
                 .setTax(TAX)
+                .setTax2(TAX2)
                 .setExchangeRate(EXCHANGE_RATE)
                 .setCategory(CATEGORY)
                 .setFile(RECEIPT_FILE)
@@ -535,6 +587,8 @@ public class ReceiptDatabaseAdapterTest {
                 .setIsFullPage(FULL_PAGE)
                 .setIndex(DESCENDING_INDEX)
                 .setPaymentMethod(PAYMENT_METHOD)
+                .setNameHiddenFromAutoComplete(NAME_HIDDEN_FROM_AUTO_COMPLETE)
+                .setCommentHiddenFromAutoComplete(COMMENT_HIDDEN_FROM_AUTO_COMPLETE)
                 .setExtraEditText1(EXTRA1)
                 .setExtraEditText2(EXTRA2)
                 .setExtraEditText3(EXTRA3)

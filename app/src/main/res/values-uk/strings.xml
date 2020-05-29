@@ -55,6 +55,11 @@
     <string name="reports_title">Звіти</string>
     <string name="search_empty">Нічого не знайдено</string>
     <string name="search_hint">Ви можете шукати звіти або квитанції за назвою, коментарями, ціною або категорією</string>
+    <string name="item_removed_from_auto_complete">%s видалено з результатів автоматичного завершення</string>
+    <string name="delete_failed">Автоматичне завершення результату не вдалося видалити</string>
+    <string name="result_restored">Автозаповнення результату відновлено</string>
+    <string name="result_restore_failed">Не вдалося відновити результат автоматичного завершення</string>
+    <string name="undo">Скасувати</string>
 
     <!-- =============== Subscriptions ================ -->
     <string name="pro_subscription">Смарт Чеки Плюс</string>
@@ -498,6 +503,7 @@
     <string name="tooltip_review_privacy">Торкніться, щоб переглянути налаштування конфіденційності</string>
     <string name="tooltip_automatic_backups_recovery_hint">Ви раніше налаштовували автоматичне резервне копіювання? Натисніть тут, щоб відновити</string>
     <string name="tooltip_first_report_hint">Ласкаво просимо! Давайте створимо вашу першу папку звіту. Назвіть його як цей місяць, цей рік, ваше поточне відрядження або інакше, як ви побажаєте. Потім натисніть на галочку, щоб зберегти його і почати додавати свої перші квитанції!</string>
+    <string name="tooltip_include_second_tax_hint">Натиснiть, щоб налаштувати поле для другого податку</string>
 
     <!-- ================== Graph titles ==================== -->
     <string name="graphs_no_data">Додайте свій перший чек щоб побачити графіки.</string>

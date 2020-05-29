@@ -55,6 +55,11 @@
     <string name="reports_title">Informes</string>
     <string name="search_empty">No se han encontrado resultados</string>
     <string name="search_hint">Puede buscar informes o recibos por nombre, comentario, precio o categoría</string>
+    <string name="item_removed_from_auto_complete">%s eliminado de los resultados de autocompletar</string>
+    <string name="delete_failed">El resultado de autocompletado no se pudo eliminar</string>
+    <string name="result_restored">Resultado de autocompletado restaurado</string>
+    <string name="result_restore_failed">El resultado de autocompletar no se pudo restaurar</string>
+    <string name="undo">Deshacer</string>
 
     <!-- =============== Subscriptions ================ -->
     <string name="pro_subscription">Smart Receipts Plus</string>
@@ -496,6 +501,7 @@
     <string name="tooltip_review_privacy">Toca para revisar tu configuración de privacidad</string>
     <string name="tooltip_automatic_backups_recovery_hint">¿Configuró previamente copias de seguridad automáticas? Toque aquí para restaurar</string>
     <string name="tooltip_first_report_hint">¡Bienvenido! Vamos a crear su primera carpeta de informes. Nombre después de este mes, este año, su viaje de negocios actual o cualquier cosa que desee. Luego haga clic en la marca de verificación para guardarlo y comience a agregar sus primeros recibos.</string>
+    <string name="tooltip_include_second_tax_hint">Toque para configurar el segundo campo de impuestos</string>
 
     <!-- ================== Graph titles ==================== -->
     <string name="graphs_no_data">Agregue sus primeros recibos para ver los gráficos.</string>

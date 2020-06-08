@@ -179,6 +179,9 @@ public class ManualRestoreTask {
                 throw new IOException("Failed to find our import database file");
             }
 
+            // delete the zip file since we've successfully exported the data from it
+            external.delete(localZipFile);
+
             return importDatabaseFile;
         })
         .doOnSuccess(importDatabaseFile ->

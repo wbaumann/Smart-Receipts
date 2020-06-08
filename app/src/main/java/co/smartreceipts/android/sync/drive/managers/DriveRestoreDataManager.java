@@ -62,6 +62,15 @@ public class DriveRestoreDataManager {
     public Single<Boolean> restoreBackup(@NonNull final RemoteBackupMetadata remoteBackupMetadata, final boolean overwriteExistingData) {
         Logger.info(this, "Initiating the restoration of a backup file for Google Drive with ID: {}", remoteBackupMetadata.getId());
 
+        if (overwriteExistingData) {
+            Logger.debug(this, "Deleting old files from external storage");
+            for (File f : mStorageDirectory.listFiles()) {
+                if (f.isDirectory()) {
+                    deleteRecursively(f);
+                }
+            }
+        }
+
         return downloadBackupMetadataImages(remoteBackupMetadata, overwriteExistingData, mStorageDirectory)
                 .flatMap(files -> {
                     Logger.debug(this, "Performing database merge");
@@ -227,6 +236,43 @@ public class DriveRestoreDataManager {
         final File receiptFile = new File(new File(inDirectory, partialReceipt.parentTripName), partialReceipt.fileName);
         return driveDownloader.downloadFile(partialReceipt.driveId.getId(), receiptFile)
                 .doOnError(throwable -> Logger.error(DriveRestoreDataManager.this, "Failed to download {} in {} with id {}.", partialReceipt.fileName, partialReceipt.parentTripName, partialReceipt.driveId));
+    }
+
+    private boolean deleteRecursively(final File dir) {
+        if (dir == null || !dir.exists())
+            return true;
+        if (!dir.canWrite())
+            return false;
+        if (dir.isDirectory()) {
+            final File[] files = dir.listFiles();
+            for (File file : files) {
+                deleteRecursively(file);
+            }
+            if (dir.listFiles().length > 0)
+                return false;
+        }
+        return renameThenDelete(dir);
+    }
+
+    private boolean renameThenDelete(final File file) {
+        if (file == null || !file.exists()) {
+            return true;
+        }
+        final File renamedFiled = this.rename(file, "delete.me." + file.hashCode());
+        return renamedFiled.delete();
+    }
+
+    public File rename(final File oldFile, final String newName) {
+        final File file = this.getFile(oldFile.getParentFile(), newName);
+        final boolean success = oldFile.renameTo(file);
+        if (success)
+            return file;
+        else
+            return oldFile;
+    }
+
+    public File getFile(final File root, final String filename) {
+        return new File(root, filename);
     }
 
     /**

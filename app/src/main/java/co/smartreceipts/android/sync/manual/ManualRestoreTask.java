@@ -156,6 +156,14 @@ public class ManualRestoreTask {
             final SDCardFileManager external = persistenceManager.getExternalStorageManager();
             StorageManager internal = persistenceManager.getInternalStorageManager();
 
+            // delete old receipt files from the app so they aren't included in future backups
+            if (overwrite) {
+                Logger.info(ManualRestoreTask.this, "Deleting old files from external storage");
+                for (File f : external.listDirs()) {
+                    external.deleteRecursively(f);
+                }
+            }
+
             if (!external.unzip(localZipFile, overwrite)) {
                 throw new IOException("Failed to unzip file: " + localZipFile);
             }

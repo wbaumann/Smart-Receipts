@@ -1,5 +1,6 @@
 package co.smartreceipts.analytics.crash
 
+import co.smartreceipts.analytics.BuildConfig
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import javax.inject.Inject
 
@@ -10,6 +11,10 @@ class CrashReporter @Inject constructor() : CrashReporterInterface {
      */
     override fun initialize(isCrashTrackingEnabled: Boolean) {
         // Set up Crashlytics, disabling it when the user has elected to disable the functionality
-        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(isCrashTrackingEnabled)
+        if (!BuildConfig.DEBUG) {
+            FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(isCrashTrackingEnabled)
+        } else {
+            FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(false)
+        }
     }
 }

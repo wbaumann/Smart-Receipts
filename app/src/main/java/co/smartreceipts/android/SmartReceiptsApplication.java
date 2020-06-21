@@ -7,7 +7,6 @@ import android.os.Looper;
 import androidx.annotation.VisibleForTesting;
 import androidx.multidex.MultiDex;
 
-import com.google.firebase.FirebaseApp;
 import com.tom_roush.pdfbox.util.PDFBoxResourceLoader;
 
 import org.jetbrains.annotations.NotNull;
@@ -183,8 +182,6 @@ public class SmartReceiptsApplication extends Application implements HasAndroidI
     }
 
     private void init() {
-
-        FirebaseApp.initializeApp(this);
 
         // To handle RxJava exceptions
         RxJavaPlugins.setErrorHandler(new DefaultRxErrorHandler(analytics));

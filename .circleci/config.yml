@@ -80,11 +80,6 @@ jobs:
       - restore_cache:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
       - run:
-          name: Build debug and test APKs for Free variant
-          command: |
-            ./gradlew :app:assembleFreeDebug
-            ./gradlew :app:assembleFreeDebugAndroidTest
-      - run:
           name: Get JSON & GPG Keys From Env-Var
           command: |
             echo ${PLAYSTORE_SERVICE_KEY} > app/GPLAY_KEY.json
@@ -101,6 +96,11 @@ jobs:
           command: |
             sudo gcloud auth activate-service-account --key-file=test_lab_account_key.json
             sudo gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+      - run:
+          name: Build debug and test APKs for Free variant
+          command: |
+            ./gradlew :app:assembleFreeDebug
+            ./gradlew :app:assembleFreeDebugAndroidTest
       - run:
           name: Test Free Variant with Firebase Test Lab
           command: >
@@ -120,11 +120,6 @@ jobs:
       - restore_cache:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
       - run:
-          name: Build debug and test APKs for Plus variant
-          command: |
-            ./gradlew :app:assemblePlusFlavorDebug
-            ./gradlew :app:assemblePlusFlavorDebugAndroidTest
-      - run:
           name: Get JSON & GPG Keys From Env-Var
           command: |
             echo ${PLAYSTORE_SERVICE_KEY} > app/GPLAY_KEY.json
@@ -141,6 +136,11 @@ jobs:
           command: |
             sudo gcloud auth activate-service-account --key-file=test_lab_account_key.json
             sudo gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+      - run:
+          name: Build debug and test APKs for Plus variant
+          command: |
+            ./gradlew :app:assemblePlusFlavorDebug
+            ./gradlew :app:assemblePlusFlavorDebugAndroidTest
       - run:
           name: Test Plus Variant with Firebase Test Lab
           command: >
@@ -160,11 +160,6 @@ jobs:
       - restore_cache:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
       - run:
-          name: Build debug and test APKs for Floss variant
-          command: |
-            ./gradlew :app:assembleFlossFlavorDebug
-            ./gradlew :app:assembleFlossFlavorDebugAndroidTest
-      - run:
           name: Get JSON & GPG Keys From Env-Var
           command: |
             echo ${PLAYSTORE_SERVICE_KEY} > app/GPLAY_KEY.json
@@ -181,6 +176,11 @@ jobs:
           command: |
             sudo gcloud auth activate-service-account --key-file=test_lab_account_key.json
             sudo gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+      - run:
+          name: Build debug and test APKs for Floss variant
+          command: |
+            ./gradlew :app:assembleFlossFlavorDebug
+            ./gradlew :app:assembleFlossFlavorDebugAndroidTest
       - run:
           name: Test Floss Variant with Firebase Test Lab
           command: >

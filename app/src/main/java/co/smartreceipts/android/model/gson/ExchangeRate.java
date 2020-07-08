@@ -3,6 +3,8 @@ package co.smartreceipts.android.model.gson;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.joda.money.CurrencyUnit;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Map;
@@ -64,8 +66,12 @@ public class ExchangeRate implements Serializable {
      * @param currency the {@link PriceCurrency} to test if we have a valid rate
      * @return {@code true} if we have a valid exchange rate. {@code false} otherwise
      */
+    @Deprecated
     public boolean supportsExchangeRateFor(@NonNull PriceCurrency currency) {
         return supportsExchangeRateFor(currency.getCurrencyCode());
+    }
+    public boolean supportsExchangeRateFor(@NonNull CurrencyUnit currency) {
+        return supportsExchangeRateFor(currency.getCode());
     }
 
     /**

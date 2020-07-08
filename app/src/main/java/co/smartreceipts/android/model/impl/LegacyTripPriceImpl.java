@@ -1,15 +1,16 @@
 package co.smartreceipts.android.model.impl;
 
 import android.os.Parcel;
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.text.TextUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import co.smartreceipts.android.model.Price;
 import co.smartreceipts.android.currency.PriceCurrency;
+import co.smartreceipts.android.model.Price;
 import co.smartreceipts.android.model.factory.ExchangeRateBuilderFactory;
 import co.smartreceipts.android.model.gson.ExchangeRate;
 import co.smartreceipts.android.model.utils.ModelUtils;
@@ -21,6 +22,7 @@ import co.smartreceipts.android.model.utils.ModelUtils;
  *
  * @author williambaumann
  */
+@Deprecated
 public class LegacyTripPriceImpl extends AbstractPriceImpl {
 
     private static final int ROUNDING_PRECISION = Price.ROUNDING_PRECISION + 2;

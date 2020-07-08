@@ -2,6 +2,8 @@ package co.smartreceipts.android.model.factory;
 
 import androidx.annotation.NonNull;
 
+import org.joda.money.CurrencyUnit;
+
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +35,11 @@ public final class ExchangeRateBuilderFactory implements BuilderFactory<Exchange
         return this;
     }
 
+    public ExchangeRateBuilderFactory setBaseCurrency(@NonNull CurrencyUnit baseCurrency) {
+        _baseCurrencyCode = baseCurrency.getCode();
+        return this;
+    }
+
     public ExchangeRateBuilderFactory setRate(@NonNull String currencyCode, double rate) {
         if (rate > 0) {
             _rates.put(currencyCode, rate);
@@ -58,6 +65,10 @@ public final class ExchangeRateBuilderFactory implements BuilderFactory<Exchange
 
     public ExchangeRateBuilderFactory setRate(@NonNull PriceCurrency currency, @NonNull String rateString) {
         return setRate(currency.getCurrencyCode(), ModelUtils.tryParse(rateString, new BigDecimal(-1)));
+    }
+
+    public ExchangeRateBuilderFactory setRate(@NonNull CurrencyUnit currency, @NonNull BigDecimal rate) {
+        return setRate(currency.getCode(), rate);
     }
 
     @Override

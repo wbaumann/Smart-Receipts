@@ -1,8 +1,9 @@
 package co.smartreceipts.android.model.impl;
 
 import android.os.Parcel;
-import androidx.annotation.NonNull;
 import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
 
 import com.google.common.base.Preconditions;
 
@@ -64,7 +65,8 @@ public final class ImmutableNetPriceImpl extends AbstractPriceImpl {
                 areAllExchangeRatesValid = false;
             }
             possiblyIncorrectTotalPrice = possiblyIncorrectTotalPrice.add(priceToAdd);
-            final BigDecimal priceForCurrency = currencyToPriceMap.containsKey(currencyForPriceToAdd) ? currencyToPriceMap.get(currencyForPriceToAdd).add(priceToAdd) : priceToAdd;
+            final BigDecimal priceForCurrency = currencyToPriceMap.containsKey(currencyForPriceToAdd) ?
+                    currencyToPriceMap.get(currencyForPriceToAdd).add(priceToAdd) : priceToAdd;
             currencyToPriceMap.put(currencyForPriceToAdd, priceForCurrency);
         }
         this.totalPrice = totalPrice.setScale(TOTAL_DECIMAL_PRECISION, RoundingMode.HALF_DOWN);

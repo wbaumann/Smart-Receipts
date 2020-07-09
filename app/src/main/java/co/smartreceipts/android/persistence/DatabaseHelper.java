@@ -274,19 +274,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Single<Integer> getNextReceiptAutoIncrementIdHelper() {
         return Single.fromCallable(() -> {
             SQLiteDatabase db = getReadableDatabase();
-            Cursor cursor = null;
 
-            try {
-                cursor = db.rawQuery("SELECT seq FROM SQLITE_SEQUENCE WHERE name=?", new String[]{ReceiptsTable.TABLE_NAME});
+            try (Cursor cursor = db.rawQuery("SELECT seq FROM SQLITE_SEQUENCE WHERE name=?", new String[]{ReceiptsTable.TABLE_NAME})) {
                 if (cursor != null && cursor.moveToFirst() && cursor.getColumnCount() > 0) {
                     return cursor.getInt(0) + 1;
                 } else {
                     return 0;
-                }
-
-            } finally {
-                if (cursor != null) {
-                    cursor.close();
                 }
             }
         });

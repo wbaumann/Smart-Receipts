@@ -64,7 +64,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Caching Vars
     private ArrayList<CharSequence> mFullCurrencyList;
     private ArrayList<CharSequence> mMostRecentlyUsedCurrencyList;
-    private final ReceiptColumnDefinitions mReceiptColumnDefinitions;
 
     // Other vars
     private final DatabaseContext mContext;
@@ -105,15 +104,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         mContext = context;
         mPreferences = preferences;
-        mReceiptColumnDefinitions = receiptColumnDefinitions;
         mCustomizations = tableDefaultsCustomizer;
 
         // Tables:
         mTables = new ArrayList<>();
         mTripsTable = new TripsTable(this, storageManager, preferences);
         mCategoriesTable = new CategoriesTable(this, orderingPreferencesManager);
-        mCSVTable = new CSVTable(this, mReceiptColumnDefinitions, orderingPreferencesManager);
-        mPDFTable = new PDFTable(this, mReceiptColumnDefinitions, orderingPreferencesManager);
+        mCSVTable = new CSVTable(this, receiptColumnDefinitions, orderingPreferencesManager);
+        mPDFTable = new PDFTable(this, receiptColumnDefinitions, orderingPreferencesManager);
         mPaymentMethodsTable = new PaymentMethodsTable(this, orderingPreferencesManager);
         mDistanceTable = new DistanceTable(this, mTripsTable, mPaymentMethodsTable, preferences);
         mReceiptsTable = new ReceiptsTable(this, mTripsTable, mPaymentMethodsTable, mCategoriesTable, storageManager, preferences, orderingPreferencesManager);

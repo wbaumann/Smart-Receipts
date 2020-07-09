@@ -236,9 +236,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         if (mPreferences.get(UserPreference.Distance.IncludeDistancePriceInReports)) {
             final List<Distance> distances = mDistanceTable.getBlocking(trip, true);
-            for (final Distance distance : distances) {
-                prices.add(distance);
-            }
+            prices.addAll(distances);
         }
 
         trip.setPrice(new PriceBuilderFactory().setPriceables(prices, trip.getTripCurrency()).build());

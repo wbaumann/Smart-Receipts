@@ -325,10 +325,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                                     builder.append(" OR ");
                                 }
 
-                                builder.append(searchColumns[i])
-                                        .append(" like '")
-                                        .append(input)
-                                        .append("%' ");
+                                if (searchColumns[i].equals(ReceiptsTable.COLUMN_COMMENT)) {
+                                    builder.append(searchColumns[i])
+                                            .append(" like '%")
+                                            .append(input)
+                                            .append("%' ");
+                                } else {
+                                    builder.append(searchColumns[i])
+                                            .append(" like '")
+                                            .append(input)
+                                            .append("%' ");
+                                }
                             }
 
                             if (orderByColumn != null) {

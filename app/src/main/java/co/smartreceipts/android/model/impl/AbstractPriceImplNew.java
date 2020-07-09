@@ -6,7 +6,7 @@ import co.smartreceipts.android.model.PriceNew;
 /**
  * Provides common methods that all {@link PriceNew} implementations use
  */
-abstract class AbstractPriceImplNew implements PriceNew {
+public abstract class AbstractPriceImplNew implements PriceNew {
 
     protected static final float EPSILON = 1f / (Price.ROUNDING_PRECISION + 2f);
 

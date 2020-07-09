@@ -1,11 +1,13 @@
 package co.smartreceipts.android.model.factory
 
+import co.smartreceipts.android.DefaultObjects
 import co.smartreceipts.android.model.impl.MultiplePriceImplNew
 import co.smartreceipts.android.model.impl.SinglePriceImplNew
 import co.smartreceipts.android.utils.TestLocaleToggler
 import org.joda.money.CurrencyUnit
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -30,6 +32,10 @@ class PriceBuilderFactoryNewTest {
         val SINGLE_PRICE2 = SinglePriceImplNew(PRICE2, CURRENCY2, EXCHANGE_RATE2)
 
         val MULTIPLE_PRICE1 = MultiplePriceImplNew(CURRENCY1, listOf(SINGLE_PRICE1, SINGLE_PRICE2))
+
+        val PRICEABLE1 = DefaultObjects.newDefaultTrip(SINGLE_PRICE1)
+        val PRICEABLE2 = DefaultObjects.newDefaultTrip(SINGLE_PRICE2)
+
     }
 
     @Before
@@ -75,6 +81,32 @@ class PriceBuilderFactoryNewTest {
         val expected = SinglePriceImplNew(PRICE1, CURRENCY2, EXCHANGE_RATE1)
 
         assertEquals(expected, price)
+
+    }
+
+    @Test
+    fun setPriceOverridePrices() {
+
+        val price = PriceBuilderFactoryNew()
+            .setPrices(listOf(SINGLE_PRICE1, SINGLE_PRICE2), CURRENCY1)
+            .setPrice(SINGLE_PRICE1)
+            .build()
+
+        assertNotEquals(MULTIPLE_PRICE1, price)
+        assertEquals(SINGLE_PRICE1, price)
+
+    }
+
+    @Test
+    fun setPricesOverridePrice() {
+
+        val price = PriceBuilderFactoryNew()
+            .setPrice(SINGLE_PRICE1)
+            .setPrices(listOf(SINGLE_PRICE1, SINGLE_PRICE2), CURRENCY1)
+            .build()
+
+        assertNotEquals(SINGLE_PRICE1, price)
+        assertEquals(MULTIPLE_PRICE1, price)
 
     }
 
@@ -134,16 +166,27 @@ class PriceBuilderFactoryNewTest {
         assertEquals(MULTIPLE_PRICE1, price)
     }
 
-//    @Test
-//    fun multiplePriceFromSinglePriceables() {
-//
-        // TODO: 10.07.2020 test later (need to migrate to updated Priceables)
-//        val price = PriceBuilderFactoryNew()
-//            .setPriceables(listOf(SINGLE_PRICE1, SINGLE_PRICE2), CURRENCY1)
-//            .build()
-//
-//        assertEquals(MULTIPLE_PRICE1, price)
-//    }
+    @Test
+    fun multiplePriceFromSinglePriceables() {
+        val price = PriceBuilderFactoryNew()
+            .setPriceables(listOf(PRICEABLE1, PRICEABLE2), CURRENCY1)
+            .build()
+
+        assertEquals(MULTIPLE_PRICE1, price)
+    }
+
+    @Test
+    fun pricesAndPriceablesAreSame() {
+        val price1 = PriceBuilderFactoryNew()
+            .setPrices(listOf(SINGLE_PRICE1, SINGLE_PRICE2), CURRENCY1)
+            .build()
+
+        val price2 = PriceBuilderFactoryNew()
+            .setPriceables(listOf(PRICEABLE1, PRICEABLE2), CURRENCY1)
+            .build()
+
+        assertEquals(price1, price2)
+    }
 
     @Test
     fun multiplePriceFromMixedPrices() {

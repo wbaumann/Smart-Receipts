@@ -3,7 +3,7 @@ package co.smartreceipts.android.model
 import android.os.Parcelable
 import co.smartreceipts.android.currency.PriceCurrency
 import co.smartreceipts.android.date.DisplayableDate
-import co.smartreceipts.android.model.factory.PriceBuilderFactory
+import co.smartreceipts.android.model.factory.PriceBuilderFactoryNew
 import co.smartreceipts.android.search.Searchable
 import co.smartreceipts.core.sync.model.SyncState
 import co.smartreceipts.core.sync.model.Syncable
@@ -46,16 +46,16 @@ class Trip @JvmOverloads constructor(
      */
     override val syncState: SyncState = DefaultSyncState(),
     /**
-     * As the price of a trip exists as a function of its receipt children (and not itself), [Price] must be var
+     * As the price of a trip exists as a function of its receipt children (and not itself), [PriceNew] must be var
      */
-    override var price: Price = PriceBuilderFactory().setPrice(0.0).setCurrency(tripCurrency).build(),
+    override var price: PriceNew = PriceBuilderFactoryNew().setCurrency(tripCurrency.currencyCode).build(),
     /**
-     * The daily sub-total [Price] (i.e. all expenditures that occurred today) for this trip,
+     * The daily sub-total [PriceNew] (i.e. all expenditures that occurred today) for this trip,
      * daily sub-total of a trip exists as a function of it's receipt children (and not itself)
      */
-    var dailySubTotal: Price = PriceBuilderFactory().setPrice(0.0).setCurrency(tripCurrency).build(),
+    var dailySubTotal: PriceNew = PriceBuilderFactoryNew().setCurrency(tripCurrency.currencyCode).build(),
     val autoCompleteMetadata: AutoCompleteMetadata
-) : Keyed, Parcelable, Priceable, Comparable<Trip>, Syncable, Searchable {
+) : Keyed, Parcelable, PriceableNew, Comparable<Trip>, Syncable, Searchable {
 
     /**
      * The [Date] upon which this trip began

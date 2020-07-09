@@ -16,10 +16,8 @@ import java.util.*
 class PriceBuilderFactoryNew : BuilderFactory<PriceNew> {
     private var priceDecimal: BigDecimal = BigDecimal.ZERO
     private var currency: CurrencyUnit = CurrencyUnit.of(Locale.getDefault())
+    private var prices: List<PriceNew> = emptyList()
     private var exchangeRate: ExchangeRate? = null
-    private var priceables: List<PriceableNew>? = null
-    private var prices: List<PriceNew>? = null
-
 
     constructor() {
         currency = CurrencyUnit.of(Locale.getDefault())
@@ -36,47 +34,60 @@ class PriceBuilderFactoryNew : BuilderFactory<PriceNew> {
         priceDecimal = price.price
         currency = price.currency
         exchangeRate = price.exchangeRate
+
+        prices = emptyList()
         return this
     }
 
     fun setPrice(price: String): PriceBuilderFactoryNew {
         priceDecimal = ModelUtils.tryParse(price)
+
+        prices = emptyList()
         return this
     }
 
     fun setPrice(price: Double): PriceBuilderFactoryNew {
         priceDecimal = BigDecimal.valueOf(price)
+
+        prices = emptyList()
         return this
     }
 
     fun setPrice(price: BigDecimal): PriceBuilderFactoryNew {
         priceDecimal = price
+
+        prices = emptyList()
         return this
     }
 
     fun setCurrency(currency: CurrencyUnit): PriceBuilderFactoryNew {
         this.currency = currency
+
         return this
     }
 
     fun setCurrency(currencyCode: String): PriceBuilderFactoryNew {
         currency = CurrencyUnit.of(currencyCode)
+
         return this
     }
 
     fun setExchangeRate(exchangeRate: ExchangeRate): PriceBuilderFactoryNew {
         this.exchangeRate = exchangeRate
+
         return this
     }
 
     fun setPrices(prices: List<PriceNew>, desiredCurrency: CurrencyUnit): PriceBuilderFactoryNew {
         this.prices = ArrayList(prices)
         currency = desiredCurrency
+
         return this
     }
 
     fun setPriceables(priceables: List<PriceableNew>, desiredCurrency: CurrencyUnit): PriceBuilderFactoryNew {
-        this.priceables = ArrayList(priceables)
+        prices = priceables.map { it.price }
+
         currency = desiredCurrency
         return this
     }
@@ -84,14 +95,11 @@ class PriceBuilderFactoryNew : BuilderFactory<PriceNew> {
     override fun build(): PriceNew {
 
         return when {
-            !prices.isNullOrEmpty() -> MultiplePriceImplNew(currency, prices!!)
+            prices.isNotEmpty() -> MultiplePriceImplNew(currency, prices)
 
-            !priceables.isNullOrEmpty() -> {
-                val actualPrices = priceables!!.map { it.price }
-                MultiplePriceImplNew(currency, actualPrices)
-            }
             else -> {
-                SinglePriceImplNew(priceDecimal, currency, exchangeRate ?: ExchangeRateBuilderFactory().setBaseCurrency(currency).build())
+                val rate = exchangeRate ?: ExchangeRateBuilderFactory().setBaseCurrency(currency).build()
+                SinglePriceImplNew(priceDecimal, currency, rate)
             }
         }
     }

@@ -15,6 +15,7 @@ import co.smartreceipts.android.model.Category;
 import co.smartreceipts.android.model.Keyed;
 import co.smartreceipts.android.model.PaymentMethod;
 import co.smartreceipts.android.model.Price;
+import co.smartreceipts.android.model.PriceNew;
 import co.smartreceipts.android.model.Trip;
 import co.smartreceipts.android.model.factory.CategoryBuilderFactory;
 import co.smartreceipts.android.model.factory.PaymentMethodBuilderFactory;
@@ -40,6 +41,16 @@ public class DefaultObjects {
                 new DisplayableDate(new Date(System.currentTimeMillis()), TimeZone.getDefault()),
                 new DisplayableDate(new Date(System.currentTimeMillis()), TimeZone.getDefault()),
                 PriceCurrency.getDefaultCurrency(), "comment", "costCenter", newAutoCompleteMetadata());
+    }
+
+    @NonNull
+    public static Trip newDefaultTrip(PriceNew price) {
+        return new Trip(Keyed.MISSING_ID, Keyed.Companion.getMISSING_UUID(),
+                new File(new File("").getAbsolutePath()),
+                new DisplayableDate(new Date(System.currentTimeMillis()), TimeZone.getDefault()),
+                new DisplayableDate(new Date(System.currentTimeMillis()), TimeZone.getDefault()),
+                PriceCurrency.getDefaultCurrency(), "comment", "costCenter", newDefaultSyncState(),
+                price, newAutoCompleteMetadata());
     }
 
     @NonNull

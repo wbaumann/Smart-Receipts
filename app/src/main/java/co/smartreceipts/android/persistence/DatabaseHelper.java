@@ -212,8 +212,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      * This class is not synchronized! Sync outside of it
      *
-     * @param trip
-     * @return
+     * @param trip The trip we want the prices of
      */
     public void getTripPriceAndDailyPrice(final Trip trip) {
         queryTripPrice(trip);

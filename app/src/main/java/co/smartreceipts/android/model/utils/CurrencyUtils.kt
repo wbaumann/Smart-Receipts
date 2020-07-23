@@ -239,7 +239,7 @@ object CurrencyUtils {
             CurrencyWithDecimalPlaces("PPC"), // Peercoin
             CurrencyWithDecimalPlaces("SC"), // SiaCoin
             CurrencyWithDecimalPlaces("SJCX"), // Storjcoin
-            CurrencyWithDecimalPlaces("XBT"), // Bitcoin (New Code)
+            CurrencyWithDecimalPlaces("XBT", 8), // Bitcoin (New Code)
             CurrencyWithDecimalPlaces("XMR"), // Monero
             CurrencyWithDecimalPlaces("XRP", 15), // Ripple
 

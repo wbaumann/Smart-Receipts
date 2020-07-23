@@ -130,6 +130,7 @@ class Distance(
     companion object {
         @JvmField val PARCEL_KEY: String = Distance::class.java.name
         const val RATE_PRECISION = 3
+        const val DISTANCE_PRECISION = 2
     }
 
 }

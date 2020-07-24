@@ -323,12 +323,12 @@
     <string name="dialog_remote_backup_delete_progress">Видалення резервної копії з пристрою %s…</string>
     <string name="dialog_remote_backup_delete_toast_success">Резервна копія вдало видалена</string>
     <string name="dialog_remote_backup_delete_toast_failure">Не вдалося видалити цю резервну копію</string>
-    <string name="dialog_remote_backup_download_progress">Завантаження зображень в ZIP-файл…</string>
+    <string name="dialog_remote_backup_download_progress">Завантаження зображень в ZIP-файл&#8230;</string>
 
     <string name="dialog_remote_backup_drive_restore_title">Відновлення диску</string>
     <string name="dialog_remote_backup_drive_restore_message">Виникли проблеми при синхронізації ваших даних. Для їх відновлення ми хотіли б очистити резервну копію диску та повторити синхронізацію. Якщо ви часто бачите це повідомлення, зверніться до нас для отримання додаткової підтримки.</string>
-    <string name="dialog_remote_backup_restore_progress">Очищення резервної копії для підготовки до повторної синхронізації…</string>
-    <string name="dialog_remote_backup_restore_toast_success">Резервна копія вдало очищена. Повторна синхронізація…</string>
+    <string name="dialog_remote_backup_restore_progress">Очищення резервної копії для підготовки до повторної синхронізації&#8230;</string>
+    <string name="dialog_remote_backup_restore_toast_success">Резервна копія вдало очищена. Повторна синхронізація&#8230;</string>
     <string name="dialog_remote_backup_restore_toast_failure">Не вдалося повторно синхронізувати цю резервну копію</string>
 
     <string name="automatic_backups_info_dialog_message">Автоматичне резервне копіювання зараз вимкнено.</string>

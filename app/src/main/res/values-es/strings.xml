@@ -321,12 +321,12 @@
     <string name="dialog_remote_backup_delete_progress">Eliminando tu copia de seguridad del dispositivo %s…</string>
     <string name="dialog_remote_backup_delete_toast_success">Copia de seguridad eliminada correctamente</string>
     <string name="dialog_remote_backup_delete_toast_failure">No se pudo eliminar esta copia de seguridad</string>
-    <string name="dialog_remote_backup_download_progress">Descargando imágenes a archivo ZIP…</string>
+    <string name="dialog_remote_backup_download_progress">Descargando imágenes a archivo ZIP&#8230;</string>
 
     <string name="dialog_remote_backup_drive_restore_title">Restauración de Drive</string>
     <string name="dialog_remote_backup_drive_restore_message">Estamos teniendo problemas para sincronizar tus datos. Para recuperar, nos gustaría borrar tu copia de seguridad de Drive y sincronizar de nuevo. Si ves este mensaje con frecuencia, por favor contáctanos para obtener más asistencia.</string>
-    <string name="dialog_remote_backup_restore_progress">Borrando tu copia de seguridad para preparar una resincronización…</string>
-    <string name="dialog_remote_backup_restore_toast_success">Se borró correctamente la copia de seguridad. Sincronizando de nuevo…</string>
+    <string name="dialog_remote_backup_restore_progress">Borrando tu copia de seguridad para preparar una resincronización&#8230;</string>
+    <string name="dialog_remote_backup_restore_toast_success">Se borró correctamente la copia de seguridad. Sincronizando de nuevo&#8230;</string>
     <string name="dialog_remote_backup_restore_toast_failure">No se pudo sincronizar de nuevo esta copia de seguridad</string>
 
     <string name="automatic_backups_info_dialog_message">Las copias de seguridad automáticas no están habilitadas en el momento.</string>

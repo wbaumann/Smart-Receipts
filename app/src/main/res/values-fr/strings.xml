@@ -321,12 +321,12 @@
     <string name="dialog_remote_backup_delete_progress">Suppression de votre sauvegarde de l\'appareil %s…</string>
     <string name="dialog_remote_backup_delete_toast_success">Sauvegarde supprimée avec succès</string>
     <string name="dialog_remote_backup_delete_toast_failure">Impossible de supprimer cette sauvegarde</string>
-    <string name="dialog_remote_backup_download_progress">Téléchargement d\'images vers le fichier ZIP…</string>
+    <string name="dialog_remote_backup_download_progress">Téléchargement d\'images vers le fichier ZIP&#8230;</string>
 
     <string name="dialog_remote_backup_drive_restore_title">Restauration avec Google Drive</string>
     <string name="dialog_remote_backup_drive_restore_message">Nous rencontrons des difficultés pour synchroniser vos données. Pour les récupérer, nous aimerions effacer votre sauvegarde Drive et resynchroniser vos données. Si vous voyez ce message souvent, veuillez nous contacter pour une assistance supplémentaire.</string>
-    <string name="dialog_remote_backup_restore_progress">Effacement de votre sauvegarde pour préparer la resynchronisation…</string>
-    <string name="dialog_remote_backup_restore_toast_success">Sauvegarde effacée avec succès. Resynchronisation…</string>
+    <string name="dialog_remote_backup_restore_progress">Effacement de votre sauvegarde pour préparer la resynchronisation&#8230;</string>
+    <string name="dialog_remote_backup_restore_toast_success">Sauvegarde effacée avec succès. Resynchronisation&#8230;</string>
     <string name="dialog_remote_backup_restore_toast_failure">Impossible de resynchroniser cette sauvegarde</string>
 
     <string name="automatic_backups_info_dialog_message">Les sauvegardes automatiques ne sont pas activées.</string>

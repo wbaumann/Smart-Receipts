@@ -321,12 +321,12 @@
     <string name="dialog_remote_backup_delete_progress">Löschen Sie Ihren Backup vom %s Gerät …</string>
     <string name="dialog_remote_backup_delete_toast_success">Backup erfolgreich gelöscht</string>
     <string name="dialog_remote_backup_delete_toast_failure">Löschen dieses Backups ist nicht erfolgt</string>
-    <string name="dialog_remote_backup_download_progress">Herunterladen von Bildern auf ZIP-Datei …</string>
+    <string name="dialog_remote_backup_download_progress">Herunterladen von Bildern auf ZIP-Datei&#8230;</string>
 
     <string name="dialog_remote_backup_drive_restore_title">Laufwerk Wiederherstellung</string>
     <string name="dialog_remote_backup_drive_restore_message">Wir haben Probleme mit dem Synchronisieren Ihrer Daten. Zum Wiederherstellen  möchten wir Ihr Backup-Laufwerk löschen und erneut synchronisieren. Wenn Sie diese Meldung häufig zu sehen bekommen, kontaktieren Sie uns für weitere Unterstützung.</string>
-    <string name="dialog_remote_backup_restore_progress">Leeren des Backup zur Vorbereitung einer erneuten Synchronisierung…</string>
-    <string name="dialog_remote_backup_restore_toast_success">Backup erfolgreich gelöscht. Re-Synchronisierung …</string>
+    <string name="dialog_remote_backup_restore_progress">Leeren des Backup zur Vorbereitung einer erneuten Synchronisierung&#8230;</string>
+    <string name="dialog_remote_backup_restore_toast_success">Backup erfolgreich gelöscht. Re-Synchronisierung&#8230;</string>
     <string name="dialog_remote_backup_restore_toast_failure">Resynchroniserung des Backups ist fehlgeschlagen</string>
 
     <string name="automatic_backups_info_dialog_message">Automatische Backups sind derzeit nicht aktiviert.</string>

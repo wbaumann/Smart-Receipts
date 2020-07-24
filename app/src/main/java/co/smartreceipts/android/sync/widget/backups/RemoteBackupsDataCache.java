@@ -167,7 +167,6 @@ class RemoteBackupsDataCache {
             final File cacheDirZipFile = new SmartReceiptsTemporaryFileCache(mContext).getInternalCacheFile(FileUtils.omitIllegalCharactersFromFileName(remoteBackupMetadata.getSyncDeviceName()) + ".zip");
             downloadBackupReplaySubjectMap = ReplaySubject.create();
 
-
             Completable.fromCallable(() -> {
                 final StorageManager storageManager = StorageManager.getInstance(mContext);
                 if (storageManager.deleteRecursively(cacheDir)) {

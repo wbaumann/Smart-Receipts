@@ -77,7 +77,6 @@ public class BackupsFragment extends WBFragment implements BackupProviderChangeL
     private View existingBackupsSection;
     private RecyclerView recyclerView;
 
-    private SimpleRecyclerViewBinding rootBinding;
     private BackupsHeaderBinding headerBinding;
 
     @Override
@@ -99,7 +98,7 @@ public class BackupsFragment extends WBFragment implements BackupProviderChangeL
     @Override
     @SuppressLint("InflateParams")
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootBinding = SimpleRecyclerViewBinding.inflate(inflater, container, false);
+        SimpleRecyclerViewBinding rootBinding = SimpleRecyclerViewBinding.inflate(inflater, container, false);
         recyclerView = rootBinding.list;
 
         headerBinding = BackupsHeaderBinding.inflate(inflater, container, false);

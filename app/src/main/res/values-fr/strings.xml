@@ -312,6 +312,10 @@
     <string name="remote_backups_list_item_menu_download_images">Télécharger en ZIP</string>
     <string name="remote_backups_list_item_menu_download_images_debug">[Débogage] Télécharger</string>
 
+    <string name="dialog_remote_backup_rename_progress">Renommer votre sauvegarde de %s en %s&#8230;</string>
+    <string name="dialog_remote_backup_rename_toast_success">Sauvegarde renommée avec succès, actualisation de la liste maintenant&#8230;</string>
+    <string name="dialog_remote_backup_rename_toast_failure">Échec du changement de nom de cette sauvegarde</string>
+
     <string name="dialog_remote_backup_delete_message">Êtes-vous sûr de vouloir supprimer votre sauvegarde de l’appareil %s ? Cette opération est irréversible.</string>
     <string name="dialog_remote_backup_delete_message_this_device">Êtes-vous sûr de vouloir supprimer votre sauvegarde de cet appareil ? Cette opération est irréversible. Veuillez noter que vous pouvez désactiver les sauvegardes automatiques après cette opération ou toutes les données locales peuvent être resynchronisées.</string>
     <string name="dialog_remote_backup_delete_progress">Suppression de votre sauvegarde de l\'appareil %s…</string>

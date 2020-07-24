@@ -312,6 +312,10 @@
     <string name="remote_backups_list_item_menu_download_images">Descargar a ZIP</string>
     <string name="remote_backups_list_item_menu_download_images_debug">[Depuración] Descargar</string>
 
+    <string name="dialog_remote_backup_rename_progress">Cambiar el nombre de su copia de seguridad de %s a %s&#8230;</string>
+    <string name="dialog_remote_backup_rename_toast_success">Copia de seguridad exitosamente renombrada, lista de actualización ahora&#8230;</string>
+    <string name="dialog_remote_backup_rename_toast_failure">Error al cambiar el nombre de esta copia de seguridad</string>
+
     <string name="dialog_remote_backup_delete_message">¿Estás seguro que deseas eliminar tu copia de seguridad del dispositivo %s? Esta operación no se puede deshacer.</string>
     <string name="dialog_remote_backup_delete_message_this_device">¿Estás seguro que deseas eliminar tu copia de seguridad de este dispositivo? Esta operación no se puede deshacer. Por favor ten en cuenta que debes deshabilitar las copias de seguridad automáticas luego de terminar esta operación, o todos los datos locales pueden ser sincronizados de nuevo.</string>
     <string name="dialog_remote_backup_delete_progress">Eliminando tu copia de seguridad del dispositivo %s…</string>

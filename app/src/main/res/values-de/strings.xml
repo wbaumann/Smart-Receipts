@@ -312,6 +312,10 @@
     <string name="remote_backups_list_item_menu_download_images">Auf ZIP herunterladen</string>
     <string name="remote_backups_list_item_menu_download_images_debug">[Debug] Herunterladen</string>
 
+    <string name="dialog_remote_backup_rename_progress">Benennen Sie Ihr Backup von %s in %s um&#8230;</string>
+    <string name="dialog_remote_backup_rename_toast_success">Backup erfolgreich umbenannt, Liste jetzt aktualisieren&#8230;</string>
+    <string name="dialog_remote_backup_rename_toast_failure">Fehler beim Umbenennen dieser Sicherung</string>
+
     <string name="dialog_remote_backup_delete_message">Sind Sie sicher, dass Sie Ihre Sicherungskopie vom %s Gerät löschen wollen? Dieser Vorgang kann nicht rückgängig gemacht werden.</string>
     <string name="dialog_remote_backup_delete_message_this_device">Sind Sie sicher, dass Sie Ihren Backup auf diesem Gerät löschen wollen? Dieser Vorgang kann nicht rückgängig gemacht werden. Bitte beachten Sie, dass Sie die automatische Sicherung ausschalten sollten, sobald dieser Vorgang abgeschlossen ist - ansonsten werden alle lokalen Daten neu synchronisiert.</string>
     <string name="dialog_remote_backup_delete_progress">Löschen Sie Ihren Backup vom %s Gerät …</string>

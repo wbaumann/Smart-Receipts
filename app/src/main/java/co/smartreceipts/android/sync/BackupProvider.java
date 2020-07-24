@@ -72,6 +72,16 @@ public interface BackupProvider {
     Single<Boolean> restoreBackup(@NonNull RemoteBackupMetadata remoteBackupMetadata, boolean overwriteExistingData);
 
     /**
+     * Renames an existing backup
+     *
+     * @param remoteBackupMetadata the metadata to rename
+     * @param newFileName what we are renaming the metadata to
+     * @return an {@link Single} for the delete operation with a success boolean
+     */
+    @NonNull
+    Single<com.google.api.services.drive.model.File> renameBackup(@NonNull RemoteBackupMetadata remoteBackupMetadata, @NonNull String newFileName);
+
+    /**
      * Deletes an existing backup
      *
      * @param remoteBackupMetadata the metadata to delete

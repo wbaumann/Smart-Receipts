@@ -39,6 +39,7 @@
     <string name="next_id">Siguiente ID: %d</string>
     <string name="no">No</string>
     <string name="pdf">PDF</string>
+    <string name="rename">Rebautizar</string>
     <string name="report">Informe</string>
     <string name="report_attached">1 informe adjunto</string>
     <string name="reports_attached">%s informes adjuntos</string>

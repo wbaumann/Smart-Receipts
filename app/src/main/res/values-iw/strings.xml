@@ -39,6 +39,7 @@
     <string name="next_id">%s :המזהה הבא</string>
     <string name="no">לא</string>
     <string name="pdf">PDF</string>
+    <string name="rename">שנה שם</string>
     <string name="report">דו״ח</string>
     <string name="report_attached">דוח 1 מצורף</string>
     <string name="reports_attached">דוחות מצורפים %s</string>

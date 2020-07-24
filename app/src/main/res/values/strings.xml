@@ -41,6 +41,7 @@
     <string name="next_id">Next ID: %d</string>
     <string name="no">No</string>
     <string name="pdf">PDF</string>
+    <string name="rename">Rename</string>
     <string name="report">Report</string>
     <string name="report_attached">1 report attached</string>
     <string name="reports_attached">%s reports attached</string>

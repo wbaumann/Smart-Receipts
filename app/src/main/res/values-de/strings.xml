@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <resources>
 
     <!-- =================== App Details ===================== -->
@@ -39,6 +39,7 @@
     <string name="next_id">Nächste ID: %d</string>
     <string name="no">Nein</string>
     <string name="pdf">PDF</string>
+    <string name="rename">Umbenennen</string>
     <string name="report">Bericht</string>
     <string name="report_attached">1 Bericht beigefügt</string>
     <string name="reports_attached">%s Berichte beigefügt</string>

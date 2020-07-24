@@ -39,6 +39,7 @@
     <string name="next_id">Наступний ID: %d</string>
     <string name="no">Ні</string>
     <string name="pdf">PDF</string>
+    <string name="rename">Перейменуйте</string>
     <string name="report">Звіт</string>
     <string name="report_attached">1 Звіт прикладений</string>
     <string name="reports_attached">%s звітів прикладено</string>

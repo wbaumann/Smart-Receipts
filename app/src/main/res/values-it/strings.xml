@@ -288,6 +288,9 @@
     <string name="receipt_attach_image">Seleziona una foto</string>
     <string name="receipt_attach_file">Allega file</string>
 
+    <!-- ================= DIALOG_RENAME_BACKUP =================== -->
+    <string name="dialog_rename_text">Nuovo nome file</string>
+    <string name="new_filename_empty_error">Il nome del nuovo file non può essere vuoto</string>
 
     <!-- ==================== dialog export / import ====================== -->
     <string name="dialog_export_title">Esportare le ricevute?</string>

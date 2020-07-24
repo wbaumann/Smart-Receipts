@@ -277,6 +277,10 @@
     <string name="receipt_attach_image">Choisissez une photo</string>
     <string name="receipt_attach_file">Pièce jointe</string>
 
+    <!-- ================= DIALOG_RENAME_BACKUP =================== -->
+    <string name="dialog_rename_text">Nouveau nom de fichier</string>
+    <string name="new_filename_empty_error">Le nouveau nom de fichier ne peut pas être vide</string>
+
     <!-- ==================== dialog export / import ====================== -->
     <string name="dialog_export_title">Exporter vos reçus ?</string>
     <string name="dialog_export_text">Vous pouvez réimporter vos données en cliquant sur le fichier SmartReceipts.SMR qui est généré en cliquant ci-dessous.</string>

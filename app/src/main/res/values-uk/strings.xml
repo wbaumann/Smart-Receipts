@@ -279,6 +279,10 @@
     <string name="receipt_attach_image">Обрати зображення</string>
     <string name="receipt_attach_file">Прикріпити файл</string>
 
+    <!-- ================= DIALOG_RENAME_BACKUP =================== -->
+    <string name="dialog_rename_text">Нове ім\'я файлу</string>
+    <string name="new_filename_empty_error">Ім\'я нового файлу не може бути порожнім</string>
+
     <!-- ==================== dialog export / import ====================== -->
     <string name="dialog_export_title">Експортувати ваші чеки?</string>
     <string name="dialog_export_text">Ви можете повторно імпортувати ваші дані, натиснувши на файл SmartReceipts.SMR, що генерується натисканням нижче.</string>

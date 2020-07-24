@@ -292,6 +292,9 @@
     <string name="receipt_attach_image">בחר תמונה</string>
     <string name="receipt_attach_file">צרף קובץ</string>
 
+    <!-- ================= DIALOG_RENAME_BACKUP =================== -->
+    <string name="dialog_rename_text">שם קובץ חדש</string>
+    <string name="new_filename_empty_error">שם קובץ חדש לא יכול להיות ריק</string>
 
     <!-- ==================== dialog export / import ====================== -->
     <string name="dialog_export_title">ייצא את הקבלות שלך?</string>

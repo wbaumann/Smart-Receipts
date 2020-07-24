@@ -281,6 +281,7 @@
 
     <!-- ================= DIALOG_RENAME_BACKUP =================== -->
     <string name="dialog_rename_text">Новое имя файла</string>
+    <string name="new_filename_empty_error">Новое имя файла не может быть пустым</string>
 
     <!-- ==================== dialog export / import ====================== -->
     <string name="dialog_export_title">Экспортировать ваши чеки?</string>

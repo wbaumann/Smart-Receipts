@@ -330,7 +330,7 @@
     <string name="dialog_remote_backup_delete_message">Siete sicuri di voler cancellare il backup dal dispositivo %s ? Questa operazione non può essere annullata.</string>
     <string name="dialog_remote_backup_delete_message_this_device">Siete sicuri di voler cancellare il backup dal dispositivo? Questa operazione non può essere annullata. Prego notaer che potete disabilitare il backup automatico dopo che questa operazione è completa o tutti i dati locali possono essere risincronizzati.</string>
     <string name="dialog_remote_backup_delete_progress">Il vostro backup dal dispositivo %s in cancellazione&#8230;</string>
-    <string name="dialog_remote_backup_delete_toast_success">Questo backup è stato cancellato con successo</string>
+    <string name="dialog_remote_backup_delete_toast_success">Backup eliminato correttamente, elenco di aggiornamento ora&#8230;</string>
     <string name="dialog_remote_backup_delete_toast_failure">Cancellazione del backup fallita</string>
     <string name="dialog_remote_backup_download_progress">Immagini scaricate nel file ZIP&#8230;</string>
 

@@ -319,7 +319,7 @@
     <string name="dialog_remote_backup_delete_message">Tem certeza de que deseja excluir o backup do dispositivo %s? Essa operação não pode ser desfeita.</string>
     <string name="dialog_remote_backup_delete_message_this_device">Tem certeza de que deseja excluir o backup deste dispositivo? Essa operação não pode ser desfeita. É possível desabilitar o backup automático depois que a operação for concluída, ou todos os dados locais serão sincronizados novamente.</string>
     <string name="dialog_remote_backup_delete_progress">Excluindo seu backup do dispositivo %s…</string>
-    <string name="dialog_remote_backup_delete_toast_success">Backup excluído com êxito</string>
+    <string name="dialog_remote_backup_delete_toast_success">Backup excluído com sucesso, atualizando a lista agora&#8230;</string>
     <string name="dialog_remote_backup_delete_toast_failure">Falha ao excluir esse backup</string>
     <string name="dialog_remote_backup_download_progress">Baixando imagens para o arquivo ZIP…</string>
 

@@ -350,7 +350,7 @@
     <string name="dialog_remote_backup_delete_message">אתה בטוח שאתה רוצה למחוק את הגיבויים שלך ממכשיר %s? פעולה זו הינה בלתי הפיכה.</string>
     <string name="dialog_remote_backup_delete_message_this_device">אתה בטוח שאתה רוצה למחוק את הגיבוי שלך מהמכשיר הזה? הפעולה הינה בלתי הפיכה. אנא שים לב שרצוי לכבות את פונקציית הגיבויים האוטומטיים אחרי שהפעולה הזו הושלמה או שכל המידע המקומי עלול להיות מסונכרן שוב.</string>
     <string name="dialog_remote_backup_delete_progress">מחק את הגיבוי שלך ממכשיר %s &#8230;</string>
-    <string name="dialog_remote_backup_delete_toast_success">הגיבוי נמחק בהצלחה</string>
+    <string name="dialog_remote_backup_delete_toast_success">הגיבוי שנמחק בהצלחה מרענן כעת&#8230;</string>
     <string name="dialog_remote_backup_delete_toast_failure">מחיקת הגיבוי נכשלה</string>
     <string name="dialog_remote_backup_download_progress">מוריד קבצים לקובץ זיפ&#8230;</string>
     <string name="dialog_remote_backup_drive_restore_title">שחזור דרייב</string>

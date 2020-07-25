@@ -9,6 +9,7 @@ import com.google.common.base.Preconditions;
 
 import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;
+import org.joda.money.format.MoneyFormatter;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -18,15 +19,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import co.smartreceipts.android.model.PriceNew;
+import co.smartreceipts.android.model.Price;
 import co.smartreceipts.android.model.factory.ExchangeRateBuilderFactory;
 import co.smartreceipts.android.model.gson.ExchangeRate;
 
 /**
- * Defines an immutable implementation of the {@link co.smartreceipts.android.model.PriceNew} interface
+ * Defines an immutable implementation of the {@link co.smartreceipts.android.model.Price} interface
  * for a collection of other price objects.
  */
-public final class MultiplePriceImplNew extends AbstractPriceImplNew {
+public final class MultiplePriceImpl extends AbstractPriceImpl {
+
+    // TODO: 24.07.2020 to Kotlin
 
     private final BigMoney totalMoney;
 
@@ -43,7 +46,7 @@ public final class MultiplePriceImplNew extends AbstractPriceImplNew {
     private final String currencyFormattedPrice; // Note: We create/cache this as it's common, slower operation
     private final String currencyCodeFormattedPrice; // Note: We create/cache this as it's common, slower operation
 
-    public MultiplePriceImplNew(@NonNull CurrencyUnit baseCurrency, @NonNull List<PriceNew> prices) {
+    public MultiplePriceImpl(@NonNull CurrencyUnit baseCurrency, @NonNull List<Price> prices) {
 
         notExchangedPriceMap = new HashMap<>();
         currencyToPriceMap = new HashMap<>();
@@ -53,7 +56,7 @@ public final class MultiplePriceImplNew extends AbstractPriceImplNew {
         BigMoney possiblyIncorrectTotalPrice = BigMoney.zero(baseCurrency);
         boolean areAllExchangeRatesValid = true;
 
-        for (final PriceNew price : prices) {
+        for (final Price price : prices) {
 
             notExchangedPriceMap.put(price.getCurrency(),
                     notExchangedPriceMap.containsKey(price.getCurrency()) ?
@@ -92,13 +95,14 @@ public final class MultiplePriceImplNew extends AbstractPriceImplNew {
         this.exchangeRate = new ExchangeRateBuilderFactory().setBaseCurrency(baseCurrency).build();
 
         // Pre-cache formatted values here
-        this.decimalFormattedPrice = calculateDecimalFormattedPrice();
-        this.currencyFormattedPrice = calculateCurrencyFormattedPrice();
-        this.currencyCodeFormattedPrice = calculateCurrencyCodeFormattedPrice();
+        MoneyFormatter formatter = Companion.getMoneyFormatter();
+        this.decimalFormattedPrice = calculateDecimalFormattedPrice(formatter);
+        this.currencyFormattedPrice = calculateCurrencyFormattedPrice(formatter);
+        this.currencyCodeFormattedPrice = calculateCurrencyCodeFormattedPrice(formatter);
     }
 
     @SuppressWarnings("unchecked")
-    private MultiplePriceImplNew(@NonNull Parcel in) {
+    private MultiplePriceImpl(@NonNull Parcel in) {
         this((BigMoney) in.readSerializable(),
                 (BigMoney) in.readSerializable(),
                 (ExchangeRate) in.readSerializable(),
@@ -119,12 +123,12 @@ public final class MultiplePriceImplNew extends AbstractPriceImplNew {
         writeMapToParcel(dest, notExchangedPriceMap);
     }
 
-    private MultiplePriceImplNew(@NonNull BigMoney totalMoney,
-                                 @NonNull BigMoney possiblyIncorrectTotalPrice,
-                                 @NonNull ExchangeRate exchangeRate,
-                                 boolean areAllExchangeRatesValid,
-                                 @NonNull Map<CurrencyUnit, BigMoney> currencyToPriceMap,
-                                 @NonNull Map<CurrencyUnit, BigMoney> notExchangedPrices) {
+    private MultiplePriceImpl(@NonNull BigMoney totalMoney,
+                              @NonNull BigMoney possiblyIncorrectTotalPrice,
+                              @NonNull ExchangeRate exchangeRate,
+                              boolean areAllExchangeRatesValid,
+                              @NonNull Map<CurrencyUnit, BigMoney> currencyToPriceMap,
+                              @NonNull Map<CurrencyUnit, BigMoney> notExchangedPrices) {
         this.totalMoney = Preconditions.checkNotNull(totalMoney);
         this.possiblyIncorrectTotalPrice = Preconditions.checkNotNull(possiblyIncorrectTotalPrice);
         this.exchangeRate = Preconditions.checkNotNull(exchangeRate);
@@ -133,9 +137,10 @@ public final class MultiplePriceImplNew extends AbstractPriceImplNew {
         this.notExchangedPriceMap = Preconditions.checkNotNull(notExchangedPrices);
 
         // Note: The actual model utils stuff is somewhat slow due to the NumberFormats behind the scenes. We pre-cache here
-        this.decimalFormattedPrice = calculateDecimalFormattedPrice();
-        this.currencyFormattedPrice = calculateCurrencyFormattedPrice();
-        this.currencyCodeFormattedPrice = calculateCurrencyCodeFormattedPrice();
+        MoneyFormatter formatter = Companion.getMoneyFormatter();
+        this.decimalFormattedPrice = calculateDecimalFormattedPrice(formatter);
+        this.currencyFormattedPrice = calculateCurrencyFormattedPrice(formatter);
+        this.currencyCodeFormattedPrice = calculateCurrencyCodeFormattedPrice(formatter);
     }
 
     @Override
@@ -160,7 +165,6 @@ public final class MultiplePriceImplNew extends AbstractPriceImplNew {
     @NonNull
     @Override
     public BigMoney getMoney() {
-        // TODO: 15.06.2020 probably getPrice() is surplus
         if (areAllExchangeRatesValid) {
             return totalMoney;
         } else {
@@ -187,10 +191,15 @@ public final class MultiplePriceImplNew extends AbstractPriceImplNew {
     }
 
     @NonNull
-    private String getCurrencyCodeFormattedStringFromMap(Map<CurrencyUnit, BigMoney> map) {
+    private String getCurrencyCodeFormattedStringFromMap(Map<CurrencyUnit, BigMoney> map, MoneyFormatter formatter) {
         final List<String> currencyStrings = new ArrayList<>();
         for (CurrencyUnit currency : map.keySet()) {
-            currencyStrings.add(map.get(currency).withCurrencyScale().toString());
+            final BigMoney money = map.get(currency).withCurrencyScale();
+
+            String decimalValue = formatter.print(money);
+            String codeFormatted = money.getCurrencyUnit().getCode().concat(" ").concat(decimalValue);
+
+            currencyStrings.add(codeFormatted);
         }
         return TextUtils.join("; ", currencyStrings);
     }
@@ -241,30 +250,32 @@ public final class MultiplePriceImplNew extends AbstractPriceImplNew {
     }
 
     @NonNull
-    private String calculateDecimalFormattedPrice() {
+    private String calculateDecimalFormattedPrice(MoneyFormatter formatter) {
         if (areAllExchangeRatesValid) {
-            return totalMoney.getAmount().toPlainString();
+            return formatter.print(totalMoney.withCurrencyScale());
         } else {
-            return getCurrencyCodeFormattedStringFromMap(currencyToPriceMap);
+            return getCurrencyCodeFormattedStringFromMap(currencyToPriceMap, formatter);
         }
     }
 
     @NonNull
-    private String calculateCurrencyFormattedPrice() {
+    private String calculateCurrencyFormattedPrice(MoneyFormatter formatter) {
         if (areAllExchangeRatesValid) {
-            return totalMoney.getCurrencyUnit().getSymbol().concat(totalMoney.withCurrencyScale().getAmount().toPlainString());
+            return totalMoney.getCurrencyUnit().getSymbol()
+                    .concat(formatter.print(totalMoney.withCurrencyScale()));
         } else {
             final List<String> currencyStrings = new ArrayList<>();
             for (CurrencyUnit currency : currencyToPriceMap.keySet()) {
-                currencyStrings.add(currency.getSymbol().concat(currencyToPriceMap.get(currency).withCurrencyScale().getAmount().toPlainString()));
+                final BigMoney money = currencyToPriceMap.get(currency).withCurrencyScale();
+                currencyStrings.add(currency.getSymbol().concat(formatter.print(money)));
             }
             return TextUtils.join("; ", currencyStrings);
         }
     }
 
     @NonNull
-    private String calculateCurrencyCodeFormattedPrice() {
-            return getCurrencyCodeFormattedStringFromMap(notExchangedPriceMap);
+    private String calculateCurrencyCodeFormattedPrice(MoneyFormatter formatter) {
+            return getCurrencyCodeFormattedStringFromMap(notExchangedPriceMap, formatter);
     }
 
     private void writeMapToParcel(@NonNull Parcel dest, @NonNull Map<CurrencyUnit, BigMoney> map) {
@@ -287,13 +298,13 @@ public final class MultiplePriceImplNew extends AbstractPriceImplNew {
         return currencyToPriceMap;
     }
 
-    public static final Creator<MultiplePriceImplNew> CREATOR = new Creator<MultiplePriceImplNew>() {
-        public MultiplePriceImplNew createFromParcel(Parcel source) {
-            return new MultiplePriceImplNew(source);
+    public static final Creator<MultiplePriceImpl> CREATOR = new Creator<MultiplePriceImpl>() {
+        public MultiplePriceImpl createFromParcel(Parcel source) {
+            return new MultiplePriceImpl(source);
         }
 
-        public MultiplePriceImplNew[] newArray(int size) {
-            return new MultiplePriceImplNew[size];
+        public MultiplePriceImpl[] newArray(int size) {
+            return new MultiplePriceImpl[size];
         }
     };
 }

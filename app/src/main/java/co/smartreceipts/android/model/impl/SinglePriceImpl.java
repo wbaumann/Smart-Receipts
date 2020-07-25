@@ -14,10 +14,12 @@ import java.math.RoundingMode;
 import co.smartreceipts.android.model.gson.ExchangeRate;
 
 /**
- * Defines an immutable implementation of the {@link co.smartreceipts.android.model.PriceNew} interface
+ * Defines an immutable implementation of the {@link co.smartreceipts.android.model.Price} interface
  */
-public final class SinglePriceImplNew extends AbstractPriceImplNew {
+public final class SinglePriceImpl extends AbstractPriceImpl {
 
+    // TODO: 10.07.2020 convert to kotlin, add @Parcelize
+    // TODO: 06.06.2020 no need to export BigDecimal if we can export Money ?
 
     private final Money money;
     private final ExchangeRate exchangeRate;
@@ -26,33 +28,30 @@ public final class SinglePriceImplNew extends AbstractPriceImplNew {
     private final String currencyCodeFormattedPrice; // Note: We create/cache this as it's common, slower operation
 
 
-    public SinglePriceImplNew(@NonNull BigDecimal price, @NonNull CurrencyUnit currency, @NonNull ExchangeRate exchangeRate) {
+    public SinglePriceImpl(@NonNull BigDecimal price, @NonNull CurrencyUnit currency, @NonNull ExchangeRate exchangeRate) {
         this.money = Money.of(currency, price, RoundingMode.HALF_UP);
         this.exchangeRate = exchangeRate;
 
-
         // Pre-cache formatted values here
-        this.decimalFormattedPrice = money.getAmount().toPlainString();
-        this.currencyFormattedPrice = money.getCurrencyUnit().getSymbol().concat(money.getAmount().toPlainString());
-        this.currencyCodeFormattedPrice = money.toString();
+        this.decimalFormattedPrice = Companion.getMoneyFormatter().print(money);
+        this.currencyFormattedPrice = money.getCurrencyUnit().getSymbol().concat(decimalFormattedPrice);
+        this.currencyCodeFormattedPrice = money.getCurrencyUnit().getCode().concat(" ").concat(decimalFormattedPrice);
     }
 
-    private SinglePriceImplNew(@NonNull Parcel in) {
+    private SinglePriceImpl(@NonNull Parcel in) {
         this.money = (Money) in.readSerializable();
         this.exchangeRate = (ExchangeRate) in.readSerializable();
 
         // Pre-cache formatted values here
-        this.decimalFormattedPrice = money.getAmount().toPlainString();
-        this.currencyFormattedPrice = money.getCurrencyUnit().getSymbol().concat(money.getAmount().toPlainString());
-        this.currencyCodeFormattedPrice = money.toString();
+        this.decimalFormattedPrice = Companion.getMoneyFormatter().print(money);
+        this.currencyFormattedPrice = money.getCurrencyUnit().getSymbol().concat(decimalFormattedPrice);
+        this.currencyCodeFormattedPrice = money.getCurrencyUnit().getCode().concat(" ").concat(decimalFormattedPrice);
     }
 
-    // TODO: 29.06.2020 looks like this fun is not needed actually
     @Override
     public float getPriceAsFloat() {
         return money.getAmount().floatValue();
     }
-    // TODO: 06.06.2020 no need to export BigDecimal if we can export Money ?
 
     @Override
     @NonNull
@@ -123,14 +122,13 @@ public final class SinglePriceImplNew extends AbstractPriceImplNew {
         dest.writeSerializable(exchangeRate);
     }
 
-    public static final Creator<SinglePriceImplNew> CREATOR = new Creator<SinglePriceImplNew>() {
-        public SinglePriceImplNew createFromParcel(Parcel source) {
-            return new SinglePriceImplNew(source);
+    public static final Creator<SinglePriceImpl> CREATOR = new Creator<SinglePriceImpl>() {
+        public SinglePriceImpl createFromParcel(Parcel source) {
+            return new SinglePriceImpl(source);
         }
 
-        public SinglePriceImplNew[] newArray(int size) {
-            return new SinglePriceImplNew[size];
+        public SinglePriceImpl[] newArray(int size) {
+            return new SinglePriceImpl[size];
         }
     };
-
 }

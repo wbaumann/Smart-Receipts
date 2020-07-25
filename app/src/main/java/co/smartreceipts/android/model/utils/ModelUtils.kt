@@ -4,8 +4,8 @@ import android.content.Context
 import android.text.TextUtils
 import android.text.format.DateFormat
 import co.smartreceipts.android.date.DateUtils
-import co.smartreceipts.android.model.PriceNew
-import co.smartreceipts.android.model.PriceNew.Companion.moneyFormatter
+import co.smartreceipts.android.model.Price
+import co.smartreceipts.android.model.Price.Companion.moneyFormatter
 import org.joda.money.BigMoney
 import org.joda.money.CurrencyUnit
 import java.math.BigDecimal
@@ -70,7 +70,7 @@ object ModelUtils {
      */
     @JvmStatic
     @JvmOverloads
-    fun getDecimalFormattedValue(decimal: BigDecimal, precision: Int = PriceNew.TOTAL_DECIMAL_PRECISION): String {
+    fun getDecimalFormattedValue(decimal: BigDecimal, precision: Int = Price.TOTAL_DECIMAL_PRECISION): String {
         val money = BigMoney.of(CurrencyUnit.of(Locale.getDefault()), decimal)
 
         return moneyFormatter.print(money.withScale(precision, RoundingMode.HALF_UP))
@@ -164,7 +164,7 @@ object ModelUtils {
     }
 
     @JvmStatic
-    fun isPriceZero(price: PriceNew): Boolean {
+    fun isPriceZero(price: Price): Boolean {
         return price.priceAsFloat < EPSILON && price.priceAsFloat > -1 * EPSILON
     }
 }

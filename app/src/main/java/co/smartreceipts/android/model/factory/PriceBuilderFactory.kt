@@ -1,7 +1,7 @@
 package co.smartreceipts.android.model.factory
 
-import co.smartreceipts.android.model.PriceNew
-import co.smartreceipts.android.model.PriceableNew
+import co.smartreceipts.android.model.Price
+import co.smartreceipts.android.model.Priceable
 import co.smartreceipts.android.model.gson.ExchangeRate
 import co.smartreceipts.android.model.impl.*
 import co.smartreceipts.android.model.utils.ModelUtils
@@ -10,13 +10,13 @@ import java.math.BigDecimal
 import java.util.*
 
 /**
- * A [PriceNew] [BuilderFactory]
- * implementation, which will be used to generate instances of [PriceNew] objects
+ * A [Price] [BuilderFactory]
+ * implementation, which will be used to generate instances of [Price] objects
  */
-class PriceBuilderFactoryNew : BuilderFactory<PriceNew> {
+class PriceBuilderFactory : BuilderFactory<Price> {
     private var priceDecimal: BigDecimal = BigDecimal.ZERO
     private var currency: CurrencyUnit = CurrencyUnit.of(Locale.getDefault())
-    private var prices: List<PriceNew> = emptyList()
+    private var prices: List<Price> = emptyList()
     private var exchangeRate: ExchangeRate? = null
 
     constructor() {
@@ -24,13 +24,13 @@ class PriceBuilderFactoryNew : BuilderFactory<PriceNew> {
         priceDecimal = BigDecimal.ZERO
     }
 
-    constructor(price: PriceNew) {
+    constructor(price: Price) {
         priceDecimal = price.price
         currency = price.currency
         exchangeRate = price.exchangeRate
     }
 
-    fun setPrice(price: PriceNew): PriceBuilderFactoryNew {
+    fun setPrice(price: Price): PriceBuilderFactory {
         priceDecimal = price.price
         currency = price.currency
         exchangeRate = price.exchangeRate
@@ -39,67 +39,67 @@ class PriceBuilderFactoryNew : BuilderFactory<PriceNew> {
         return this
     }
 
-    fun setPrice(price: String): PriceBuilderFactoryNew {
+    fun setPrice(price: String): PriceBuilderFactory {
         priceDecimal = ModelUtils.tryParse(price)
 
         prices = emptyList()
         return this
     }
 
-    fun setPrice(price: Double): PriceBuilderFactoryNew {
+    fun setPrice(price: Double): PriceBuilderFactory {
         priceDecimal = BigDecimal.valueOf(price)
 
         prices = emptyList()
         return this
     }
 
-    fun setPrice(price: BigDecimal): PriceBuilderFactoryNew {
+    fun setPrice(price: BigDecimal): PriceBuilderFactory {
         priceDecimal = price
 
         prices = emptyList()
         return this
     }
 
-    fun setCurrency(currency: CurrencyUnit): PriceBuilderFactoryNew {
+    fun setCurrency(currency: CurrencyUnit): PriceBuilderFactory {
         this.currency = currency
 
         return this
     }
 
-    fun setCurrency(currencyCode: String): PriceBuilderFactoryNew {
+    fun setCurrency(currencyCode: String): PriceBuilderFactory {
         currency = CurrencyUnit.of(currencyCode)
 
         return this
     }
 
-    fun setExchangeRate(exchangeRate: ExchangeRate): PriceBuilderFactoryNew {
+    fun setExchangeRate(exchangeRate: ExchangeRate): PriceBuilderFactory {
         this.exchangeRate = exchangeRate
 
         return this
     }
 
-    fun setPrices(prices: List<PriceNew>, desiredCurrency: CurrencyUnit): PriceBuilderFactoryNew {
+    fun setPrices(prices: List<Price>, desiredCurrency: CurrencyUnit): PriceBuilderFactory {
         this.prices = ArrayList(prices)
         currency = desiredCurrency
 
         return this
     }
 
-    fun setPriceables(priceables: List<PriceableNew>, desiredCurrency: CurrencyUnit): PriceBuilderFactoryNew {
+    fun setPriceables(priceables: List<Priceable>, desiredCurrency: CurrencyUnit): PriceBuilderFactory {
         prices = priceables.map { it.price }
 
         currency = desiredCurrency
         return this
     }
 
-    override fun build(): PriceNew {
+    override fun build(): Price {
 
         return when {
-            prices.isNotEmpty() -> MultiplePriceImplNew(currency, prices)
+            prices.isNotEmpty() -> MultiplePriceImpl(currency, prices)
 
             else -> {
                 val rate = exchangeRate ?: ExchangeRateBuilderFactory().setBaseCurrency(currency).build()
-                SinglePriceImplNew(priceDecimal, currency, rate)
+                SinglePriceImpl(priceDecimal, currency, rate)
             }
         }
     }

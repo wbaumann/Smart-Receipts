@@ -64,7 +64,7 @@ class Distance(
      * A "decimal-formatted" distance [String], which would appear to the end user as "25.20" or "25,20" instead of
      * showing naively as "25.2" or "25.2123144444"
      */
-    val decimalFormattedDistance: String get() = ModelUtils.getDecimalFormattedValue(distance)
+    val decimalFormattedDistance: String get() = ModelUtils.getDecimalFormattedValue(distance, DISTANCE_PRECISION)
 
     /**
      * A "decimal-formatted" rate [String], which would appear to the end user as "25.20" or "25,20" instead of

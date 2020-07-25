@@ -1,14 +1,14 @@
 package co.smartreceipts.android.model
 
 import android.os.Parcelable
-import co.smartreceipts.android.currency.PriceCurrency
 import co.smartreceipts.android.date.DisplayableDate
-import co.smartreceipts.android.model.factory.PriceBuilderFactoryNew
+import co.smartreceipts.android.model.factory.PriceBuilderFactory
 import co.smartreceipts.android.search.Searchable
 import co.smartreceipts.core.sync.model.SyncState
 import co.smartreceipts.core.sync.model.Syncable
 import co.smartreceipts.core.sync.model.impl.DefaultSyncState
 import kotlinx.android.parcel.Parcelize
+import org.joda.money.CurrencyUnit
 import java.io.File
 import java.sql.Date
 import java.util.*
@@ -30,9 +30,9 @@ class Trip @JvmOverloads constructor(
      */
     val endDisplayableDate: DisplayableDate,
     /**
-     * The [PriceCurrency] which this trip is tracked in
+     * The [CurrencyUnit] which this trip is tracked in
      */
-    val tripCurrency: PriceCurrency,
+    val tripCurrency: CurrencyUnit,
     /**
      * The user defined comment [String] for this trip
      */
@@ -46,16 +46,16 @@ class Trip @JvmOverloads constructor(
      */
     override val syncState: SyncState = DefaultSyncState(),
     /**
-     * As the price of a trip exists as a function of its receipt children (and not itself), [PriceNew] must be var
+     * As the price of a trip exists as a function of its receipt children (and not itself), [Price] must be var
      */
-    override var price: PriceNew = PriceBuilderFactoryNew().setCurrency(tripCurrency.currencyCode).build(),
+    override var price: Price = PriceBuilderFactory().setCurrency(tripCurrency).build(),
     /**
-     * The daily sub-total [PriceNew] (i.e. all expenditures that occurred today) for this trip,
+     * The daily sub-total [Price] (i.e. all expenditures that occurred today) for this trip,
      * daily sub-total of a trip exists as a function of it's receipt children (and not itself)
      */
-    var dailySubTotal: PriceNew = PriceBuilderFactoryNew().setCurrency(tripCurrency.currencyCode).build(),
+    var dailySubTotal: Price = PriceBuilderFactory().setCurrency(tripCurrency).build(),
     val autoCompleteMetadata: AutoCompleteMetadata
-) : Keyed, Parcelable, PriceableNew, Comparable<Trip>, Syncable, Searchable {
+) : Keyed, Parcelable, Priceable, Comparable<Trip>, Syncable, Searchable {
 
     /**
      * The [Date] upon which this trip began
@@ -88,10 +88,10 @@ class Trip @JvmOverloads constructor(
     val directoryPath: String get() = directory.absolutePath
 
     /**
-     * The default currency code representation for this trip or [PriceCurrency.MISSING_CURRENCY]
+     * The default currency code representation for this trip
      * if it cannot be found
      */
-    val defaultCurrencyCode: String get() = tripCurrency.currencyCode
+    val defaultCurrencyCode: String get() = tripCurrency.code
 
     /**
      * Tests if a particular date is included with the bounds of this particular trip When performing the test, it uses

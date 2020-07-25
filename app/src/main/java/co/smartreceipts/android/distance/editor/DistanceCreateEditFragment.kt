@@ -42,7 +42,6 @@ import io.reactivex.functions.Consumer
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.update_distance.*
-import java.math.BigDecimal
 import java.sql.Date
 import java.util.*
 import javax.inject.Inject
@@ -300,8 +299,8 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
     private fun constructDistance(): Distance {
         val distanceBuilder: DistanceBuilderFactory = when (editableItem) {
             null -> DistanceBuilderFactory()
-                .setDistance(ModelUtils.tryParse(text_distance_value.text.toString(), BigDecimal.ZERO))
-                .setRate(ModelUtils.tryParse(text_distance_rate.text.toString(), BigDecimal.ZERO))
+                .setDistance(ModelUtils.tryParse(text_distance_value.text.toString()))
+                .setRate(ModelUtils.tryParse(text_distance_rate.text.toString()))
             else -> DistanceBuilderFactory(editableItem!!)
                 .setDistance(ModelUtils.tryParse(text_distance_value.text.toString(), editableItem!!.distance))
                 .setRate(ModelUtils.tryParse(text_distance_rate.text.toString(), editableItem!!.rate))

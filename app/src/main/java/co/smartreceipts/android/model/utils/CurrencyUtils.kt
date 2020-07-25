@@ -1,6 +1,6 @@
 package co.smartreceipts.android.model.utils
 
-import co.smartreceipts.android.model.PriceNew
+import co.smartreceipts.android.model.Price
 
 object CurrencyUtils {
 
@@ -260,4 +260,4 @@ object CurrencyUtils {
     }
 }
 
-data class CurrencyWithDecimalPlaces(val currencyCode: String, val decimalPlaces: Int = PriceNew.TOTAL_DECIMAL_PRECISION)
+data class CurrencyWithDecimalPlaces(val currencyCode: String, val decimalPlaces: Int = Price.TOTAL_DECIMAL_PRECISION)

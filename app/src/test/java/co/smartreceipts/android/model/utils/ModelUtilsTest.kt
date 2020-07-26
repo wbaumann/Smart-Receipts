@@ -1,6 +1,6 @@
 package co.smartreceipts.android.model.utils
 
-import co.smartreceipts.android.model.factory.PriceBuilderFactoryNew
+import co.smartreceipts.android.model.factory.PriceBuilderFactory
 import co.smartreceipts.android.utils.TestLocaleToggler
 import org.joda.money.CurrencyUnit
 import org.junit.After
@@ -70,14 +70,14 @@ class ModelUtilsTest {
 
     @Test
     fun isPriceZero() {
-        assertTrue(ModelUtils.isPriceZero(PriceBuilderFactoryNew().setPrice(0.0).setCurrency("USD").build()))
-        assertFalse(ModelUtils.isPriceZero(PriceBuilderFactoryNew().setPrice(0.1).setCurrency("USD").build()))
-        assertFalse(ModelUtils.isPriceZero(PriceBuilderFactoryNew().setPrice(-0.1).setCurrency("USD").build()))
+        assertTrue(ModelUtils.isPriceZero(PriceBuilderFactory().setPrice(0.0).setCurrency("USD").build()))
+        assertFalse(ModelUtils.isPriceZero(PriceBuilderFactory().setPrice(0.1).setCurrency("USD").build()))
+        assertFalse(ModelUtils.isPriceZero(PriceBuilderFactory().setPrice(-0.1).setCurrency("USD").build()))
         assertFalse(
-            ModelUtils.isPriceZero(PriceBuilderFactoryNew().setPrice(java.lang.Float.MAX_VALUE.toDouble()).setCurrency("USD").build())
+            ModelUtils.isPriceZero(PriceBuilderFactory().setPrice(java.lang.Float.MAX_VALUE.toDouble()).setCurrency("USD").build())
         )
         assertFalse(
-            ModelUtils.isPriceZero(PriceBuilderFactoryNew().setPrice((-java.lang.Float.MAX_VALUE).toDouble()).setCurrency("USD").build())
+            ModelUtils.isPriceZero(PriceBuilderFactory().setPrice((-java.lang.Float.MAX_VALUE).toDouble()).setCurrency("USD").build())
         )
     }
 

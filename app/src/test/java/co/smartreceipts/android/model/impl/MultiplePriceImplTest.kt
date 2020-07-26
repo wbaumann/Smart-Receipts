@@ -1,13 +1,10 @@
 package co.smartreceipts.android.model.impl
 
 import android.os.Parcel
-import android.os.Parcelable
 import co.smartreceipts.android.model.Distance
 import co.smartreceipts.android.model.factory.ExchangeRateBuilderFactory
 import co.smartreceipts.android.utils.TestLocaleToggler
 import co.smartreceipts.android.utils.TestUtils
-import org.hamcrest.CoreMatchers.equalTo
-import org.hamcrest.core.IsNot.not
 import org.joda.money.CurrencyUnit
 import org.junit.After
 import org.junit.Assert.*
@@ -20,7 +17,7 @@ import java.math.BigDecimal
 import java.util.*
 
 @RunWith(RobolectricTestRunner::class)
-class MultiplePriceImplNewTest {
+class MultiplePriceImplTest {
     companion object {
         private val USD_CURRENCY = CurrencyUnit.USD
         private val EUR_CURRENCY = CurrencyUnit.EUR
@@ -33,25 +30,33 @@ class MultiplePriceImplNewTest {
         private val JPY_EXCHANGE_RATE = ExchangeRateBuilderFactory().setBaseCurrency(JPY_CURRENCY).build()
     }
 
-    private lateinit var sameCurrencyPrice: MultiplePriceImplNew
-    private lateinit var differentCurrenciesNoExchangeRatePrice: MultiplePriceImplNew
-    private lateinit var differentCurrenciesWithExchangeRatePrice: MultiplePriceImplNew
+
+    private lateinit var sameCurrencyPrice: MultiplePriceImpl
+    private lateinit var differentCurrenciesNoExchangeRatePrice: MultiplePriceImpl
+    private lateinit var differentCurrenciesWithExchangeRatePrice: MultiplePriceImpl
 
     @Before
     @Throws(Exception::class)
     fun setUp() {
         TestLocaleToggler.setDefaultLocale(Locale.US)
 
-        val priceUsd1 = SinglePriceImplNew(BigDecimal.ONE, USD_CURRENCY, USD_EXCHANGE_RATE)
-        val priceUsd2 = SinglePriceImplNew(BigDecimal(2.0), USD_CURRENCY, USD_EXCHANGE_RATE)
+        val priceUsd1 =
+            SinglePriceImpl(BigDecimal.ONE, USD_CURRENCY, USD_EXCHANGE_RATE)
+        val priceUsd2 =
+            SinglePriceImpl(BigDecimal(2.0), USD_CURRENCY, USD_EXCHANGE_RATE)
 
-        val priceEur1 = SinglePriceImplNew(BigDecimal.ONE, EUR_CURRENCY, EUR_EXCHANGE_RATE)
+        val priceEur1 =
+            SinglePriceImpl(BigDecimal.ONE, EUR_CURRENCY, EUR_EXCHANGE_RATE)
 
-        val priceJpu1 = SinglePriceImplNew(BigDecimal.ONE, JPY_CURRENCY, JPY_EXCHANGE_RATE)
+        val priceJpu1 =
+            SinglePriceImpl(BigDecimal.ONE, JPY_CURRENCY, JPY_EXCHANGE_RATE)
 
-        sameCurrencyPrice = MultiplePriceImplNew(USD_CURRENCY, listOf(priceUsd1, priceUsd2))
-        differentCurrenciesWithExchangeRatePrice = MultiplePriceImplNew(USD_CURRENCY, listOf(priceUsd1, priceUsd2, priceEur1))
-        differentCurrenciesNoExchangeRatePrice = MultiplePriceImplNew(USD_CURRENCY, listOf(priceUsd1, priceEur1, priceJpu1))
+        sameCurrencyPrice =
+            MultiplePriceImpl(USD_CURRENCY, listOf(priceUsd1, priceUsd2))
+        differentCurrenciesWithExchangeRatePrice =
+            MultiplePriceImpl(USD_CURRENCY, listOf(priceUsd1, priceUsd2, priceEur1))
+        differentCurrenciesNoExchangeRatePrice =
+            MultiplePriceImpl(USD_CURRENCY, listOf(priceUsd1, priceEur1, priceJpu1))
     }
 
     @After
@@ -132,7 +137,7 @@ class MultiplePriceImplNewTest {
         sameCurrencyPrice.writeToParcel(parcel1, 0)
         parcel1.setDataPosition(0)
 
-        val parcelPrice1 = MultiplePriceImplNew.CREATOR.createFromParcel(parcel1)
+        val parcelPrice1 = MultiplePriceImpl.CREATOR.createFromParcel(parcel1)
         assertNotNull(parcelPrice1)
         assertEquals(sameCurrencyPrice, parcelPrice1)
 
@@ -141,7 +146,7 @@ class MultiplePriceImplNewTest {
         differentCurrenciesNoExchangeRatePrice.writeToParcel(parcel2, 0)
         parcel2.setDataPosition(0)
 
-        val parcelPrice2 = MultiplePriceImplNew.CREATOR.createFromParcel(parcel2)
+        val parcelPrice2 = MultiplePriceImpl.CREATOR.createFromParcel(parcel2)
         assertNotNull(parcelPrice2)
         assertEquals(differentCurrenciesNoExchangeRatePrice, parcelPrice2)
 
@@ -150,34 +155,56 @@ class MultiplePriceImplNewTest {
         differentCurrenciesWithExchangeRatePrice.writeToParcel(parcel3, 0)
         parcel3.setDataPosition(0)
 
-        val parcelPrice3 = MultiplePriceImplNew.CREATOR.createFromParcel(parcel3)
+        val parcelPrice3 = MultiplePriceImpl.CREATOR.createFromParcel(parcel3)
         assertNotNull(parcelPrice3)
         assertEquals(differentCurrenciesWithExchangeRatePrice, parcelPrice3)
     }
 
     @Test
     fun equals() {
-        val usd1 = SinglePriceImplNew(BigDecimal.ONE, USD_CURRENCY, USD_EXCHANGE_RATE)
-        val usd2 = SinglePriceImplNew(BigDecimal(2), USD_CURRENCY, USD_EXCHANGE_RATE)
-        val usd0 = SinglePriceImplNew(BigDecimal.ZERO, USD_CURRENCY, USD_EXCHANGE_RATE)
-        val eur3 = SinglePriceImplNew(BigDecimal(3), CurrencyUnit.EUR, EUR_EXCHANGE_RATE)
-        val eur1 = SinglePriceImplNew(BigDecimal.ONE, CurrencyUnit.EUR, EUR_EXCHANGE_RATE)
+        val usd1 = SinglePriceImpl(BigDecimal.ONE, USD_CURRENCY, USD_EXCHANGE_RATE)
+        val usd2 = SinglePriceImpl(BigDecimal(2), USD_CURRENCY, USD_EXCHANGE_RATE)
+        val usd0 = SinglePriceImpl(BigDecimal.ZERO, USD_CURRENCY, USD_EXCHANGE_RATE)
+        val eur3 =
+            SinglePriceImpl(BigDecimal(3), CurrencyUnit.EUR, EUR_EXCHANGE_RATE)
+        val eur1 =
+            SinglePriceImpl(BigDecimal.ONE, CurrencyUnit.EUR, EUR_EXCHANGE_RATE)
 
-        val equalPrice = MultiplePriceImplNew(USD_CURRENCY, listOf(usd1, usd2))
+        val equalPrice = MultiplePriceImpl(USD_CURRENCY, listOf(usd1, usd2))
 
-        val equalPriceWithEur = MultiplePriceImplNew(USD_CURRENCY, listOf(usd1, eur1))
+        val equalPriceWithEur = MultiplePriceImpl(USD_CURRENCY, listOf(usd1, eur1))
 
 
         assertEquals(sameCurrencyPrice, sameCurrencyPrice)
         assertEquals(sameCurrencyPrice, equalPriceWithEur)
         assertEquals(sameCurrencyPrice, equalPrice)
-        assertEquals(sameCurrencyPrice, SinglePriceImplNew(BigDecimal(3), USD_CURRENCY, USD_EXCHANGE_RATE))
+        assertEquals(sameCurrencyPrice,
+            SinglePriceImpl(BigDecimal(3), USD_CURRENCY, USD_EXCHANGE_RATE)
+        )
 
         assertNotEquals(differentCurrenciesNoExchangeRatePrice, sameCurrencyPrice)
         assertNotEquals(Any(), sameCurrencyPrice)
         assertNotEquals(usd0, sameCurrencyPrice)
         assertNotEquals(eur3, sameCurrencyPrice)
         assertNotEquals(mock(Distance::class.java), sameCurrencyPrice)
+    }
+
+    @Test
+    fun localeBasedFormattingTest() {
+        val usd1 = SinglePriceImpl(BigDecimal(1000), USD_CURRENCY, USD_EXCHANGE_RATE)
+        val usd2 = SinglePriceImpl(BigDecimal(2.5023), USD_CURRENCY, USD_EXCHANGE_RATE)
+
+        TestLocaleToggler.setDefaultLocale(Locale.US)
+        val multiplePriceUs = MultiplePriceImpl(USD_CURRENCY, listOf(usd1, usd2))
+        assertEquals("1,002.50", multiplePriceUs.decimalFormattedPrice)
+        assertEquals("USD 1,002.50", multiplePriceUs.currencyCodeFormattedPrice)
+        assertEquals("$1,002.50", multiplePriceUs.currencyFormattedPrice)
+
+        TestLocaleToggler.setDefaultLocale(Locale.FRANCE)
+        val multiplePriceFrance = MultiplePriceImpl(USD_CURRENCY, listOf(usd1, usd2))
+        assertEquals("1 002,50", multiplePriceFrance.decimalFormattedPrice)
+        assertEquals("USD 1 002,50", multiplePriceFrance.currencyCodeFormattedPrice)
+        assertEquals("USD1 002,50", multiplePriceFrance.currencyFormattedPrice)
     }
 
 }

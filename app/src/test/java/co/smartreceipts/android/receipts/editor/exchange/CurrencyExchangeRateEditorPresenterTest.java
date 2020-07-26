@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.hadisatrio.optional.Optional;
 
+import org.joda.money.CurrencyUnit;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,7 +18,6 @@ import java.sql.Date;
 import java.util.Arrays;
 import java.util.List;
 
-import co.smartreceipts.android.currency.PriceCurrency;
 import co.smartreceipts.android.currency.widget.CurrencyListEditorView;
 import co.smartreceipts.android.model.Price;
 import co.smartreceipts.android.model.Receipt;
@@ -43,7 +43,6 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
@@ -92,7 +91,7 @@ public class CurrencyExchangeRateEditorPresenterTest {
     Consumer<UiIndicator<ExchangeRate>> displayExchangeRateConsumer;
 
     @Mock
-    Consumer<PriceCurrency> displayBaseCurrencyConsumer;
+    Consumer<CurrencyUnit> displayBaseCurrencyConsumer;
 
     @Mock
     Consumer<Optional<Price>> displayExchangedPriceInBaseCurrencyConsumer;
@@ -138,7 +137,7 @@ public class CurrencyExchangeRateEditorPresenterTest {
     public void subscribeDisplaysBaseCurrency() throws Exception {
         presenter = new CurrencyExchangeRateEditorPresenter(currencyExchangeRateEditorView, receiptPricingView, currencyListEditorView, receiptDateView, exchangeRateServiceManager, databaseHelper, trip, null, null, Schedulers.trampoline(), Schedulers.trampoline(), Schedulers.trampoline());
         presenter.subscribe();
-        verify(displayBaseCurrencyConsumer).accept(PriceCurrency.getInstance(TRIP_CURRENCY));
+        verify(displayBaseCurrencyConsumer).accept(CurrencyUnit.of(TRIP_CURRENCY));
     }
 
     @Test

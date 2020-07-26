@@ -15,7 +15,7 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 
 @RunWith(RobolectricTestRunner::class)
-class SinglePriceImplNewTest {
+class SinglePriceImplTest {
 
     companion object {
 
@@ -27,15 +27,15 @@ class SinglePriceImplNewTest {
         private val EXCHANGE_RATE = ExchangeRateBuilderFactory().setBaseCurrency(CURRENCY1).build()
     }
 
-    private lateinit var price1: SinglePriceImplNew
-    private lateinit var price2: SinglePriceImplNew
-    private lateinit var price3: SinglePriceImplNew
+    private lateinit var price1: SinglePriceImpl
+    private lateinit var price2: SinglePriceImpl
+    private lateinit var price3: SinglePriceImpl
 
     @Before
     fun setUp() {
-        price1 = SinglePriceImplNew(PRICE, CURRENCY1, EXCHANGE_RATE)
-        price2 = SinglePriceImplNew(PRICE, CURRENCY2, EXCHANGE_RATE)
-        price3 = SinglePriceImplNew(PRICE, CURRENCY3, EXCHANGE_RATE)
+        price1 = SinglePriceImpl(PRICE, CURRENCY1, EXCHANGE_RATE)
+        price2 = SinglePriceImpl(PRICE, CURRENCY2, EXCHANGE_RATE)
+        price3 = SinglePriceImpl(PRICE, CURRENCY3, EXCHANGE_RATE)
     }
 
     @Test
@@ -114,7 +114,7 @@ class SinglePriceImplNewTest {
         price1.writeToParcel(parcel, 0)
         parcel.setDataPosition(0)
 
-        val parcelPrice = SinglePriceImplNew.CREATOR.createFromParcel(parcel)
+        val parcelPrice = SinglePriceImpl.CREATOR.createFromParcel(parcel)
         assertNotNull(parcelPrice)
         assertEquals(price1, parcelPrice)
     }
@@ -122,12 +122,12 @@ class SinglePriceImplNewTest {
     @Test
     fun equals() {
         assertEquals(price1, price1)
-        assertEquals(price1, SinglePriceImplNew(PRICE, CURRENCY1, EXCHANGE_RATE))
+        assertEquals(price1, SinglePriceImpl(PRICE, CURRENCY1, EXCHANGE_RATE))
 
         assertNotEquals(Any(), price1)
         assertNotEquals(mock(Distance::class.java), price1)
-        assertNotEquals(SinglePriceImplNew(BigDecimal.ZERO, CURRENCY1, EXCHANGE_RATE), price1)
-        assertNotEquals(SinglePriceImplNew(PRICE, CurrencyUnit.EUR, EXCHANGE_RATE), price1)
+        assertNotEquals(SinglePriceImpl(BigDecimal.ZERO, CURRENCY1, EXCHANGE_RATE), price1)
+        assertNotEquals(SinglePriceImpl(PRICE, CurrencyUnit.EUR, EXCHANGE_RATE), price1)
     }
 
     @Test

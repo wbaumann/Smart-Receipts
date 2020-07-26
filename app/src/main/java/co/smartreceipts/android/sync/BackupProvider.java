@@ -75,8 +75,8 @@ public interface BackupProvider {
      * Renames an existing backup
      *
      * @param remoteBackupMetadata the metadata to rename
-     * @param newFileName what we are renaming the metadata to
-     * @return an {@link Single} for the delete operation with a success boolean
+     * @param newFileName what we are renaming the metadata's description to
+     * @return an {@link Single} with the file confirming the updated completed successfully
      */
     @NonNull
     Single<com.google.api.services.drive.model.File> renameBackup(@NonNull RemoteBackupMetadata remoteBackupMetadata, @NonNull String newFileName);

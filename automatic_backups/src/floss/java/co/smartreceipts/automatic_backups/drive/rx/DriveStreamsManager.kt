@@ -27,6 +27,8 @@ class DriveStreamsManager(context: Context, driveServiceHelper: DriveServiceHelp
 
     fun updateDriveFile(currentSyncState: SyncState, file: java.io.File): Single<SyncState?> = Single.never()
 
+    fun renameBackup(identifier: Identifier, newFileName: String): Single<com.google.api.services.drive.model.File> = Single.never()
+
     fun deleteDriveFile(currentSyncState: SyncState, isFullDelete: Boolean): Single<SyncState?> = Single.never()
 
     fun delete(identifier: Identifier): Single<Boolean?> = Single.never()

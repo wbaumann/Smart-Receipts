@@ -19,7 +19,7 @@ object ModelUtils {
 
     private const val EPSILON = 0.0001f
 
-    private val decimalFormat: DecimalFormat
+    val decimalFormat: DecimalFormat
         get() {
             // check for the case when Locale has changed
             if (_decimalFormat.decimalFormatSymbols != DecimalFormatSymbols()) {
@@ -27,6 +27,10 @@ object ModelUtils {
             }
             return _decimalFormat
         }
+
+    val decimalSeparator: Char
+        get() = decimalFormat.decimalFormatSymbols.decimalSeparator
+
     private var _decimalFormat: DecimalFormat = initDecimalFormat()
 
     private fun initDecimalFormat(): DecimalFormat {

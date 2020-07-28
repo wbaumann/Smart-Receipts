@@ -12,9 +12,6 @@ class CurrencyInitializer @Inject constructor() {
      * Register currencies from CurrencyUtils to Joda Money
      */
     fun init() {
-
-        // TODO: 23.06.2020 check if we can add support for skipped currencies
-
         Logger.debug(this, "registered currencies size ${CurrencyUnit.registeredCurrencies().size}")
 
         CurrencyUtils.currencies.forEach {

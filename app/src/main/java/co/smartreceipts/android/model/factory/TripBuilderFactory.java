@@ -19,6 +19,7 @@ import co.smartreceipts.android.date.DisplayableDate;
 import co.smartreceipts.android.model.AutoCompleteMetadata;
 import co.smartreceipts.android.model.Keyed;
 import co.smartreceipts.android.model.Trip;
+import co.smartreceipts.android.model.utils.CurrencyUtils;
 import co.smartreceipts.core.sync.model.SyncState;
 import co.smartreceipts.core.sync.model.impl.DefaultSyncState;
 
@@ -141,7 +142,7 @@ public final class TripBuilderFactory implements BuilderFactory<Trip> {
     }
 
     public TripBuilderFactory setDefaultCurrency(@Nullable String currencyCode, @NonNull String missingCodeDefault) {
-        if (TextUtils.isEmpty(currencyCode)) {
+        if (TextUtils.isEmpty(currencyCode) || !CurrencyUtils.INSTANCE.isCurrencySupported(currencyCode)) {
             defaultCurrency = CurrencyUnit.of(missingCodeDefault);
         } else {
             defaultCurrency = CurrencyUnit.of(currencyCode);

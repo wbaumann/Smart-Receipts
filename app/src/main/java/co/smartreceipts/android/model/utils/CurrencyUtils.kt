@@ -7,6 +7,8 @@ object CurrencyUtils {
     val currencies
         get() = _currencies
 
+    fun isCurrencySupported(code: String): Boolean = currencies.find { it.currencyCode == code } != null
+
     private val _currencies: List<CurrencyWithDecimalPlaces> = getIso4217Currencies() + getNonIso4217Currencies()
 
 
@@ -219,34 +221,31 @@ object CurrencyUtils {
 
             // https://en.wikipedia.org/wiki/ISO_4217#Non_ISO_4217_currencies
             CurrencyWithDecimalPlaces("BYN", 2), // New Belarus Currency
-            CurrencyWithDecimalPlaces("CNH"), // Chinese yuan (when traded offshore) - Hong Kong
+            CurrencyWithDecimalPlaces("CNH", 2), // Chinese yuan (when traded offshore) - Hong Kong
             CurrencyWithDecimalPlaces("CNT"), // Chinese yuan (when traded offshore) - Taiwan
-            CurrencyWithDecimalPlaces("GGP"), // Guernsey pound
-            CurrencyWithDecimalPlaces("IMP"), // Isle of Man pound
-            CurrencyWithDecimalPlaces("JEP"), // Jersey pound
-            CurrencyWithDecimalPlaces("KID"), // Kiribati dollar
-            CurrencyWithDecimalPlaces("NIS"), // New Israeli Shekel
-            CurrencyWithDecimalPlaces("PRB"), // Transnistrian ruble
-            CurrencyWithDecimalPlaces("SLS"), // Somaliland Shillings
-            CurrencyWithDecimalPlaces("TVD"), // Tuvalu dollar
+            CurrencyWithDecimalPlaces("GGP", 2), // Guernsey pound
+            CurrencyWithDecimalPlaces("IMP", 2), // Isle of Man pound
+            CurrencyWithDecimalPlaces("JEP", 2), // Jersey pound
+            CurrencyWithDecimalPlaces("KID", 2), // Kiribati dollar
+            CurrencyWithDecimalPlaces("NIS", 2), // New Israeli Shekel
+            CurrencyWithDecimalPlaces("PRB", 2), // Transnistrian ruble
+            CurrencyWithDecimalPlaces("SLS", 2), // Somaliland Shillings
+            CurrencyWithDecimalPlaces("TVD", 2), // Tuvalu dollar
 
             // https://coinmarketcap.com/
             CurrencyWithDecimalPlaces("BTC", 8), // Bitcoin (Old Code)
-            CurrencyWithDecimalPlaces("DOGE"), // Dogecoin
             CurrencyWithDecimalPlaces("ETH", 18), // Ethereum
-            CurrencyWithDecimalPlaces("GNT"), // Golem Project
-            CurrencyWithDecimalPlaces("LTC"), // Litecoin
-            CurrencyWithDecimalPlaces("PPC"), // Peercoin
-            CurrencyWithDecimalPlaces("SC"), // SiaCoin
-            CurrencyWithDecimalPlaces("SJCX"), // Storjcoin
+            CurrencyWithDecimalPlaces("GNT", 18), // Golem Project
+            CurrencyWithDecimalPlaces("LTC", 8), // Litecoin
+            CurrencyWithDecimalPlaces("PPC", 8), // Peercoin
             CurrencyWithDecimalPlaces("XBT", 8), // Bitcoin (New Code)
-            CurrencyWithDecimalPlaces("XMR"), // Monero
-            CurrencyWithDecimalPlaces("XRP", 15), // Ripple
+            CurrencyWithDecimalPlaces("XMR", 12), // Monero
+            CurrencyWithDecimalPlaces("XRP", 6), // Ripple
 
             // Misc Requests from over the years:
             CurrencyWithDecimalPlaces("BYR", 0), // Belarusian ruble
-            CurrencyWithDecimalPlaces("BSF"), // Venezuelan Bolivar
-            CurrencyWithDecimalPlaces("DRC"), // Congolese Franc
+            CurrencyWithDecimalPlaces("BSF", 2), // Venezuelan Bolivar
+            CurrencyWithDecimalPlaces("DRC", 2), // Congolese Franc
             CurrencyWithDecimalPlaces("GHS", 2), // Ghanaian Cedi
             CurrencyWithDecimalPlaces("GST"), // Goods and Services Tax (Not sure how this got here but...?)
             CurrencyWithDecimalPlaces("LVL", 2), // Latvian lats (Replaced by Euro in 2014)

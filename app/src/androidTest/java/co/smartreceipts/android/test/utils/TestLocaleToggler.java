@@ -4,14 +4,11 @@ import androidx.annotation.NonNull;
 
 import java.util.Locale;
 
-import co.smartreceipts.android.currency.PriceCurrency;
-
 public class TestLocaleToggler {
 
     private static Locale originalLocale;
 
     public static void setDefaultLocale(@NonNull Locale locale) {
-        PriceCurrency.clearStaticCachesForTesting();
         originalLocale = Locale.getDefault();
         Locale.setDefault(locale);
     }

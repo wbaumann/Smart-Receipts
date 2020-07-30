@@ -29,8 +29,6 @@ import co.smartreceipts.android.model.gson.ExchangeRate;
  */
 public final class MultiplePriceImpl extends AbstractPriceImpl {
 
-    // TODO: 24.07.2020 to Kotlin
-
     private final BigMoney totalMoney;
 
     private final BigMoney possiblyIncorrectTotalPrice;

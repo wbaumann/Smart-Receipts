@@ -18,9 +18,6 @@ import co.smartreceipts.android.model.gson.ExchangeRate;
  */
 public final class SinglePriceImpl extends AbstractPriceImpl {
 
-    // TODO: 10.07.2020 convert to kotlin, add @Parcelize
-    // TODO: 06.06.2020 no need to export BigDecimal if we can export Money ?
-
     private final Money money;
     private final ExchangeRate exchangeRate;
     private final String decimalFormattedPrice; // Note: We create/cache this as it's common, slower operation

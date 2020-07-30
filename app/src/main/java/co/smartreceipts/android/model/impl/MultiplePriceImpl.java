@@ -60,7 +60,7 @@ public final class MultiplePriceImpl extends AbstractPriceImpl {
 
             notExchangedPriceMap.put(price.getCurrency(),
                     notExchangedPriceMap.containsKey(price.getCurrency()) ?
-                    notExchangedPriceMap.get(price.getCurrency()).plus(price.getMoney()) :
+                            notExchangedPriceMap.get(price.getCurrency()).plus(price.getMoney()) :
                             price.getMoney());
 
             final BigMoney moneyToAdd;
@@ -69,7 +69,7 @@ public final class MultiplePriceImpl extends AbstractPriceImpl {
 
                 final BigDecimal exchangeRate = price.getExchangeRate().getExchangeRate(baseCurrency.getCode());
 
-                moneyToAdd = price.getMoney().convertedTo(baseCurrency, exchangeRate);
+                moneyToAdd = price.getCurrency().equals(baseCurrency) ? price.getMoney() : price.getMoney().convertedTo(baseCurrency, exchangeRate);
                 currencyForPriceToAdd = baseCurrency;
 
                 total = total.plus(moneyToAdd);
@@ -194,7 +194,7 @@ public final class MultiplePriceImpl extends AbstractPriceImpl {
     private String getCurrencyCodeFormattedStringFromMap(Map<CurrencyUnit, BigMoney> map, MoneyFormatter formatter) {
         final List<String> currencyStrings = new ArrayList<>();
         for (CurrencyUnit currency : map.keySet()) {
-            final BigMoney money = map.get(currency).withCurrencyScale();
+            final BigMoney money = map.get(currency).withCurrencyScale(RoundingMode.HALF_UP);
 
             String decimalValue = formatter.print(money);
             String codeFormatted = money.getCurrencyUnit().getCode().concat(" ").concat(decimalValue);
@@ -252,7 +252,7 @@ public final class MultiplePriceImpl extends AbstractPriceImpl {
     @NonNull
     private String calculateDecimalFormattedPrice(MoneyFormatter formatter) {
         if (areAllExchangeRatesValid) {
-            return formatter.print(totalMoney.withCurrencyScale());
+            return formatter.print(totalMoney.withCurrencyScale(RoundingMode.HALF_UP));
         } else {
             return getCurrencyCodeFormattedStringFromMap(currencyToPriceMap, formatter);
         }
@@ -262,11 +262,11 @@ public final class MultiplePriceImpl extends AbstractPriceImpl {
     private String calculateCurrencyFormattedPrice(MoneyFormatter formatter) {
         if (areAllExchangeRatesValid) {
             return totalMoney.getCurrencyUnit().getSymbol()
-                    .concat(formatter.print(totalMoney.withCurrencyScale()));
+                    .concat(formatter.print(totalMoney.withCurrencyScale(RoundingMode.HALF_UP)));
         } else {
             final List<String> currencyStrings = new ArrayList<>();
             for (CurrencyUnit currency : currencyToPriceMap.keySet()) {
-                final BigMoney money = currencyToPriceMap.get(currency).withCurrencyScale();
+                final BigMoney money = currencyToPriceMap.get(currency).withCurrencyScale(RoundingMode.HALF_UP);
                 currencyStrings.add(currency.getSymbol().concat(formatter.print(money)));
             }
             return TextUtils.join("; ", currencyStrings);
@@ -275,7 +275,7 @@ public final class MultiplePriceImpl extends AbstractPriceImpl {
 
     @NonNull
     private String calculateCurrencyCodeFormattedPrice(MoneyFormatter formatter) {
-            return getCurrencyCodeFormattedStringFromMap(notExchangedPriceMap, formatter);
+        return getCurrencyCodeFormattedStringFromMap(notExchangedPriceMap, formatter);
     }
 
     private void writeMapToParcel(@NonNull Parcel dest, @NonNull Map<CurrencyUnit, BigMoney> map) {

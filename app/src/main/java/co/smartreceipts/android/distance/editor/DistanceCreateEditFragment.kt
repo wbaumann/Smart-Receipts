@@ -34,6 +34,7 @@ import co.smartreceipts.android.receipts.editor.paymentmethods.PaymentMethodsPre
 import co.smartreceipts.android.receipts.editor.paymentmethods.PaymentMethodsView
 import co.smartreceipts.android.utils.SoftKeyboardManager
 import co.smartreceipts.android.widget.model.UiIndicator
+import co.smartreceipts.android.widget.ui.PriceInputEditText
 import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxbinding3.widget.textChanges
 import dagger.android.support.AndroidSupportInjection
@@ -122,6 +123,11 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
     }
 
     override fun onFocusChange(view: View, hasFocus: Boolean) {
+        if (focusedView is PriceInputEditText && !hasFocus) {
+            // format rate on focus lose
+            (focusedView as PriceInputEditText).formatPriceText()
+        }
+
         focusedView = if (hasFocus) view else null
         if (editableItem == null && hasFocus) {
             // Only launch if we have focus and it's a new distance
@@ -190,6 +196,7 @@ class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.On
             subtitle = ""
         }
 
+        text_distance_rate.setDecimalPlaces(Distance.RATE_PRECISION)
 
         if (editableItem == null) {
             // New Distance

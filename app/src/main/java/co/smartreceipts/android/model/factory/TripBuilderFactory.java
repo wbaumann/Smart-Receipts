@@ -137,7 +137,11 @@ public final class TripBuilderFactory implements BuilderFactory<Trip> {
         if (TextUtils.isEmpty(currencyCode)) {
             throw new IllegalArgumentException("The currency code cannot be null or empty");
         }
-        defaultCurrency = CurrencyUnit.of(currencyCode);
+
+        if (CurrencyUtils.INSTANCE.isCurrencySupported(currencyCode)) {
+            defaultCurrency = CurrencyUnit.of(currencyCode);
+        }
+
         return this;
     }
 

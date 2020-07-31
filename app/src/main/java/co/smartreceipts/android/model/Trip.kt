@@ -89,7 +89,6 @@ class Trip @JvmOverloads constructor(
 
     /**
      * The default currency code representation for this trip
-     * if it cannot be found
      */
     val defaultCurrencyCode: String get() = tripCurrency.code
 

@@ -29,6 +29,9 @@ import co.smartreceipts.android.model.gson.ExchangeRate;
  */
 public final class MultiplePriceImpl extends AbstractPriceImpl {
 
+    /**
+     * Total money value with currency scale
+     */
     private final BigMoney totalMoney;
 
     private final BigMoney possiblyIncorrectTotalPrice;
@@ -192,7 +195,7 @@ public final class MultiplePriceImpl extends AbstractPriceImpl {
     private String getCurrencyCodeFormattedStringFromMap(Map<CurrencyUnit, BigMoney> map, MoneyFormatter formatter) {
         final List<String> currencyStrings = new ArrayList<>();
         for (CurrencyUnit currency : map.keySet()) {
-            final BigMoney money = map.get(currency).withCurrencyScale(RoundingMode.HALF_UP);
+            final BigMoney money = map.get(currency).withCurrencyScale(RoundingMode.HALF_DOWN);
 
             String decimalValue = formatter.print(money);
             String codeFormatted = money.getCurrencyUnit().getCode().concat(" ").concat(decimalValue);
@@ -250,7 +253,7 @@ public final class MultiplePriceImpl extends AbstractPriceImpl {
     @NonNull
     private String calculateDecimalFormattedPrice(MoneyFormatter formatter) {
         if (areAllExchangeRatesValid) {
-            return formatter.print(totalMoney.withCurrencyScale(RoundingMode.HALF_UP));
+            return formatter.print(totalMoney);
         } else {
             return getCurrencyCodeFormattedStringFromMap(currencyToPriceMap, formatter);
         }
@@ -260,11 +263,11 @@ public final class MultiplePriceImpl extends AbstractPriceImpl {
     private String calculateCurrencyFormattedPrice(MoneyFormatter formatter) {
         if (areAllExchangeRatesValid) {
             return totalMoney.getCurrencyUnit().getSymbol()
-                    .concat(formatter.print(totalMoney.withCurrencyScale(RoundingMode.HALF_UP)));
+                    .concat(formatter.print(totalMoney));
         } else {
             final List<String> currencyStrings = new ArrayList<>();
             for (CurrencyUnit currency : currencyToPriceMap.keySet()) {
-                final BigMoney money = currencyToPriceMap.get(currency).withCurrencyScale(RoundingMode.HALF_UP);
+                final BigMoney money = currencyToPriceMap.get(currency).withCurrencyScale(RoundingMode.HALF_DOWN);
                 currencyStrings.add(currency.getSymbol().concat(formatter.print(money)));
             }
             return TextUtils.join("; ", currencyStrings);

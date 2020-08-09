@@ -15,7 +15,9 @@ import co.smartreceipts.core.sync.model.impl.DefaultSyncState
 import co.smartreceipts.android.workers.reports.ReportResourcesManager
 import java.util.*
 
-class CategoryColumnDefinitions(private val reportResourcesManager: ReportResourcesManager, private val multiCurrency: Boolean) :
+class CategoryColumnDefinitions(private val reportResourcesManager: ReportResourcesManager,
+                                private val multiCurrency: Boolean,
+                                private val taxEnabled: Boolean) :
     ColumnDefinitions<SumCategoryGroupingResult> {
 
     private val actualDefinitions = values()
@@ -57,9 +59,12 @@ class CategoryColumnDefinitions(private val reportResourcesManager: ReportResour
 
         for (definition in actualDefinitions) {
             // don't include PRICE_EXCHANGED definition if all receipts have same currency
-            if (!(definition == PRICE_EXCHANGED && !multiCurrency)) {
-                columns.add(getColumnFromClass(definition))
+            // don't include TAX definition if tax field is disabled
+            if ((definition == PRICE_EXCHANGED && !multiCurrency)
+                    || (definition == TAX && !taxEnabled)) {
+                continue
             }
+            columns.add(getColumnFromClass(definition))
         }
 
         Collections.sort(columns, ColumnNameComparator(reportResourcesManager))

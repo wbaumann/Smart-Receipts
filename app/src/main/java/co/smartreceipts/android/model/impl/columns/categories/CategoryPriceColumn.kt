@@ -6,7 +6,6 @@ import co.smartreceipts.android.model.impl.columns.AbstractColumnImpl
 import co.smartreceipts.android.persistence.database.controllers.grouping.results.SumCategoryGroupingResult
 import co.smartreceipts.core.sync.model.SyncState
 
-
 class CategoryPriceColumn(id: Int, syncState: SyncState) :
     AbstractColumnImpl<SumCategoryGroupingResult>(
         id,
@@ -19,7 +18,7 @@ class CategoryPriceColumn(id: Int, syncState: SyncState) :
     }
 
     override fun getFooter(rows: List<SumCategoryGroupingResult>): String {
-        return if (!rows.isEmpty()) {
+        return if (rows.isNotEmpty()) {
             val prices = ArrayList<Price>()
 
             for (row in rows) {

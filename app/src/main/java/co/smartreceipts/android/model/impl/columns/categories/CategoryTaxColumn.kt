@@ -7,7 +7,6 @@ import co.smartreceipts.android.persistence.database.controllers.grouping.result
 import co.smartreceipts.core.sync.model.SyncState
 import java.util.*
 
-
 class CategoryTaxColumn(id: Int, syncState: SyncState) :
     AbstractColumnImpl<SumCategoryGroupingResult>(
         id,
@@ -19,7 +18,7 @@ class CategoryTaxColumn(id: Int, syncState: SyncState) :
         rowItem.netTax.currencyCodeFormattedPrice
 
     override fun getFooter(rows: List<SumCategoryGroupingResult>): String {
-        return if (!rows.isEmpty()) {
+        return if (rows.isNotEmpty()) {
             val prices = ArrayList<Price>()
 
             for (row in rows) {

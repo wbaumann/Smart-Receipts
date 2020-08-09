@@ -70,7 +70,6 @@ public class PdfBoxFullPdfReport extends PdfBoxAbstractReport {
         // Grouping by Category Receipts Tables
         final List<CategoryGroupingResult> groupingResults = groupingController.getReceiptsGroupedByCategory(trip).toList().blockingGet();
 
-
         pdfBoxReportFile.addSection(pdfBoxReportFile.createReceiptsTableSection(trip,
                 receipts, columns, distances, distanceColumns, categories, categoryColumns,
                 groupingResults, purchaseWallet));

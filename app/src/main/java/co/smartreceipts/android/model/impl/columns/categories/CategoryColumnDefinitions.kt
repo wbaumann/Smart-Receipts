@@ -75,7 +75,6 @@ class CategoryColumnDefinitions(private val reportResourcesManager: ReportResour
         return getColumnFromClass(NAME)
     }
 
-
     private fun getColumnFromClass(
         definition: ActualDefinition,
         id: Int = Keyed.MISSING_ID,

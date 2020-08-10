@@ -23,7 +23,7 @@ class CategoryColumnDefinitionsTest {
     fun setUp() {
         MockitoAnnotations.initMocks(this)
 
-        whenever(reportResourceManager.getFlexString(any<Int>())).thenReturn(anyString)
+        whenever(reportResourceManager.getFlexString(any())).thenReturn(anyString)
     }
 
     @Test

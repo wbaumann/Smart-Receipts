@@ -27,25 +27,49 @@ class CategoryColumnDefinitionsTest {
     }
 
     @Test
-    fun checkWhenMultiCurrency() {
-        categoryColumnDefinitions = CategoryColumnDefinitions(reportResourceManager, true)
+    fun checkWhenNotMultiCurrencyTaxDisabled() {
+        categoryColumnDefinitions = CategoryColumnDefinitions(reportResourceManager, false, false)
 
         val allColumns = categoryColumnDefinitions.allColumns
 
         assert(allColumns.isNotEmpty())
-        assert(allColumns.size == CategoryColumnDefinitions.ActualDefinition.values().size)
-        assert(allColumns.contains(CategoryExchangedPriceColumn(Keyed.MISSING_ID, DefaultSyncState())))
+        assert(allColumns.size == CategoryColumnDefinitions.ActualDefinition.values().size - 2)
+        assert(!allColumns.contains(CategoryExchangedPriceColumn(Keyed.MISSING_ID, DefaultSyncState())))
+        assert(!allColumns.contains(CategoryTaxColumn(Keyed.MISSING_ID, DefaultSyncState())))
     }
 
     @Test
-    fun checkWhenNotMultiCurrency() {
-        categoryColumnDefinitions = CategoryColumnDefinitions(reportResourceManager, false)
+    fun checkWhenMultiCurrencyTaxDisabled() {
+        categoryColumnDefinitions = CategoryColumnDefinitions(reportResourceManager, true, false)
+
+        val allColumns = categoryColumnDefinitions.allColumns
+
+        assert(allColumns.isNotEmpty())
+        assert(allColumns.size == CategoryColumnDefinitions.ActualDefinition.values().size - 1)
+        assert(!allColumns.contains(CategoryTaxColumn(Keyed.MISSING_ID, DefaultSyncState())))
+    }
+
+    @Test
+    fun checkWhenNotMultiCurrencyTaxEnabled() {
+        categoryColumnDefinitions = CategoryColumnDefinitions(reportResourceManager, false, true)
 
         val allColumns = categoryColumnDefinitions.allColumns
 
         assert(allColumns.isNotEmpty())
         assert(allColumns.size == CategoryColumnDefinitions.ActualDefinition.values().size - 1)
         assert(!allColumns.contains(CategoryExchangedPriceColumn(Keyed.MISSING_ID, DefaultSyncState())))
+    }
+
+    @Test
+    fun checkWhenMultiCurrencyTaxEnabled() {
+        categoryColumnDefinitions = CategoryColumnDefinitions(reportResourceManager, true, true)
+
+        val allColumns = categoryColumnDefinitions.allColumns
+
+        assert(allColumns.isNotEmpty())
+        assert(allColumns.size == CategoryColumnDefinitions.ActualDefinition.values().size)
+        assert(allColumns.contains(CategoryExchangedPriceColumn(Keyed.MISSING_ID, DefaultSyncState())))
+        assert(allColumns.contains(CategoryTaxColumn(Keyed.MISSING_ID, DefaultSyncState())))
     }
 
     companion object {

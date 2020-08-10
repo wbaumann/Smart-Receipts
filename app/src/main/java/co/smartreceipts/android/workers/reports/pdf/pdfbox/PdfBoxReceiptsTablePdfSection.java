@@ -260,7 +260,9 @@ public class PdfBoxReceiptsTablePdfSection extends PdfBoxSection {
                 pdfBoxContext.getFontManager().getFont(PdfFontStyle.DefaultBold))));
 
         // Print the grand total (reimbursable)
-        if (!preferenceManager.get(UserPreference.Receipts.OnlyIncludeReimbursable) && !data.getGrandTotalPrice().equals(data.getReimbursableGrandTotalPrice())) {
+        if (!preferenceManager.get(UserPreference.Receipts.OnlyIncludeReimbursable)
+                && !data.getGrandTotalPrice().equals(data.getReimbursableGrandTotalPrice())
+                && !data.getReimbursableGrandTotalPrice().getDecimalFormattedPrice().equals("0.00")) {
             headerRows.add(new GridRowRenderer(new TextRenderer(
                     pdfBoxContext.getAndroidContext(),
                     pdDocument,
@@ -268,7 +270,6 @@ public class PdfBoxReceiptsTablePdfSection extends PdfBoxSection {
                     pdfBoxContext.getColorManager().getColor(PdfColorStyle.Default),
                     pdfBoxContext.getFontManager().getFont(PdfFontStyle.DefaultBold))));
         }
-
 
         for (final GridRowRenderer headerRow : headerRows) {
             headerRow.getRenderingFormatting().addFormatting(new Alignment(Alignment.Type.Start));

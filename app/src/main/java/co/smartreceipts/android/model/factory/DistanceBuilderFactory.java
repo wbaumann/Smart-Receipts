@@ -194,7 +194,7 @@ public final class DistanceBuilderFactory implements BuilderFactory<Distance> {
     @NonNull
     public Distance build() {
         final BigDecimal scaledDistance = distance.setScale(ROUNDING_PRECISION, RoundingMode.HALF_UP);
-        final BigDecimal scaledRate = rate.setScale(ROUNDING_PRECISION, RoundingMode.HALF_UP);
+        final BigDecimal scaledRate = rate.setScale(ROUNDING_PRECISION, RoundingMode.HALF_EVEN);
 
         Price price = new PriceBuilderFactory()
                 .setCurrency(currency)

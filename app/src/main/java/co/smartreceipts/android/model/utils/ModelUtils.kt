@@ -77,7 +77,7 @@ object ModelUtils {
     fun getDecimalFormattedValue(decimal: BigDecimal, precision: Int = Price.TOTAL_DECIMAL_PRECISION): String {
         val money = BigMoney.of(CurrencyUnit.of(Locale.getDefault()), decimal)
 
-        return moneyFormatter.print(money.withScale(precision, RoundingMode.HALF_UP))
+        return moneyFormatter.print(money.withScale(precision, RoundingMode.HALF_EVEN))
     }
 
     /**
@@ -98,7 +98,7 @@ object ModelUtils {
                 else -> precision
             }
 
-        return money.currencyUnit.symbol + moneyFormatter.print(money.withScale(decimalPlaces, RoundingMode.HALF_UP))
+        return money.currencyUnit.symbol + moneyFormatter.print(money.withScale(decimalPlaces, RoundingMode.HALF_EVEN))
     }
 
     /**
@@ -119,7 +119,7 @@ object ModelUtils {
                 else -> precision
             }
 
-        return currency.code + " " + moneyFormatter.print(money.withScale(decimalPlaces, RoundingMode.HALF_UP))
+        return currency.code + " " + moneyFormatter.print(money.withScale(decimalPlaces, RoundingMode.HALF_EVEN))
     }
 
 

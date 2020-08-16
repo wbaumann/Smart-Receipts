@@ -90,8 +90,8 @@ public final class MultiplePriceImpl extends AbstractPriceImpl {
             currencyToPriceMap.put(currencyForPriceToAdd, priceForCurrency);
         }
 
-        this.totalMoney = total.withCurrencyScale(RoundingMode.HALF_DOWN);
-        this.possiblyIncorrectTotalPrice = possiblyIncorrectTotalPrice.withCurrencyScale(RoundingMode.HALF_DOWN);
+        this.totalMoney = total.withCurrencyScale(RoundingMode.HALF_EVEN);
+        this.possiblyIncorrectTotalPrice = possiblyIncorrectTotalPrice.withCurrencyScale(RoundingMode.HALF_EVEN);
         this.areAllExchangeRatesValid = areAllExchangeRatesValid;
         this.exchangeRate = new ExchangeRateBuilderFactory().setBaseCurrency(baseCurrency).build();
 
@@ -195,7 +195,7 @@ public final class MultiplePriceImpl extends AbstractPriceImpl {
     private String getCurrencyCodeFormattedStringFromMap(Map<CurrencyUnit, BigMoney> map, MoneyFormatter formatter) {
         final List<String> currencyStrings = new ArrayList<>();
         for (CurrencyUnit currency : map.keySet()) {
-            final BigMoney money = map.get(currency).withCurrencyScale(RoundingMode.HALF_DOWN);
+            final BigMoney money = map.get(currency).withCurrencyScale(RoundingMode.HALF_EVEN);
 
             String decimalValue = formatter.print(money);
             String codeFormatted = money.getCurrencyUnit().getCode().concat(" ").concat(decimalValue);
@@ -267,7 +267,7 @@ public final class MultiplePriceImpl extends AbstractPriceImpl {
         } else {
             final List<String> currencyStrings = new ArrayList<>();
             for (CurrencyUnit currency : currencyToPriceMap.keySet()) {
-                final BigMoney money = currencyToPriceMap.get(currency).withCurrencyScale(RoundingMode.HALF_DOWN);
+                final BigMoney money = currencyToPriceMap.get(currency).withCurrencyScale(RoundingMode.HALF_EVEN);
                 currencyStrings.add(currency.getSymbol().concat(formatter.print(money)));
             }
             return TextUtils.join("; ", currencyStrings);

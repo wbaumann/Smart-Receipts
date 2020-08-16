@@ -26,7 +26,7 @@ public final class SinglePriceImpl extends AbstractPriceImpl {
 
 
     public SinglePriceImpl(@NonNull BigDecimal price, @NonNull CurrencyUnit currency, @NonNull ExchangeRate exchangeRate) {
-        this.money = Money.of(currency, price, RoundingMode.HALF_UP);
+        this.money = Money.of(currency, price, RoundingMode.HALF_EVEN);
         this.exchangeRate = exchangeRate;
 
         // Pre-cache formatted values here

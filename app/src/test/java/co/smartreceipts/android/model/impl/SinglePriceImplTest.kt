@@ -47,9 +47,9 @@ class SinglePriceImplTest {
 
     @Test
     fun getMoney() {
-        assertEquals(PRICE.setScale(2, RoundingMode.HALF_UP), price1.money.amount)
-        assertEquals(PRICE.setScale(3, RoundingMode.HALF_UP), price2.money.amount)
-        assertEquals(PRICE.setScale(0, RoundingMode.HALF_UP), price3.money.amount)
+        assertEquals(PRICE.setScale(2, RoundingMode.HALF_EVEN), price1.money.amount)
+        assertEquals(PRICE.setScale(3, RoundingMode.HALF_EVEN), price2.money.amount)
+        assertEquals(PRICE.setScale(0, RoundingMode.HALF_EVEN), price3.money.amount)
     }
 
     @Test

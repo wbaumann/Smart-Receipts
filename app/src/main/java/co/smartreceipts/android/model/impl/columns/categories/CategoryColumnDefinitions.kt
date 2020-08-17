@@ -58,13 +58,15 @@ class CategoryColumnDefinitions(private val reportResourcesManager: ReportResour
         val columns = ArrayList<AbstractColumnImpl<SumCategoryGroupingResult>>(actualDefinitions.size)
 
         for (definition in actualDefinitions) {
-            // don't include PRICE_EXCHANGED definition if all receipts have same currency
-            // don't include TAX definition if tax field is disabled
-            if ((definition == PRICE_EXCHANGED && !multiCurrency)
-                    || (definition == TAX && !taxEnabled)) {
+            if (!(definition == PRICE_EXCHANGED && !multiCurrency)) {
+                // don't include PRICE_EXCHANGED definition if all receipts have same currency
                 continue
+            } else if (definition == TAX && !taxEnabled) {
+                // don't include TAX definition if tax field is disabled
+                continue
+            } else {
+                columns.add(getColumnFromClass(definition))
             }
-            columns.add(getColumnFromClass(definition))
         }
 
         Collections.sort(columns, ColumnNameComparator(reportResourcesManager))

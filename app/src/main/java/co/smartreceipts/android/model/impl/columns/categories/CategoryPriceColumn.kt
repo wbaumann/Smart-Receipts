@@ -23,7 +23,7 @@ class CategoryPriceColumn(id: Int, syncState: SyncState) :
 
             for (row in rows) {
                 for (entry in row.netPrice.immutableOriginalPrices.entries) {
-                    prices.add(PriceBuilderFactory().setCurrency(entry.key).setPrice(entry.value).build())
+                    prices.add(PriceBuilderFactory().setCurrency(entry.key).setPrice(entry.value.amount).build())
                 }
             }
 

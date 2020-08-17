@@ -28,7 +28,7 @@ class CategoryColumnDefinitionsTest {
 
     @Test
     fun checkWhenNotMultiCurrencyTaxDisabled() {
-        categoryColumnDefinitions = CategoryColumnDefinitions(reportResourceManager, false, false)
+        categoryColumnDefinitions = CategoryColumnDefinitions(reportResourceManager, multiCurrency = false, taxEnabled = false)
 
         val allColumns = categoryColumnDefinitions.allColumns
 
@@ -40,7 +40,7 @@ class CategoryColumnDefinitionsTest {
 
     @Test
     fun checkWhenMultiCurrencyTaxDisabled() {
-        categoryColumnDefinitions = CategoryColumnDefinitions(reportResourceManager, true, false)
+        categoryColumnDefinitions = CategoryColumnDefinitions(reportResourceManager, multiCurrency = true, taxEnabled = false)
 
         val allColumns = categoryColumnDefinitions.allColumns
 
@@ -51,7 +51,7 @@ class CategoryColumnDefinitionsTest {
 
     @Test
     fun checkWhenNotMultiCurrencyTaxEnabled() {
-        categoryColumnDefinitions = CategoryColumnDefinitions(reportResourceManager, false, true)
+        categoryColumnDefinitions = CategoryColumnDefinitions(reportResourceManager, multiCurrency = false, taxEnabled = true)
 
         val allColumns = categoryColumnDefinitions.allColumns
 
@@ -62,7 +62,7 @@ class CategoryColumnDefinitionsTest {
 
     @Test
     fun checkWhenMultiCurrencyTaxEnabled() {
-        categoryColumnDefinitions = CategoryColumnDefinitions(reportResourceManager, true, true)
+        categoryColumnDefinitions = CategoryColumnDefinitions(reportResourceManager, multiCurrency = true, taxEnabled = true)
 
         val allColumns = categoryColumnDefinitions.allColumns
 

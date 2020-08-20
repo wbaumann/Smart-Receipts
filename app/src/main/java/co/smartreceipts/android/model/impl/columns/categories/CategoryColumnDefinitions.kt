@@ -58,7 +58,7 @@ class CategoryColumnDefinitions(private val reportResourcesManager: ReportResour
         val columns = ArrayList<AbstractColumnImpl<SumCategoryGroupingResult>>(actualDefinitions.size)
 
         for (definition in actualDefinitions) {
-            if (!(definition == PRICE_EXCHANGED && !multiCurrency)) {
+            if (definition == PRICE_EXCHANGED && !multiCurrency) {
                 // don't include PRICE_EXCHANGED definition if all receipts have same currency
                 continue
             } else if (definition == TAX && !taxEnabled) {

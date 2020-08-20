@@ -8,6 +8,7 @@ import com.tom_roush.pdfbox.pdmodel.PDDocument;
 import com.tom_roush.pdfbox.pdmodel.common.PDRectangle;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -262,7 +263,7 @@ public class PdfBoxReceiptsTablePdfSection extends PdfBoxSection {
         // Print the grand total (reimbursable)
         if (!preferenceManager.get(UserPreference.Receipts.OnlyIncludeReimbursable)
                 && !data.getGrandTotalPrice().equals(data.getReimbursableGrandTotalPrice())
-                && !data.getReimbursableGrandTotalPrice().getDecimalFormattedPrice().equals("0.00")) {
+                && data.getReimbursableGrandTotalPrice().getPrice().compareTo(BigDecimal.ZERO) != 0) {
             headerRows.add(new GridRowRenderer(new TextRenderer(
                     pdfBoxContext.getAndroidContext(),
                     pdDocument,

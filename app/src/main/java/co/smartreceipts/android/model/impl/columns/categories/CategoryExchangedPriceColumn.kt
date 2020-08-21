@@ -7,7 +7,6 @@ import co.smartreceipts.android.persistence.database.controllers.grouping.result
 import co.smartreceipts.core.sync.model.SyncState
 import java.util.*
 
-
 class CategoryExchangedPriceColumn(id: Int, syncState: SyncState) :
     AbstractColumnImpl<SumCategoryGroupingResult>(
         id,
@@ -17,11 +16,11 @@ class CategoryExchangedPriceColumn(id: Int, syncState: SyncState) :
 
     override fun getValue(rowItem: SumCategoryGroupingResult): String {
         val price = rowItem.netPrice
-        return price.currency.currencyCode + price.decimalFormattedPrice
+        return price.currency.code + price.decimalFormattedPrice
     }
 
     override fun getFooter(rows: List<SumCategoryGroupingResult>): String {
-        return if (!rows.isEmpty()) {
+        return if (rows.isNotEmpty()) {
             val tripCurrency = rows[0].baseCurrency
             val prices = ArrayList<Price>()
             for (row in rows) {

@@ -77,15 +77,15 @@ public class GoogleDriveBackupManager implements BackupProvider {
     private CompositeDisposable intentsCompositeDisposable = new CompositeDisposable();
 
     @Inject
-    public GoogleDriveBackupManager(@NonNull Context context,
-                                    @NonNull DatabaseHelper databaseHelper,
-                                    @NonNull GoogleDriveTableManager googleDriveTableManager,
-                                    @NonNull NetworkManager networkManager,
-                                    @NonNull Analytics analytics,
-                                    @NonNull ReceiptTableController receiptTableController,
-                                    @NonNull DatabaseRestorer databaseRestorer,
-                                    @NonNull NoOpBackupProvider noOpBackupProvider,
-                                    @NonNull DriveAccountHelper driveAccountHelper) {
+    GoogleDriveBackupManager(@NonNull Context context,
+                             @NonNull DatabaseHelper databaseHelper,
+                             @NonNull GoogleDriveTableManager googleDriveTableManager,
+                             @NonNull NetworkManager networkManager,
+                             @NonNull Analytics analytics,
+                             @NonNull ReceiptTableController receiptTableController,
+                             @NonNull DatabaseRestorer databaseRestorer,
+                             @NonNull NoOpBackupProvider noOpBackupProvider,
+                             @NonNull DriveAccountHelper driveAccountHelper) {
 
         this.context = context;
         this.databaseHelper = databaseHelper;
@@ -203,6 +203,21 @@ public class GoogleDriveBackupManager implements BackupProvider {
             return driveClientInitializerRef.getDriveRestoreDataManager().restoreBackup(remoteBackupMetadata, overwriteExistingData);
         } else {
             return noOpBackupProvider.restoreBackup(remoteBackupMetadata, overwriteExistingData);
+        }
+    }
+
+    @NonNull
+    @Override
+    public Single<com.google.api.services.drive.model.File> renameBackup(@NonNull RemoteBackupMetadata remoteBackupMetadata, @NonNull String newFileName) {
+        Logger.info(this, "Renaming drive backup: {}", remoteBackupMetadata);
+        final DriveClientInitializer driveClientInitializerRef;
+        synchronized (initializationLock) {
+            driveClientInitializerRef = driveClientInitializer;
+        }
+        if (driveClientInitializerRef != null) {
+            return driveClientInitializerRef.getDriveStreamsManager().renameBackup(remoteBackupMetadata.getId(), newFileName);
+        } else {
+            return noOpBackupProvider.renameBackup(remoteBackupMetadata, newFileName);
         }
     }
 

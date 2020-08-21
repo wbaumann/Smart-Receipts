@@ -6,10 +6,10 @@ plugins {
 
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.android.gms.oss-licenses-plugin'
+apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'kotlin-android'
-apply plugin: 'org.jetbrains.kotlin.android.extensions'
-apply plugin: 'io.fabric'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'org.jetbrains.kotlin.android.extensions'
 
 androidExtensions {
     experimental = true
@@ -158,6 +158,9 @@ android {
 
         implementation "com.android.support.constraint:constraint-layout:$CONSTRAINT_LAYOUT_VERSION"
 
+        implementation("com.google.apis:google-api-services-drive:$GOOGLE_API_SERVICES_VERSION") {
+            exclude group: 'org.apache.httpcomponents'
+        }
         implementation "com.google.http-client:google-http-client-gson:$GOOGLE_HTTP_CLIENT_VERSION"
 
         implementation "com.squareup.picasso:picasso:$PICASSO_VERSION"
@@ -197,6 +200,8 @@ android {
         implementation "com.hannesdorfmann:adapterdelegates4-kotlin-dsl-layoutcontainer:$ADAPTER_DELEGATES_VERSION"
 
         implementation "com.github.pqpo:SmartCropper:$SMART_CROPPER_VERSION"
+
+        implementation "org.joda:joda-money:$JODA_MONEY_VERSION"
 
         // Dagger
         kapt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"

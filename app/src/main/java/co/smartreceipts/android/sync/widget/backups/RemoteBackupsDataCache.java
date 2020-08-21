@@ -32,7 +32,7 @@ import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.ReplaySubject;
 import wb.android.storage.StorageManager;
 
-public class RemoteBackupsDataCache {
+class RemoteBackupsDataCache {
 
     private final Context mContext;
     private final BackupProvidersManager mBackupProvidersManager;
@@ -40,9 +40,9 @@ public class RemoteBackupsDataCache {
     private final DatabaseHelper mDatabaseHelper;
     private RemoteBackupsResultsCacheHeadlessFragment mHeadlessFragment;
 
-    public RemoteBackupsDataCache(@NonNull FragmentManager fragmentManager, @NonNull Context context,
-                                  @NonNull BackupProvidersManager backupProvidersManager, @NonNull NetworkManager networkManager,
-                                  @NonNull DatabaseHelper databaseHelper) {
+    RemoteBackupsDataCache(@NonNull FragmentManager fragmentManager, @NonNull Context context,
+                           @NonNull BackupProvidersManager backupProvidersManager, @NonNull NetworkManager networkManager,
+                           @NonNull DatabaseHelper databaseHelper) {
         mContext = Preconditions.checkNotNull(context.getApplicationContext());
         mBackupProvidersManager = Preconditions.checkNotNull(backupProvidersManager);
         mNetworkManager = Preconditions.checkNotNull(networkManager);
@@ -58,7 +58,7 @@ public class RemoteBackupsDataCache {
     }
 
     @NonNull
-    public synchronized Observable<List<RemoteBackupMetadata>> getBackups(@NonNull SyncProvider syncProvider) {
+    synchronized Observable<List<RemoteBackupMetadata>> getBackups(@NonNull SyncProvider syncProvider) {
         if (mHeadlessFragment.getBackupsReplaySubjectMap == null) {
             mHeadlessFragment.getBackupsReplaySubjectMap = new HashMap<>();
         }
@@ -80,14 +80,33 @@ public class RemoteBackupsDataCache {
         return backupsReplaySubject;
     }
 
-    public synchronized void clearGetBackupsResults() {
+    synchronized void clearGetBackupsResults() {
         if (mHeadlessFragment.getBackupsReplaySubjectMap != null) {
             mHeadlessFragment.getBackupsReplaySubjectMap.clear();
         }
     }
 
     @NonNull
-    public synchronized Observable<Boolean> deleteBackup(@Nullable RemoteBackupMetadata remoteBackupMetadata) {
+    synchronized Observable<com.google.api.services.drive.model.File> renameBackup(@NonNull RemoteBackupMetadata remoteBackupMetadata, @NonNull String newFileName) {
+        if (mHeadlessFragment.renameBackupReplaySubjectMap == null) {
+            mHeadlessFragment.renameBackupReplaySubjectMap = new HashMap<>();
+        }
+        ReplaySubject<com.google.api.services.drive.model.File> renameReplaySubject = mHeadlessFragment.renameBackupReplaySubjectMap.get(remoteBackupMetadata);
+        if (renameReplaySubject == null) {
+            renameReplaySubject = ReplaySubject.create();
+
+            mBackupProvidersManager.renameBackup(remoteBackupMetadata, newFileName)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .toObservable()
+                    .subscribe(renameReplaySubject);
+            mHeadlessFragment.renameBackupReplaySubjectMap.put(remoteBackupMetadata, renameReplaySubject);
+        }
+        return renameReplaySubject;
+    }
+
+    @NonNull
+    synchronized Observable<Boolean> deleteBackup(@Nullable RemoteBackupMetadata remoteBackupMetadata) {
         if (mHeadlessFragment.deleteBackupReplaySubjectMap == null) {
             mHeadlessFragment.deleteBackupReplaySubjectMap = new HashMap<>();
         }
@@ -119,7 +138,7 @@ public class RemoteBackupsDataCache {
     }
 
     @NonNull
-    public synchronized Observable<Boolean> restoreBackup(@NonNull final RemoteBackupMetadata remoteBackupMetadata, final boolean overwriteExistingData) {
+    synchronized Observable<Boolean> restoreBackup(@NonNull final RemoteBackupMetadata remoteBackupMetadata, final boolean overwriteExistingData) {
         if (mHeadlessFragment.restoreBackupReplaySubjectMap == null) {
             mHeadlessFragment.restoreBackupReplaySubjectMap = new HashMap<>();
         }
@@ -137,7 +156,7 @@ public class RemoteBackupsDataCache {
     }
 
     @NonNull
-    public synchronized Observable<File> downloadBackup(@NonNull final RemoteBackupMetadata remoteBackupMetadata, final boolean debugMode) {
+    synchronized Observable<File> downloadBackup(@NonNull final RemoteBackupMetadata remoteBackupMetadata, final boolean debugMode) {
         if (mHeadlessFragment.downloadBackupReplaySubjectMap == null) {
             mHeadlessFragment.downloadBackupReplaySubjectMap = new HashMap<>();
         }
@@ -147,7 +166,6 @@ public class RemoteBackupsDataCache {
             final File cacheDir = new SmartReceiptsTemporaryFileCache(mContext).getInternalCacheFile(FileUtils.omitIllegalCharactersFromFileName(remoteBackupMetadata.getSyncDeviceName()));
             final File cacheDirZipFile = new SmartReceiptsTemporaryFileCache(mContext).getInternalCacheFile(FileUtils.omitIllegalCharactersFromFileName(remoteBackupMetadata.getSyncDeviceName()) + ".zip");
             downloadBackupReplaySubjectMap = ReplaySubject.create();
-
 
             Completable.fromCallable(() -> {
                 final StorageManager storageManager = StorageManager.getInstance(mContext);
@@ -182,7 +200,7 @@ public class RemoteBackupsDataCache {
         }
     }
 
-    public synchronized void removeCachedRestoreBackupFor(@NonNull final RemoteBackupMetadata remoteBackupMetadata) {
+    synchronized void removeCachedRestoreBackupFor(@NonNull final RemoteBackupMetadata remoteBackupMetadata) {
         if (mHeadlessFragment.restoreBackupReplaySubjectMap != null) {
             mHeadlessFragment.restoreBackupReplaySubjectMap.remove(remoteBackupMetadata);
         }
@@ -229,6 +247,7 @@ public class RemoteBackupsDataCache {
         private Map<RemoteBackupMetadata, ReplaySubject<Boolean>> deleteBackupReplaySubjectMap;
         private Map<RemoteBackupMetadata, ReplaySubject<Boolean>> restoreBackupReplaySubjectMap;
         private Map<RemoteBackupMetadata, ReplaySubject<File>> downloadBackupReplaySubjectMap;
+        private Map<RemoteBackupMetadata, ReplaySubject<com.google.api.services.drive.model.File>> renameBackupReplaySubjectMap;
 
         @Override
         public void onCreate(@Nullable Bundle savedInstanceState) {

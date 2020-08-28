@@ -1,4 +1,4 @@
-package co.smartreceipts.android.fragments;
+package co.smartreceipts.android.workers.widget;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -20,10 +20,13 @@ import javax.inject.Inject;
 
 import co.smartreceipts.analytics.Analytics;
 import co.smartreceipts.analytics.events.Events;
+import co.smartreceipts.analytics.log.Logger;
 import co.smartreceipts.android.R;
 import co.smartreceipts.android.activities.NavigationHandler;
 import co.smartreceipts.android.databinding.GenerateReportLayoutBinding;
 import co.smartreceipts.android.date.DateFormatter;
+import co.smartreceipts.android.fragments.ReportInfoFragment;
+import co.smartreceipts.android.fragments.WBFragment;
 import co.smartreceipts.android.model.Trip;
 import co.smartreceipts.android.persistence.PersistenceManager;
 import co.smartreceipts.android.purchases.wallet.PurchaseWallet;
@@ -31,12 +34,12 @@ import co.smartreceipts.android.settings.UserPreferenceManager;
 import co.smartreceipts.android.settings.catalog.UserPreference;
 import co.smartreceipts.android.widget.tooltip.report.generate.GenerateInfoTooltipManager;
 import co.smartreceipts.android.workers.EmailAssistant;
+import co.smartreceipts.android.workers.EmailAssistantOld;
 import co.smartreceipts.android.workers.reports.ReportResourcesManager;
-import co.smartreceipts.analytics.log.Logger;
 import dagger.android.support.AndroidSupportInjection;
 import wb.android.flex.Flex;
 
-public class GenerateReportFragment extends WBFragment implements View.OnClickListener {
+public class GenerateReportFragmentOld extends WBFragment implements View.OnClickListener {
 
     @Inject
     Flex flex;
@@ -75,8 +78,8 @@ public class GenerateReportFragment extends WBFragment implements View.OnClickLi
     private Trip trip;
 
     @NonNull
-    public static GenerateReportFragment newInstance() {
-        return new GenerateReportFragment();
+    public static GenerateReportFragmentOld newInstance() {
+        return new GenerateReportFragmentOld();
     }
 
     @Override
@@ -139,22 +142,8 @@ public class GenerateReportFragment extends WBFragment implements View.OnClickLi
         }
 
         analytics.record(Events.Generate.GenerateReports);
+        
         generateInfoTooltipManager.reportWasGenerated();
-        if (pdfFullCheckbox.isChecked()) {
-            analytics.record(Events.Generate.FullPdfReport);
-        }
-        if (pdfImagesCheckbox.isChecked()) {
-            analytics.record(Events.Generate.ImagesPdfReport);
-        }
-        if (csvCheckbox.isChecked()) {
-            analytics.record(Events.Generate.CsvReport);
-        }
-        if (zipWithMetadataCheckbox.isChecked()) {
-            analytics.record(Events.Generate.ZipWithMetadataReport);
-        }
-        if (zipCheckbox.isChecked()) {
-            analytics.record(Events.Generate.ZipReport);
-        }
 
         // TODO: Off the UI thread :/
         if (persistenceManager.getDatabase().getReceiptsTable().getBlocking(trip, true).isEmpty()) {
@@ -181,18 +170,23 @@ public class GenerateReportFragment extends WBFragment implements View.OnClickLi
 
         EnumSet<EmailAssistant.EmailOptions> options = EnumSet.noneOf(EmailAssistant.EmailOptions.class);
         if (pdfFullCheckbox.isChecked()) {
+            analytics.record(Events.Generate.FullPdfReport);
             options.add(EmailAssistant.EmailOptions.PDF_FULL);
         }
         if (pdfImagesCheckbox.isChecked()) {
+            analytics.record(Events.Generate.ImagesPdfReport);
             options.add(EmailAssistant.EmailOptions.PDF_IMAGES_ONLY);
         }
         if (csvCheckbox.isChecked()) {
+            analytics.record(Events.Generate.CsvReport);
             options.add(EmailAssistant.EmailOptions.CSV);
         }
         if (zipWithMetadataCheckbox.isChecked()) {
+            analytics.record(Events.Generate.ZipWithMetadataReport);
             options.add(EmailAssistant.EmailOptions.ZIP_WITH_METADATA);
         }
         if (zipCheckbox.isChecked()) {
+            analytics.record(Events.Generate.ZipReport);
             options.add(EmailAssistant.EmailOptions.ZIP);
         }
 

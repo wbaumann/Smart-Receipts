@@ -49,6 +49,7 @@ import javax.inject.Inject
 
 class DistanceCreateEditFragment : WBFragment(), DistanceCreateEditView, View.OnFocusChangeListener,
         PaymentMethodsView {
+
     @Inject
     lateinit var presenter: DistanceCreateEditPresenter
 

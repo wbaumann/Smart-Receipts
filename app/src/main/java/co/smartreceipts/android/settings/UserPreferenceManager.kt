@@ -58,7 +58,7 @@ class UserPreferenceManager constructor(private val context: Context,
                         val preferenceName = name(userPreference)
                         if (!preferences.get().contains(preferenceName)) {
                             // In here - we assign values that don't allow for preference_defaults.xml definitions (e.g. Locale Based Settings)
-                            // Additionally, we set all float fields, which don't don't allow for 'android:defaultValue' settings
+                            // Additionally, we set all float fields, which don't allow for 'android:defaultValue' settings
                             if (UserPreference.General.DateSeparator == userPreference) {
                                 val assignedDateSeparator = context.getString(UserPreference.General.DateSeparator.defaultValue)
                                 if (TextUtils.isEmpty(assignedDateSeparator)) {

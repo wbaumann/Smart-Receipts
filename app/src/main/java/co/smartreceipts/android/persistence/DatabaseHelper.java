@@ -215,9 +215,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      *
      * @param trip The trip we want the prices of
      */
-    public void getTripPriceAndDailyPrice(final Trip trip) {
+    public void getTripPriceAndDailyPriceAndSize(final Trip trip) {
         queryTripPrice(trip);
         queryTripDailyPrice(trip);
+        queryTripSize(trip);
     }
 
     /**
@@ -270,6 +271,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         trip.setDailySubTotal(new PriceBuilderFactory().setPriceables(prices, trip.getTripCurrency()).build());
+    }
+
+    private void queryTripSize(final Trip trip) {
+        final List<Receipt> receipts = mReceiptsTable.getBlocking(trip, true);
+        trip.setSize(receipts.size());
     }
 
     public Single<Integer> getNextReceiptAutoIncrementIdHelper() {

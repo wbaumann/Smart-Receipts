@@ -41,7 +41,7 @@ public class DefaultObjects {
                 new File(new File("").getAbsolutePath()),
                 new DisplayableDate(new Date(System.currentTimeMillis()), TimeZone.getDefault()),
                 new DisplayableDate(new Date(System.currentTimeMillis()), TimeZone.getDefault()),
-                CurrencyUnit.of(Locale.getDefault()), "comment", "costCenter", newAutoCompleteMetadata());
+                CurrencyUnit.of(Locale.getDefault()), "comment", "costCenter", 0, newAutoCompleteMetadata());
     }
 
     @NonNull
@@ -51,7 +51,7 @@ public class DefaultObjects {
                 new DisplayableDate(new Date(System.currentTimeMillis()), TimeZone.getDefault()),
                 new DisplayableDate(new Date(System.currentTimeMillis()), TimeZone.getDefault()),
                 CurrencyUnit.of(Locale.getDefault()), "comment", "costCenter", newDefaultSyncState(),
-                price, newAutoCompleteMetadata());
+                price, 0, newAutoCompleteMetadata());
     }
 
     @NonNull

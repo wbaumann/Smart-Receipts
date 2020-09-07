@@ -37,6 +37,7 @@ public final class TripBuilderFactory implements BuilderFactory<Trip> {
     private TimeZone startTimeZone, endTimeZone;
     private CurrencyUnit defaultCurrency;
     private SyncState syncState;
+    private int size;
     private AutoCompleteMetadata autoCompleteMetadata;
 
     public TripBuilderFactory() {
@@ -51,6 +52,7 @@ public final class TripBuilderFactory implements BuilderFactory<Trip> {
         startTimeZone = TimeZone.getDefault();
         endTimeZone = TimeZone.getDefault();
         syncState = new DefaultSyncState();
+        size = 0;
         autoCompleteMetadata = new AutoCompleteMetadata(false, false, false, false);
     }
 
@@ -66,6 +68,7 @@ public final class TripBuilderFactory implements BuilderFactory<Trip> {
         startTimeZone = trip.getStartTimeZone();
         endTimeZone = trip.getEndTimeZone();
         syncState = trip.getSyncState();
+        size = trip.getSize();
         autoCompleteMetadata = trip.getAutoCompleteMetadata();
     }
 
@@ -184,12 +187,17 @@ public final class TripBuilderFactory implements BuilderFactory<Trip> {
         return this;
     }
 
+    public TripBuilderFactory setSize(int size) {
+        this.size = size;
+        return this;
+    }
+
     @Override
     @NonNull
     public Trip build() {
         final DisplayableDate startDisplayableDate = new DisplayableDate(startDate, startTimeZone);
         final DisplayableDate endDisplayableDate = new DisplayableDate(endDate, endTimeZone);
         return new Trip(id, uuid, dir, startDisplayableDate, endDisplayableDate, defaultCurrency,
-                comment, costCenter, syncState, autoCompleteMetadata);
+                comment, costCenter, syncState, size, autoCompleteMetadata);
     }
 }

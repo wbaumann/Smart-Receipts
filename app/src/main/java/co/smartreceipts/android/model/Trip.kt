@@ -51,9 +51,10 @@ class Trip @JvmOverloads constructor(
     override var price: Price = PriceBuilderFactory().setCurrency(tripCurrency).build(),
     /**
      * The daily sub-total [Price] (i.e. all expenditures that occurred today) for this trip,
-     * daily sub-total of a trip exists as a function of it's receipt children (and not itself)
+     * daily sub-total of a trip exists as a function of its receipt children (and not itself)
      */
     var dailySubTotal: Price = PriceBuilderFactory().setCurrency(tripCurrency).build(),
+    var size: Int,
     val autoCompleteMetadata: AutoCompleteMetadata
 ) : Keyed, Parcelable, Priceable, Comparable<Trip>, Syncable, Searchable {
 

@@ -154,6 +154,7 @@ class Trip @JvmOverloads constructor(
         if (syncState != that.syncState) return false
         if (price != that.price) return false
         if (dailySubTotal != that.dailySubTotal) return false
+        if (size != that.size) return false
         if (autoCompleteMetadata != that.autoCompleteMetadata) return false
         return if (tripCurrency != that.tripCurrency) false else costCenter == that.costCenter
 
@@ -172,6 +173,7 @@ class Trip @JvmOverloads constructor(
         result = 31 * result + syncState.hashCode()
         result = 31 * result + price.hashCode()
         result = 31 * result + dailySubTotal.hashCode()
+        result = 31 * result + size.hashCode()
         result = 31 * result + autoCompleteMetadata.hashCode()
         return result
     }
@@ -189,6 +191,7 @@ class Trip @JvmOverloads constructor(
                 ", endDisplayableDate=" + endDisplayableDate +
                 ", tripCurrency=" + tripCurrency +
                 ", syncState=" + syncState +
+                ", size=" + size +
                 ", autoCompleteMetadata=" + autoCompleteMetadata +
                 '}'.toString()
     }

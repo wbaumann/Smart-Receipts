@@ -213,6 +213,7 @@
     <!-- ================== Trip Adapter ===================== -->
     <string name="trip_adapter_list_item_to">%1$s до %2$s</string>
     <string name="trip_no_data">Судя по всему, в настоящее время у вас нет отчетов. Нажмите на кнопку + (плюс), чтобы начать.</string>
+    <string name="number_of_receipts">Чеки: %d</string>
 
     <!-- ================= Receipt Adapter =================== -->
     <string name="receipt_no_data">Судя по всему, у вас еще нет чеков. Попробуйте нажать кнопку + (плюс), чтобы начать…</string>

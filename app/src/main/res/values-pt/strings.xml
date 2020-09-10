@@ -211,6 +211,7 @@
     <!-- ================== Trip Adapter ===================== -->
     <string name="trip_adapter_list_item_to">%1$s para %2$s</string>
     <string name="trip_no_data">Você não parece ter nenhum relatório definido no momento. Tente clicar no botão \'+\' para começar.</string>
+    <string name="number_of_receipts">Recibos: %d</string>
 
     <!-- ================= Receipt Adapter =================== -->
     <string name="receipt_no_data">Parece que você ainda não tem nenhum recibo. Tente clicar no botão \'+\' para começar.</string>

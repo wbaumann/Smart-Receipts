@@ -74,7 +74,7 @@ jobs:
   buildAndTestFreeAPK:
     working_directory: ~/code
     docker:
-      - image: circleci/android:api-29  # gcloud is baked into this image
+      - image: circleci/android:api-28  # gcloud is baked into this image
     steps:
       - checkout
       - restore_cache:
@@ -114,7 +114,7 @@ jobs:
   buildAndTestPlusAPK:
     working_directory: ~/code
     docker:
-      - image: circleci/android:api-29  # gcloud is baked into this image
+      - image: circleci/android:api-28  # gcloud is baked into this image
     steps:
       - checkout
       - restore_cache:
@@ -154,7 +154,7 @@ jobs:
   buildAndTestFlossAPK:
     working_directory: ~/code
     docker:
-      - image: circleci/android:api-29  # gcloud is baked into this image
+      - image: circleci/android:api-28  # gcloud is baked into this image
     steps:
       - checkout
       - restore_cache:

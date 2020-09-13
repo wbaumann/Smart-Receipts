@@ -3,8 +3,8 @@ package co.smartreceipts.android.test.espresso
 import android.content.Context
 import android.util.Log
 import androidx.annotation.CallSuper
+import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.rule.ActivityTestRule
 import co.smartreceipts.android.SmartReceiptsApplication
 import co.smartreceipts.android.activities.SmartReceiptsActivity
 import co.smartreceipts.android.date.DateFormatter
@@ -107,7 +107,7 @@ abstract class UpgradeFromKnownDatabaseValidator {
 
     @Rule
     @JvmField
-    val activityTestRule = ActivityTestRule(SmartReceiptsActivity::class.java)
+    val activityTestRule = ActivityScenarioRule(SmartReceiptsActivity::class.java)
 
     private lateinit var databaseHelper: DatabaseHelper
 
@@ -118,9 +118,11 @@ abstract class UpgradeFromKnownDatabaseValidator {
     @Before
     @CallSuper
     fun setUp() {
-        val application = activityTestRule.activity.application as SmartReceiptsApplication
-        databaseHelper = application.databaseHelper
-        dateFormatter = application.dateFormatter
+        activityTestRule.scenario.onActivity { activity ->
+            val application = activity.application as SmartReceiptsApplication
+            databaseHelper = application.databaseHelper
+            dateFormatter = application.dateFormatter
+        }
 
         // Set the Locale to en-US for consistency purposes
         val nonLocalizedContext = InstrumentationRegistry.getInstrumentation().targetContext

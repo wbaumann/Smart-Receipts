@@ -14,8 +14,7 @@ object CurrencyUtils {
     fun isCurrencySupported(code: String): Boolean = currencies.find { it.currencyCode == code } != null
 
     private val _currencies: List<CurrencyWithDecimalPlaces> = getIso4217Currencies() + getNonIso4217Currencies()
-
-
+    
     /**
      * Returns a list of all ISO 4127 currencies
      * http://en.wikipedia.org/wiki/ISO_4217

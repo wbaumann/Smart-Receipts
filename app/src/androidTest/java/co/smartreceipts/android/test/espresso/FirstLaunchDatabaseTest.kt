@@ -1,7 +1,7 @@
 package co.smartreceipts.android.test.espresso
 
+import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.filters.LargeTest
-import androidx.test.rule.ActivityTestRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import co.smartreceipts.android.SmartReceiptsApplication
 import co.smartreceipts.android.activities.SmartReceiptsActivity
@@ -20,16 +20,17 @@ class FirstLaunchDatabaseTest {
 
     @Rule
     @JvmField
-    val activityTestRule = ActivityTestRule(SmartReceiptsActivity::class.java)
+    val activityTestRule = ActivityScenarioRule(SmartReceiptsActivity::class.java)
 
     private lateinit var databaseHelper: DatabaseHelper
 
 
-
     @Before
     fun setUp() {
-        val application = activityTestRule.activity.application as SmartReceiptsApplication
-        databaseHelper = application.databaseHelper
+        activityTestRule.scenario.onActivity { activity ->
+            val application = activity.application as SmartReceiptsApplication
+            databaseHelper = application.databaseHelper
+        }
     }
 
 

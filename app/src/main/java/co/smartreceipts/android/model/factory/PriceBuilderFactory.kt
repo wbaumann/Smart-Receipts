@@ -5,6 +5,7 @@ import co.smartreceipts.android.model.Priceable
 import co.smartreceipts.android.model.gson.ExchangeRate
 import co.smartreceipts.android.model.impl.MultiplePriceImpl
 import co.smartreceipts.android.model.impl.SinglePriceImpl
+import co.smartreceipts.android.model.utils.CurrencyUtils.getDefaultCurrency
 import co.smartreceipts.android.model.utils.ModelUtils
 import org.joda.money.CurrencyUnit
 import java.math.BigDecimal
@@ -16,12 +17,12 @@ import java.util.*
  */
 class PriceBuilderFactory : BuilderFactory<Price> {
     private var priceDecimal: BigDecimal = BigDecimal.ZERO
-    private var currency: CurrencyUnit = CurrencyUnit.of(Currency.getInstance(Locale.getDefault()).currencyCode)
+    private var currency: CurrencyUnit = getDefaultCurrency()!!
     private var prices: List<Price> = emptyList()
     private var exchangeRate: ExchangeRate? = null
 
     constructor() {
-        currency = CurrencyUnit.of(Currency.getInstance(Locale.getDefault()).currencyCode)
+        currency = getDefaultCurrency()!!
         priceDecimal = BigDecimal.ZERO
     }
 

@@ -156,7 +156,7 @@ public final class ReceiptDatabaseAdapter implements SelectionBackedDatabaseAdap
                 .setTimeZone(timezone)
                 .setComment(comment)
                 .setIsReimbursable(reimbursable)
-                .setCurrency(CurrencyUtils.INSTANCE.isCurrencySupported(currency) ? CurrencyUnit.of(currency) : CurrencyUnit.of(Currency.getInstance(Locale.getDefault()).getCurrencyCode()))
+                .setCurrency(CurrencyUtils.INSTANCE.isCurrencySupported(currency) ? CurrencyUnit.of(currency) : CurrencyUtils.INSTANCE.getDefaultCurrency())
                 .setIsFullPage(fullPage)
                 .setIndex(index)
                 .setNameHiddenFromAutoComplete(isNameHiddenFromAutoComplete)

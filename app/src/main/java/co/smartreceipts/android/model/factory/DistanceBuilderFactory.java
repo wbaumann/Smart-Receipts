@@ -24,6 +24,7 @@ import co.smartreceipts.android.model.Keyed;
 import co.smartreceipts.android.model.PaymentMethod;
 import co.smartreceipts.android.model.Price;
 import co.smartreceipts.android.model.Trip;
+import co.smartreceipts.android.model.utils.CurrencyUtils;
 import co.smartreceipts.core.sync.model.SyncState;
 import co.smartreceipts.core.sync.model.impl.DefaultSyncState;
 
@@ -61,7 +62,7 @@ public final class DistanceBuilderFactory implements BuilderFactory<Distance> {
         date = new Date(System.currentTimeMillis());
         timeZone = TimeZone.getDefault();
         rate = BigDecimal.ZERO;
-        currency = CurrencyUnit.of(Currency.getInstance(Locale.getDefault()).getCurrencyCode());
+        currency = CurrencyUtils.INSTANCE.getDefaultCurrency();
         comment = "";
         syncState = new DefaultSyncState();
         autoCompleteMetadata = new AutoCompleteMetadata(false, false, false, false);

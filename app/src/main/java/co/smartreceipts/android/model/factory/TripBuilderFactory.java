@@ -46,7 +46,7 @@ public final class TripBuilderFactory implements BuilderFactory<Trip> {
         dir = new File("");
         comment = "";
         costCenter = "";
-        defaultCurrency = CurrencyUnit.of(Currency.getInstance(Locale.getDefault()).getCurrencyCode());
+        defaultCurrency = CurrencyUtils.INSTANCE.getDefaultCurrency();
         startDate = new Date(System.currentTimeMillis());
         endDate = startDate;
         startTimeZone = TimeZone.getDefault();

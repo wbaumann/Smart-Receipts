@@ -1,6 +1,10 @@
 package co.smartreceipts.android.model.utils
 
+import androidx.annotation.NonNull
+import co.smartreceipts.analytics.log.Logger
 import co.smartreceipts.android.model.Price
+import org.joda.money.CurrencyUnit
+import java.util.*
 
 object CurrencyUtils {
 
@@ -256,6 +260,16 @@ object CurrencyUtils {
             CurrencyWithDecimalPlaces("ZWD", 2) // Zimbabwean Dollar
         )
         return nonIso4217Currencies
+    }
+
+    @NonNull
+    fun getDefaultCurrency(): CurrencyUnit? {
+        return try {
+            CurrencyUnit.of(Currency.getInstance(Locale.getDefault()).currencyCode)
+        } catch (e: IllegalArgumentException) {
+            Logger.warn(CurrencyUtils::class.java, "Unable to find a default currency, since the device has an unsupported ISO 3166 locale. Returning USD instead")
+            CurrencyUnit.of("USD")
+        }
     }
 }
 

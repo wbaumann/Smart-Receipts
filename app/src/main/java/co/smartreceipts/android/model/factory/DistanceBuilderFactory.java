@@ -12,6 +12,7 @@ import org.joda.money.CurrencyUnit;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Date;
+import java.util.Currency;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.UUID;
@@ -60,7 +61,7 @@ public final class DistanceBuilderFactory implements BuilderFactory<Distance> {
         date = new Date(System.currentTimeMillis());
         timeZone = TimeZone.getDefault();
         rate = BigDecimal.ZERO;
-        currency = CurrencyUnit.of(Locale.getDefault());
+        currency = CurrencyUnit.of(Currency.getInstance(Locale.getDefault()).getCurrencyCode());
         comment = "";
         syncState = new DefaultSyncState();
         autoCompleteMetadata = new AutoCompleteMetadata(false, false, false, false);

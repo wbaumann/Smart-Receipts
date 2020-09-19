@@ -5,6 +5,7 @@ import android.os.StrictMode
 import co.smartreceipts.android.BuildConfig
 import co.smartreceipts.analytics.log.Logger
 import java.util.concurrent.Executors
+import kotlin.math.min
 
 /**
  * A simple wrapper around our [StrictMode] configuration to allow us to enable this for testing
@@ -12,7 +13,7 @@ import java.util.concurrent.Executors
  */
 object StrictModeConfiguration {
 
-    private val MAX_STACK_DEPTH_TO_CHECK = 15
+    private const val MAX_STACK_DEPTH_TO_CHECK = 15
 
     /**
      * Enables strict mode
@@ -37,7 +38,7 @@ object StrictModeConfiguration {
                 // https://stackoverflow.com/questions/51021362/strictmode-disk-read-violation-on-empty-activitys-setcontentview
                 val stackTrace = it.stackTrace.asList()
                 stackTrace.reversed()
-                stackTrace.subList(0, Math.min(stackTrace.size, MAX_STACK_DEPTH_TO_CHECK))
+                stackTrace.subList(0, min(stackTrace.size, MAX_STACK_DEPTH_TO_CHECK))
                 var hasInflationTraceElement = false
                 var hasDexTraceElement = false
                 var hasPreferenceManagerInflation = false

@@ -88,7 +88,7 @@ class AdMobAdView @Inject constructor() : BannerAdView {
 
     companion object {
 
-        private val LOADING_DELAY = 50 // millis
+        private const val LOADING_DELAY = 50 // millis
 
         private fun getAdRequest(allowAdPersonalization: Boolean): AdRequest {
             val builder = AdRequest.Builder()

@@ -41,6 +41,7 @@ object StrictModeConfiguration {
                 var hasInflationTraceElement = false
                 var hasDexTraceElement = false
                 var hasPreferenceManagerInflation = false
+                var hasPreferenceReadWrite = false
                 stackTrace.forEach { stackTraceElement ->
                     if (stackTraceElement.toString().contains("LayoutInflater.createView")) {
                         hasInflationTraceElement = true
@@ -51,8 +52,11 @@ object StrictModeConfiguration {
                     if (stackTraceElement.toString().contains("PreferenceManager.inflateFromResource")) {
                         hasPreferenceManagerInflation = true
                     }
+                    if (stackTraceElement.toString().contains("CrashReporter.initialize")) {
+                        hasPreferenceReadWrite = true
+                    }
                 }
-                val isWhiteListed = (hasInflationTraceElement and hasDexTraceElement) or hasPreferenceManagerInflation
+                val isWhiteListed = (hasInflationTraceElement and hasDexTraceElement) or hasPreferenceManagerInflation or hasPreferenceReadWrite
                 if (!isWhiteListed) {
                     throw it
                 } else {

@@ -10,10 +10,7 @@ import co.smartreceipts.android.R
 import co.smartreceipts.android.ad.AdLoadListener
 import co.smartreceipts.android.ad.BannerAdView
 import com.google.ads.mediation.admob.AdMobAdapter
-import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
-import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.*
 import javax.inject.Inject
 
 class AdMobAdView @Inject constructor() : BannerAdView {
@@ -92,12 +89,6 @@ class AdMobAdView @Inject constructor() : BannerAdView {
 
         private fun getAdRequest(allowAdPersonalization: Boolean): AdRequest {
             val builder = AdRequest.Builder()
-                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                    .addTestDevice("EF80F770CD5E7AA481D559EC1037AE2D")
-                    .addTestDevice("BFB48A3556EED9C87CB3AD907780D610")
-                    .addTestDevice("E03AEBCB2894909B8E4EC87C0368C242")
-                    .addTestDevice("B48FF89819FAB2B50FE3E5240FCD9741")
-                    .addTestDevice("F868E3E348ACF850C6454323A90E2F09")
             if (allowAdPersonalization) {
                 val extras = Bundle()
                 extras.putString("npa", "1")

@@ -34,7 +34,7 @@ object StrictModeConfiguration {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             // We use a custom policy to white-list specific failures
             threadPolicyBuilder.penaltyListener(Executors.newSingleThreadExecutor(), StrictMode.OnThreadViolationListener {
-                // This we use this to check for a strict mode violation that occurs due to instant run
+                // We use this to check for a strict mode violation that occurs due to instant run
                 // https://stackoverflow.com/questions/51021362/strictmode-disk-read-violation-on-empty-activitys-setcontentview
                 val stackTrace = it.stackTrace.asList()
                 stackTrace.reversed()
@@ -102,7 +102,6 @@ object StrictModeConfiguration {
 
         return temporaryPolicyChange(func, newPolicy)
     }
-
 
     private fun <T> temporaryPolicyChange(func: () -> T?, newThreadPolicy: StrictMode.ThreadPolicy): T? {
         return if (BuildConfig.DEBUG) {

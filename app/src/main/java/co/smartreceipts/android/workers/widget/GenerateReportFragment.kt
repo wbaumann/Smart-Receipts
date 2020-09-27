@@ -1,6 +1,10 @@
 package co.smartreceipts.android.workers.widget
 
+import android.app.AlertDialog
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,14 +14,15 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import co.smartreceipts.analytics.Analytics
 import co.smartreceipts.analytics.events.Events
-import co.smartreceipts.analytics.log.Logger.debug
+import co.smartreceipts.analytics.log.Logger
 import co.smartreceipts.android.R
 import co.smartreceipts.android.activities.NavigationHandler
 import co.smartreceipts.android.activities.SmartReceiptsActivity
 import co.smartreceipts.android.databinding.GenerateReportLayoutBinding
 import co.smartreceipts.android.fragments.ReportInfoFragment
 import co.smartreceipts.android.fragments.WBFragment
-import co.smartreceipts.android.workers.EmailAssistantKt.EmailOptions
+import co.smartreceipts.android.model.Trip
+import co.smartreceipts.android.workers.EmailAssistant.EmailOptions
 import com.google.common.base.Preconditions
 import com.jakewharton.rxbinding3.view.clicks
 import dagger.android.support.AndroidSupportInjection
@@ -58,21 +63,11 @@ class GenerateReportFragment : GenerateReportView, WBFragment() {
             .map {
                 val options = EnumSet.noneOf(EmailOptions::class.java)
 
-                when {
-                    pdfFullCheckbox.isChecked -> options.add(EmailOptions.PDF_FULL)
-                }
-                when {
-                    pdfImagesCheckbox.isChecked -> options.add(EmailOptions.PDF_IMAGES_ONLY)
-                }
-                when {
-                    csvCheckbox.isChecked -> options.add(EmailOptions.CSV)
-                }
-                when {
-                    zipWithMetadataCheckbox.isChecked -> options.add(EmailOptions.ZIP_WITH_METADATA)
-                }
-                when {
-                    zipCheckbox.isChecked -> options.add(EmailOptions.ZIP)
-                }
+                if (pdfFullCheckbox.isChecked) options.add(EmailOptions.PDF_FULL)
+                if (pdfImagesCheckbox.isChecked) options.add(EmailOptions.PDF_IMAGES_ONLY)
+                if (csvCheckbox.isChecked) options.add(EmailOptions.CSV)
+                if (zipWithMetadataCheckbox.isChecked) options.add(EmailOptions.ZIP_WITH_METADATA)
+                if (zipCheckbox.isChecked) options.add(EmailOptions.ZIP)
 
                 return@map options
             }
@@ -104,10 +99,7 @@ class GenerateReportFragment : GenerateReportView, WBFragment() {
 
     override fun onStart() {
         super.onStart()
-
-        val trip = (parentFragment as ReportInfoFragment?)!!.trip
-        Preconditions.checkNotNull(trip, "A valid trip is required")
-        presenter.subscribe(trip)
+        presenter.subscribe(getParentTrip())
     }
 
     override fun onStop() {
@@ -126,19 +118,31 @@ class GenerateReportFragment : GenerateReportView, WBFragment() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        debug(this, "pre-onSaveInstanceState")
+        Logger.debug(this, "pre-onSaveInstanceState")
         super.onSaveInstanceState(outState)
-        debug(this, "onSaveInstanceState")
+        Logger.debug(this, "onSaveInstanceState")
     }
 
     override fun present(result: EmailResult) {
 
         when (result) {
             is EmailResult.Success -> {
-                // TODO: 04.09.2020
                 progress.visibility = View.GONE
-                Toast.makeText(activity, "success", Toast.LENGTH_SHORT).show()
 
+                try {
+                    startActivity(Intent.createChooser(result.intent, requireContext().getString(R.string.send_email)))
+                } catch (e: ActivityNotFoundException) {
+                    val builder = AlertDialog.Builder(context)
+                    builder.setTitle(R.string.error_no_send_intent_dialog_title)
+                        .setMessage(
+                            requireContext().getString(
+                                R.string.error_no_send_intent_dialog_message,
+                                getParentTrip().directory.absolutePath
+                            )
+                        )
+                        .setPositiveButton(android.R.string.ok) { dialog: DialogInterface, _: Int -> dialog.cancel() }
+                        .show()
+                }
             }
 
             is EmailResult.Error -> {
@@ -148,17 +152,15 @@ class GenerateReportFragment : GenerateReportView, WBFragment() {
 
             EmailResult.InProgress -> {
                 progress.visibility = View.VISIBLE
-                Toast.makeText(activity, "loading", Toast.LENGTH_SHORT).show()
             }
         }
+    }
 
+    private fun getParentTrip(): Trip {
+        return (parentFragment as ReportInfoFragment?)!!.trip
     }
 
     private fun handleGenerationError(error: GenerationErrors) {
-        // TODO: 02.09.2020 handle other indicator states
-
-        // TODO: 02.09.2020 handle navigation to the settings when special error occures
-        // TODO: 02.09.2020 uncheck items when error
         when (error) {
             GenerationErrors.ERROR_NO_SELECTION -> {
                 Toast.makeText(context, flex.getString(context, R.string.DIALOG_EMAIL_TOAST_NO_SELECTION), Toast.LENGTH_SHORT).show()
@@ -172,47 +174,32 @@ class GenerateReportFragment : GenerateReportView, WBFragment() {
                 Toast.makeText(
                     context, requireContext().getString(
                         R.string.toast_csv_report_distances, requireContext().getString(R.string.pref_distance_print_table_title)
-                    ),
-                    Toast.LENGTH_SHORT
+                    ), Toast.LENGTH_SHORT
                 ).show()
 
                 navigationHandler.navigateToSettingsScrollToDistanceSection()
             }
 
             GenerationErrors.ERROR_TOO_MANY_COLUMNS -> {
-                // TODO: 04.09.2020
-                /*AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    builder.setTitle(R.string.report_pdf_error_too_many_columns_title)
-                            .setMessage(
-                                    mPreferenceManager.get(UserPreference.ReportOutput.PrintReceiptsTableInLandscape)
-                                            ? context.getString(R.string.report_pdf_error_too_many_columns_message)
-                                            : context.getString(R.string.report_pdf_error_too_many_columns_message_landscape))
-                            .setPositiveButton(R.string.report_pdf_error_go_to_settings, (dialog1, id) -> {
-                                dialog1.cancel();
-                                navigationHandler.navigateToSettingsScrollToReportSection();
-                            })
-                            .setNegativeButton(android.R.string.cancel, null)
-                            .show();*/
-            }
-
-            GenerationErrors.ERROR_GENERAL_PDF -> {
-                Toast.makeText(context, R.string.report_pdf_generation_error, Toast.LENGTH_SHORT).show()
-            }
-
-            GenerationErrors.ERROR_MEMORY -> {
-                // TODO: 04.09.2020 translate
-                Toast.makeText(
-                    context,
-                    "Error: Not enough memory to stamp the images. Try stopping some other apps and try again.",
-                    Toast.LENGTH_LONG
-                )
+                val messageId = when {
+                    presenter.isLandscapeReportEnabled() -> R.string.report_pdf_error_too_many_columns_message
+                    else -> R.string.report_pdf_error_too_many_columns_message_landscape
+                }
+                AlertDialog.Builder(context).setTitle(R.string.report_pdf_error_too_many_columns_title)
+                    .setMessage(messageId)
+                    .setPositiveButton(R.string.report_pdf_error_go_to_settings) { dialog, _ ->
+                        dialog.cancel()
+                        navigationHandler.navigateToSettingsScrollToReportSection()
+                    }
+                    .setNegativeButton(android.R.string.cancel, null)
                     .show()
             }
 
-            GenerationErrors.ERROR_UNDETERMINED -> {
-                // TODO: 04.09.2020 translate
-                Toast.makeText(context, "Something went wrong while generating report...", Toast.LENGTH_SHORT).show()
-            }
+            GenerationErrors.ERROR_PDF_GENERATION -> Toast.makeText(context, R.string.report_pdf_generation_error, Toast.LENGTH_SHORT).show()
+
+            GenerationErrors.ERROR_MEMORY -> Toast.makeText(context, R.string.report_error_memory, Toast.LENGTH_LONG).show()
+
+            GenerationErrors.ERROR_UNDETERMINED -> Toast.makeText(context, R.string.report_error_undetermined, Toast.LENGTH_SHORT).show()
         }
     }
 

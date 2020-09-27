@@ -5,7 +5,7 @@ import co.smartreceipts.analytics.events.Events
 import co.smartreceipts.android.model.Trip
 import co.smartreceipts.android.widget.tooltip.report.generate.GenerateInfoTooltipManager
 import co.smartreceipts.android.widget.viper.BaseViperPresenter
-import co.smartreceipts.android.workers.EmailAssistantKt.EmailOptions
+import co.smartreceipts.android.workers.EmailAssistant.EmailOptions
 import co.smartreceipts.core.di.scopes.FragmentScope
 import java.util.*
 import javax.inject.Inject
@@ -41,6 +41,9 @@ class GenerateReportPresenter @Inject constructor(
                 .subscribe({ view.present(it)}, { view.present(EmailResult.Error(GenerationErrors.ERROR_UNDETERMINED))})
         )
     }
+
+    fun isLandscapeReportEnabled(): Boolean = interactor.isLandscapeReportEnabled()
+
 
     private fun recordOptionsAnalyticsEvents(options: EnumSet<EmailOptions>) {
 

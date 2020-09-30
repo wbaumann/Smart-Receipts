@@ -44,6 +44,7 @@ object StrictModeConfiguration {
                 var hasPreferenceManagerInflation = false
                 var hasPreferenceReadWrite = false
                 var hasBridgingQuery = false
+                var hasEmailAttachments = false
                 stackTrace.forEach { stackTraceElement ->
                     if (stackTraceElement.toString().contains("LayoutInflater.createView")) {
                         hasInflationTraceElement = true
@@ -57,12 +58,16 @@ object StrictModeConfiguration {
                     if (stackTraceElement.toString().contains("CrashReporter.initialize")) {
                         hasPreferenceReadWrite = true
                     }
-                    if (stackTraceElement.toString().contains("ReportInfoFragment.updateActionBarTitlePrice")) {
+                    if (stackTraceElement.toString().contains("TripForeignKeyAbstractSqlTable.getBlocking")) {
                         hasBridgingQuery = true
+                    }
+                    if (stackTraceElement.toString().contains("EmailAssistant.onAttachmentsCreated")) {
+                        hasEmailAttachments = true
                     }
                 }
                 val isWhiteListed = (hasInflationTraceElement and hasDexTraceElement) or
-                        hasPreferenceManagerInflation or hasPreferenceReadWrite or hasBridgingQuery
+                        hasPreferenceManagerInflation or hasPreferenceReadWrite or hasBridgingQuery or
+                        hasEmailAttachments
                 if (!isWhiteListed) {
                     throw it
                 } else {

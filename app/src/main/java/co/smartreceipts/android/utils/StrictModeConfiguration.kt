@@ -43,6 +43,7 @@ object StrictModeConfiguration {
                 var hasDexTraceElement = false
                 var hasPreferenceManagerInflation = false
                 var hasPreferenceReadWrite = false
+                var hasBridgingQuery = false
                 stackTrace.forEach { stackTraceElement ->
                     if (stackTraceElement.toString().contains("LayoutInflater.createView")) {
                         hasInflationTraceElement = true
@@ -56,8 +57,12 @@ object StrictModeConfiguration {
                     if (stackTraceElement.toString().contains("CrashReporter.initialize")) {
                         hasPreferenceReadWrite = true
                     }
+                    if (stackTraceElement.toString().contains("ReportInfoFragment.updateActionBarTitlePrice")) {
+                        hasBridgingQuery = true
+                    }
                 }
-                val isWhiteListed = (hasInflationTraceElement and hasDexTraceElement) or hasPreferenceManagerInflation or hasPreferenceReadWrite
+                val isWhiteListed = (hasInflationTraceElement and hasDexTraceElement) or
+                        hasPreferenceManagerInflation or hasPreferenceReadWrite or hasBridgingQuery
                 if (!isWhiteListed) {
                     throw it
                 } else {

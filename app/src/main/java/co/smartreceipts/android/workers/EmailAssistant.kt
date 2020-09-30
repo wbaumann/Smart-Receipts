@@ -9,35 +9,35 @@ import co.smartreceipts.android.date.DateFormatter
 import co.smartreceipts.android.model.Distance
 import co.smartreceipts.android.model.Receipt
 import co.smartreceipts.android.model.Trip
-import co.smartreceipts.android.persistence.PersistenceManager
-import co.smartreceipts.android.purchases.wallet.PurchaseWallet
+import co.smartreceipts.android.persistence.DatabaseHelper
+import co.smartreceipts.android.settings.UserPreferenceManager
 import co.smartreceipts.android.settings.catalog.UserPreference
 import co.smartreceipts.android.utils.IntentUtils
-import co.smartreceipts.android.workers.reports.ReportResourcesManager
 import co.smartreceipts.android.workers.reports.formatting.SmartReceiptsFormattableString
 import co.smartreceipts.android.workers.widget.EmailResult
 import co.smartreceipts.android.workers.widget.GenerationErrors
+import co.smartreceipts.core.di.scopes.ApplicationScope
 import com.hadisatrio.optional.Optional
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import java.io.File
 import java.util.*
+import javax.inject.Inject
 
-class EmailAssistant(
+@ApplicationScope
+class EmailAssistant @Inject constructor(
     private val context: Context,
-    private val reportResourcesManager: ReportResourcesManager,
-    private val persistenceManager: PersistenceManager,
-    private val purchaseWallet: PurchaseWallet,
+    private val databaseHelper: DatabaseHelper,
+    private val preferenceManager: UserPreferenceManager,
+    private val attachmentFilesWriter: AttachmentFilesWriter,
     private val dateFormatter: DateFormatter
 ) {
 
     enum class EmailOptions(val index: Int) {
         PDF_FULL(0), PDF_IMAGES_ONLY(1), CSV(2), ZIP(3), ZIP_WITH_METADATA(4);
-
     }
 
     companion object {
-
         private const val DEVELOPER_EMAIL = "supp" + "or" + "t@" + "smart" + "receipts" + "." + "co"
 
         private fun getEmailDeveloperIntent(): Intent {
@@ -76,8 +76,8 @@ class EmailAssistant(
         }
 
         return Single.zip(
-            persistenceManager.database.receiptsTable.get(trip, true),
-            persistenceManager.database.distanceTable.get(trip, true),
+            databaseHelper.receiptsTable.get(trip, true),
+            databaseHelper.distanceTable.get(trip, true),
             BiFunction<List<Receipt>, List<Distance>, EmailResult> { receipts, distances ->
                 val preGenerationIssues = checkPreGenerationIssues(receipts, distances, options)
 
@@ -99,7 +99,7 @@ class EmailAssistant(
                 // Only allow report processing to continue with no receipts if we're doing a full pdf or CSV report with distances
                 return Optional.of(EmailResult.Error(GenerationErrors.ERROR_NO_RECEIPTS))
             } else {
-                if (options.contains(EmailOptions.CSV) && !persistenceManager.preferenceManager.get(UserPreference.Distance.PrintDistanceTableInReports)) {
+                if (options.contains(EmailOptions.CSV) && !preferenceManager.get(UserPreference.Distance.PrintDistanceTableInReports)) {
                     // user wants to create CSV report with just distances but this option is disabled
                     return Optional.of(EmailResult.Error(GenerationErrors.ERROR_DISABLED_DISTANCES))
                 }
@@ -110,9 +110,7 @@ class EmailAssistant(
     }
 
     private fun writeReport(trip: Trip, receipts: List<Receipt>, distances: List<Distance>, options: EnumSet<EmailOptions>): EmailResult {
-        val writer = AttachmentFilesWriter(context, persistenceManager, reportResourcesManager, purchaseWallet, dateFormatter)
-
-        val writerResults = writer.write(trip, receipts, distances, options)
+        val writerResults = attachmentFilesWriter.write(trip, receipts, distances, options)
 
         return when {
             writerResults.didMemoryErrorOccurre -> EmailResult.Error(GenerationErrors.ERROR_MEMORY)
@@ -124,13 +122,15 @@ class EmailAssistant(
                 }
             }
             else -> {
-                val sendIntent = prepareSendAttachmentsIntent(writerResults.files.filterNotNull(), trip)
+                val sendIntent = prepareSendAttachmentsIntent(writerResults.files.filterNotNull(), trip, receipts, distances)
                 EmailResult.Success(sendIntent)
             }
         }
     }
 
-    private fun prepareSendAttachmentsIntent(attachments: List<File>, trip: Trip): Intent {
+    private fun prepareSendAttachmentsIntent(
+        attachments: List<File>, trip: Trip, receipts: List<Receipt>, distances: List<Distance>
+    ): Intent {
         val bodyBuilder = StringBuilder()
 
         for (attachment in attachments) {
@@ -155,25 +155,17 @@ class EmailAssistant(
         }
 
         val emailIntent: Intent = IntentUtils.getSendIntent(context, attachments)
-        val to = persistenceManager.preferenceManager.get(UserPreference.Email.ToAddresses).split(";".toRegex()).toTypedArray()
-        val cc = persistenceManager.preferenceManager.get(UserPreference.Email.CcAddresses).split(";".toRegex()).toTypedArray()
-        val bcc = persistenceManager.preferenceManager.get(UserPreference.Email.BccAddresses).split(";".toRegex()).toTypedArray()
+        val to = preferenceManager.get(UserPreference.Email.ToAddresses).split(";".toRegex()).toTypedArray()
+        val cc = preferenceManager.get(UserPreference.Email.CcAddresses).split(";".toRegex()).toTypedArray()
+        val bcc = preferenceManager.get(UserPreference.Email.BccAddresses).split(";".toRegex()).toTypedArray()
         emailIntent.putExtra(Intent.EXTRA_EMAIL, to)
         emailIntent.putExtra(Intent.EXTRA_CC, cc)
         emailIntent.putExtra(Intent.EXTRA_BCC, bcc)
 
-        val receipts: List<Receipt> = ArrayList(persistenceManager.database.receiptsTable.getBlocking(trip, false))
-        val distances: List<Distance> = ArrayList(persistenceManager.database.distanceTable.getBlocking(trip, false))
-
         emailIntent.putExtra(
             Intent.EXTRA_SUBJECT,
             SmartReceiptsFormattableString(
-                persistenceManager.preferenceManager.get(UserPreference.Email.Subject),
-                trip,
-                persistenceManager.preferenceManager,
-                dateFormatter,
-                receipts,
-                distances
+                preferenceManager.get(UserPreference.Email.Subject), trip, preferenceManager, dateFormatter, receipts, distances
             ).toString()
         )
         emailIntent.putExtra(Intent.EXTRA_TEXT, body)

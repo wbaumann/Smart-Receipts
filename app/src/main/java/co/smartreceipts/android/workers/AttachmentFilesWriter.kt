@@ -14,7 +14,7 @@ import co.smartreceipts.android.model.converters.DistanceToReceiptsConverter
 import co.smartreceipts.android.model.factory.PriceBuilderFactory
 import co.smartreceipts.android.model.impl.columns.categories.CategoryColumnDefinitions
 import co.smartreceipts.android.model.impl.columns.distance.DistanceColumnDefinitions
-import co.smartreceipts.android.persistence.PersistenceManager
+import co.smartreceipts.android.persistence.DatabaseHelper
 import co.smartreceipts.android.persistence.database.controllers.grouping.GroupingController
 import co.smartreceipts.android.purchases.wallet.PurchaseWallet
 import co.smartreceipts.android.settings.UserPreferenceManager
@@ -28,13 +28,19 @@ import co.smartreceipts.android.workers.reports.csv.CsvTableGenerator
 import co.smartreceipts.android.workers.reports.pdf.PdfBoxFullPdfReport
 import co.smartreceipts.android.workers.reports.pdf.PdfBoxImagesOnlyReport
 import co.smartreceipts.android.workers.reports.pdf.misc.TooManyColumnsException
+import co.smartreceipts.core.di.scopes.ApplicationScope
+import wb.android.storage.StorageManager
 import java.io.File
 import java.io.IOException
 import java.util.*
+import javax.inject.Inject
 
-class AttachmentFilesWriter(
+@ApplicationScope
+class AttachmentFilesWriter @Inject constructor(
     private val context: Context,
-    private val persistenceManager: PersistenceManager,
+    private val databaseHelper: DatabaseHelper,
+    private val preferenceManager: UserPreferenceManager,
+    private val storageManager: StorageManager,
     private val reportResourcesManager: ReportResourcesManager,
     private val purchaseWallet: PurchaseWallet,
     private val dateFormatter: DateFormatter
@@ -56,19 +62,18 @@ class AttachmentFilesWriter(
     }
 
     fun write(trip: Trip, receiptsList: List<Receipt>, distancesList: List<Distance>, options: EnumSet<EmailOptions>): WriterResults {
+        Logger.info(this, "Generating the following report types {}.", options)
+
+        val results = WriterResults()
 
         // Make our trip output directory exists in a good state
         var dir = trip.directory
         if (!dir.exists()) {
-            dir = persistenceManager.storageManager.getFile(trip.name)
+            dir = storageManager.getFile(trip.name)
             if (!dir.exists()) {
-                dir = persistenceManager.storageManager.mkdir(trip.name)
+                dir = storageManager.mkdir(trip.name)
             }
         }
-
-        val results = WriterResults()
-
-        Logger.info(this, "Generating the following report types {}.", options)
 
         if (options.contains(EmailOptions.PDF_FULL)) {
             generateFullPdf(trip, results)
@@ -78,28 +83,26 @@ class AttachmentFilesWriter(
             generateImagesPdf(trip, results)
         }
 
-        if (options.contains(EmailOptions.CSV)) {
-            generateCsv(trip, receiptsList, distancesList, dir, results)
-        }
-
         if (options.contains(EmailOptions.ZIP) && receiptsList.isNotEmpty()) {
             generateZip(trip, receiptsList, dir, results)
         }
 
+        val csvColumns by lazy { databaseHelper.csvTable.get().blockingGet() }
+
+        if (options.contains(EmailOptions.CSV)) {
+            generateCsv(trip, receiptsList, distancesList, csvColumns, dir, results)
+        }
+
         if (options.contains(EmailOptions.ZIP_WITH_METADATA) && receiptsList.isNotEmpty()) {
-            generateZipWithMetadata(trip, receiptsList, dir, options.contains(EmailOptions.ZIP), results)
+            generateZipWithMetadata(trip, receiptsList, csvColumns, dir, options.contains(EmailOptions.ZIP), results)
         }
 
         return results
-
     }
 
     private fun generateFullPdf(trip: Trip, results: WriterResults) {
-        val pdfFullReport: Report = PdfBoxFullPdfReport(
-            reportResourcesManager, persistenceManager.database,
-            persistenceManager.preferenceManager, persistenceManager.storageManager,
-            purchaseWallet, dateFormatter
-        )
+        val pdfFullReport: Report =
+            PdfBoxFullPdfReport(reportResourcesManager, databaseHelper, preferenceManager, storageManager, purchaseWallet, dateFormatter)
 
         try {
             results.files[EmailOptions.PDF_FULL.index] = pdfFullReport.generate(trip)
@@ -112,7 +115,9 @@ class AttachmentFilesWriter(
     }
 
     private fun generateImagesPdf(trip: Trip, results: WriterResults) {
-        val pdfImagesReport: Report = PdfBoxImagesOnlyReport(reportResourcesManager, persistenceManager, dateFormatter)
+        val pdfImagesReport: Report =
+            PdfBoxImagesOnlyReport(reportResourcesManager, databaseHelper, preferenceManager, storageManager, dateFormatter)
+
         try {
             results.files[EmailOptions.PDF_IMAGES_ONLY.index] = pdfImagesReport.generate(trip)
         } catch (e: ReportGenerationException) {
@@ -120,28 +125,23 @@ class AttachmentFilesWriter(
         }
     }
 
-    private fun generateCsv(trip: Trip, receiptsList: List<Receipt>, distancesList: List<Distance>, dir: File, results: WriterResults) {
-        val printFooters: Boolean = persistenceManager.preferenceManager.get(UserPreference.ReportOutput.ShowTotalOnCSV)
+    private fun generateCsv(
+        trip: Trip, receiptsList: List<Receipt>, distancesList: List<Distance>, csvColumns: List<Column<Receipt>>, dir: File,
+        results: WriterResults
+    ) {
+        val printFooters: Boolean = preferenceManager.get(UserPreference.ReportOutput.ShowTotalOnCSV)
 
         try {
-            persistenceManager.storageManager.delete(dir, dir.name + ".csv")
+            storageManager.delete(dir, dir.name + ".csv")
 
-            // TODO: 04.09.2020 reduce using of blockingGet
-            val csvColumns: List<Column<Receipt>> = persistenceManager.database.csvTable.get().blockingGet()
-            val csvTableGenerator = CsvTableGenerator(
-                reportResourcesManager,
-                csvColumns,
-                true,
-                printFooters,
-                LegacyReceiptFilter(persistenceManager.preferenceManager)
-            )
-
+            val csvTableGenerator =
+                CsvTableGenerator(reportResourcesManager, csvColumns, true, printFooters, LegacyReceiptFilter(preferenceManager))
 
             val receipts: MutableList<Receipt> = ArrayList(receiptsList)
             val distances: MutableList<Distance> = ArrayList(distancesList)
 
             // Receipts table
-            if (persistenceManager.preferenceManager.get(UserPreference.Distance.PrintDistanceAsDailyReceiptInReports)) {
+            if (preferenceManager.get(UserPreference.Distance.PrintDistanceAsDailyReceiptInReports)) {
                 receipts.addAll(DistanceToReceiptsConverter(context, dateFormatter).convert(distances))
                 Collections.sort(receipts, ReceiptDateComparator())
             }
@@ -149,13 +149,13 @@ class AttachmentFilesWriter(
             var data = csvTableGenerator.generate(receipts)
 
             // Distance table
-            if (persistenceManager.preferenceManager.get(UserPreference.Distance.PrintDistanceTableInReports)) {
+            if (preferenceManager.get(UserPreference.Distance.PrintDistanceTableInReports)) {
                 if (distances.isNotEmpty()) {
                     distances.reverse() // Reverse the list, so we print the most recent one first
 
                     // CSVs cannot print special characters
                     val distanceColumnDefinitions: ColumnDefinitions<Distance> =
-                        DistanceColumnDefinitions(reportResourcesManager, persistenceManager.preferenceManager, dateFormatter, true)
+                        DistanceColumnDefinitions(reportResourcesManager, preferenceManager, dateFormatter, true)
                     val distanceColumns = distanceColumnDefinitions.allColumns
                     data += "\n\n"
                     data += CsvTableGenerator(
@@ -166,12 +166,11 @@ class AttachmentFilesWriter(
             }
 
             // Categorical summation table
-            if (persistenceManager.preferenceManager.get(UserPreference.PlusSubscription.CategoricalSummationInReports)) {
-                val sumCategoryGroupingResults =
-                    GroupingController(persistenceManager.database, context, persistenceManager.preferenceManager)
-                        .getSummationByCategory(trip)
-                        .toList()
-                        .blockingGet() // TODO: 04.09.2020 reduce using of blockingGet
+            if (preferenceManager.get(UserPreference.PlusSubscription.CategoricalSummationInReports)) {
+                val sumCategoryGroupingResults = GroupingController(databaseHelper, context, preferenceManager)
+                    .getSummationByCategory(trip)
+                    .toList()
+                    .blockingGet()
                 var isMultiCurrency = false
                 for (sumCategoryGroupingResult in sumCategoryGroupingResults) {
                     if (sumCategoryGroupingResult.isMultiCurrency) {
@@ -179,7 +178,7 @@ class AttachmentFilesWriter(
                         break
                     }
                 }
-                val taxEnabled: Boolean = persistenceManager.preferenceManager.get(UserPreference.Receipts.IncludeTaxField)
+                val taxEnabled: Boolean = preferenceManager.get(UserPreference.Receipts.IncludeTaxField)
                 val categoryColumns = CategoryColumnDefinitions(reportResourcesManager, isMultiCurrency, taxEnabled)
                     .allColumns
                 data += "\n\n"
@@ -190,11 +189,11 @@ class AttachmentFilesWriter(
             }
 
             // Separated tables for each category
-            if (persistenceManager.preferenceManager.get(UserPreference.PlusSubscription.SeparateByCategoryInReports)) {
-                val groupingResults = GroupingController(persistenceManager.database, context, persistenceManager.preferenceManager)
+            if (preferenceManager.get(UserPreference.PlusSubscription.SeparateByCategoryInReports)) {
+                val groupingResults = GroupingController(databaseHelper, context, preferenceManager)
                     .getReceiptsGroupedByCategory(trip)
                     .toList()
-                    .blockingGet() // TODO: 04.09.2020 reduce using of blockingGet
+                    .blockingGet()
                 for (groupingResult in groupingResults) {
                     data += "\n\n" + groupingResult.category.name + "\n";
                     data += CsvTableGenerator(reportResourcesManager, csvColumns, true, printFooters).generate(groupingResult.receipts)
@@ -213,40 +212,35 @@ class AttachmentFilesWriter(
 
     private fun generateZip(trip: Trip, receiptsList: List<Receipt>, directory: File, results: WriterResults) {
         var dir = directory
-        persistenceManager.storageManager.delete(dir, dir.name + ".zip")
-        dir = persistenceManager.storageManager.mkdir(trip.directory, trip.name)
+        storageManager.delete(dir, dir.name + ".zip")
+        dir = storageManager.mkdir(trip.directory, trip.name)
         for (i in receiptsList.indices) {
             val receipt = receiptsList[i]
-            if (!filterOutReceipt(persistenceManager.preferenceManager, receipt) && receipt.file != null && receipt.file.exists()) {
-                val data = persistenceManager.storageManager.read(receipt.file)
-                if (data != null) persistenceManager.storageManager.write(dir, receipt.file.name, data)
+            if (!filterOutReceipt(preferenceManager, receipt) && receipt.file != null && receipt.file.exists()) {
+                val data = storageManager.read(receipt.file)
+                if (data != null) storageManager.write(dir, receipt.file.name, data)
             }
         }
-        val zip: File = persistenceManager.storageManager.zipBuffered(dir, 2048)
-        persistenceManager.storageManager.deleteRecursively(dir)
-        results.files[EmailAssistant.EmailOptions.ZIP.index] = zip
+        val zip: File = storageManager.zipBuffered(dir, 2048)
+        storageManager.deleteRecursively(dir)
+        results.files[EmailOptions.ZIP.index] = zip
     }
 
     private fun generateZipWithMetadata(
-        trip: Trip,
-        receiptsList: List<Receipt>,
-        dir: File,
-        isZipGenerationIncluded: Boolean,
-        results: WriterResults
+        trip: Trip, receiptsList: List<Receipt>, csvColumns: List<Column<Receipt>>,
+        dir: File, isZipGenerationIncluded: Boolean, results: WriterResults
     ) {
         val zipDir = if (isZipGenerationIncluded) {
-            persistenceManager.storageManager.delete(dir, dir.name + "_stamped" + ".zip")
-            persistenceManager.storageManager.mkdir(trip.directory, trip.name + "_stamped")
+            storageManager.delete(dir, dir.name + "_stamped" + ".zip")
+            storageManager.mkdir(trip.directory, trip.name + "_stamped")
         } else {
-            persistenceManager.storageManager.delete(dir, dir.name + ".zip")
-            persistenceManager.storageManager.mkdir(trip.directory, trip.name)
+            storageManager.delete(dir, dir.name + ".zip")
+            storageManager.mkdir(trip.directory, trip.name)
         }
         for (i in receiptsList.indices) {
             val receipt = receiptsList[i]
-            if (!filterOutReceipt(persistenceManager.preferenceManager, receipt)) {
+            if (!filterOutReceipt(preferenceManager, receipt)) {
                 if (receipt.hasImage()) {
-                    val csvColumns: List<Column<Receipt>> =
-                        persistenceManager.database.getCSVTable().get().blockingGet() // TODO: 04.09.2020 reduce using of blockingGet
                     val userCommentBuilder = StringBuilder()
                     for (col in csvColumns) {
                         userCommentBuilder.append(reportResourcesManager.getFlexString(col.headerStringResId))
@@ -256,11 +250,10 @@ class AttachmentFilesWriter(
                     }
                     val userComment = userCommentBuilder.toString()
                     try {
-                        var b: Bitmap? = stampImage(trip, receipt, Bitmap.Config.ARGB_8888)
+                        val b: Bitmap? = stampImage(trip, receipt, Bitmap.Config.ARGB_8888)
                         if (b != null) {
-                            persistenceManager.storageManager.writeBitmap(zipDir, b, receipt.file!!.name, CompressFormat.JPEG, 85, userComment)
+                            storageManager.writeBitmap(zipDir, b, receipt.file!!.name, CompressFormat.JPEG, 85, userComment)
                             b.recycle()
-                            b = null
                         }
                     } catch (e: OutOfMemoryError) {
                         Logger.error(this, "Trying to recover from OOM", e)
@@ -268,14 +261,7 @@ class AttachmentFilesWriter(
                         try {
                             val b: Bitmap? = stampImage(trip, receipt, Bitmap.Config.RGB_565)
                             if (b != null) {
-                                persistenceManager.storageManager.writeBitmap(
-                                    zipDir,
-                                    b,
-                                    receipt.file!!.name,
-                                    CompressFormat.JPEG,
-                                    85,
-                                    userComment
-                                )
+                                storageManager.writeBitmap(zipDir, b, receipt.file!!.name, CompressFormat.JPEG, 85, userComment)
                                 b.recycle()
                             }
                         } catch (e2: OutOfMemoryError) {
@@ -286,13 +272,13 @@ class AttachmentFilesWriter(
                         }
                     }
                 } else if (receipt.hasPDF()) {
-                    val data = persistenceManager.storageManager.read(receipt.file)
-                    if (data != null) persistenceManager.storageManager.write(zipDir, receipt.file!!.name, data)
+                    val data = storageManager.read(receipt.file)
+                    if (data != null) storageManager.write(zipDir, receipt.file!!.name, data)
                 }
             }
         }
-        val zipWithMetadata: File = persistenceManager.storageManager.zipBuffered(zipDir, 2048)
-        persistenceManager.storageManager.deleteRecursively(zipDir)
+        val zipWithMetadata: File = storageManager.zipBuffered(zipDir, 2048)
+        storageManager.deleteRecursively(zipDir)
         results.files[EmailOptions.ZIP_WITH_METADATA.index] = zipWithMetadata
     }
 
@@ -314,7 +300,7 @@ class AttachmentFilesWriter(
         if (!receipt.hasImage()) {
             return null
         }
-        var foreground: Bitmap? = persistenceManager.storageManager.getMutableMemoryEfficientBitmap(receipt.file)
+        var foreground: Bitmap? = storageManager.getMutableMemoryEfficientBitmap(receipt.file)
         return if (foreground != null) { // It can be null if file not found
             // Size the image
             var foreWidth = foreground.width
@@ -353,7 +339,7 @@ class AttachmentFilesWriter(
 
             // Set up the number of items to draw
             var num = 5
-            if (persistenceManager.preferenceManager.get(UserPreference.Receipts.IncludeTaxField)) {
+            if (preferenceManager.get(UserPreference.Receipts.IncludeTaxField)) {
                 num++
             }
             if (receipt.hasExtraEditText1()) {
@@ -390,7 +376,7 @@ class AttachmentFilesWriter(
                 brush
             )
             y += spacing
-            if (persistenceManager.preferenceManager.get(UserPreference.Receipts.IncludeTaxField)) {
+            if (preferenceManager.get(UserPreference.Receipts.IncludeTaxField)) {
                 val totalTax = PriceBuilderFactory(receipt.tax).setPrice(receipt.tax.price.add(receipt.tax2.price)).build()
                 canvas.drawText(
                     reportResourcesManager.getFlexString(R.string.RECEIPTMENU_FIELD_TAX) + ": " + totalTax.decimalFormattedPrice + " " + receipt.price.currencyCode,

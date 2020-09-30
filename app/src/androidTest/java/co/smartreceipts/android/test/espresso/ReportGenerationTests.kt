@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Instrumentation.ActivityResult
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -100,7 +101,7 @@ class ReportGenerationTests {
         onView(withId(R.id.action_save)).perform(click())
 
         // Wait a second to ensure that everything loaded
-        Thread.sleep(TimeUnit.SECONDS.toMillis(1))
+        Thread.sleep(TimeUnit.SECONDS.toMillis(10))
 
         // Verify that we have a list item with Test Receipt
         onView(withId(R.id.title)).check(matches(withText("Test Receipt")))
@@ -120,7 +121,17 @@ class ReportGenerationTests {
         Thread.sleep(TimeUnit.SECONDS.toMillis(3)) // give app time to generate files and display intent chooser
 
         // Verify the intent chooser with a PDF report was displayed
-        intended(allOf(hasAction(Intent.ACTION_CHOOSER), hasExtra(`is`(Intent.EXTRA_INTENT), allOf(hasAction(Intent.ACTION_SEND_MULTIPLE), hasType("application/pdf"), hasFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION), hasExtra(Intent.EXTRA_STREAM, arrayListOf(uri))))))
+        intended(allOf(
+                hasAction(Intent.ACTION_CHOOSER),
+                hasExtra(`is`(Intent.EXTRA_INTENT),
+                        allOf(
+                                hasAction(Intent.ACTION_SEND_MULTIPLE),
+                                hasType("application/pdf"),
+                                hasFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION),
+                                hasExtra(Intent.EXTRA_STREAM, arrayListOf(uri))
+                        )
+                )
+        ))
     }
 
     @Test
@@ -161,7 +172,7 @@ class ReportGenerationTests {
         onView(withId(R.id.action_save)).perform(click())
 
         // Wait a second to ensure that everything loaded
-        Thread.sleep(TimeUnit.SECONDS.toMillis(1))
+        Thread.sleep(TimeUnit.SECONDS.toMillis(10))
 
         // Verify that we have a list item with Test Receipt
         onView(withId(R.id.title)).check(matches(withText("Test Receipt")))
@@ -181,7 +192,17 @@ class ReportGenerationTests {
         Thread.sleep(TimeUnit.SECONDS.toMillis(3)) // give app time to generate files and display intent chooser
 
         // Verify the intent chooser with a PDF report was displayed
-        intended(allOf(hasAction(Intent.ACTION_CHOOSER), hasExtra(`is`(Intent.EXTRA_INTENT), allOf(hasAction(Intent.ACTION_SEND_MULTIPLE), hasType("application/pdf"), hasFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION), hasExtra(Intent.EXTRA_STREAM, arrayListOf(uri))))))
+        intended(allOf(
+                hasAction(Intent.ACTION_CHOOSER),
+                hasExtra(`is`(Intent.EXTRA_INTENT),
+                        allOf(
+                                hasAction(Intent.ACTION_SEND_MULTIPLE),
+                                hasType("application/pdf"),
+                                hasFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION),
+                                hasExtra(Intent.EXTRA_STREAM, arrayListOf(uri))
+                        )
+                )
+        ))
     }
 
     @Test
@@ -222,7 +243,7 @@ class ReportGenerationTests {
         onView(withId(R.id.action_save)).perform(click())
 
         // Wait a second to ensure that everything loaded
-        Thread.sleep(TimeUnit.SECONDS.toMillis(1))
+        Thread.sleep(TimeUnit.SECONDS.toMillis(10))
 
         // Verify that we have a list item with Test Receipt
         onView(withId(R.id.title)).check(matches(withText("Test Receipt")))
@@ -242,7 +263,17 @@ class ReportGenerationTests {
         Thread.sleep(TimeUnit.SECONDS.toMillis(3)) // give app time to generate files and display intent chooser
 
         // Verify the intent chooser with a CSV report was displayed
-        intended(allOf(hasAction(Intent.ACTION_CHOOSER), hasExtra(`is`(Intent.EXTRA_INTENT), allOf(hasAction(Intent.ACTION_SEND_MULTIPLE), hasType("text/comma-separated-values"), hasFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION), hasExtra(Intent.EXTRA_STREAM, arrayListOf(uri))))))
+        intended(allOf(
+                hasAction(Intent.ACTION_CHOOSER),
+                hasExtra(`is`(Intent.EXTRA_INTENT),
+                        allOf(
+                                hasAction(Intent.ACTION_SEND_MULTIPLE),
+                                hasType("text/comma-separated-values"),
+                                hasFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION),
+                                hasExtra(Intent.EXTRA_STREAM, arrayListOf(uri))
+                        )
+                )
+        ))
     }
 
     @Test
@@ -281,7 +312,7 @@ class ReportGenerationTests {
         onView(withId(R.id.action_save)).perform(click())
 
         // Wait a second to ensure that everything loaded
-        Thread.sleep(TimeUnit.SECONDS.toMillis(1))
+        Thread.sleep(TimeUnit.SECONDS.toMillis(10))
 
         // Verify that we have a list item with Test Receipt
         onView(withId(R.id.title)).check(matches(withText("Test Receipt")))
@@ -301,7 +332,31 @@ class ReportGenerationTests {
         Thread.sleep(TimeUnit.SECONDS.toMillis(3)) // give app time to generate files and display intent chooser
 
         // Verify the intent chooser with a Zip file was displayed
-        intended(allOf(hasAction(Intent.ACTION_CHOOSER), hasExtra(`is`(Intent.EXTRA_INTENT), allOf(hasAction(Intent.ACTION_SEND_MULTIPLE), hasType("application/octet-stream"), hasFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION), hasExtra(Intent.EXTRA_STREAM, ArrayList<Uri>())))))
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+            intended(allOf(
+                    hasAction(Intent.ACTION_CHOOSER),
+                    hasExtra(`is`(Intent.EXTRA_INTENT),
+                            allOf(
+                                    hasAction(Intent.ACTION_SEND_MULTIPLE),
+                                    hasType("application/octet-stream"),
+                                    hasFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION),
+                                    hasExtra(Intent.EXTRA_STREAM, ArrayList<Uri>())
+                            )
+                    )
+            ))
+        } else {
+            intended(allOf(
+                    hasAction(Intent.ACTION_CHOOSER),
+                    hasExtra(`is`(Intent.EXTRA_INTENT),
+                            allOf(
+                                    hasAction(Intent.ACTION_SEND_MULTIPLE),
+                                    hasType("application/zip"),
+                                    hasFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                            )
+                    ),
+                    hasExtra(Intent.EXTRA_TITLE, mIntentsRule.activity.resources.getString(R.string.send_email))
+            ))
+        }
     }
 
     @Test
@@ -340,7 +395,7 @@ class ReportGenerationTests {
         onView(withId(R.id.action_save)).perform(click())
 
         // Wait a second to ensure that everything loaded
-        Thread.sleep(TimeUnit.SECONDS.toMillis(1))
+        Thread.sleep(TimeUnit.SECONDS.toMillis(10))
 
         // Verify that we have a list item with Test Receipt
         onView(withId(R.id.title)).check(matches(withText("Test Receipt")))
@@ -360,7 +415,31 @@ class ReportGenerationTests {
         Thread.sleep(TimeUnit.SECONDS.toMillis(3)) // give app time to generate files and display intent chooser
 
         // Verify the intent chooser with a Zip file was displayed
-        intended(allOf(hasAction(Intent.ACTION_CHOOSER), hasExtra(`is`(Intent.EXTRA_INTENT), allOf(hasAction(Intent.ACTION_SEND_MULTIPLE), hasType("application/octet-stream"), hasFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION), hasExtra(Intent.EXTRA_STREAM, ArrayList<Uri>())))))
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+            intended(allOf(
+                    hasAction(Intent.ACTION_CHOOSER),
+                    hasExtra(`is`(Intent.EXTRA_INTENT),
+                            allOf(
+                                    hasAction(Intent.ACTION_SEND_MULTIPLE),
+                                    hasType("application/octet-stream"),
+                                    hasFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION),
+                                    hasExtra(Intent.EXTRA_STREAM, ArrayList<Uri>())
+                            )
+                    )
+            ))
+        } else {
+            intended(allOf(
+                    hasAction(Intent.ACTION_CHOOSER),
+                    hasExtra(`is`(Intent.EXTRA_INTENT),
+                            allOf(
+                                    hasAction(Intent.ACTION_SEND_MULTIPLE),
+                                    hasType("application/zip"),
+                                    hasFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                            )
+                    ),
+                    hasExtra(Intent.EXTRA_TITLE, mIntentsRule.activity.resources.getString(R.string.send_email))
+            ))
+        }
     }
 
     @Test
@@ -403,7 +482,7 @@ class ReportGenerationTests {
         onView(withId(R.id.action_save)).perform(click())
 
         // Wait a second to ensure that everything loaded
-        Thread.sleep(TimeUnit.SECONDS.toMillis(1))
+        Thread.sleep(TimeUnit.SECONDS.toMillis(10))
 
         // Verify that we have a list item with Test Receipt
         onView(withId(R.id.title)).check(matches(withText("Test Receipt")))
@@ -427,7 +506,31 @@ class ReportGenerationTests {
         Thread.sleep(TimeUnit.SECONDS.toMillis(3)) // give app time to generate files and display intent chooser
 
         // Verify the intent chooser with all files was displayed
-        intended(allOf(hasAction(Intent.ACTION_CHOOSER), hasExtra(`is`(Intent.EXTRA_INTENT), allOf(hasAction(Intent.ACTION_SEND_MULTIPLE), hasType("application/octet-stream"), hasFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION), hasExtra(Intent.EXTRA_STREAM, arrayListOf(uri, uri1, uri2))))))
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+            intended(allOf(
+                    hasAction(Intent.ACTION_CHOOSER),
+                    hasExtra(`is`(Intent.EXTRA_INTENT),
+                            allOf(
+                                    hasAction(Intent.ACTION_SEND_MULTIPLE),
+                                    hasType("application/octet-stream"),
+                                    hasFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION),
+                                    hasExtra(Intent.EXTRA_STREAM, arrayListOf(uri, uri1, uri2))
+                            )
+                    )
+            ))
+        } else {
+            intended(allOf(
+                    hasAction(Intent.ACTION_CHOOSER),
+                    hasExtra(`is`(Intent.EXTRA_INTENT),
+                            allOf(
+                                    hasAction(Intent.ACTION_SEND_MULTIPLE),
+                                    hasType("application/octet-stream"),
+                                    hasFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                            )
+                    ),
+                    hasExtra(Intent.EXTRA_TITLE, mIntentsRule.activity.resources.getString(R.string.send_email))
+            ))
+        }
     }
 
     @Test

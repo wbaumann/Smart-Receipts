@@ -55,7 +55,8 @@ object StrictModeConfiguration {
                     if (stackTraceElement.toString().contains("PreferenceManager.inflateFromResource")) {
                         hasPreferenceManagerInflation = true
                     }
-                    if (stackTraceElement.toString().contains("CrashReporter.initialize")) {
+                    if (stackTraceElement.toString().contains("CrashReporter.initialize") ||
+                            stackTraceElement.toString().contains("SharedPreferencesImpl.awaitLoadedLocked")) {
                         hasPreferenceReadWrite = true
                     }
                     if (stackTraceElement.toString().contains("TripForeignKeyAbstractSqlTable.getBlocking")) {

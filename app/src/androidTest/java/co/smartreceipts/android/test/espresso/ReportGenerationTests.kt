@@ -332,7 +332,7 @@ class ReportGenerationTests {
         Thread.sleep(TimeUnit.SECONDS.toMillis(3)) // give app time to generate files and display intent chooser
 
         // Verify the intent chooser with a Zip file was displayed
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
             intended(allOf(
                     hasAction(Intent.ACTION_CHOOSER),
                     hasExtra(`is`(Intent.EXTRA_INTENT),
@@ -415,7 +415,7 @@ class ReportGenerationTests {
         Thread.sleep(TimeUnit.SECONDS.toMillis(3)) // give app time to generate files and display intent chooser
 
         // Verify the intent chooser with a Zip file was displayed
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
             intended(allOf(
                     hasAction(Intent.ACTION_CHOOSER),
                     hasExtra(`is`(Intent.EXTRA_INTENT),

@@ -74,7 +74,7 @@ class BaseEspressoTests {
         onView(withId(R.id.action_save)).perform(click())
 
         // Wait a second to ensure that everything loaded
-        Thread.sleep(TimeUnit.SECONDS.toMillis(1))
+        Thread.sleep(TimeUnit.SECONDS.toMillis(5))
 
         // Open the fab menu (specific to our clans fab library)
         onView(allOf(withParent(withId(R.id.fab_menu)), withClassName(endsWith("ImageView")), isDisplayed())).perform(click())

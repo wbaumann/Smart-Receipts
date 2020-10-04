@@ -41,9 +41,7 @@ class BannerAdPresenter @Inject constructor(
                 "BFB48A3556EED9C87CB3AD907780D610",
                 "E03AEBCB2894909B8E4EC87C0368C242",
                 "B48FF89819FAB2B50FE3E5240FCD9741",
-                "F868E3E348ACF850C6454323A90E2F09",
-                "EE594A6A1C1989CFE1D84925A90C803F", // testlab physical test device
-                "5A7921C0E51EAA57D531840EF1D0B3D7") // testlab physical test device
+                "F868E3E348ACF850C6454323A90E2F09")
         val configuration = RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build()
         MobileAds.setRequestConfiguration(configuration)
 

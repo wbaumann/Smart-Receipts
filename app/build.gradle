@@ -145,19 +145,17 @@ android {
 
         implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-        implementation "androidx.legacy:legacy-support-v4:$LEGACY_SUPPORT_V4_VERSION"
         implementation "androidx.appcompat:appcompat:$APPCOMPAT_VERSION"
         implementation "androidx.cardview:cardview:$CARDVIEW_VERSION"
-        implementation "androidx.recyclerview:recyclerview:$RECYCLERVIEW_VERSION"
+        implementation "androidx.constraintlayout:constraintlayout:$CONSTRAINT_LAYOUT_VERSION"
         implementation "androidx.exifinterface:exifinterface:$EXIFINTERFACE_VERSION"
+        implementation "androidx.legacy:legacy-support-v4:$LEGACY_SUPPORT_V4_VERSION"
+        implementation "androidx.multidex:multidex:$MULTIDEX_VERSION"
+        implementation "androidx.recyclerview:recyclerview:$RECYCLERVIEW_VERSION"
         implementation "com.google.android.material:material:$MATERIAL_DESIGN_VERSION"
 
         // Note: We don't use custom tabs, but it stops the support library from complaining about mixed versions
 //        implementation "androidx.browser:browser:$BROWSER_VERSION"
-
-        implementation "androidx.multidex:multidex:$MULTIDEX_VERSION"
-
-        implementation "androidx.constraintlayout:constraintlayout:$CONSTRAINT_LAYOUT_VERSION"
 
         implementation("com.google.apis:google-api-services-drive:$GOOGLE_API_SERVICES_VERSION") {
             exclude group: 'org.apache.httpcomponents'

@@ -154,9 +154,6 @@ android {
         implementation "androidx.recyclerview:recyclerview:$RECYCLERVIEW_VERSION"
         implementation "com.google.android.material:material:$MATERIAL_DESIGN_VERSION"
 
-        // Note: We don't use custom tabs, but it stops the support library from complaining about mixed versions
-//        implementation "androidx.browser:browser:$BROWSER_VERSION"
-
         implementation("com.google.apis:google-api-services-drive:$GOOGLE_API_SERVICES_VERSION") {
             exclude group: 'org.apache.httpcomponents'
         }

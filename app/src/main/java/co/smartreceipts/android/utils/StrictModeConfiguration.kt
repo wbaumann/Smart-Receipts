@@ -31,53 +31,53 @@ object StrictModeConfiguration {
             threadPolicyBuilder.detectResourceMismatches()
         }
 
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-//            // We use a custom policy to white-list specific failures
-//            threadPolicyBuilder.penaltyListener(Executors.newSingleThreadExecutor(), StrictMode.OnThreadViolationListener {
-//                // We use this to check for a strict mode violation that occurs due to instant run
-//                // https://stackoverflow.com/questions/51021362/strictmode-disk-read-violation-on-empty-activitys-setcontentview
-//                val stackTrace = it.stackTrace.asList()
-//                stackTrace.reversed()
-//                stackTrace.subList(0, min(stackTrace.size, MAX_STACK_DEPTH_TO_CHECK))
-//                var hasInflationTraceElement = false
-//                var hasDexTraceElement = false
-//                var hasPreferenceManagerInflation = false
-//                var hasPreferenceReadWrite = false
-//                var hasBridgingQuery = false
-//                var hasEmailAttachments = false
-//                stackTrace.forEach { stackTraceElement ->
-//                    if (stackTraceElement.toString().contains("LayoutInflater.createView")) {
-//                        hasInflationTraceElement = true
-//                    }
-//                    if (stackTraceElement.toString().contains("BaseDexClassLoader.findClass")) {
-//                        hasDexTraceElement = true
-//                    }
-//                    if (stackTraceElement.toString().contains("PreferenceManager.inflateFromResource")) {
-//                        hasPreferenceManagerInflation = true
-//                    }
-//                    if (stackTraceElement.toString().contains("CrashReporter.initialize") ||
-//                            stackTraceElement.toString().contains("SharedPreferencesImpl.awaitLoadedLocked")) {
-//                        hasPreferenceReadWrite = true
-//                    }
-//                    if (stackTraceElement.toString().contains("TripForeignKeyAbstractSqlTable.getBlocking")) {
-//                        hasBridgingQuery = true
-//                    }
-//                    if (stackTraceElement.toString().contains("EmailAssistant.onAttachmentsCreated")) {
-//                        hasEmailAttachments = true
-//                    }
-//                }
-//                val isWhiteListed = (hasInflationTraceElement and hasDexTraceElement) or
-//                        hasPreferenceManagerInflation or hasPreferenceReadWrite or hasBridgingQuery or
-//                        hasEmailAttachments
-//                if (!isWhiteListed) {
-//                    throw it
-//                } else {
-//                    Logger.warn(this, "Ignoring StrictMode Failure for WhiteListed violation", it.message)
-//                }
-//            })
-//        } else {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            // We use a custom policy to white-list specific failures
+            threadPolicyBuilder.penaltyListener(Executors.newSingleThreadExecutor(), StrictMode.OnThreadViolationListener {
+                // We use this to check for a strict mode violation that occurs due to instant run
+                // https://stackoverflow.com/questions/51021362/strictmode-disk-read-violation-on-empty-activitys-setcontentview
+                val stackTrace = it.stackTrace.asList()
+                stackTrace.reversed()
+                stackTrace.subList(0, min(stackTrace.size, MAX_STACK_DEPTH_TO_CHECK))
+                var hasInflationTraceElement = false
+                var hasDexTraceElement = false
+                var hasPreferenceManagerInflation = false
+                var hasPreferenceReadWrite = false
+                var hasBridgingQuery = false
+                var hasEmailAttachments = false
+                stackTrace.forEach { stackTraceElement ->
+                    if (stackTraceElement.toString().contains("LayoutInflater.createView")) {
+                        hasInflationTraceElement = true
+                    }
+                    if (stackTraceElement.toString().contains("BaseDexClassLoader.findClass")) {
+                        hasDexTraceElement = true
+                    }
+                    if (stackTraceElement.toString().contains("PreferenceManager.inflateFromResource")) {
+                        hasPreferenceManagerInflation = true
+                    }
+                    if (stackTraceElement.toString().contains("CrashReporter.initialize") ||
+                            stackTraceElement.toString().contains("SharedPreferencesImpl.awaitLoadedLocked")) {
+                        hasPreferenceReadWrite = true
+                    }
+                    if (stackTraceElement.toString().contains("TripForeignKeyAbstractSqlTable.getBlocking")) {
+                        hasBridgingQuery = true
+                    }
+                    if (stackTraceElement.toString().contains("EmailAssistant.onAttachmentsCreated")) {
+                        hasEmailAttachments = true
+                    }
+                }
+                val isWhiteListed = (hasInflationTraceElement and hasDexTraceElement) or
+                        hasPreferenceManagerInflation or hasPreferenceReadWrite or hasBridgingQuery or
+                        hasEmailAttachments
+                if (!isWhiteListed) {
+                    throw it
+                } else {
+                    Logger.warn(this, "Ignoring StrictMode Failure for WhiteListed violation", it.message)
+                }
+            })
+        } else {
             threadPolicyBuilder.penaltyLog()
-//        }
+        }
 
         threadPolicyBuilder.build()
         StrictMode.setThreadPolicy(threadPolicyBuilder.build())

@@ -18,7 +18,7 @@ class GenerateReportPresenter @Inject constructor(
 ) :
     BaseViperPresenter<GenerateReportView, GenerateReportInteractor>(view, interactor)  {
 
-    private lateinit var trip: Trip;
+    private var trip: Trip? = null
 
     fun subscribe(trip: Trip) {
         this.trip = trip
@@ -27,6 +27,8 @@ class GenerateReportPresenter @Inject constructor(
     }
 
     override fun subscribe() {
+
+        checkNotNull(trip) { "Use subscribe(trip) method to subscribe" }
 
         compositeDisposable.add(
             view.generateReportClicks
@@ -37,8 +39,8 @@ class GenerateReportPresenter @Inject constructor(
 
                     recordOptionsAnalyticsEvents(it)
                 }
-                .flatMap { options -> interactor.generateReport(trip, options).toObservable() }
-                .subscribe({ view.present(it)}, { view.present(EmailResult.Error(GenerationErrors.ERROR_UNDETERMINED))})
+                .flatMap { options -> interactor.generateReport(trip!!, options).toObservable() }
+                .subscribe({ view.present(it) }, { view.present(EmailResult.Error(GenerationErrors.ERROR_UNDETERMINED)) })
         )
     }
 

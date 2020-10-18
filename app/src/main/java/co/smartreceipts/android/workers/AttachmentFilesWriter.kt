@@ -56,7 +56,7 @@ class AttachmentFilesWriter @Inject constructor(
         var didPDFFailTooManyColumns = false
         var didCSVFailCompletely = false
         var didZIPFailCompletely = false
-        var didMemoryErrorOccurre = false
+        var didMemoryErrorOccure = false
 
         val files: Array<File?> = arrayOfNulls(EmailOptions.values().size)
     }
@@ -267,7 +267,7 @@ class AttachmentFilesWriter @Inject constructor(
                         } catch (e2: OutOfMemoryError) {
                             Logger.error(this, "Failed to recover from OOM", e2)
                             results.didZIPFailCompletely = true
-                            results.didMemoryErrorOccurre = true
+                            results.didMemoryErrorOccure = true
                             break
                         }
                     }
@@ -436,8 +436,6 @@ class AttachmentFilesWriter @Inject constructor(
 
             // Clear out the dead data here
             foreground.recycle()
-            foreground = null
-
             // And return
             background
         } else {

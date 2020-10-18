@@ -89,7 +89,7 @@ class GenerateReportFragment : GenerateReportView, WBFragment() {
         zipCheckbox = binding.dialogEmailCheckboxZip
         progress = binding.progress
 
-        binding.generateReportTooltip.setOnClickListener { v: View? ->
+        binding.generateReportTooltip.setOnClickListener {
             analytics.record(Events.Informational.ConfigureReport)
             navigationHandler.navigateToSettingsScrollToReportSection()
         }

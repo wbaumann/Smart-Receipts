@@ -30,7 +30,8 @@ class EmailAssistant @Inject constructor(
     private val databaseHelper: DatabaseHelper,
     private val preferenceManager: UserPreferenceManager,
     private val attachmentFilesWriter: AttachmentFilesWriter,
-    private val dateFormatter: DateFormatter
+    private val dateFormatter: DateFormatter,
+    private val intentUtils: IntentUtils
 ) {
 
     enum class EmailOptions(val index: Int) {
@@ -62,7 +63,7 @@ class EmailAssistant @Inject constructor(
 
         @JvmStatic
         fun getEmailDeveloperIntent(context: Context, subject: String, body: String, files: List<File>): Intent {
-            val intent = IntentUtils.getSendIntent(context, files)
+            val intent = IntentUtils().getSendIntent(context, files)
             intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(DEVELOPER_EMAIL))
             intent.putExtra(Intent.EXTRA_SUBJECT, subject)
             intent.putExtra(Intent.EXTRA_TEXT, body)
@@ -99,8 +100,9 @@ class EmailAssistant @Inject constructor(
                 // Only allow report processing to continue with no receipts if we're doing a full pdf or CSV report with distances
                 return Optional.of(EmailResult.Error(GenerationErrors.ERROR_NO_RECEIPTS))
             } else {
-                if (options.contains(EmailOptions.CSV) && !preferenceManager.get(UserPreference.Distance.PrintDistanceTableInReports)) {
-                    // user wants to create CSV report with just distances but this option is disabled
+                if ((options.contains(EmailOptions.CSV) || options.contains(EmailOptions.PDF_FULL))
+                    && !preferenceManager.get(UserPreference.Distance.PrintDistanceTableInReports)) {
+                    // user wants to create CSV or PDF report with just distances but this option is disabled
                     return Optional.of(EmailResult.Error(GenerationErrors.ERROR_DISABLED_DISTANCES))
                 }
             }
@@ -113,7 +115,7 @@ class EmailAssistant @Inject constructor(
         val writerResults = attachmentFilesWriter.write(trip, receipts, distances, options)
 
         return when {
-            writerResults.didMemoryErrorOccurre -> EmailResult.Error(GenerationErrors.ERROR_MEMORY)
+            writerResults.didMemoryErrorOccure -> EmailResult.Error(GenerationErrors.ERROR_MEMORY)
             writerResults.didPDFFailCompletely -> {
                 if (writerResults.didPDFFailTooManyColumns) {
                     EmailResult.Error(GenerationErrors.ERROR_TOO_MANY_COLUMNS)
@@ -154,7 +156,7 @@ class EmailAssistant @Inject constructor(
                 context.getString(R.string.reports_attached, Integer.toString(attachments.size)).toString() + body
         }
 
-        val emailIntent: Intent = IntentUtils.getSendIntent(context, attachments)
+        val emailIntent: Intent = intentUtils.getSendIntent(context, attachments)
         val to = preferenceManager.get(UserPreference.Email.ToAddresses).split(";".toRegex()).toTypedArray()
         val cc = preferenceManager.get(UserPreference.Email.CcAddresses).split(";".toRegex()).toTypedArray()
         val bcc = preferenceManager.get(UserPreference.Email.BccAddresses).split(";".toRegex()).toTypedArray()

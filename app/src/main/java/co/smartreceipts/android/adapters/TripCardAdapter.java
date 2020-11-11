@@ -46,4 +46,9 @@ public class TripCardAdapter extends CardAdapter<Trip> {
 		textView.setText(getContext().getString(R.string.trip_adapter_list_item_to, start, end));
 	}
 
+	@Override
+	protected void setCategory(TextView textView, Trip data) {
+		textView.setText(getContext().getString(R.string.number_of_receipts, data.getSize()));
+	}
+
 }

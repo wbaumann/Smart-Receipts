@@ -147,13 +147,8 @@ public class ReportInfoFragment extends WBFragment implements GenerateNavigator,
         super.onResume();
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            if (!navigationHandler.isDualPane()) {
-                actionBar.setHomeButtonEnabled(true);
-                actionBar.setDisplayHomeAsUpEnabled(true);
-            } else {
-                actionBar.setHomeButtonEnabled(false);
-                actionBar.setDisplayHomeAsUpEnabled(false);
-            }
+            actionBar.setHomeButtonEnabled(!navigationHandler.isDualPane());
+            actionBar.setDisplayHomeAsUpEnabled(!navigationHandler.isDualPane());
         }
         updateActionBarTitlePrice();
         tripTableController.subscribe(actionBarTitleUpdatesListener);

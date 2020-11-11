@@ -214,7 +214,7 @@
     <!-- ================== Trip Adapter ===================== -->
     <string name="trip_adapter_list_item_to">%2$s %1$s אל</string>
 	<string name="trip_no_data">אין לך דוחות מוגדרים כרגע. נסה ללחוץ על + על מנת להתחיל.</string>
-	
+    <string name="number_of_receipts">קבלות: %d</string>
 
     <!-- ================= Receipt Adapter =================== -->
     <string name="receipt_no_data">נראה שאין לך קבלות. לחץ על + על מנת להתחיל.&#8230;</string>

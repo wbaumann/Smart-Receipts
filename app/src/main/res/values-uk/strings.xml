@@ -215,6 +215,7 @@
     <!-- ================== Trip Adapter ===================== -->
     <string name="trip_adapter_list_item_to">%1$s до %2$s</string>
     <string name="trip_no_data">Судячи з усього, в даний час у вас немає звітів. Натисніть на кнопку + (плюс), щоб почати.</string>
+    <string name="number_of_receipts">Чеки: %d</string>
 
     <!-- ================= Receipt Adapter =================== -->
     <string name="receipt_no_data">Судячи з усього, у вас ще немає чеків. Спробуйте натиснути кнопку + (плюс), щоб почати…</string>

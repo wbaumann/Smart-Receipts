@@ -55,7 +55,7 @@ public class TripTableActionAlterations extends StubTableActionAlterations<Trip>
     public Single<List<Trip>> postGet(@NonNull final List<Trip> trips) {
         return Observable.just(trips)
                 .flatMapIterable(trips1 -> trips1)
-                .doOnNext(mDatabaseHelper::getTripPriceAndDailyPrice)
+                .doOnNext(mDatabaseHelper::getTripPriceAndDailyPriceAndSize)
                 .toList();
     }
 

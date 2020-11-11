@@ -78,8 +78,8 @@ public class TripTableActionAlterationsTest {
                 .assertComplete()
                 .assertNoErrors();
 
-        verify(mDatabaseHelper).getTripPriceAndDailyPrice(mTrip1);
-        verify(mDatabaseHelper).getTripPriceAndDailyPrice(mTrip2);
+        verify(mDatabaseHelper).getTripPriceAndDailyPriceAndSize(mTrip1);
+        verify(mDatabaseHelper).getTripPriceAndDailyPriceAndSize(mTrip2);
     }
 
     @Test

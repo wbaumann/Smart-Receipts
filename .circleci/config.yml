@@ -8,6 +8,7 @@ jobs:
     steps:
       - run:
           name: Wait 300 Seconds (5 Minutes - To Wait For Additional Commits)
+          no_output_timeout: 30m
           command: sleep 300
       - checkout
       - restore_cache:
